@@ -1,0 +1,45 @@
+.page-notes-edit textarea {
+  border: none;
+  height: 800px;
+}
+
+.page-notes-index h1 {
+  margin-top: 0;
+}
+
+.notes-actions .btn-secondary {
+  margin-right: 10rem;
+}
+
+.note-timestamp {
+  position: absolute;
+  left: -16rem;
+  top: 3rem;
+}
+
+.notes-blurbs {
+  margin-top: 8rem;
+}
+
+.notes-blurbs li {
+  display: flex;
+  position: relative;
+  margin: 4rem 0;
+}
+
+.menu-canvas {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  background-color: white;
+}
+
+.menu-canvas .cross,
+.menu-canvas .cross:before,
+.menu-canvas .cross:after, {
+  border-color: red !important;
+}

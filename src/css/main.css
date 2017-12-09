@@ -1,0 +1,33 @@
+.menu-main {
+  display: flex;
+  position: absolute;
+
+  margin-top: 12rem;
+  margin-left: 9rem;
+}
+
+.menu-main .panini {
+  margin-right: 11rem;
+}
+
+.menu-main .panini
+.menu-main .liang {
+  cursor: pointer;
+}
+
+.nav-main {
+  position: fixed;
+  display: flex;
+  bottom: 0;
+  right: 0;
+
+  list-style-type: none;
+}
+
+.nav-main li {
+  margin: 0 2rem;
+}
+
+.breadcrumbs-main {
+  padding: 12rem 0 9rem;
+}
