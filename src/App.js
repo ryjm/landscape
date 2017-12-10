@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import './css/base.css';
-import './css/base-additions.css';
-import './css/main.css';
-import './css/pages.css';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { NotesIndexPage } from './components/notes-index.js';
 import { NotesEditPage } from './components/notes-edit.js';
