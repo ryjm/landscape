@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 
 export class NotesIndexPage extends Component {
-  registerComponent() {
-    debugger
-  }
-
   constructor(props) {
     super(props)
     /* from talk? */
@@ -37,7 +33,7 @@ export class NotesIndexPage extends Component {
         <li className="notes-index-note" key={note.desc}>
           <b className="note-timestamp">{note.timestamp}</b>
           <div>
-            <a href="/show"><h3 className="text-400 underline text-mono">{note.date}</h3></a>
+            <a href="show"><h3 className="text-400 underline text-mono">{note.date}</h3></a>
             <p>{note.desc}</p>
           </div>
         </li>

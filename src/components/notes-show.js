@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
 export class NotesShowPage extends Component {
   render() {
@@ -12,7 +11,7 @@ export class NotesShowPage extends Component {
             <h3 className="text-mono">~2017.11.12..4.50</h3>
 
             <h1>Giving people the opportunity to sit in a dark theater</h1>
-            <button className="btn btn-primary"><Link to="/edit">Edit →</Link></button>
+            <button className="btn btn-primary"><a href="edit">Edit →</a></button>
 
             <p className="mt-8">A daring escape under cover of darkness. The father shot by government guards as his wife clings to their young son—but all three making it to the water. Three days spent nearly bleeding out in a rickety boat. Pirate attacks. And then, the redemptive miracle of life: a new daughter, born in a Thai refugee camp, who years later would rise to great heights as a first-generation American.</p>
 

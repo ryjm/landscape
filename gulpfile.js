@@ -14,7 +14,7 @@ gulp.task('bundle-css', function() {
     .pipe(cssimport())
     .pipe(cssnano())
     .pipe(gulp.dest('./dist/css/'));
-})
+});
 
 gulp.task('bundle-js', function() {
   return rollup.rollup({
@@ -25,8 +25,7 @@ gulp.task('bundle-js', function() {
       }),
       commonjs({
         namedExports: {
-          'node_modules/react/index.js': [ 'Component' ],
-          'node_modules/react-router-dom/index.js': [ 'Link' ]
+          'node_modules/react/index.js': [ 'Component' ]
         }
       }),
       replace({
@@ -39,7 +38,13 @@ gulp.task('bundle-js', function() {
       file: './dist/js/index.js',
       format: 'umd',
       name: 'index',
-      sourcemap: true
+      sourcemap: "inline"
     });
   });
+});
+
+gulp.task('default', [ 'bundle-js', 'bundle-css' ]);
+
+gulp.task('watch', function() {
+  gulp.watch('src/**/*.js', ['bundle-js']);
 })
