@@ -4,7 +4,6 @@ import { NotesIndexPage } from './components/notes-index.js';
 import { NotesEditPage } from './components/notes-edit.js';
 import { NotesShowPage } from './components/notes-show.js';
 import { MenuPage } from './components/menu.js';
-import "./bootstrap.js";
 
 class NutalkLoader extends Component {
   render() {

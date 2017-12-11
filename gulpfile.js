@@ -47,4 +47,5 @@ gulp.task('default', [ 'bundle-js', 'bundle-css' ]);
 
 gulp.task('watch', function() {
   gulp.watch('src/**/*.js', ['bundle-js']);
+  gulp.watch('src/**/*.css', ['bundle-css']);
 })

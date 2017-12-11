@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 
-export class NotesEditPage extends Component {
+export class PostEditTextarea extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,21 +18,7 @@ export class NotesEditPage extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-offset-1 col-sm-10 page-notes-edit pb-24">
-            <h3 className="underline inline text-400">Brighter than the sun notes</h3>
-            <h3 className="inline text-400 ml-2">/</h3>
-            <h3 className="text-mono">~2017.11.12..4.50</h3>
-
-            <h1>Giving people the opportunity to sit in a dark theater</h1>
-            <button className="btn btn-secondary"><Link to="/show">Save →</Link></button>
-            <button className="btn btn-primary">Preview →</button>
-
-            <textarea className="text-code" defaultValue={this.state.noteText}></textarea>
-          </div>
-        </div>
-      </div>
+      <textarea className="text-code" defaultValue={this.state.noteText}></textarea>
     );
   }
 }
