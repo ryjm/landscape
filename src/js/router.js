@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ComponentMap } from './component-map';
 
-class UrbitRouter {
+export class UrbitRouter {
   constructor() {
     this.pageRoot = "/~~/pages/nutalk/";
     this.domRoot = "#root";
@@ -67,8 +67,4 @@ class UrbitRouter {
       this.transitionTo(window.location.href, false);
     }
   }
-}
-
-window.runapp = () => {
-  var router = new UrbitRouter();
 }
