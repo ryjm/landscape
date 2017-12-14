@@ -8,6 +8,8 @@ var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
 
+var serve = require('gulp-webserver');
+
 gulp.task('bundle-css', function() {
   gulp
     .src('src/index.css')
@@ -43,9 +45,19 @@ gulp.task('bundle-js', function() {
   });
 });
 
-gulp.task('default', [ 'bundle-js', 'bundle-css' ]);
+gulp.task('server', function () {
+  gulp.src('.')
+    .pipe(serve({
+      livereload: true,
+      directoryListing: true,
+      open: true
+    }));
+});
 
 gulp.task('watch', function() {
   gulp.watch('src/**/*.js', ['bundle-js']);
   gulp.watch('src/**/*.css', ['bundle-css']);
 })
+
+gulp.task('default', [ 'bundle-js', 'bundle-css' ]);
+gulp.task('serve', ['server', 'watch']);
