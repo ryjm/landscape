@@ -43,3 +43,7 @@
 .menu-canvas .cross:after, {
   border-color: red !important;
 }
+
+.create-stream-page.container {
+  max-width: 600px;
+}

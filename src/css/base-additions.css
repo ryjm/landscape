@@ -82,6 +82,25 @@ ul li {
   display: inline;
 }
 
+.block {
+  display: block;
+}
+
+/***
+  Form elements
+***/
+
 input, textarea {
   outline: none;
+}
+
+.select-dropdown select {
+  padding: 12px;
+}
+
+.select-icon {
+  position: relative;
+  font-weight: 700;
+  top: 12px;
+  right: 12px;
 }
