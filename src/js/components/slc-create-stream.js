@@ -1,12 +1,41 @@
 import React, { Component } from 'react';
 
 export class CreateStreamPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      streamDiscoverable: "no"
+    };
+
+    this.createStream = this.createStream.bind(this);
+    this.valueChange = this.valueChange.bind(this);
+  }
+
+  createStream() {
+    debugger
+  }
+
+  valueChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
   render() {
     return (
       <div className="create-stream-page container">
         <div className="input-group">
-          <label for="stream-name">Name</label>
-          <input type="text" name="stream-name" placeholder="Secret club"/>
+          <label for="streamName">Name</label>
+          <input
+            type="text"
+            name="stream-name"
+            placeholder="Secret club"
+            onChange={this.valueChange}
+            value={this.state.streamName}/>
         </div>
 
         <div className="input-group">
@@ -14,7 +43,11 @@ export class CreateStreamPage extends Component {
           <div className="row">
             <div className="col-sm-6">
               <div className="select-dropdown">
-                <select name="stream-type">
+                <select
+                  name="streamType"
+                  value={this.state.streamType}
+                  onChange={this.valueChange}>
+
                   <option value="feed">Feed</option>
                   <option value="chat">Chat</option>
                   <option value="list">List</option>
@@ -33,7 +66,11 @@ export class CreateStreamPage extends Component {
           <div className="row">
             <div className="col-sm-6">
               <div className="select-dropdown">
-                <select name="stream-security">
+                <select
+                  name="streamSecurity"
+                  value={this.state.streamSecurity}
+                  onChange={this.valueChange}>
+
                   <option value="village">Village</option>
                   <option value="channel">Channel</option>
                   <option value="journal">Journal</option>
@@ -50,16 +87,39 @@ export class CreateStreamPage extends Component {
 
         <div className="input-group">
           <label for="stream-ships">Whitelist</label>
-          <textarea name="stream-ships" placeholder="~ravmel-rodpyl, ~sorreg-namtyv"/>
+          <textarea
+            name="streamShips"
+            placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
+            value={this.state.streamShips}
+            onChange={this.valueChange}
+            />
         </div>
 
         <div className="input-group">
-          <label for="stream-discoverable">Discoverable</label>
-          <button type="button" className="btn btn-default" value="yes">Yes</button>
-          <button type="button" className="btn btn-tertiary" value="no">No</button>
+          <h5>Discoverable?</h5>
+
+          <label for="stream-discoverable-yes">Yes
+            <input
+              type="radio"
+              name="streamDiscoverable"
+              value="yes"
+              id="stream-discoverable-yes"
+              checked={this.state.streamDiscoverable === "yes"}
+              onChange={this.valueChange}/>
+          </label>
+
+          <label for="stream-discoverable-no">No
+            <input
+              type="radio"
+              name="streamDiscoverable"
+              value="no"
+              id="stream-discoverable-no"
+              checked={this.state.streamDiscoverable === "no"}
+              onChange={this.valueChange}/>
+          </label>
         </div>
 
-        <button type="submit" className="btn btn-primary">Create →</button>
+        <button type="submit" className="btn btn-primary" onClick={this.createStream}>Create →</button>
       </div>
     )
   }

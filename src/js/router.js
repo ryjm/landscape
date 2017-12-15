@@ -4,7 +4,10 @@ import { ComponentMap } from './component-map';
 
 export class UrbitRouter {
   constructor() {
-    this.pageRoot = "/~~/pages/nutalk/";
+    // TODO: Fix this later to not suck.
+    // this.pageRoot = "/~~/pages/nutalk/";
+    this.pageRoot = "";
+
     this.domRoot = "#root";
 
     this.instantiateReactComponents();
