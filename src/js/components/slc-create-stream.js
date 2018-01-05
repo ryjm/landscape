@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 export class CreateStreamPage extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       streamDiscoverable: "no"
     };
@@ -12,7 +13,13 @@ export class CreateStreamPage extends Component {
   }
 
   createStream() {
-    debugger
+    this.props.api.sendHallAction({
+      create: {
+        nom: this.state.streamName,
+        des: this.state.streamType,
+        sec: this.state.streamSecurity
+      }
+    });
   }
 
   valueChange(event) {
@@ -29,17 +36,17 @@ export class CreateStreamPage extends Component {
     return (
       <div className="create-stream-page container">
         <div className="input-group">
-          <label for="streamName">Name</label>
+          <label htmlFor="streamName">Name</label>
           <input
             type="text"
-            name="stream-name"
+            name="streamName"
             placeholder="Secret club"
             onChange={this.valueChange}
             value={this.state.streamName}/>
         </div>
 
         <div className="input-group">
-          <label for="stream-type">Type</label>
+          <label htmlFor="stream-type">Type</label>
           <div className="row">
             <div className="col-sm-6">
               <div className="select-dropdown">
@@ -62,7 +69,7 @@ export class CreateStreamPage extends Component {
         </div>
 
         <div className="input-group">
-          <label for="stream-security">Security model</label>
+          <label htmlFor="stream-security">Security model</label>
           <div className="row">
             <div className="col-sm-6">
               <div className="select-dropdown">
@@ -86,7 +93,7 @@ export class CreateStreamPage extends Component {
         </div>
 
         <div className="input-group">
-          <label for="stream-ships">Whitelist</label>
+          <label htmlFor="stream-ships">Whitelist</label>
           <textarea
             name="streamShips"
             placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
@@ -98,7 +105,7 @@ export class CreateStreamPage extends Component {
         <div className="input-group">
           <h5>Discoverable?</h5>
 
-          <label for="stream-discoverable-yes">Yes
+          <label htmlFor="stream-discoverable-yes">Yes
             <input
               type="radio"
               name="streamDiscoverable"
@@ -108,7 +115,7 @@ export class CreateStreamPage extends Component {
               onChange={this.valueChange}/>
           </label>
 
-          <label for="stream-discoverable-no">No
+          <label htmlFor="stream-discoverable-no">No
             <input
               type="radio"
               name="streamDiscoverable"

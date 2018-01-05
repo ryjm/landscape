@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import { MessagesPage } from './components/messages.js';
 
 export class UrbitApi {
-  constructor() {
+  constructor(warehouse) {
     this.seqn = 1;
+    this.warehouse = warehouse;
 
     fetch('/~/auth.json',{credentials: "same-origin"}).then((res) => {
       return res.json();
@@ -22,18 +23,18 @@ export class UrbitApi {
     // inbox config?
     this.sendBindRequest("/circle/inbox/config-l/group-r/0", "PUT");
     // inbox messages?
-    this.sendBindRequest("/circle/inbox/grams/0/3", "PUT");
+    this.sendBindRequest("/circle/inbox/grams/0", "PUT");
     // delete inbox message subscription? wut?
-    this.sendBindRequest("/circle/inbox/grams/0/3", "DELETE");
+    // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
   }
 
   sendBindRequest(path, method) {
-    var params = {
+    const params = {
       appl: "hall",
       mark: "json",
       oryx: this.authTokens.oryx,
-      path: path,
       ship: this.authTokens.ship,
+      path: path,
       wire: path
     };
 
@@ -44,49 +45,81 @@ export class UrbitApi {
     });
   }
 
-  *pollServer() {
-    while (true) {
-      yield fetch(`/~/of/${this.authTokens.ixor}?poll=${this.seqn}`, {credentials: "same-origin"})
-        .then((res) => {
-          return res.json();
-        });
-    }
+  sendHallAction(data) {
+    const params = {
+      appl: "hall",
+      mark: "hall-action",
+      oryx: this.authTokens.oryx,
+      ship: this.authTokens.ship,
+      wire: "/",
+      xyro: data
+    };
+
+    fetch(`/~/to/hall/hall-action`, {
+      credentials: "same-origin",
+      method: "POST",
+      body: JSON.stringify(params)
+    });
   }
 
-  runPoll(generator) {
-    if (!generator) {
-      generator = this.pollServer();
-    }
+  pollServer() {
+    console.log('fetching... ', this.seqn);
+    return fetch(`/~/of/${this.authTokens.ixor}?poll=${this.seqn}`, {credentials: "same-origin"})
+      .then((res) => {
+        return res.json();
+      });
+  }
 
-    var p = generator.next();
-    p.value.then((data) => {
+  runPoll() {
+    this.pollServer().then((data) => {
       if (data.beat) {
         console.log('beat');
-        this.runPoll(generator);
+        this.runPoll();
       } else {
         console.log("the data! ", data);
-        this.parseBS(data);
+
+        const hallData = this.parseBS(data);
+        this.warehouse.storeData(hallData);
+
         this.seqn++;
-        this.runPoll(generator);
+        this.runPoll();
       }
-    })
+    });
   }
 
   // BS stands for "bulletin service"
   parseBS(bs) {
+    return {
+      stations: this.parseBSStations(bs),
+      messages: this.parseBSMessages(bs)
+    }
+  }
+
+  parseBSMessages(bs) {
     if (bs.data && bs.data.json && bs.data.json.circle && bs.data.json.circle.nes) {
-      var messages = bs.data.json.circle.nes;
-
-      console.log("bs = ", messages);
-
-      var cleanMessages = messages.map((msg) => {
+      const messages = bs.data.json.circle.nes;
+      return messages.map((msg) => {
         return {
           author: msg.gam.aut,
-          body: msg.gam.sep.lin.msg
+          body: msg.gam.sep.lin.msg,
+          station: msg.gam.aud[0],
+          uid: msg.gam.uid,
+          timestamp: msg.gam.wen,
         };
       });
+    }
+  }
 
-      ReactDOM.render(<MessagesPage messages={cleanMessages}/>, document.querySelectorAll('[data-componen="MessagesPage"]')[0]);
+  parseBSStations(bs) {
+    if (bs.data &&
+        bs.data.json &&
+        bs.data.json.circle &&
+        bs.data.json.circle.cos &&
+        bs.data.json.circle.cos.loc &&
+        bs.data.json.circle.cos.loc.src ) {
+
+      const stations = bs.data.json.circle.cos.loc.src;
+      return stations;
     }
   }
 }

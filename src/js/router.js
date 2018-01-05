@@ -1,14 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ComponentMap } from './component-map';
+import { UrbitApi } from './urbit-api';
+import { UrbitWarehouse } from './urbit-warehouse';
 
 export class UrbitRouter {
   constructor() {
     // TODO: Fix this later to not suck.
     // this.pageRoot = "/~~/pages/nutalk/";
+
+    console.log('router loaded');
     this.pageRoot = "";
 
     this.domRoot = "#root";
+
+    this.warehouse = new UrbitWarehouse();
+    this.api = new UrbitApi(this.warehouse);
 
     this.instantiateReactComponents();
     this.registerAnchorListeners();
@@ -24,7 +31,7 @@ export class UrbitRouter {
       // grab the name of the component
       var componentName = elem.dataset.component;
       // look up the component type in component-map, instantiate it
-      var component = React.createElement(ComponentMap[componentName]);
+      var component = React.createElement(ComponentMap[componentName], {api: this.api});
       ReactDOM.render(component, elem);
     });
   }
