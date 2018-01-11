@@ -31,7 +31,10 @@ export class UrbitRouter {
       // grab the name of the component
       var componentName = elem.dataset.component;
       // look up the component type in component-map, instantiate it
-      var component = React.createElement(ComponentMap[componentName], {api: this.api});
+      var component = React.createElement(ComponentMap[componentName], {
+        api: this.api,
+        store: this.warehouse.store
+      });
       ReactDOM.render(component, elem);
     });
   }
