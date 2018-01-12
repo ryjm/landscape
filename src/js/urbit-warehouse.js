@@ -2,13 +2,14 @@ import _ from 'lodash';
 import { UrbitReducer } from './urbit-reducer';
 
 export class UrbitWarehouse {
-  constructor() {
+  constructor(updateFunc) {
     this.store = {
       messages: [],
       stations: {}
     };
 
     this.reducer = new UrbitReducer();
+    this.updateFunc = updateFunc;
   }
 
   storeData(data) {
@@ -24,5 +25,7 @@ export class UrbitWarehouse {
 
     console.log('data being stored = ', data);
     console.log('full store = ', this.store);
+
+    this.updateFunc();
   }
 }

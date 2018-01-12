@@ -14,7 +14,8 @@ export class UrbitRouter {
 
     this.domRoot = "#root";
 
-    this.warehouse = new UrbitWarehouse();
+    // TODO: This... might be a circular dependency? Seems to work though.
+    this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
     this.api = new UrbitApi(this.warehouse);
 
     this.instantiateReactComponents();
