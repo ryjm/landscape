@@ -37,7 +37,7 @@ gulp.task('bundle-js', function() {
     ]
   }).then(bundle => {
     return bundle.write({
-      file: './dist/js/index.js',
+      file: './urbit-web-code/nutalk/js/index.js',
       format: 'umd',
       name: 'index',
       sourcemap: "inline"

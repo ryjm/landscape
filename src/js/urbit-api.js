@@ -24,6 +24,8 @@ export class UrbitApi {
     this.sendBindRequest("/circle/inbox/config-l/group-r/0", "PUT");
     // inbox messages?
     this.sendBindRequest("/circle/inbox/grams/0", "PUT");
+    // this.sendBindRequest("/public", "PUT");
+    // this.sendBindRequest(`/circles/~${this.authTokens.ship}`, "PUT");
     // delete inbox message subscription? wut?
     // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
   }
