@@ -15,7 +15,7 @@ gulp.task('bundle-css', function() {
     .src('src/index.css')
     .pipe(cssimport())
     .pipe(cssnano())
-    .pipe(gulp.dest('./dist/css/'));
+    .pipe(gulp.dest('./urbit-web-code/nutalk/css'));
 });
 
 gulp.task('bundle-js', function() {
