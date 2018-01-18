@@ -47,6 +47,5 @@
     ==
 
     ;script@"/~~/pages/nutalk/js/index.js";
-    ;script@"/~~/pages/nutalk/js/main.js";
   ==
 ==
