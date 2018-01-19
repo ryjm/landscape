@@ -5,7 +5,8 @@ export class UrbitWarehouse {
   constructor(updateFunc) {
     this.store = {
       messages: [],
-      stations: {}
+      stations: {},
+      stationMessages: {},
     };
 
     this.reducer = new UrbitReducer();
@@ -16,6 +17,11 @@ export class UrbitWarehouse {
     if (data.messages) {
       const messages = this.reducer.messages(data.messages, this.store.messages);
       this.store.messages = messages;
+    }
+
+    if (data.messages) {
+      const stationMessages = this.reducer.stationMessages(data.messages, this.store.stationMessages);
+      this.store.stationMessages = stationMessages;
     }
 
     if (data.stations) {
