@@ -11,6 +11,9 @@ export class UrbitApi {
       return res.json();
     })
     .then((authTokens) => {
+      warehouse.storeData({
+        usership: authTokens.ship
+      });
       this.authTokens = authTokens;
       this.runPoll();
       this.bindThings();
@@ -78,7 +81,7 @@ export class UrbitApi {
         console.log('beat');
         this.runPoll();
       } else {
-        console.log("the data! ", data);
+        console.log("new server data: ", data);
 
         const hallData = this.parseBS(data);
         this.warehouse.storeData(hallData);
@@ -98,18 +101,33 @@ export class UrbitApi {
   }
 
   parseBSMessages(bs) {
+    let messages = [];
+
     if (bs.data && bs.data.json && bs.data.json.circle && bs.data.json.circle.nes) {
-      const messages = bs.data.json.circle.nes;
-      return messages.map((msg) => {
-        return {
-          author: msg.gam.aut,
-          body: msg.gam.sep.lin.msg,
-          station: msg.gam.aud[0],
+      const nesBucket = bs.data.json.circle.nes;
+      nesBucket.forEach((msg) => {
+        messages.push({
+          aut: msg.gam.aut,
+          msg: msg.gam.sep.lin.msg,
+          aud: msg.gam.aud[0],
           uid: msg.gam.uid,
-          timestamp: msg.gam.wen,
-        };
+          wen: msg.gam.wen,
+        });
       });
     }
+
+    if (bs.data && bs.data.json && bs.data.json.circle && bs.data.json.circle.gram) {
+      let gram = bs.data.json.circle.gram;
+      messages.push({
+        aut: gram.gam.aut,
+        msg: gram.gam.sep.lin.msg,
+        aud: gram.gam.aud[0],
+        uid: gram.gam.uid,
+        wen: gram.gam.wen
+      });
+    }
+
+    return messages;
   }
 
   parseBSStations(bs) {

@@ -104,3 +104,11 @@ input, textarea {
   top: 12px;
   right: 12px;
 }
+
+/***
+  Utils
+***/
+
+.flex {
+  display: flex;
+}

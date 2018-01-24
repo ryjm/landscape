@@ -31,25 +31,28 @@ export class UrbitReducer {
   */
   stationMessages(newMessages, storeStationMessages) {
     newMessages.forEach((newMsg) => {
-      console.log ("hi!, ", newMsg.station);
-
-      let station = storeStationMessages[newMsg.station];
+      let station = storeStationMessages[newMsg.aud];
 
       if (!station) {
-        storeStationMessages[newMsg.station] = {
-          name: newMsg.station,
+        storeStationMessages[newMsg.aud] = {
+          name: newMsg.aud,
           messages: [newMsg]
         };
       } else if (station.messages.findIndex(o => o.uid === newMsg.uid) === -1) {
         for (let i = 0; i < station.messages.length; i++) {
-          if (newMsg.timestamp < station.messages[i].timestamp) {
-            station.messages.splice(i, 0, newMsg);
+          if (newMsg.wen < station.messages[i].wen) {
+            storeStationMessages[newMsg.aud].messages.splice(i, 0, newMsg);
+          } else if (i === (station.messages.length - 1)) {
+            storeStationMessages[newMsg.aud].messages.push(newMsg);
+            i = i + 1;
           }
         }
 
+        // storeStationMessages[newMsg.station].messages.push(newMsg);
+
         // For debugging:
         // for (let msg of station.messages) {
-        //   console.log(`msg ${msg.uid}: ${msg.timestamp}`);
+        //   console.log(`msg ${msg.uid}: ${msg.wen}`);
         // }
       }
     });

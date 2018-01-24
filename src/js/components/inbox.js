@@ -18,7 +18,7 @@ export class InboxPage extends Component {
     }
 
     messages.forEach((msg) => {
-      fullStations[msg.station].messages.push(msg);
+      fullStations[msg.aud].messages.push(msg);
     })
 
     return fullStations;
@@ -26,20 +26,15 @@ export class InboxPage extends Component {
 
   render() {
     const inbox = this.buildInbox();
-
-    console.log("inbox = ", inbox);
-
     const stationElems = Object.keys(inbox).map((stationName) => {
-      console.log('inbox @ ', stationName, ' = ', inbox[stationName]);
-
       const messageElems = inbox[stationName].messages.map((msg) => {
         return (
           <li key={msg.uid} className="row">
             <div className="col-sm-2">
-              {msg.author}
+              {msg.aut}
             </div>
             <div className="col-sm-10">
-              {msg.body}
+              {msg.msg}
             </div>
           </li>
         );
@@ -47,7 +42,7 @@ export class InboxPage extends Component {
 
       return (
         <div className="mb-4">
-          <b><u>{stationName}</u></b>
+          <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
           <ul>
             {messageElems}
           </ul>

@@ -3,15 +3,14 @@ import ReactDOM from 'react-dom';
 import { ComponentMap } from './component-map';
 import { UrbitApi } from './urbit-api';
 import { UrbitWarehouse } from './urbit-warehouse';
+import { util } from './util';
 
 export class UrbitRouter {
   constructor() {
     // TODO: Fix this later to not suck.
     // this.pageRoot = "/~~/pages/nutalk/";
 
-    console.log('router loaded');
     this.pageRoot = "";
-
     this.domRoot = "#root";
 
     // TODO: This... might be a circular dependency? Seems to work though.
@@ -24,27 +23,45 @@ export class UrbitRouter {
   }
 
   instantiateReactComponents() {
-    var componentElements = document.querySelectorAll('[data-component]');
+    // clear header
+    let headerElem = document.querySelectorAll('[data-component-header]')[0];
+    ReactDOM.render(<div />, headerElem);
 
-    console.log('componentElements.len = ', componentElements.length);
+    let componentElements = document.querySelectorAll('[data-component]');
 
     componentElements.forEach((elem) => {
       // grab the name of the component
-      var componentName = elem.dataset.component;
+      let componentName = elem.dataset.component;
+
       // look up the component type in component-map, instantiate it
-      var component = React.createElement(ComponentMap[componentName], {
+      let component = React.createElement(ComponentMap[componentName].comp, {
         api: this.api,
-        store: this.warehouse.store
+        store: this.warehouse.store,
+        queryParams: util.getQueryParams()
       });
+
       ReactDOM.render(component, elem);
+
+      if (ComponentMap[componentName].head) {
+        let headerComponent = React.createElement(ComponentMap[componentName].head, {
+          queryParams: util.getQueryParams(),
+        });
+
+        ReactDOM.render(headerComponent, headerElem);
+      }
     });
   }
 
   transitionTo(targetUrl, createHistory) {
-    console.log("Transition to: ", targetUrl);
+
+    // trim queryparams
+    let q = targetUrl.indexOf('?');
+    let baseUrl = (q !== -1) ? targetUrl.substr(0, q) : targetUrl;
+
+    console.log("Transition to: ", baseUrl);
 
     // TODO: Extremely brittle. Expecting parts of form: /~~/pages/nutalk + /show
-    fetch(targetUrl + ".htm", {credentials: "same-origin"}).then((res) => {
+    fetch(baseUrl + ".htm", {credentials: "same-origin"}).then((res) => {
       return res.text();
     }).then((resText) => {
       if (createHistory) {
@@ -58,18 +75,18 @@ export class UrbitRouter {
   registerAnchorListeners() {
     window.document.addEventListener('click', (e) => {
       // Walk the DOM node's parents to find 'a' tags up the chain
-      var el = e.target;
+      let el = e.target;
       while (el && el.tagName != 'A') {
         el = el.parentNode;
       }
       // If you find an "a" tag in the clicked element's parents, it's a link
       if (el) {
-        var href = el.getAttribute('href');
+        let href = el.getAttribute('href');
 
         // TODO: *Extremely* rough way of detecting an external link...
         if (href.indexOf('.') === -1) {
           e.preventDefault();
-          var targetUrl = this.pageRoot + href;
+          let targetUrl = this.pageRoot + href;
           this.transitionTo(targetUrl, true);
         }
       }

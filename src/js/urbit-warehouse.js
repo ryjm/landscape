@@ -7,6 +7,11 @@ export class UrbitWarehouse {
       messages: [],
       stations: {},
       stationMessages: {},
+      usership: "",
+      header: {
+        pageName: "",
+        errata: null
+      },
     };
 
     this.reducer = new UrbitReducer();
@@ -29,7 +34,14 @@ export class UrbitWarehouse {
       this.store.stations = stations;
     }
 
-    console.log('data being stored = ', data);
+    if (data.header) {
+      this.store.header = _.merge({}, data.header, this.store.header);
+    }
+
+    if (data.usership) {
+      this.store.usership = data.usership;
+    }
+
     console.log('full store = ', this.store);
 
     this.updateFunc();
