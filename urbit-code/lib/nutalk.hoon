@@ -8,39 +8,31 @@
   ==
   ;body
     ;div
-      ;div.menu-main
-        ;a/"menu"
-          ;div.panini;
-        ==
-        ;div.liang;
-      ==
-      ;div.container.breadcrumbs-main
+      ;div.container.header-container
         ;div.row
-          ;div.col-sm-offset-1
+          ;div.col-sm-1
+            ;a/"menu"
+              ;div.panini;
+            ==
+          ==
+          ;div.col-sm-1
+            ;div.liang;
+          ==
+          ;div.col-sm-1
             ;h3.underline.text-gray
               ;a/"": Inbox
             ==
           ==
+          ;div(data-component-header "");
         ==
       ==
-      ;div.main-body
-        ;ul.nav-main
-          ;li
-            ;a/"": Index
+      ;div.container
+        ;div.row
+          ;div.col-sm-10.col-sm-offset-2
+            ;div#root
+              ;+  inner
+            ==
           ==
-          ;li
-            ;a/"show": Show
-          ==
-          ;li
-            ;a/"edit": Edit
-          ==
-          ;li
-            ;a/"menu": Menu
-          ==
-        ==
-
-        ;div#root
-          ;+  inner
         ==
       ==
     ==

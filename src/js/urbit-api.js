@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { MessagesPage } from './components/messages.js';
 
 export class UrbitApi {
   constructor(warehouse) {
@@ -31,6 +30,8 @@ export class UrbitApi {
     // this.sendBindRequest(`/circles/~${this.authTokens.ship}`, "PUT");
     // delete inbox message subscription? wut?
     // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
+
+    // sup
   }
 
   sendBindRequest(path, method) {

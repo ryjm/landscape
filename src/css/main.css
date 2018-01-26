@@ -31,13 +31,7 @@
 }
 
 .header-container {
-  padding: 12rem 0 9rem;
-
-  margin-left: -40rem;
-}
-
-.header-content {
-  margin-left: 11rem;
+  padding: 12rem 2rem 9rem;
 }
 
 .header-main {

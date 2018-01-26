@@ -41,7 +41,7 @@ export class InboxPage extends Component {
       });
 
       return (
-        <div className="mb-4">
+        <div className="mb-4" key={stationName}>
           <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
           <ul>
             {messageElems}
@@ -51,8 +51,16 @@ export class InboxPage extends Component {
     });
 
     return (
-      <div className="text-mono mt-8">
-        {stationElems}
+      <div>
+        <a href="/~~/pages/nutalk/stream/create">
+          <button className="btn btn-secondary" type="button">Create Stream →</button>
+        </a>
+        <a href="/~~/pages/nutalk/collection/create">
+          <button className="btn btn-tetiary" type="button">Create Collection →</button>
+        </a>
+        <div className="text-mono mt-8">
+          {stationElems}
+        </div>
       </div>
     );
   }
