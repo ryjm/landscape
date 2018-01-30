@@ -6,7 +6,8 @@ export class StreamCreatePage extends Component {
     super(props);
 
     this.state = {
-      streamDiscoverable: "no"
+      streamDiscoverable: "no",
+      loading: false
     };
 
     this.createStream = this.createStream.bind(this);
@@ -24,6 +25,10 @@ export class StreamCreatePage extends Component {
       }
     }, {
       target: `/~~/pages/nutalk/stream?station=~${usership}/${this.state.streamName}`
+    });
+
+    this.setState({
+      loading: true
     });
   }
 
@@ -48,6 +53,7 @@ export class StreamCreatePage extends Component {
                 type="text"
                 name="streamName"
                 placeholder="Secret club"
+                disabled={this.state.loading}
                 onChange={this.valueChange}
                 value={this.state.streamName}/>
             </div>
@@ -56,9 +62,10 @@ export class StreamCreatePage extends Component {
               <label htmlFor="stream-type">Type</label>
               <div className="row">
                 <div className="col-sm-6">
-                  <div className="select-dropdown">
+                  <div className="select-dropdown" disabled={this.state.loading}>
                     <select
                       name="streamType"
+                      disabled={this.state.loading}
                       value={this.state.streamType}
                       onChange={this.valueChange}>
 
@@ -79,9 +86,10 @@ export class StreamCreatePage extends Component {
               <label htmlFor="stream-security">Security model</label>
               <div className="row">
                 <div className="col-sm-6">
-                  <div className="select-dropdown">
+                  <div className="select-dropdown" disabled={this.state.loading}>
                     <select
                       name="streamSecurity"
+                      disabled={this.state.loading}
                       value={this.state.streamSecurity}
                       onChange={this.valueChange}>
 
@@ -104,6 +112,7 @@ export class StreamCreatePage extends Component {
               <textarea
                 name="streamShips"
                 placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
+                disabled={this.state.loading}
                 value={this.state.streamShips}
                 onChange={this.valueChange}
                 />
@@ -112,22 +121,24 @@ export class StreamCreatePage extends Component {
             <div className="input-group">
               <h5>Discoverable?</h5>
 
-              <label htmlFor="stream-discoverable-yes">Yes
+              <label htmlFor="stream-discoverable-yes" disabled={this.state.loading}>Yes
                 <input
                   type="radio"
                   name="streamDiscoverable"
                   value="yes"
                   id="stream-discoverable-yes"
+                  disabled={this.state.loading}
                   checked={this.state.streamDiscoverable === "yes"}
                   onChange={this.valueChange}/>
               </label>
 
-              <label htmlFor="stream-discoverable-no">No
+              <label htmlFor="stream-discoverable-no" disabled={this.state.loading}>No
                 <input
                   type="radio"
                   name="streamDiscoverable"
                   value="no"
                   id="stream-discoverable-no"
+                  disabled={this.state.loading}
                   checked={this.state.streamDiscoverable === "no"}
                   onChange={this.valueChange}/>
               </label>
