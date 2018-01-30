@@ -1,6 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+/**
+  Response format
+
+  {
+    data: {
+      json: {
+        circle: {   // *.loc for local, *.rem for remote
+          cos:      // config
+          pes:      // presence
+          nes:      // messages
+          gram:     // message (individual)
+        }
+        circles:    // circles you own
+        public:     // circles in your public membership list
+        client: {
+          gys:      // glyphs
+          nis:      // nicknames
+        }
+        peers:      // subscribers to your circles
+        status:     // rumor, presence -- TODO?
+      }
+    }
+    from: {
+      path:    // Subscription path that triggered response
+      ship:    // Subscription requestor
+    }
+  }
+**/
+
 export class UrbitApi {
   constructor(warehouse) {
     this.seqn = 1;
@@ -20,18 +49,23 @@ export class UrbitApi {
   }
 
   bindThings() {
-    // no idea
+    // parses client-specific info (ship nicknames, glyphs, etc)
     this.sendBindRequest("/client", "PUT");
-    // inbox config?
-    this.sendBindRequest("/circle/inbox/config-l/group-r/0", "PUT");
-    // inbox messages?
-    this.sendBindRequest("/circle/inbox/grams/0", "PUT");
-    // this.sendBindRequest("/public", "PUT");
-    // this.sendBindRequest(`/circles/~${this.authTokens.ship}`, "PUT");
-    // delete inbox message subscription? wut?
-    // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
 
-    // sup
+    // inbox local + remote configs
+    this.sendBindRequest("/circle/inbox/config/0", "PUT");
+
+    // inbox messages, remote presences
+    this.sendBindRequest("/circle/inbox/grams/group-r/0", "PUT");
+
+    // public membership
+    this.sendBindRequest("/public", "PUT");
+
+    // owner's circles
+    this.sendBindRequest(`/circles/~${this.authTokens.ship}`, "PUT");
+
+    // delete subscriptions when you're done with them, like...
+    // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
   }
 
   sendBindRequest(path, method) {
@@ -96,51 +130,75 @@ export class UrbitApi {
   // BS stands for "bulletin service"
   parseBS(bs) {
     return {
-      stations: this.parseBSStations(bs),
-      messages: this.parseBSMessages(bs)
+      configs: this.parseInboxConfigs(bs),
+      messages: this.parseInboxMessages(bs)
     }
   }
 
-  parseBSMessages(bs) {
+  parseInboxMessages(bs) {
     let messages = [];
 
-    if (bs.data && bs.data.json && bs.data.json.circle && bs.data.json.circle.nes) {
-      const nesBucket = bs.data.json.circle.nes;
-      nesBucket.forEach((msg) => {
-        messages.push({
-          aut: msg.gam.aut,
-          msg: msg.gam.sep.lin.msg,
-          aud: msg.gam.aud[0],
-          uid: msg.gam.uid,
-          wen: msg.gam.wen,
-        });
-      });
-    }
+    let pathTokens = bs.from.path.split("/");
 
-    if (bs.data && bs.data.json && bs.data.json.circle && bs.data.json.circle.gram) {
-      let gram = bs.data.json.circle.gram;
-      messages.push({
-        aut: gram.gam.aut,
-        msg: gram.gam.sep.lin.msg,
-        aud: gram.gam.aud[0],
-        uid: gram.gam.uid,
-        wen: gram.gam.wen
-      });
+    if (pathTokens[1] === "circle"
+     && pathTokens[2] === "inbox"
+     && pathTokens[3] === "grams") {
+
+      let {
+        data: {
+          json: {
+            circle
+          }
+        }
+      } = bs;
+
+      if (circle.nes) {
+        // Add inbox messages
+        messages = circle.nes.map(m => m.gam);
+      }
+
+      if (circle.gram) {
+        // Add single message
+        messages = [circle.gram.gam];
+      }
     }
 
     return messages;
   }
 
-  parseBSStations(bs) {
-    if (bs.data &&
-        bs.data.json &&
-        bs.data.json.circle &&
-        bs.data.json.circle.cos &&
-        bs.data.json.circle.cos.loc &&
-        bs.data.json.circle.cos.loc.src ) {
+  parseInboxConfigs(bs) {
+    let configs = {};
 
-      const stations = bs.data.json.circle.cos.loc.src;
-      return stations;
+    let pathTokens = bs.from.path.split("/");
+
+    if (pathTokens[1] === "circle"
+     && pathTokens[2] === "inbox"
+     && pathTokens[3] === "config") {
+
+      let {
+        data: {
+          json: {
+            circle
+          }
+        },
+        from: {
+          ship
+        }
+      } = bs;
+
+      // Add inbox config
+      let inbox = `~${ship}/inbox`;
+      configs[inbox] = circle.cos.loc;
+
+      // Add remote configs
+      Object.keys(circle.cos.rem).forEach((remConfig) => {
+        configs[remConfig] = circle.cos.rem[remConfig];
+      });
+
+      // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
     }
+
+    return configs;
   }
+
 }

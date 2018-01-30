@@ -1,5 +1,4 @@
 import { InboxPage } from './components/inbox';
-import { AppHeader } from './components/app-header';
 import { StreamPage, StreamPageHeader } from './components/stream';
 import { StreamEditPage } from './components/stream/edit';
 import { StreamCreatePage } from './components/stream/create';
@@ -28,8 +27,5 @@ export var ComponentMap = {
   },
   "InboxPage": {
     comp: InboxPage
-  },
-  "AppHeader": {
-    comp: AppHeader
-  },
+  }
 };

@@ -4,14 +4,9 @@ import { UrbitReducer } from './urbit-reducer';
 export class UrbitWarehouse {
   constructor(updateFunc) {
     this.store = {
-      messages: [],
-      stations: {},
-      stationMessages: {},
-      usership: "",
-      header: {
-        pageName: "",
-        errata: null
-      },
+      messages: {},
+      configs: {},
+      usership: ""
     };
 
     this.reducer = new UrbitReducer();
@@ -24,18 +19,9 @@ export class UrbitWarehouse {
       this.store.messages = messages;
     }
 
-    if (data.messages) {
-      const stationMessages = this.reducer.stationMessages(data.messages, this.store.stationMessages);
-      this.store.stationMessages = stationMessages;
-    }
-
-    if (data.stations) {
-      const stations = this.reducer.stations(data.stations, this.store.stations);
-      this.store.stations = stations;
-    }
-
-    if (data.header) {
-      this.store.header = _.merge({}, data.header, this.store.header);
+    if (data.configs) {
+      const configs = this.reducer.configs(data.configs, this.store.configs);
+      this.store.configs = configs;
     }
 
     if (data.usership) {

@@ -71,7 +71,7 @@ export class StreamPage extends Component {
   }
 
   render() {
-    let station = this.props.store.stationMessages[this.props.queryParams.station];
+    let station = this.props.store.messages[this.props.queryParams.station];
 
     if (station === undefined) {
       return (
@@ -121,7 +121,7 @@ export class StreamPage extends Component {
         return (
           <div className="row" key={msg.uid}>
             <div className="col-sm-2 text-mono">{autLabel}</div>
-            <div className="col-sm-8">{msg.msg}</div>
+            <div className="col-sm-8">{msg.sep.lin.msg}</div>
           </div>
         );
       }

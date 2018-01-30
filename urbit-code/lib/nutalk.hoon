@@ -20,7 +20,7 @@
           ==
           ;div.col-sm-1
             ;h3.underline.text-gray
-              ;a/"": Inbox
+              ;a/"/~~/pages/nutalk": Inbox
             ==
           ==
           ;div(data-component-header "");
