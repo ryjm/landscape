@@ -4,10 +4,23 @@ export class InboxPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {}
+    this.state = {
+      filter: ""
+    };
+
+    this.filterChange = this.filterChange.bind(this);
+  }
+
+  filterChange(evt) {
+    console.log('evt = ', evt);
+    this.setState({
+      filter: evt.target.value
+    });
   }
 
   render() {
+    console.log(this.state.filter);
+
     const inboxMessages = this.props.store.messages;
     const stationElems = Object.keys(inboxMessages).map((stationName) => {
       const messageElems = inboxMessages[stationName].messages.map((msg) => {
@@ -37,6 +50,7 @@ export class InboxPage extends Component {
 
     return (
       <div>
+        <input type="text" value={this.state.filter} onChange={this.filterChange} placeholder="Filter..." />
         <a href="/~~/pages/nutalk/stream/create">
           <button className="btn btn-secondary" type="button">Create Stream →</button>
         </a>
