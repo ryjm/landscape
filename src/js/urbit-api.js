@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+//import { MessagesPage } from './components/messages.js';
 
 export class UrbitApi {
   constructor(warehouse) {
@@ -30,13 +31,15 @@ export class UrbitApi {
     // this.sendBindRequest(`/circles/~${this.authTokens.ship}`, "PUT");
     // delete inbox message subscription? wut?
     // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
-
-    // sup
+    // subscribe to collections app
+    this.sendBindRequest("/foo", "PUT", "collections");
   }
 
-  sendBindRequest(path, method) {
+  // keep default bind to hall, since its bind procedure more complex for now AA
+  sendBindRequest(path, method, appl = "hall") {
+    console.log('binding to ...', appl);
     const params = {
-      appl: "hall",
+      appl,
       mark: "json",
       oryx: this.authTokens.oryx,
       ship: this.authTokens.ship,
@@ -44,7 +47,7 @@ export class UrbitApi {
       wire: path
     };
 
-    fetch(`/~/is/~${this.authTokens.user}/hall${path}.json?${method}`, {
+    fetch(`/~/is/~${this.authTokens.user}/${appl}${path}.json?${method}`, {
       credentials: "same-origin",
       method: "POST",
       body: JSON.stringify(params)
@@ -52,16 +55,25 @@ export class UrbitApi {
   }
 
   sendHallAction(data) {
+    this.sendAction("hall", "hall-action", data);
+  }
+
+  sendCollAction(data) {
+    this.sendAction("collections", "collections-action", data);
+  }
+
+  sendAction(appl, mark, data) {
+
     const params = {
-      appl: "hall",
-      mark: "hall-action",
+      appl,
+      mark,
       oryx: this.authTokens.oryx,
       ship: this.authTokens.ship,
       wire: "/",
       xyro: data
     };
 
-    fetch(`/~/to/hall/hall-action`, {
+    fetch(`/~/to/${appl}/${mark}`, {
       credentials: "same-origin",
       method: "POST",
       body: JSON.stringify(params)
