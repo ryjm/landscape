@@ -25,6 +25,7 @@ Clone this repo.
 
 To get it running, you'll need to install Gulp globally:
 > npm install -g gulp
+
 > npm install
 
 Update the `gulpfile.js` with the path to your pier. This will tell the build script where to place the bundled files.
