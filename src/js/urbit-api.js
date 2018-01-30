@@ -34,6 +34,7 @@ export class UrbitApi {
   constructor(warehouse) {
     this.seqn = 1;
     this.warehouse = warehouse;
+    this.transition = null;
 
     fetch('/~/auth.json',{credentials: "same-origin"}).then((res) => {
       return res.json();
@@ -86,7 +87,7 @@ export class UrbitApi {
     });
   }
 
-  sendHallAction(data) {
+  sendHallAction(data, transition) {
     const params = {
       appl: "hall",
       mark: "hall-action",
@@ -101,6 +102,10 @@ export class UrbitApi {
       method: "POST",
       body: JSON.stringify(params)
     });
+
+    if (transition) {
+      this.warehouse.setPendingTransition(transition);
+    }
   }
 
   pollServer() {
@@ -202,7 +207,6 @@ export class UrbitApi {
       }
 
       if (circle.config && circle.config.dif) {
-        console.log("dif = ", circle.config.dif);
         return configs;
       }
 

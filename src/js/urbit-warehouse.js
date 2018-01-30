@@ -12,6 +12,11 @@ export class UrbitWarehouse {
 
     this.reducer = new UrbitReducer();
     this.updateFunc = updateFunc;
+    this.pendingTransition = null;
+  }
+
+  setPendingTransition(transition) {
+    this.pendingTransition = transition;
   }
 
   storeData(data) {
