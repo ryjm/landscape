@@ -43,6 +43,7 @@ export class UrbitApi {
         usership: authTokens.ship
       });
       this.authTokens = authTokens;
+      console.log("usership = ", this.authTokens.ship);
       this.runPoll();
       this.bindThings();
     });
@@ -121,6 +122,9 @@ export class UrbitApi {
         const hallData = this.parseBS(data);
         this.warehouse.storeData(hallData);
 
+        // TODO:  Side effects get processed here, after warehouse data is updated. Would prefer to do this inside warehouse itself, but warehouse doesn't have access to the API. Need to think through this much more carefully, as this is the crux of asychronous state updates in the system.
+        this.processSideEffects();
+
         this.seqn++;
         this.runPoll();
       }
@@ -131,7 +135,8 @@ export class UrbitApi {
   parseBS(bs) {
     return {
       configs: this.parseInboxConfigs(bs),
-      messages: this.parseInboxMessages(bs)
+      messages: this.parseInboxMessages(bs),
+      ownedStations: this.parseOwnedStations(bs)
     }
   }
 
@@ -144,14 +149,7 @@ export class UrbitApi {
      && pathTokens[2] === "inbox"
      && pathTokens[3] === "grams") {
 
-      let {
-        data: {
-          json: {
-            circle
-          }
-        }
-      } = bs;
-
+      let circle = bs.data.json.circle;
       if (circle.nes) {
         // Add inbox messages
         messages = circle.nes.map(m => m.gam);
@@ -163,7 +161,26 @@ export class UrbitApi {
       }
     }
 
-    return messages;
+    return messages.map(m => {
+
+      // Remove ~ship/inbox from audiences if they exist
+      // TODO:  This is legacy from old web talk. In general we should perhaps
+      // drop chat messages addressed directly to inbox (?)
+      let i = m.aud.indexOf(`~${this.authTokens.ship}/inbox`);
+      if (i !== -1 && m.aud.length > 1) {
+        m.aud.splice(i, 1);
+      }
+
+      // flatten msg.sep.app into msg
+      // TODO:  Bake this into Hall api response if possible
+      if (m.sep.app) {
+        m.sep = m.sep.app.sep;
+        m.app = true;
+        m.aut = "rob";
+      }
+
+      return m;
+    });
   }
 
   parseInboxConfigs(bs) {
@@ -175,19 +192,23 @@ export class UrbitApi {
      && pathTokens[2] === "inbox"
      && pathTokens[3] === "config") {
 
-      let {
-        data: {
-          json: {
-            circle
-          }
-        },
-        from: {
-          ship
-        }
-      } = bs;
+      let circle = bs.data.json.circle;
+
+      if (circle.config && circle.config.dif) {
+
+        // TODO: can add newly created stations to inbox here instead of through /circles interface
+        configs[circle.config.cir] = circle.config.dif.full;
+        return configs;
+      }
+
+      if (circle.config && circle.config.dif) {
+        console.log("dif = ", circle.config.dif);
+        return configs;
+      }
 
       // Add inbox config
-      let inbox = `~${ship}/inbox`;
+      let inbox = `~${this.authTokens.ship}/inbox`;
+
       configs[inbox] = circle.cos.loc;
 
       // Add remote configs
@@ -201,4 +222,52 @@ export class UrbitApi {
     return configs;
   }
 
+  parseOwnedStations(bs) {
+    let pathTokens = bs.from.path.split("/");
+
+    if (pathTokens[1] === "circles"
+     && pathTokens[2] === `~${this.authTokens.ship}`) {
+
+      let ownedStations = bs.data.json.circles;
+
+      if (ownedStations.cir && ownedStations.add) {
+        this.sendHallAction({
+          source: {
+            nom: `inbox`,
+            sub: true,
+            srs: [`~${this.authTokens.ship}/${ownedStations.cir}`]
+          }
+        });
+      }
+    }
+
+    return [];
+  }
+
+  processSideEffects() {
+    // this.subscribeToOwnedStations();
+  }
+
+  subscribeToOwnedStations() {
+    let {ownedStations, configs} = this.warehouse.store;
+    let pendingStations = [];
+
+    console.log('ownedStations = ', ownedStations);
+
+    ownedStations.forEach(station => {
+      if (!configs[station]) {
+        pendingStations.push(`${this.authTokens.ship}/${station}`);
+      }
+    });
+
+    if (pendingStations.length > 0) {
+      this.sendHallAction({
+        source: {
+          nom: `~${this.authTokens.ship}/inbox`,
+          sub: true,
+          srs: [pendingStations]
+        }
+      });
+    }
+  }
 }

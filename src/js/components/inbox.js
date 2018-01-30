@@ -11,8 +11,10 @@ export class InboxPage extends Component {
     const inboxMessages = this.props.store.messages;
     const stationElems = Object.keys(inboxMessages).map((stationName) => {
       const messageElems = inboxMessages[stationName].messages.map((msg) => {
+        let appClass = msg.app ? " chat-msg-app" : "";
+
         return (
-          <li key={msg.uid} className="row">
+          <li key={msg.uid} className={`row ${appClass}`}>
             <div className="col-sm-2">
               {msg.aut}
             </div>

@@ -6,6 +6,7 @@ export class UrbitWarehouse {
     this.store = {
       messages: {},
       configs: {},
+      ownedStations: [],
       usership: ""
     };
 
@@ -15,17 +16,19 @@ export class UrbitWarehouse {
 
   storeData(data) {
     if (data.messages) {
-      const messages = this.reducer.messages(data.messages, this.store.messages);
-      this.store.messages = messages;
+      this.store.messages = this.reducer.messages(data.messages, this.store.messages);
     }
 
     if (data.configs) {
-      const configs = this.reducer.configs(data.configs, this.store.configs);
-      this.store.configs = configs;
+      this.store.configs = this.reducer.configs(data.configs, this.store.configs);
     }
 
     if (data.usership) {
       this.store.usership = data.usership;
+    }
+
+    if (data.ownedStations) {
+      this.store.ownedStations = data.ownedStations;
     }
 
     console.log('full store = ', this.store);
