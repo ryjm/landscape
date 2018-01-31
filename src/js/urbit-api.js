@@ -58,7 +58,7 @@ export class UrbitApi {
     this.sendBindRequest("/circle/inbox/config/0", "PUT");
 
     // inbox messages, remote presences
-    this.sendBindRequest("/circle/inbox/grams/group-r/0", "PUT");
+    this.sendBindRequest("/circle/inbox/grams/group-r/0/500", "PUT");
 
     // public membership
     this.sendBindRequest("/public", "PUT");
