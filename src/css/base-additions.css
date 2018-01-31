@@ -105,6 +105,11 @@ input, textarea {
   right: 12px;
 }
 
+button.disabled {
+  color: white;
+  cursor: inherit;
+}
+
 /***
   Utils
 ***/
