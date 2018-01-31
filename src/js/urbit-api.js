@@ -2,10 +2,40 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 //import { MessagesPage } from './components/messages.js';
 
+/**
+  Response format
+
+  {
+    data: {
+      json: {
+        circle: {   // *.loc for local, *.rem for remote
+          cos:      // config
+          pes:      // presence
+          nes:      // messages
+          gram:     // message (individual)
+        }
+        circles:    // circles you own
+        public:     // circles in your public membership list
+        client: {
+          gys:      // glyphs
+          nis:      // nicknames
+        }
+        peers:      // subscribers to your circles
+        status:     // rumor, presence -- TODO?
+      }
+    }
+    from: {
+      path:    // Subscription path that triggered response
+      ship:    // Subscription requestor
+    }
+  }
+**/
+
 export class UrbitApi {
   constructor(warehouse) {
     this.seqn = 1;
     this.warehouse = warehouse;
+    this.transition = null;
 
     fetch('/~/auth.json',{credentials: "same-origin"}).then((res) => {
       return res.json();
@@ -15,24 +45,32 @@ export class UrbitApi {
         usership: authTokens.ship
       });
       this.authTokens = authTokens;
+      console.log("usership = ", this.authTokens.ship);
       this.runPoll();
       this.bindThings();
     });
   }
 
   bindThings() {
-    // no idea
+    // parses client-specific info (ship nicknames, glyphs, etc)
     this.sendBindRequest("/client", "PUT");
-    // inbox config?
-    this.sendBindRequest("/circle/inbox/config-l/group-r/0", "PUT");
-    // inbox messages?
-    this.sendBindRequest("/circle/inbox/grams/0", "PUT");
-    // this.sendBindRequest("/public", "PUT");
-    // this.sendBindRequest(`/circles/~${this.authTokens.ship}`, "PUT");
-    // delete inbox message subscription? wut?
+    // inbox local + remote configs
+    this.sendBindRequest("/circle/inbox/config/0", "PUT");
+
+    // inbox messages, remote presences
+    this.sendBindRequest("/circle/inbox/grams/group-r/0", "PUT");
+
+    // public membership
+    this.sendBindRequest("/public", "PUT");
+
+    // owner's circles
+    this.sendBindRequest(`/circles/~${this.authTokens.ship}`, "PUT");
+
+    // bind to collections
+    this.sendBindRequest("/", "PUT", "collections");
+
+    // delete subscriptions when you're done with them, like...
     // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
-    // subscribe to collections app
-    this.sendBindRequest("/foo", "PUT", "collections");
   }
 
   // keep default bind to hall, since its bind procedure more complex for now AA
@@ -54,16 +92,15 @@ export class UrbitApi {
     });
   }
 
-  sendHallAction(data) {
-    this.sendAction("hall", "hall-action", data);
+  sendHallAction(data, transition) {
+    this.sendAction("hall", "hall-action", data, transition);
   }
 
   sendCollAction(data) {
     this.sendAction("collections", "collections-action", data);
   }
 
-  sendAction(appl, mark, data) {
-
+  sendAction(appl, mark, data, transition) {
     const params = {
       appl,
       mark,
@@ -78,6 +115,10 @@ export class UrbitApi {
       method: "POST",
       body: JSON.stringify(params)
     });
+
+    if (transition) {
+      this.warehouse.setPendingTransition(transition);
+    }
   }
 
   pollServer() {
@@ -99,6 +140,9 @@ export class UrbitApi {
         const hallData = this.parseBS(data);
         this.warehouse.storeData(hallData);
 
+        // TODO:  Side effects get processed here, after warehouse data is updated. Would prefer to do this inside warehouse itself, but warehouse doesn't have access to the API. Need to think through this much more carefully, as this is the crux of asychronous state updates in the system.
+        this.processSideEffects();
+
         this.seqn++;
         this.runPoll();
       }
@@ -108,51 +152,139 @@ export class UrbitApi {
   // BS stands for "bulletin service"
   parseBS(bs) {
     return {
-      stations: this.parseBSStations(bs),
-      messages: this.parseBSMessages(bs)
+      configs: this.parseInboxConfigs(bs),
+      messages: this.parseInboxMessages(bs),
+      ownedStations: this.parseOwnedStations(bs)
     }
   }
 
-  parseBSMessages(bs) {
+  parseInboxMessages(bs) {
     let messages = [];
 
-    if (bs.data && bs.data.json && bs.data.json.circle && bs.data.json.circle.nes) {
-      const nesBucket = bs.data.json.circle.nes;
-      nesBucket.forEach((msg) => {
-        messages.push({
-          aut: msg.gam.aut,
-          msg: msg.gam.sep.lin.msg,
-          aud: msg.gam.aud[0],
-          uid: msg.gam.uid,
-          wen: msg.gam.wen,
-        });
-      });
+    let pathTokens = bs.from.path.split("/");
+
+    if (pathTokens[1] === "circle"
+     && pathTokens[2] === "inbox"
+     && pathTokens[3] === "grams") {
+
+      let circle = bs.data.json.circle;
+      if (circle.nes) {
+        // Add inbox messages
+        messages = circle.nes.map(m => m.gam);
+      }
+
+      if (circle.gram) {
+        // Add single message
+        messages = [circle.gram.gam];
+      }
     }
 
-    if (bs.data && bs.data.json && bs.data.json.circle && bs.data.json.circle.gram) {
-      let gram = bs.data.json.circle.gram;
-      messages.push({
-        aut: gram.gam.aut,
-        msg: gram.gam.sep.lin.msg,
-        aud: gram.gam.aud[0],
-        uid: gram.gam.uid,
-        wen: gram.gam.wen
-      });
-    }
+    return messages.map(m => {
 
-    return messages;
+      // Remove ~ship/inbox from audiences if they exist
+      // TODO:  This is legacy from old web talk. In general we should perhaps
+      // drop chat messages addressed directly to inbox (?)
+      let i = m.aud.indexOf(`~${this.authTokens.ship}/inbox`);
+      if (i !== -1 && m.aud.length > 1) {
+        m.aud.splice(i, 1);
+      }
+
+      // flatten msg.sep.app into msg
+      // TODO:  Bake this into Hall api response if possible
+      if (m.sep.app) {
+        m.sep = m.sep.app.sep;
+        m.app = true;
+        m.aut = "rob";
+      }
+
+      return m;
+    });
   }
 
-  parseBSStations(bs) {
-    if (bs.data &&
-        bs.data.json &&
-        bs.data.json.circle &&
-        bs.data.json.circle.cos &&
-        bs.data.json.circle.cos.loc &&
-        bs.data.json.circle.cos.loc.src ) {
+  parseInboxConfigs(bs) {
+    let configs = {};
 
-      const stations = bs.data.json.circle.cos.loc.src;
-      return stations;
+    let pathTokens = bs.from.path.split("/");
+
+    if (pathTokens[1] === "circle"
+     && pathTokens[2] === "inbox"
+     && pathTokens[3] === "config") {
+
+      let circle = bs.data.json.circle;
+
+      if (circle.config && circle.config.dif) {
+
+        // TODO: can add newly created stations to inbox here instead of through /circles interface
+        configs[circle.config.cir] = circle.config.dif.full;
+        return configs;
+      }
+
+      if (circle.config && circle.config.dif) {
+        return configs;
+      }
+
+      // Add inbox config
+      let inbox = `~${this.authTokens.ship}/inbox`;
+
+      configs[inbox] = circle.cos.loc;
+
+      // Add remote configs
+      Object.keys(circle.cos.rem).forEach((remConfig) => {
+        configs[remConfig] = circle.cos.rem[remConfig];
+      });
+
+      // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
+    }
+
+    return configs;
+  }
+
+  parseOwnedStations(bs) {
+    let pathTokens = bs.from.path.split("/");
+
+    if (pathTokens[1] === "circles"
+     && pathTokens[2] === `~${this.authTokens.ship}`) {
+
+      let ownedStations = bs.data.json.circles;
+
+      if (ownedStations.cir && ownedStations.add) {
+        this.sendHallAction({
+          source: {
+            nom: `inbox`,
+            sub: true,
+            srs: [`~${this.authTokens.ship}/${ownedStations.cir}`]
+          }
+        });
+      }
+    }
+
+    return [];
+  }
+
+  processSideEffects() {
+    // this.subscribeToOwnedStations();
+  }
+
+  subscribeToOwnedStations() {
+    let {ownedStations, configs} = this.warehouse.store;
+    let pendingStations = [];
+
+    console.log('ownedStations = ', ownedStations);
+
+    ownedStations.forEach(station => {
+      if (!configs[station]) {
+        pendingStations.push(`${this.authTokens.ship}/${station}`);
+      }
+    });
+
+    if (pendingStations.length > 0) {
+      this.sendHallAction({
+        source: {
+          nom: `~${this.authTokens.ship}/inbox`,
+          sub: true,
+          srs: [pendingStations]
+        }
+      });
     }
   }
 }

@@ -14,12 +14,16 @@ export class StreamCreatePage extends Component {
   }
 
   createStream() {
+    let usership = this.props.store.usership;
+
     this.props.api.sendHallAction({
       create: {
         nom: this.state.streamName,
         des: this.state.streamType,
         sec: this.state.streamSecurity
       }
+    }, {
+      target: `/~~/pages/nutalk/stream?station=~${usership}/${this.state.streamName}`
     });
   }
 

@@ -7,34 +7,19 @@ export class InboxPage extends Component {
     this.state = {}
   }
 
-  buildInbox() {
-    var messages = this.props.store.messages;
-    var stations = this.props.store.stations;
-
-    let fullStations = stations;
-
-    for (var station in fullStations) {
-      fullStations[station].messages = [];
-    }
-
-    messages.forEach((msg) => {
-      fullStations[msg.aud].messages.push(msg);
-    })
-
-    return fullStations;
-  }
-
   render() {
-    const inbox = this.buildInbox();
-    const stationElems = Object.keys(inbox).map((stationName) => {
-      const messageElems = inbox[stationName].messages.map((msg) => {
+    const inboxMessages = this.props.store.messages;
+    const stationElems = Object.keys(inboxMessages).map((stationName) => {
+      const messageElems = inboxMessages[stationName].messages.map((msg) => {
+        let appClass = msg.app ? " chat-msg-app" : "";
+
         return (
-          <li key={msg.uid} className="row">
+          <li key={msg.uid} className={`row ${appClass}`}>
             <div className="col-sm-2">
               {msg.aut}
             </div>
             <div className="col-sm-10">
-              {msg.msg}
+              {msg.sep.lin.msg}
             </div>
           </li>
         );

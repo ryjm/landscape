@@ -71,20 +71,8 @@ export class StreamPage extends Component {
   }
 
   render() {
-    let station = this.props.store.stationMessages[this.props.queryParams.station];
+    let station = this.props.store.messages[this.props.queryParams.station] || {messages: []};
 
-    if (station === undefined) {
-      return (
-        <div className="container">
-          <h3 className="mt-40">Sorry, no messages yet.</h3>
-        </div>
-      )
-    } else {
-      return this.renderPage(station);
-    }
-  }
-
-  renderPage(station) {
     let chatRows = [];
     let prevDay = 0;
     let thing = moment();
@@ -112,6 +100,7 @@ export class StreamPage extends Component {
 
     let chatMessages = chatRows.map((msg) => {
       let autLabel = msg.printship ? `~${msg.aut}` : null;
+      let appClass = msg.app ? " chat-msg-app" : "";
 
       if (msg.date) {
         return (
@@ -119,9 +108,9 @@ export class StreamPage extends Component {
         )
       } else {
         return (
-          <div className="row" key={msg.uid}>
+          <div key={msg.uid} className={`row ${appClass}`}>
             <div className="col-sm-2 text-mono">{autLabel}</div>
-            <div className="col-sm-8">{msg.msg}</div>
+            <div className="col-sm-8">{msg.sep.lin.msg}</div>
           </div>
         );
       }

@@ -16,6 +16,7 @@ export class UrbitRouter {
     // TODO: This... might be a circular dependency? Seems to work though.
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
     this.api = new UrbitApi(this.warehouse);
+    this.pendingTransitions = [];
 
     this.instantiateReactComponents();
     this.registerAnchorListeners();
@@ -23,6 +24,11 @@ export class UrbitRouter {
   }
 
   instantiateReactComponents() {
+    if (this.warehouse.pendingTransition) {
+      this.transitionTo(this.warehouse.pendingTransition.target);
+      this.warehouse.pendingTransition = null;
+    }
+
     // clear header
     let headerElem = document.querySelectorAll('[data-component-header]')[0];
     ReactDOM.render(<div />, headerElem);
@@ -52,7 +58,7 @@ export class UrbitRouter {
     });
   }
 
-  transitionTo(targetUrl, createHistory) {
+  transitionTo(targetUrl, noHistory) {
 
     // trim queryparams
     let q = targetUrl.indexOf('?');
@@ -64,7 +70,7 @@ export class UrbitRouter {
     fetch(baseUrl + ".htm", {credentials: "same-origin"}).then((res) => {
       return res.text();
     }).then((resText) => {
-      if (createHistory) {
+      if (!noHistory) {
         window.history.pushState({}, null, targetUrl);
       }
       document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
@@ -87,7 +93,7 @@ export class UrbitRouter {
         if (href.indexOf('.') === -1) {
           e.preventDefault();
           let targetUrl = this.pageRoot + href;
-          this.transitionTo(targetUrl, true);
+          this.transitionTo(targetUrl);
         }
       }
     });
@@ -95,7 +101,7 @@ export class UrbitRouter {
 
   registerHistoryListeners() {
     window.onpopstate = (state) => {
-      this.transitionTo(window.location.href, false);
+      this.transitionTo(window.location.href, true);
     }
   }
 }
