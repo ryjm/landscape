@@ -16,7 +16,8 @@ export class CollectionCreatePage extends Component {
       visibility: false,
       comments: true,
       foreignPost: true,
-      onProfile: true
+      onProfile: true,
+      collectionShips: ''
     };
   }
 
@@ -30,7 +31,7 @@ export class CollectionCreatePage extends Component {
         // ses needs to be an ace separated list of non-sig ships
         // *GOOD* 'zod polryt-tarnyr binzod'
         // *BAD* '~zod ~polryt-tarnyr ~binzod'
-        ses: "polryt-tarnyr"
+        ses: this.state.collectionShips.replace(/~|,/g, '')
       }
     }, {
       target: '/~~/pages/nutalk'
@@ -123,7 +124,16 @@ export class CollectionCreatePage extends Component {
             </button>
           </div>
         </div>
-        <button type="submit" className={this.state.collectionName.length > 0 ? "btn btn-primary" : "btn disabled"} onClick={this.createCollection}>Create →</button>
+        <div className="input-group">
+          <label htmlFor="collection-ships">{this.state.visibility ? 'Blacklist' : 'Whitelist'}</label>
+          <textarea
+            name="collectionShips"
+            placeholder="poldec-tonteg sorreg-namtyv"
+            value={this.state.collectionShips}
+            onChange={this.valueChange}
+            />
+        </div>
+        <button type="submit" className={this.state.collectionName.length > 0 ? "btn btn-primary" : "btn disabled"} onClick={this.canSubmit ? this.createCollection : null}> Create →</button>
       </div>
     )
   }
