@@ -34,7 +34,7 @@ export class CollectionCreatePage extends Component {
         ses: this.state.collectionShips.replace(/~|,/g, '')
       }
     }, {
-      target: '/~~/pages/nutalk'
+      target: '/~~/pages/nutalk/collections'
     });
 ;
   }
