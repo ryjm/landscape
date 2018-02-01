@@ -9,6 +9,7 @@ export class CollectionCreatePage extends Component {
     this.toggleClasses = this.toggleClasses.bind(this);
     this.valueChange = this.valueChange.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.canSubmit = this.canSubmit.bind(this);
     // Keep our state legible
     this.state = {
       collectionName: '',
@@ -37,7 +38,11 @@ export class CollectionCreatePage extends Component {
 ;
   }
 
-  //TODO These functions can almost certainly be combined
+  canSubmit() {
+    this.state.collectionName.length > 0
+  }
+
+  //TODO These functions should be combined
 
   valueChange(event) {
     const target = event.target;
