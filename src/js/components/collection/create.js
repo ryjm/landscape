@@ -9,7 +9,6 @@ export class CollectionCreatePage extends Component {
     this.createCollection = this.createCollection.bind(this);
     this.toggleClasses = this.toggleClasses.bind(this);
     this.valueChange = this.valueChange.bind(this);
-    this.toggle = this.toggle.bind(this);
     this.canSubmit = this.canSubmit.bind(this);
     // Keep our state legible
     this.state = {
@@ -42,26 +41,25 @@ export class CollectionCreatePage extends Component {
 ;
   }
 
+  // make sure that the white/blacklist is composed of ships
+  valSes(ses) {
+    const sesArray = ses.replace(/,/g, '').split(' ');
+    const offenders = sesArray.filter(s => !urbitOb.isShip(s));
+    // might want to return offending ships?
+    return offenders.length == 0;
+  }
+
   canSubmit() {
     this.state.collectionName.length > 0
   }
 
-  //TODO These functions should be combined
-
   valueChange(event) {
     const target = event.target;
     const name = target.name;
-
-    this.setState({
-      [name]: target.value
-    });
-  }
-
-  toggle(event) {
-    const target = event.target;
-    const name = target.name;
-    // must be bool
-    const value = (target.value == 'true');
+    const value = typeof this.state[name] == 'boolean' ? (target.value == 'true') : target.value;
+    if (name == 'collectionShips') {
+      this.state.sesValidated = this.valSes(value);
+    }
 
     this.setState({
       [name]: value
@@ -90,28 +88,28 @@ export class CollectionCreatePage extends Component {
         <div className="row">
           <div className="input-group col-md-3">
             <label htmlFor="visibility">Public</label>
-            <button name="visibility" value="true" className={this.state.visibility ? "btn btn-secondary" : "btn"} onClick={this.toggle}>
+            <button name="visibility" value="true" className={this.state.visibility ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
               Yes
             </button>
-            <button name="visibility" value="false" className={this.state.visibility ? "btn" : "btn-warning"} onClick={this.toggle}>
+            <button name="visibility" value="false" className={this.state.visibility ? "btn" : "btn-warning"} onClick={this.valueChange}>
               No
             </button>
           </div>
           <div className="input-group col-md-3">
             <label htmlFor="comments">Comments</label>
-            <button name="comments" value="true" className={this.state.comments ? "btn btn-secondary" : "btn"} onClick={this.toggle}>
+            <button name="comments" value="true" className={this.state.comments ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
               Yes
             </button>
-            <button name="comments" value="false" className={this.state.comments ? "btn" : "btn-warning"} onClick={this.toggle}>
+            <button name="comments" value="false" className={this.state.comments ? "btn" : "btn-warning"} onClick={this.valueChange}>
               No
             </button>
           </div>
           <div className="input-group col-md-3">
             <label htmlFor="foreignPost">Others can post</label>
-            <button name="foreignPost" value="true" className={this.state.foreignPost ? "btn btn-secondary" : "btn"} onClick={this.toggle}>
+            <button name="foreignPost" value="true" className={this.state.foreignPost ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
               Yes
             </button>
-            <button name="foreignPost" value="false" className={this.state.foreignPost ? "btn" : "btn-warning"} onClick={this.toggle}>
+            <button name="foreignPost" value="false" className={this.state.foreignPost ? "btn" : "btn-warning"} onClick={this.valueChange}>
               No
             </button>
           </div>
@@ -119,10 +117,10 @@ export class CollectionCreatePage extends Component {
         <div className="row">
           <div className="input-group col-md-3">
             <label htmlFor="onProfile">On profile</label>
-            <button name="onProfile" value="true" className={this.state.onProfile ? "btn btn-secondary" : "btn"} onClick={this.toggle}>
+            <button name="onProfile" value="true" className={this.state.onProfile ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
               Yes
             </button>
-            <button name="onProfile" value="false" className={this.state.onProfile ? "btn" : "btn-warning"} onClick={this.toggle}>
+            <button name="onProfile" value="false" className={this.state.onProfile ? "btn" : "btn-warning"} onClick={this.valueChange}>
               No
             </button>
           </div>
