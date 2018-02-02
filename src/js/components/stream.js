@@ -19,6 +19,8 @@ export class StreamPage extends Component {
   constructor(props) {
     super(props);
 
+    this.presence = false;
+
     this.state = {
       message: "",
       messageSending: false
@@ -98,15 +100,76 @@ export class StreamPage extends Component {
     return chatRows;
   }
 
-  assembleMembers() {
-    return [];
+  assembleMembers(station) {
+    console.log('configs = ', this.props.store.configs[station])
+    let cos = this.props.store.configs[station] || {pes: {}, con: {sis: []}};
+    let statusCir = "";
+
+    let presMems = Object.keys(cos.pes).map(ship => {
+      switch (cos.pes[ship].pec) {
+        case "idle":
+          statusCir = "cir-green"
+          break;
+        case "talk":
+          statusCir = "cir-red"
+          break;
+        case "gone":
+          statusCir = "cir-black"
+          break;
+      }
+
+      return (
+        <div key={ship}>
+          <span className={`cir-status mr-4 ${statusCir}`}></span>
+          <span className="chat-member-name">{ship}</span>
+        </div>
+      )
+    });
+
+    let invMems = cos.con.sis.map(inv => {
+      // If user is in whitelist but not in presence list
+      if (Object.keys(cos.pes).indexOf(`~${inv}`) === -1) {
+        return (
+          <div key={`${inv}`}>
+            <span className={`cir-status mr-4 cir-grey`}></span>
+            <span className="chat-member-name">{`~${inv}`}</span>
+          </div>
+        )
+      }
+    });
+
+    return (
+      <div>
+        {presMems}
+        <h4 className="mt-8">Invited:</h4>
+        {invMems}
+      </div>
+    )
+
+
+  }
+
+  setPresence(station) {
+    if (!this.presence) {
+      this.presence = true;
+
+      this.props.api.hall({
+        notify: {
+          aud: [station],
+          pes: "idle"
+        }
+      });
+    }
   }
 
   render() {
-    let station = this.props.store.messages[this.props.queryParams.station] || {messages: []};
+    let stationName = this.props.queryParams.station;
+    let station = this.props.store.messages[stationName] || {messages: []};
+
+    this.setPresence(stationName);
 
     let chatRows = this.assembleChatRows(station.messages);
-    let chatMembers = this.assembleMembers();
+    let chatMembers = this.assembleMembers(stationName);
 
     let chatMessages = chatRows.map((msg) => {
       let autLabel = msg.printship ? `~${msg.aut}` : null;
@@ -157,9 +220,7 @@ export class StreamPage extends Component {
           </li>
         </ul>
         <div className="chat-members">
-          <ul>
-            {chatMembers}
-          </ul>
+          {chatMembers}
         </div>
       </div>
     )

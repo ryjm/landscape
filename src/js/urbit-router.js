@@ -12,11 +12,11 @@ export class UrbitRouter {
 
     this.pageRoot = "";
     this.domRoot = "#root";
+    this.pendingTransitions = [];
 
     // TODO: This... might be a circular dependency? Seems to work though.
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
     this.api = new UrbitApi(this.warehouse);
-    this.pendingTransitions = [];
 
     this.instantiateReactComponents();
     this.registerAnchorListeners();
@@ -24,9 +24,15 @@ export class UrbitRouter {
   }
 
   instantiateReactComponents() {
+    // if userhip is null, auth tokens haven't been loaded yet, so api isn't unavablable. so we wait.
+    if (this.warehouse.store.usership === "") {
+      return;
+    }
+
     if (this.warehouse.pendingTransition) {
       this.transitionTo(this.warehouse.pendingTransition.target);
       this.warehouse.pendingTransition = null;
+      return;
     }
 
     // clear header

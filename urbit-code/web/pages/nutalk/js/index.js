@@ -33014,6 +33014,7 @@ function (_Component2) {
 
     _classCallCheck(this, StreamPage);
     _this = _possibleConstructorReturn(this, (StreamPage.__proto__ || Object.getPrototypeOf(StreamPage)).call(this, props));
+    _this.presence = false;
     _this.state = {
       message: "",
       messageSending: false
@@ -33099,17 +33100,77 @@ function (_Component2) {
     }
   }, {
     key: "assembleMembers",
-    value: function assembleMembers() {
-      return [];
+    value: function assembleMembers(station) {
+      console.log('configs = ', this.props.store.configs[station]);
+      var cos = this.props.store.configs[station] || {
+        pes: {},
+        con: {
+          sis: []
+        }
+      };
+      var statusCir = "";
+      var presMems = Object.keys(cos.pes).map(function (ship) {
+        switch (cos.pes[ship].pec) {
+          case "idle":
+            statusCir = "cir-green";
+            break;
+
+          case "talk":
+            statusCir = "cir-red";
+            break;
+
+          case "gone":
+            statusCir = "cir-black";
+            break;
+        }
+
+        return react.createElement("div", {
+          key: ship
+        }, react.createElement("span", {
+          className: "cir-status mr-4 ".concat(statusCir)
+        }), react.createElement("span", {
+          className: "chat-member-name"
+        }, ship));
+      });
+      var invMems = cos.con.sis.map(function (inv) {
+        // If user is in whitelist but not in presence list
+        if (Object.keys(cos.pes).indexOf("~".concat(inv)) === -1) {
+          return react.createElement("div", {
+            key: "".concat(inv)
+          }, react.createElement("span", {
+            className: "cir-status mr-4 cir-grey"
+          }), react.createElement("span", {
+            className: "chat-member-name"
+          }, "~".concat(inv)));
+        }
+      });
+      return react.createElement("div", null, presMems, react.createElement("h4", {
+        className: "mt-8"
+      }, "Invited:"), invMems);
+    }
+  }, {
+    key: "setPresence",
+    value: function setPresence(station) {
+      if (!this.presence) {
+        this.presence = true;
+        this.props.api.hall({
+          notify: {
+            aud: [station],
+            pes: "idle"
+          }
+        });
+      }
     }
   }, {
     key: "render",
     value: function render() {
-      var station = this.props.store.messages[this.props.queryParams.station] || {
+      var stationName = this.props.queryParams.station;
+      var station = this.props.store.messages[stationName] || {
         messages: []
       };
+      this.setPresence(stationName);
       var chatRows = this.assembleChatRows(station.messages);
-      var chatMembers = this.assembleMembers();
+      var chatMembers = this.assembleMembers(stationName);
       var chatMessages = chatRows.map(function (msg) {
         var autLabel = msg.printship ? "~".concat(msg.aut) : null;
         var appClass = msg.app ? " chat-msg-app" : "";
@@ -33167,7 +33228,7 @@ function (_Component2) {
         href: "javascript:void(0)"
       }, "invite +"))), react.createElement("div", {
         className: "chat-members"
-      }, react.createElement("ul", null, chatMembers)));
+      }, chatMembers));
     }
   }]);
   return StreamPage;
@@ -33554,10 +33615,12 @@ function () {
     }).then(function (res) {
       return res.json();
     }).then(function (authTokens) {
-      warehouse.storeData({
+      _this.authTokens = authTokens;
+
+      _this.warehouse.storeData({
         usership: authTokens.ship
       });
-      _this.authTokens = authTokens;
+
       console.log("usership = ", _this.authTokens.ship);
 
       _this.runPoll();
@@ -33570,31 +33633,23 @@ function () {
     key: "bindAll",
     value: function bindAll() {
       // parses client-specific info (ship nicknames, glyphs, etc)
-      this.bindHall("/client", "PUT"); // inbox local + remote configs
+      this.bind("/client", "PUT"); // inbox local + remote configs
 
-      this.bindHall("/circle/inbox/config/0", "PUT"); // inbox messages, remote presences
+      this.bind("/circle/inbox/config/group-r/0", "PUT"); // inbox messages, remote presences
 
-      this.bindHall("/circle/inbox/grams/group-r/0/500", "PUT"); // public membership
+      this.bind("/circle/inbox/grams/0/500", "PUT"); // public membership
 
-      this.bindHall("/public", "PUT"); // owner's circles
+      this.bind("/public", "PUT"); // owner's circles
 
-      this.bindHall("/circles/~".concat(this.authTokens.ship), "PUT"); // bind to collections
+      this.bind("/circles/~".concat(this.authTokens.ship), "PUT"); // bind to collections
 
-      this.bindHall("/", "PUT", "collections"); // delete subscriptions when you're done with them, like...
-      // this.bindHall("/circle/inbox/grams/0", "DELETE");
-
-      this.hall({
-        permit: {
-          nom: "eloel",
-          sis: ["polzod"],
-          inv: true
-        }
-      });
+      this.bind("/", "PUT", "collections"); // delete subscriptions when you're done with them, like...
+      // this.bind("/circle/inbox/grams/0", "DELETE");
     } // keep default bind to hall, since its bind procedure more complex for now AA
 
   }, {
-    key: "bindHall",
-    value: function bindHall(path, method) {
+    key: "bind",
+    value: function bind(path, method) {
       var appl = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "hall";
       console.log('binding to ...', appl);
       var params = {
@@ -33762,6 +33817,15 @@ function () {
           console.log('circle config.cos.rem', circle.cos.rem);
           Object.keys(circle.cos.rem).forEach(function (remConfig) {
             configs[remConfig] = circle.cos.rem[remConfig];
+          });
+        }
+
+        if (circle.pes && circle.pes.rem) {
+          // Add remote configs
+          // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
+          console.log('circle config.pes.rem', circle.pes.rem);
+          Object.keys(circle.pes.rem).forEach(function (pes) {
+            configs[pes].pes = circle.pes.rem[pes];
           });
         }
 
@@ -51045,11 +51109,11 @@ function () {
     // TODO: Fix this later to not suck.
     // this.pageRoot = "/~~/pages/nutalk/";
     this.pageRoot = "";
-    this.domRoot = "#root"; // TODO: This... might be a circular dependency? Seems to work though.
+    this.domRoot = "#root";
+    this.pendingTransitions = []; // TODO: This... might be a circular dependency? Seems to work though.
 
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
     this.api = new UrbitApi(this.warehouse);
-    this.pendingTransitions = [];
     this.instantiateReactComponents();
     this.registerAnchorListeners();
     this.registerHistoryListeners();
@@ -51060,9 +51124,15 @@ function () {
     value: function instantiateReactComponents() {
       var _this = this;
 
+      // if userhip is null, auth tokens haven't been loaded yet, so api isn't unavablable. so we wait.
+      if (this.warehouse.store.usership === "") {
+        return;
+      }
+
       if (this.warehouse.pendingTransition) {
         this.transitionTo(this.warehouse.pendingTransition.target);
         this.warehouse.pendingTransition = null;
+        return;
       } // clear header
 
 

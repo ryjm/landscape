@@ -41,10 +41,10 @@ export class UrbitApi {
       return res.json();
     })
     .then((authTokens) => {
-      warehouse.storeData({
+      this.authTokens = authTokens;
+      this.warehouse.storeData({
         usership: authTokens.ship
       });
-      this.authTokens = authTokens;
       console.log("usership = ", this.authTokens.ship);
       this.runPoll();
       this.bindAll();
@@ -53,37 +53,29 @@ export class UrbitApi {
 
   bindAll() {
     // parses client-specific info (ship nicknames, glyphs, etc)
-    this.bindHall("/client", "PUT");
+    this.bind("/client", "PUT");
 
     // inbox local + remote configs
-    this.bindHall("/circle/inbox/config/0", "PUT");
+    this.bind("/circle/inbox/config/group-r/0", "PUT");
 
     // inbox messages, remote presences
-    this.bindHall("/circle/inbox/grams/group-r/0/500", "PUT");
+    this.bind("/circle/inbox/grams/0/500", "PUT");
 
     // public membership
-    this.bindHall("/public", "PUT");
+    this.bind("/public", "PUT");
 
     // owner's circles
-    this.bindHall(`/circles/~${this.authTokens.ship}`, "PUT");
+    this.bind(`/circles/~${this.authTokens.ship}`, "PUT");
 
     // bind to collections
-    this.bindHall("/", "PUT", "collections");
+    this.bind("/", "PUT", "collections");
 
     // delete subscriptions when you're done with them, like...
-    // this.bindHall("/circle/inbox/grams/0", "DELETE");
-
-    this.hall({
-      permit: {
-        nom: "eloel",
-        sis: ["polzod"],
-        inv: true
-      }
-    });
+    // this.bind("/circle/inbox/grams/0", "DELETE");
   }
 
   // keep default bind to hall, since its bind procedure more complex for now AA
-  bindHall(path, method, appl = "hall") {
+  bind(path, method, appl = "hall") {
     console.log('binding to ...', appl);
     const params = {
       appl,
@@ -243,6 +235,15 @@ export class UrbitApi {
         console.log('circle config.cos.rem', circle.cos.rem);
         Object.keys(circle.cos.rem).forEach((remConfig) => {
           configs[remConfig] = circle.cos.rem[remConfig];
+        });
+      }
+
+      if (circle.pes && circle.pes.rem) {
+        // Add remote configs
+        // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
+        console.log('circle config.pes.rem', circle.pes.rem);
+        Object.keys(circle.pes.rem).forEach((pes) => {
+          configs[pes].pes = circle.pes.rem[pes];
         });
       }
 

@@ -85,6 +85,32 @@
 
 .chat-members {
   position: absolute;
-  right: 5rem;
-  top: 22rem;
+  right: 24rem;
+  top: 48rem;
+}
+
+.cir-status {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
+
+  display: inline-block;
+  position: relative;
+  bottom: 1px;
+}
+
+.cir-green {
+  background-color: #8EEE9C;
+}
+
+.cir-grey {
+  background-color: #B0B0B0;
+}
+
+.cir-black {
+  background-color: #B0B0B0;
+}
+
+.cir-red {
+  background-color: #FF4444;
 }
