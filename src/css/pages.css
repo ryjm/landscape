@@ -82,3 +82,9 @@
 .chat-msg-app, .chat-msg-app * {
   color: #9B9B9B;
 }
+
+.chat-members {
+  position: absolute;
+  right: 5rem;
+  top: 22rem;
+}

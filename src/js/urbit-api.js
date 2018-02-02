@@ -68,6 +68,14 @@ export class UrbitApi {
 
     // delete subscriptions when you're done with them, like...
     // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
+
+    this.sendHallAction({
+      permit: {
+        nom: "~zod/aefaw",
+        sis: ["~wicwep-panfes-lopryd-tarwyx--timlex-doprev-risren-lorrux"],
+        inv: true
+      }
+    });
   }
 
   sendBindRequest(path, method) {
@@ -199,28 +207,40 @@ export class UrbitApi {
 
       let circle = bs.data.json.circle;
 
-      if (circle.config && circle.config.dif) {
-
-        // TODO: can add newly created stations to inbox here instead of through /circles interface
+      if (circle.config && circle.config.dif && circle.config.dif.full) {
+        console.log('circle circle.config.dif.full', circle.config.cir);
         configs[circle.config.cir] = circle.config.dif.full;
-        return configs;
       }
 
-      if (circle.config && circle.config.dif) {
-        return configs;
+      if (circle.cos && circle.cos.loc) {
+        // Add inbox config
+        console.log('circle config.cos.loc', circle.cos.loc);
+        let inbox = `~${this.authTokens.ship}/inbox`;
+        configs[inbox] = circle.cos.loc;
       }
 
-      // Add inbox config
-      let inbox = `~${this.authTokens.ship}/inbox`;
+      if (circle.cos && circle.cos.rem) {
+        // Add remote configs
+        // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
+        console.log('circle config.cos.rem', circle.cos.rem);
+        Object.keys(circle.cos.rem).forEach((remConfig) => {
+          configs[remConfig] = circle.cos.rem[remConfig];
+        });
+      }
 
-      configs[inbox] = circle.cos.loc;
-
-      // Add remote configs
-      Object.keys(circle.cos.rem).forEach((remConfig) => {
-        configs[remConfig] = circle.cos.rem[remConfig];
-      });
-
-      // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
+      Object.keys(configs).forEach(cos => {
+        this.warehouse.store.pendingInvites.forEach(inv => {
+          if (cos.indexOf(inv.nom) !== -1) {
+            this.sendHallAction({
+              permit: {
+                nom: inv.nom,
+                sis: inv.aud,
+                inv: true
+              }
+            });
+          }
+        });
+      })
     }
 
     return configs;

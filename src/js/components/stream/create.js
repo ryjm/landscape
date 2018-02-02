@@ -6,8 +6,15 @@ export class StreamCreatePage extends Component {
     super(props);
 
     this.state = {
-      streamDiscoverable: "no",
-      loading: false
+      loading: false,
+      stream: {
+        dis: "no",
+        nom: "",
+        des: "",
+        sec: "",
+        aud: [],
+        audRaw: []
+      }
     };
 
     this.createStream = this.createStream.bind(this);
@@ -19,26 +26,42 @@ export class StreamCreatePage extends Component {
 
     this.props.api.sendHallAction({
       create: {
-        nom: this.state.streamName,
-        des: this.state.streamType,
-        sec: this.state.streamSecurity
+        nom: this.state.stream.nom,
+        des: this.state.stream.des,
+        sec: this.state.stream.sec
       }
     }, {
-      target: `/~~/pages/nutalk/stream?station=~${usership}/${this.state.streamName}`
+      target: `/~~/pages/nutalk/stream?station=~${usership}/${this.state.stream.nom}`
     });
 
     this.setState({
       loading: true
     });
+
+    this.props.storeData({
+      pendingInvites: [{
+        aud: this.state.stream.aud,
+        nom: this.state.stream.nom
+      }]
+    });
   }
 
   valueChange(event) {
-    const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    const name = event.target.name;
+
+    let stream = {
+      [name]: value
+    };
+
+    if (name === "audRaw") {
+      stream.aud = value.split([", "])
+    }
+
+    console.log("stream? = ",this.state.stream, stream);
 
     this.setState({
-      [name]: value
+      stream: Object.assign(this.state.stream, stream)
     });
   }
 
@@ -48,14 +71,14 @@ export class StreamCreatePage extends Component {
         <div className="col-sm-6">
           <div className="create-stream-page container">
             <div className="input-group">
-              <label htmlFor="streamName">Name</label>
+              <label htmlFor="nom">Name</label>
               <input
                 type="text"
-                name="streamName"
+                name="nom"
                 placeholder="Secret club"
                 disabled={this.state.loading}
                 onChange={this.valueChange}
-                value={this.state.streamName}/>
+                value={this.state.stream.nom}/>
             </div>
 
             <div className="input-group">
@@ -64,9 +87,9 @@ export class StreamCreatePage extends Component {
                 <div className="col-sm-6">
                   <div className="select-dropdown" disabled={this.state.loading}>
                     <select
-                      name="streamType"
+                      name="des"
                       disabled={this.state.loading}
-                      value={this.state.streamType}
+                      value={this.state.stream.des}
                       onChange={this.valueChange}>
 
                       <option value="feed">Feed</option>
@@ -88,9 +111,9 @@ export class StreamCreatePage extends Component {
                 <div className="col-sm-6">
                   <div className="select-dropdown" disabled={this.state.loading}>
                     <select
-                      name="streamSecurity"
+                      name="sec"
                       disabled={this.state.loading}
-                      value={this.state.streamSecurity}
+                      value={this.state.stream.sec}
                       onChange={this.valueChange}>
 
                       <option value="village">Village</option>
@@ -110,10 +133,10 @@ export class StreamCreatePage extends Component {
             <div className="input-group">
               <label htmlFor="stream-ships">Whitelist</label>
               <textarea
-                name="streamShips"
+                name="audRaw"
                 placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
                 disabled={this.state.loading}
-                value={this.state.streamShips}
+                value={this.state.stream.audRaw}
                 onChange={this.valueChange}
                 />
             </div>
@@ -124,22 +147,22 @@ export class StreamCreatePage extends Component {
               <label htmlFor="stream-discoverable-yes" disabled={this.state.loading}>Yes
                 <input
                   type="radio"
-                  name="streamDiscoverable"
+                  name="dis"
                   value="yes"
                   id="stream-discoverable-yes"
                   disabled={this.state.loading}
-                  checked={this.state.streamDiscoverable === "yes"}
+                  checked={this.state.stream.dis === "yes"}
                   onChange={this.valueChange}/>
               </label>
 
               <label htmlFor="stream-discoverable-no" disabled={this.state.loading}>No
                 <input
                   type="radio"
-                  name="streamDiscoverable"
+                  name="dis"
                   value="no"
                   id="stream-discoverable-no"
                   disabled={this.state.loading}
-                  checked={this.state.streamDiscoverable === "no"}
+                  checked={this.state.stream.dis === "no"}
                   onChange={this.valueChange}/>
               </label>
             </div>
