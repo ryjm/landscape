@@ -2,3 +2,5 @@
 
 node_modules/
 dist/
+urbit-code/web/pages/nutalk/{js,css}/
+*.swp
