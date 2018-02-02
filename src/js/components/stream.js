@@ -61,7 +61,7 @@ export class StreamPage extends Component {
       }
     };
 
-    this.props.api.sendHallAction({
+    this.props.api.hall({
       convey: [message]
     });
 
@@ -70,18 +70,15 @@ export class StreamPage extends Component {
     });
   }
 
-  render() {
-    let station = this.props.store.messages[this.props.queryParams.station] || {messages: []};
-
+  assembleChatRows(messages) {
     let chatRows = [];
     let prevDay = 0;
-    let thing = moment();
     let prevName = "";
 
     // add date markers & group messages by author
-    for (var i = 0; i < station.messages.length; i++) {
-      let date = moment(station.messages[i].wen);
-      if (station.messages[i].wen > prevDay) {
+    for (var i = 0; i < messages.length; i++) {
+      let date = moment(messages[i].wen);
+      if (messages[i].wen > prevDay) {
         chatRows.push({
           date: date.format("dddd, MMM Do")
         });
@@ -90,13 +87,26 @@ export class StreamPage extends Component {
         prevName = "";
       }
 
-      if (prevName !== station.messages[i].aut) {
-        station.messages[i].printship = true;
-        prevName = station.messages[i].aut;
+      if (prevName !== messages[i].aut) {
+        messages[i].printship = true;
+        prevName = messages[i].aut;
       }
 
-      chatRows.push(station.messages[i]);
+      chatRows.push(messages[i]);
     }
+
+    return chatRows;
+  }
+
+  assembleMembers() {
+    return [];
+  }
+
+  render() {
+    let station = this.props.store.messages[this.props.queryParams.station] || {messages: []};
+
+    let chatRows = this.assembleChatRows(station.messages);
+    let chatMembers = this.assembleMembers();
 
     let chatMessages = chatRows.map((msg) => {
       let autLabel = msg.printship ? `~${msg.aut}` : null;
@@ -146,6 +156,11 @@ export class StreamPage extends Component {
             <a href="javascript:void(0)">invite +</a>
           </li>
         </ul>
+        <div className="chat-members">
+          <ul>
+            {chatMembers}
+          </ul>
+        </div>
       </div>
     )
   }

@@ -43,6 +43,7 @@ export class UrbitRouter {
       let component = React.createElement(ComponentMap[componentName].comp, {
         api: this.api,
         store: this.warehouse.store,
+        storeData: this.warehouse.storeData.bind(this.warehouse),
         queryParams: util.getQueryParams()
       });
 

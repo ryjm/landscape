@@ -2,7 +2,9 @@ var gulp = require('gulp');
 var cssimport = require('gulp-cssimport');
 var cssnano = require('gulp-cssnano');
 
-var rollup = require('rollup');
+var rollup = require('rollup-stream');
+var source = require('vinyl-source-stream');
+
 var babel = require('rollup-plugin-babel');
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
@@ -28,9 +30,13 @@ gulp.task('bundle-css', function() {
     .pipe(gulp.dest('./urbit-code/web/pages/nutalk/css'));
 });
 
+var cache;
+
 gulp.task('bundle-js', function() {
-  return rollup.rollup({
+  return rollup({
     input: './src/index.js',
+    cache: cache,
+    format: "umd",
     plugins: [
       babel({
         exclude: 'node_modules/**'
@@ -45,14 +51,9 @@ gulp.task('bundle-js', function() {
       }),
       resolve()
     ]
-  }).then(bundle => {
-    return bundle.write({
-      file: './urbit-code/web/pages/nutalk/js/index.js',
-      format: 'umd',
-      name: 'index',
-      sourcemap: "inline"
-    });
-  });
+  }).on('bundle', function(bundle){ cache = bundle; })
+    .pipe(source('index.js'))
+    .pipe(gulp.dest('./urbit-code/web/pages/nutalk/js/'));
 });
 
 gulp.task('server', function () {
@@ -76,5 +77,5 @@ gulp.task('watch', function() {
   gulp.watch('urbit-code/**/*', ['copy-urbit']);
 })
 
-gulp.task('default', [ 'bundle-js', 'bundle-css', 'copy-urbit' ]);
+gulp.task('default', [ 'bundle-js2', 'bundle-css', 'copy-urbit' ]);
 gulp.task('serve', ['server', 'watch']);

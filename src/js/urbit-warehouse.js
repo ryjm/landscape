@@ -7,6 +7,7 @@ export class UrbitWarehouse {
       messages: {},
       configs: {},
       ownedStations: [],
+      pendingInvites: [],
       usership: ""
     };
 
@@ -36,6 +37,11 @@ export class UrbitWarehouse {
       this.store.ownedStations = data.ownedStations;
     }
 
+    if (data.pendingInvites) {
+      this.store.pendingInvites = this.store.pendingInvites.concat(data.pendingInvites);
+    }
+
+    console.log('new store obj =', data);
     console.log('full store = ', this.store);
 
     this.updateFunc();
