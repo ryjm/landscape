@@ -16,7 +16,10 @@ var serve = require('gulp-webserver');
   Main config options
 ***/
 
-var URBIT_PIER = "/Users/chris/ciqss/proj/urbit/piers/fake/fake_zod/home";
+var URBIT_PIERS = [
+  "/Users/chris/ciqss/proj/urbit/piers/fake/fake_zod2/home",
+  "/Users/chris/ciqss/proj/urbit/piers/fake/marzod/home",
+];
 
 /***
   End main config options
@@ -66,8 +69,10 @@ gulp.task('server', function () {
 });
 
 gulp.task('copy-urbit', function () {
-  gulp.src('urbit-code/**/*')
-      .pipe(gulp.dest(URBIT_PIER));
+  URBIT_PIERS.forEach(function(pier) {
+    gulp.src('urbit-code/**/*')
+        .pipe(gulp.dest(pier));    
+  })
 });
 
 gulp.task('watch', function() {

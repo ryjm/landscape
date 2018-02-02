@@ -26014,6 +26014,7 @@ function (_Component) {
       filter: ""
     };
     _this.filterChange = _this.filterChange.bind(_this);
+    _this.subCircle = _this.subCircle.bind(_this);
     return _this;
   }
 
@@ -26023,6 +26024,18 @@ function (_Component) {
       console.log('evt = ', evt);
       this.setState({
         filter: evt.target.value
+      });
+    }
+  }, {
+    key: "subCircle",
+    value: function subCircle(evt) {
+      var cir = evt.target.dataset.cir;
+      this.props.api.hall({
+        source: {
+          nom: "inbox",
+          sub: true,
+          srs: [cir]
+        }
       });
     }
   }, {
@@ -26040,10 +26053,29 @@ function (_Component) {
         var messageElems = inboxMessages[stationName].messages.map(function (msg) {
           var appClass = msg.app ? " chat-msg-app" : "";
           var autLabel = "";
+          var message = "";
 
           if (prevName !== msg.aut) {
             autLabel = "~".concat(msg.aut);
             prevName = msg.aut;
+          }
+
+          if (msg.sep.lin) {
+            message = msg.sep.lin.msg;
+          } else if (msg.sep.inv && !_this2.props.store.configs[msg.sep.inv.cir]) {
+            message = react.createElement("span", {
+              className: "ml-4"
+            }, react.createElement("span", null, "Invite to ", react.createElement("b", null, msg.sep.inv.cir), ". Would you like to join?"), react.createElement("span", {
+              className: "text-500 underline ml-2 mr-2",
+              onClick: _this2.subCircle,
+              value: "yes",
+              "data-cir": msg.sep.inv.cir
+            }, "Yes"), react.createElement("span", {
+              className: "text-500 underline ml-2 mr-2",
+              onClick: _this2.subCircle,
+              value: "no",
+              "data-cir": msg.sep.inv.cir
+            }, "No"));
           }
 
           return react.createElement("li", {
@@ -26053,7 +26085,7 @@ function (_Component) {
             className: "col-sm-2"
           }, autLabel), react.createElement("div", {
             className: "col-sm-10"
-          }, msg.sep.lin.msg));
+          }, message));
         });
         return react.createElement("div", {
           className: "mb-4",
@@ -26061,6 +26093,16 @@ function (_Component) {
         }, react.createElement("a", {
           href: "/~~/pages/nutalk/stream?station=".concat(stationName)
         }, react.createElement("b", null, react.createElement("u", null, stationName))), react.createElement("ul", null, messageElems));
+      });
+      var olderStations = Object.keys(this.props.store.configs).map(function (cos) {
+        if (inboxKeys.indexOf(cos) === -1) {
+          return react.createElement("div", {
+            className: "mb-4",
+            key: cos
+          }, react.createElement("a", {
+            href: "/~~/pages/nutalk/stream?station=".concat(cos)
+          }, react.createElement("b", null, react.createElement("u", null, cos))));
+        }
       });
       return react.createElement("div", null, react.createElement("a", {
         href: "/~~/pages/nutalk/stream/create"
@@ -26082,7 +26124,9 @@ function (_Component) {
         placeholder: "Filter..."
       })), react.createElement("div", {
         className: "text-mono mt-8"
-      }, stationElems));
+      }, stationElems), react.createElement("h3", {
+        className: "mt-8"
+      }, "Older stations"), olderStations);
     }
   }]);
   return InboxPage;
@@ -33086,9 +33130,7 @@ function (_Component2) {
           }, msg.sep.lin.msg));
         }
       });
-      return react.createElement("div", {
-        className: "container"
-      }, react.createElement(lib_1, {
+      return react.createElement("div", null, react.createElement(lib_1, {
         renderTrackHorizontal: function renderTrackHorizontal(props) {
           return react.createElement("div", {
             style: {
@@ -33192,12 +33234,15 @@ function (_Component) {
       this.setState({
         loading: true
       });
-      this.props.storeData({
-        pendingInvites: [{
-          aud: this.state.stream.aud,
-          nom: this.state.stream.nom
-        }]
-      });
+
+      if (this.state.stream.aud.length > 0) {
+        this.props.storeData({
+          pendingInvites: [{
+            aud: this.state.stream.aud,
+            nom: this.state.stream.nom
+          }]
+        });
+      }
     }
   }, {
     key: "valueChange",
@@ -33337,6 +33382,144 @@ function (_Component) {
   return StreamCreatePage;
 }(react_1);
 
+var CollectionCreatePage =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(CollectionCreatePage, _Component);
+
+  function CollectionCreatePage(props) {
+    var _this;
+
+    _classCallCheck(this, CollectionCreatePage);
+    _this = _possibleConstructorReturn(this, (CollectionCreatePage.__proto__ || Object.getPrototypeOf(CollectionCreatePage)).call(this, props));
+    _this.createCollection = _this.createCollection.bind(_this);
+    _this.valueChange = _this.valueChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(CollectionCreatePage, [{
+    key: "createCollection",
+    value: function createCollection() {
+      this.props.api.sendCollAction({
+        // test data
+        create: {
+          wat: 'blog',
+          des: 'a description',
+          pub: false,
+          vis: false,
+          // ses needs to be an ace separated list of non-sig ships
+          // *GOOD* 'zod polryt-tarnyr binzod'
+          // *BAD* '~zod ~polryt-tarnyr ~binzod'
+          ses: "polryt-tarnyr"
+        }
+      });
+    }
+  }, {
+    key: "valueChange",
+    value: function valueChange(event) {
+      var target = event.target;
+      var value = target.type === 'checkbox' ? target.checked : target.value;
+      var name = target.name;
+      this.setState(_defineProperty({}, name, value));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react.createElement("div", {
+        className: "test"
+      }, react.createElement("button", {
+        onClick: this.createCollection
+      }, "Create")) //<div className="create-stream-page container">
+      //  <div className="input-group">
+      //    <label htmlFor="streamName">Name</label>
+      //    <input
+      //      type="text"
+      //      name="streamName"
+      //      placeholder="Secret club"
+      //      onChange={this.valueChange}
+      //      value={this.state.streamName}/>
+      //  </div>
+      //  <div className="input-group">
+      //    <label htmlFor="stream-type">Type</label>
+      //    <div className="row">
+      //      <div className="col-sm-6">
+      //        <div className="select-dropdown">
+      //          <select
+      //            name="streamType"
+      //            value={this.state.streamType}
+      //            onChange={this.valueChange}>
+      //            <option value="feed">Feed</option>
+      //            <option value="chat">Chat</option>
+      //            <option value="list">List</option>
+      //          </select>
+      //          <span className="select-icon">↓</span>
+      //        </div>
+      //      </div>
+      //      <div className="col-sm-offset-1 col-sm-5">
+      //        <i className="text-sm">A Feed is a time-ordered (newest-first) list of microblogging messages with character limits.</i>
+      //      </div>
+      //    </div>
+      //  </div>
+      //  <div className="input-group">
+      //    <label htmlFor="stream-security">Security model</label>
+      //    <div className="row">
+      //      <div className="col-sm-6">
+      //        <div className="select-dropdown">
+      //          <select
+      //            name="streamSecurity"
+      //            value={this.state.streamSecurity}
+      //            onChange={this.valueChange}>
+      //            <option value="village">Village</option>
+      //            <option value="channel">Channel</option>
+      //            <option value="journal">Journal</option>
+      //            <option value="mailbox">Mailbox</option>
+      //          </select>
+      //          <span className="select-icon">↓</span>
+      //        </div>
+      //      </div>
+      //      <div className="col-sm-offset-1 col-sm-5">
+      //        <i className="text-sm">A Village is privately readable and writable, with a whitelist for inviting.</i>
+      //      </div>
+      //    </div>
+      //  </div>
+      //  <div className="input-group">
+      //    <label htmlFor="stream-ships">Whitelist</label>
+      //    <textarea
+      //      name="streamShips"
+      //      placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
+      //      value={this.state.streamShips}
+      //      onChange={this.valueChange}
+      //      />
+      //  </div>
+      //  <div className="input-group">
+      //    <h5>Discoverable?</h5>
+      //    <label htmlFor="stream-discoverable-yes">Yes
+      //      <input
+      //        type="radio"
+      //        name="streamDiscoverable"
+      //        value="yes"
+      //        id="stream-discoverable-yes"
+      //        checked={this.state.streamDiscoverable === "yes"}
+      //        onChange={this.valueChange}/>
+      //    </label>
+      //    <label htmlFor="stream-discoverable-no">No
+      //      <input
+      //        type="radio"
+      //        name="streamDiscoverable"
+      //        value="no"
+      //        id="stream-discoverable-no"
+      //        checked={this.state.streamDiscoverable === "no"}
+      //        onChange={this.valueChange}/>
+      //    </label>
+      //  </div>
+      //  <button type="submit" className="btn btn-primary" onClick={this.createStream}>Create →</button>
+      //</div>
+      ;
+    }
+  }]);
+  return CollectionCreatePage;
+}(react_1);
+
 var ComponentMap = {
   "StreamPage": {
     comp: StreamPage,
@@ -33345,6 +33528,9 @@ var ComponentMap = {
   "StreamCreatePage": {
     comp: StreamCreatePage
   },
+  "CollectionCreatePage": {
+    comp: CollectionCreatePage
+  },
   "StreamEditPage": {
     comp: StreamEditPage
   },
@@ -33352,35 +33538,6 @@ var ComponentMap = {
     comp: InboxPage
   }
 };
-
-/**
-  Response format
-
-  {
-    data: {
-      json: {
-        circle: {   // *.loc for local, *.rem for remote
-          cos:      // config
-          pes:      // presence
-          nes:      // messages
-          gram:     // message (individual)
-        }
-        circles:    // circles you own
-        public:     // circles in your public membership list
-        client: {
-          gys:      // glyphs
-          nis:      // nicknames
-        }
-        peers:      // subscribers to your circles
-        status:     // rumor, presence -- TODO?
-      }
-    }
-    from: {
-      path:    // Subscription path that triggered response
-      ship:    // Subscription requestor
-    }
-  }
-**/
 
 var UrbitApi =
 /*#__PURE__*/
@@ -33421,7 +33578,9 @@ function () {
 
       this.bindHall("/public", "PUT"); // owner's circles
 
-      this.bindHall("/circles/~".concat(this.authTokens.ship), "PUT"); // delete subscriptions when you're done with them, like...
+      this.bindHall("/circles/~".concat(this.authTokens.ship), "PUT"); // bind to collections
+
+      this.bindHall("/", "PUT", "collections"); // delete subscriptions when you're done with them, like...
       // this.bindHall("/circle/inbox/grams/0", "DELETE");
 
       this.hall({
@@ -33431,19 +33590,22 @@ function () {
           inv: true
         }
       });
-    }
+    } // keep default bind to hall, since its bind procedure more complex for now AA
+
   }, {
     key: "bindHall",
     value: function bindHall(path, method) {
+      var appl = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "hall";
+      console.log('binding to ...', appl);
       var params = {
-        appl: "hall",
+        appl: appl,
         mark: "json",
         oryx: this.authTokens.oryx,
         ship: this.authTokens.ship,
         path: path,
         wire: path
       };
-      fetch("/~/is/~".concat(this.authTokens.user, "/hall").concat(path, ".json?").concat(method), {
+      fetch("/~/is/~".concat(this.authTokens.user, "/").concat(appl).concat(path, ".json?").concat(method), {
         credentials: "same-origin",
         method: "POST",
         body: JSON.stringify(params)
@@ -33452,15 +33614,25 @@ function () {
   }, {
     key: "hall",
     value: function hall(data, transition) {
+      this.sendAction("hall", "hall-action", data, transition);
+    }
+  }, {
+    key: "sendCollAction",
+    value: function sendCollAction(data) {
+      this.sendAction("collections", "collections-action", data);
+    }
+  }, {
+    key: "sendAction",
+    value: function sendAction(appl, mark, data, transition) {
       var params = {
-        appl: "hall",
-        mark: "hall-action",
+        appl: appl,
+        mark: mark,
         oryx: this.authTokens.oryx,
         ship: this.authTokens.ship,
         wire: "/",
         xyro: data
       };
-      fetch("/~/to/hall/hall-action", {
+      fetch("/~/to/".concat(appl, "/").concat(mark), {
         credentials: "same-origin",
         method: "POST",
         body: JSON.stringify(params)
@@ -33569,13 +33741,13 @@ function () {
         if (circle.config && circle.config.dif && circle.config.dif.full) {
           console.log('circle circle.config.dif.full', circle.config.cir);
           configs[circle.config.cir] = circle.config.dif.full;
-        } // if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
-        //   console.log('circle circle.config.dif.full', circle.config.cir);
-        //
-        //   configs[circle.config.cir] = configs[circle.config.cir] || {};
-        //   configs[circle.config.cir].sis = circle.config.dif.permit.sis;
-        // }
+        }
 
+        if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
+          console.log('circle circle.config.dif.full', circle.config.cir);
+          configs[circle.config.cir] = configs[circle.config.cir] || {};
+          configs[circle.config.cir].sis = circle.config.dif.permit.sis;
+        }
 
         if (circle.cos && circle.cos.loc) {
           // Add inbox config
@@ -50768,7 +50940,7 @@ function () {
         }
 
         if (newConfigs[cos].sis) {
-          storeConfigs[cos].con.sis = storeConfigs[cos].con.sis ? storeConfigs[cos].con.sis.concat(newConfigs.sis) : newConfigs.sis;
+          storeConfigs[cos].con.sis = storeConfigs[cos].con.sis ? storeConfigs[cos].con.sis.concat(newConfigs[cos].sis) : newConfigs[cos].sis;
         }
       });
       return storeConfigs;

@@ -68,7 +68,7 @@ export class UrbitApi {
     this.bindHall(`/circles/~${this.authTokens.ship}`, "PUT");
 
     // bind to collections
-    this.sendBindRequest("/", "PUT", "collections");
+    this.bindHall("/", "PUT", "collections");
 
     // delete subscriptions when you're done with them, like...
     // this.bindHall("/circle/inbox/grams/0", "DELETE");
@@ -223,12 +223,12 @@ export class UrbitApi {
         configs[circle.config.cir] = circle.config.dif.full;
       }
 
-      // if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
-      //   console.log('circle circle.config.dif.full', circle.config.cir);
-      //
-      //   configs[circle.config.cir] = configs[circle.config.cir] || {};
-      //   configs[circle.config.cir].sis = circle.config.dif.permit.sis;
-      // }
+      if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
+        console.log('circle circle.config.dif.full', circle.config.cir);
+
+        configs[circle.config.cir] = configs[circle.config.cir] || {};
+        configs[circle.config.cir].sis = circle.config.dif.permit.sis;
+      }
 
       if (circle.cos && circle.cos.loc) {
         // Add inbox config

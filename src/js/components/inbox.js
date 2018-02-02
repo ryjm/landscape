@@ -9,6 +9,7 @@ export class InboxPage extends Component {
     };
 
     this.filterChange = this.filterChange.bind(this);
+    this.subCircle = this.subCircle.bind(this);
   }
 
   filterChange(evt) {
@@ -16,6 +17,19 @@ export class InboxPage extends Component {
     this.setState({
       filter: evt.target.value
     });
+  }
+
+  subCircle(evt) {
+    let cir = evt.target.dataset.cir;
+    let val = evt.target.attributes.value;
+
+    this.props.api.hall({
+      source: {
+        nom: "inbox",
+        sub: true,
+        srs: [cir]
+      }
+    })
   }
 
   render() {
@@ -31,10 +45,23 @@ export class InboxPage extends Component {
         let appClass = msg.app ? " chat-msg-app" : "";
 
         let autLabel = "";
+        let message = "";
 
         if (prevName !== msg.aut) {
           autLabel = `~${msg.aut}`;
           prevName = msg.aut;
+        }
+
+        if (msg.sep.lin) {
+          message = msg.sep.lin.msg;
+        } else if (msg.sep.inv && !this.props.store.configs[msg.sep.inv.cir]) {
+          message = (
+            <span className="ml-4">
+              <span>Invite to <b>{msg.sep.inv.cir}</b>. Would you like to join?</span>
+              <span className="text-500 underline ml-2 mr-2" onClick={this.subCircle} value="yes" data-cir={msg.sep.inv.cir}>Yes</span>
+              <span className="text-500 underline ml-2 mr-2" onClick={this.subCircle} value="no" data-cir={msg.sep.inv.cir}>No</span>
+            </span>
+          );
         }
 
         return (
@@ -43,7 +70,7 @@ export class InboxPage extends Component {
               {autLabel}
             </div>
             <div className="col-sm-10">
-              {msg.sep.lin.msg}
+              {message}
             </div>
           </li>
         );
@@ -57,6 +84,16 @@ export class InboxPage extends Component {
           </ul>
         </div>
       );
+    });
+
+    let olderStations = Object.keys(this.props.store.configs).map(cos => {
+      if (inboxKeys.indexOf(cos) === -1) {
+        return (
+          <div className="mb-4" key={cos}>
+            <a href={`/~~/pages/nutalk/stream?station=${cos}`}><b><u>{cos}</u></b></a>
+          </div>
+        )
+      }
     });
 
     return (
@@ -73,6 +110,8 @@ export class InboxPage extends Component {
         <div className="text-mono mt-8">
           {stationElems}
         </div>
+        <h3 className="mt-8">Older stations</h3>
+        {olderStations}
       </div>
     );
   }

@@ -127,7 +127,7 @@ export class StreamPage extends Component {
     });
 
     return (
-      <div className="container">
+      <div>
         <Scrollbars
           renderTrackHorizontal={props => <div style={{display: "none"}}/>}
           style={{height: 650}}
