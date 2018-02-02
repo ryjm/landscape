@@ -53,25 +53,25 @@ export class UrbitApi {
 
   bindAll() {
     // parses client-specific info (ship nicknames, glyphs, etc)
-    this.bindHall("/client", "PUT");
+    this.bindAppl("/client", "PUT");
 
     // inbox local + remote configs
-    this.bindHall("/circle/inbox/config/0", "PUT");
+    this.bindAppl("/circle/inbox/config/0", "PUT");
 
     // inbox messages, remote presences
-    this.bindHall("/circle/inbox/grams/group-r/0/500", "PUT");
+    this.bindAppl("/circle/inbox/grams/group-r/0/500", "PUT");
 
     // public membership
-    this.bindHall("/public", "PUT");
+    this.bindAppl("/public", "PUT");
 
     // owner's circles
-    this.bindHall(`/circles/~${this.authTokens.ship}`, "PUT");
+    this.bindAppl(`/circles/~${this.authTokens.ship}`, "PUT");
 
     // bind to collections
-    this.sendBindRequest("/", "PUT", "collections");
+    this.bindAppl("/", "PUT", "collections");
 
     // delete subscriptions when you're done with them, like...
-    // this.bindHall("/circle/inbox/grams/0", "DELETE");
+    // this.bindAppl("/circle/inbox/grams/0", "DELETE");
 
     this.hall({
       permit: {
@@ -83,7 +83,7 @@ export class UrbitApi {
   }
 
   // keep default bind to hall, since its bind procedure more complex for now AA
-  bindHall(path, method, appl = "hall") {
+  bindAppl(path, method, appl = "hall") {
     console.log('binding to ...', appl);
     const params = {
       appl,
