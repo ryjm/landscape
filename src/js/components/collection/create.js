@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { util } from '../../util';
+import urbitOb from 'urbit-ob';
 
 export class CollectionCreatePage extends Component {
   constructor(props) {
@@ -17,7 +18,9 @@ export class CollectionCreatePage extends Component {
       comments: true,
       foreignPost: true,
       onProfile: true,
-      collectionShips: ''
+      collectionShips: '',
+      // start with true so that we don't have a red default
+      sesValidated: true
     };
   }
 
@@ -124,7 +127,7 @@ export class CollectionCreatePage extends Component {
             </button>
           </div>
         </div>
-        <div className="input-group">
+        <div className={this.state.sesValidated ? "input-group" : "input-group error"}>
           <label htmlFor="collection-ships">{this.state.visibility ? 'Blacklist' : 'Whitelist'}</label>
           <textarea
             name="collectionShips"
