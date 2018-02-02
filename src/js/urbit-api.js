@@ -96,8 +96,8 @@ export class UrbitApi {
     this.sendAction("hall", "hall-action", data, transition);
   }
 
-  sendCollAction(data) {
-    this.sendAction("collections", "collections-action", data);
+  sendCollAction(data, transition) {
+    this.sendAction("collections", "collections-action", data, transition);
   }
 
   sendAction(appl, mark, data, transition) {
