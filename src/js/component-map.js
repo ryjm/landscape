@@ -2,6 +2,7 @@ import { InboxPage } from './components/inbox';
 import { StreamPage, StreamPageHeader } from './components/stream';
 import { StreamEditPage } from './components/stream/edit';
 import { StreamCreatePage } from './components/stream/create';
+import { CollectionCreatePage } from './components/collection/create';
 
 /**
   Anatomy:
@@ -21,6 +22,9 @@ export var ComponentMap = {
   },
   "StreamCreatePage": {
     comp: StreamCreatePage
+  },
+  "CollectionCreatePage": {
+    comp: CollectionCreatePage
   },
   "StreamEditPage": {
     comp: StreamEditPage
