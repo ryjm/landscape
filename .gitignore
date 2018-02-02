@@ -1,4 +1,6 @@
 .DS_Store
 
+.urbitrc
+
 node_modules/
 dist/

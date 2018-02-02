@@ -105,7 +105,7 @@ export class InboxPage extends Component {
           <button className="btn btn-tetiary" type="button">Create Collection →</button>
         </a>
         <div className="row">
-          <input className="mt-4 w-80" type="text" value={this.state.filter} onChange={this.filterChange} placeholder="Filter..." />
+          <input className="mt-4 w-80 input-sm" type="text" value={this.state.filter} onChange={this.filterChange} placeholder="Filter..." />
         </div>
         <div className="text-mono mt-8">
           {stationElems}

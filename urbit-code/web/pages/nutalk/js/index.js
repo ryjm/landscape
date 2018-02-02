@@ -26117,7 +26117,7 @@ function (_Component) {
       }, "Create Collection \u2192")), react.createElement("div", {
         className: "row"
       }, react.createElement("input", {
-        className: "mt-4 w-80",
+        className: "mt-4 w-80 input-sm",
         type: "text",
         value: this.state.filter,
         onChange: this.filterChange,
@@ -33017,18 +33017,28 @@ function (_Component2) {
     _this.presence = false;
     _this.state = {
       message: "",
+      invitee: "",
       messageSending: false
     };
-    _this.inputChange = _this.inputChange.bind(_this);
-    _this.submitMessage = _this.submitMessage.bind(_this);
+    _this.messageChange = _this.messageChange.bind(_this);
+    _this.messageSubmit = _this.messageSubmit.bind(_this);
+    _this.inviteChange = _this.inviteChange.bind(_this);
+    _this.inviteSubmit = _this.inviteSubmit.bind(_this);
     return _this;
   }
 
   _createClass(StreamPage, [{
-    key: "inputChange",
-    value: function inputChange(event) {
+    key: "messageChange",
+    value: function messageChange(event) {
       this.setState({
         message: event.target.value
+      });
+    }
+  }, {
+    key: "inviteChange",
+    value: function inviteChange(event) {
+      this.setState({
+        invitee: event.target.value
       });
     }
   }, {
@@ -33047,8 +33057,8 @@ function (_Component2) {
       return str.slice(0, -1);
     }
   }, {
-    key: "submitMessage",
-    value: function submitMessage(event) {
+    key: "messageSubmit",
+    value: function messageSubmit(event) {
       event.preventDefault();
       event.stopPropagation();
       var message = {
@@ -33068,6 +33078,22 @@ function (_Component2) {
       });
       this.setState({
         message: ""
+      });
+    }
+  }, {
+    key: "inviteSubmit",
+    value: function inviteSubmit(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.props.api.hall({
+        permit: {
+          nom: this.props.queryParams.station.split("/")[1],
+          sis: [this.state.invitee],
+          inv: true
+        }
+      });
+      this.setState({
+        invitee: ""
       });
     }
   }, {
@@ -33109,6 +33135,11 @@ function (_Component2) {
         }
       };
       var statusCir = "";
+
+      if (!cos.pes) {
+        return;
+      }
+
       var presMems = Object.keys(cos.pes).map(function (ship) {
         switch (cos.pes[ship].pec) {
           case "idle":
@@ -33144,9 +33175,17 @@ function (_Component2) {
           }, "~".concat(inv)));
         }
       });
-      return react.createElement("div", null, presMems, react.createElement("h4", {
+      return react.createElement("div", null, presMems, react.createElement("h5", {
         className: "mt-8"
-      }, "Invited:"), invMems);
+      }, "Invited:"), invMems, react.createElement("form", {
+        onSubmit: this.inviteSubmit
+      }, react.createElement("input", {
+        type: "text",
+        className: "w-30 input-sm",
+        value: this.state.invitee,
+        onChange: this.inviteChange,
+        placeholder: "Ship..."
+      })));
     }
   }, {
     key: "setPresence",
@@ -33211,13 +33250,13 @@ function (_Component2) {
       }, "~", this.props.store.usership), react.createElement("div", {
         className: "col-sm-8"
       }, react.createElement("form", {
-        onSubmit: this.submitMessage
+        onSubmit: this.messageSubmit
       }, react.createElement("input", {
         className: "chat-input-field",
         type: "text",
         placeholder: "Say something",
         value: this.state.message,
-        onChange: this.inputChange
+        onChange: this.messageChange
       })))), react.createElement("ul", {
         className: "nav-main"
       }, react.createElement("li", null, react.createElement("a", {
@@ -51101,6 +51140,40 @@ function () {
   return UrbitWarehouse;
 }();
 
+var RootComponent =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(RootComponent, _Component);
+
+  function RootComponent(props) {
+    var _this;
+
+    _classCallCheck(this, RootComponent);
+    _this = _possibleConstructorReturn(this, (RootComponent.__proto__ || Object.getPrototypeOf(RootComponent)).call(this, props));
+    _this.state = {
+      kids: null
+    };
+    return _this;
+  }
+
+  _createClass(RootComponent, [{
+    key: "renderKids",
+    value: function renderKids(kids) {
+      this.setState({
+        kids: kids
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      {
+        this.state.kids;
+      }
+    }
+  }]);
+  return RootComponent;
+}(react_1);
+
 var UrbitRouter =
 /*#__PURE__*/
 function () {
@@ -51110,10 +51183,12 @@ function () {
     // this.pageRoot = "/~~/pages/nutalk/";
     this.pageRoot = "";
     this.domRoot = "#root";
-    this.pendingTransitions = []; // TODO: This... might be a circular dependency? Seems to work though.
+    this.pendingTransitions = [];
+    this.root = new RootComponent(); // TODO: This... might be a circular dependency? Seems to work though.
 
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
-    this.api = new UrbitApi(this.warehouse);
+    this.api = new UrbitApi(this.warehouse); // ReactDOM.render(component, elem);
+
     this.instantiateReactComponents();
     this.registerAnchorListeners();
     this.registerHistoryListeners();
@@ -51122,7 +51197,7 @@ function () {
   _createClass(UrbitRouter, [{
     key: "instantiateReactComponents",
     value: function instantiateReactComponents() {
-      var _this = this;
+      var _this2 = this;
 
       // if userhip is null, auth tokens haven't been loaded yet, so api isn't unavablable. so we wait.
       if (this.warehouse.store.usership === "") {
@@ -51144,9 +51219,9 @@ function () {
         var componentName = elem.dataset.component; // look up the component type in component-map, instantiate it
 
         var component = react.createElement(ComponentMap[componentName].comp, {
-          api: _this.api,
-          store: _this.warehouse.store,
-          storeData: _this.warehouse.storeData.bind(_this.warehouse),
+          api: _this2.api,
+          store: _this2.warehouse.store,
+          storeData: _this2.warehouse.storeData.bind(_this2.warehouse),
           queryParams: util.getQueryParams()
         });
         reactDom.render(component, elem);
@@ -51162,7 +51237,7 @@ function () {
   }, {
     key: "transitionTo",
     value: function transitionTo(targetUrl, noHistory) {
-      var _this2 = this;
+      var _this3 = this;
 
       // trim queryparams
       var q = targetUrl.indexOf('?');
@@ -51178,15 +51253,15 @@ function () {
           window.history.pushState({}, null, targetUrl);
         }
 
-        document.querySelectorAll(_this2.domRoot)[0].innerHTML = resText;
+        document.querySelectorAll(_this3.domRoot)[0].innerHTML = resText;
 
-        _this2.instantiateReactComponents();
+        _this3.instantiateReactComponents();
       });
     }
   }, {
     key: "registerAnchorListeners",
     value: function registerAnchorListeners() {
-      var _this3 = this;
+      var _this4 = this;
 
       window.document.addEventListener('click', function (e) {
         // Walk the DOM node's parents to find 'a' tags up the chain
@@ -51202,9 +51277,9 @@ function () {
 
           if (href.indexOf('.') === -1) {
             e.preventDefault();
-            var targetUrl = _this3.pageRoot + href;
+            var targetUrl = _this4.pageRoot + href;
 
-            _this3.transitionTo(targetUrl);
+            _this4.transitionTo(targetUrl);
           }
         }
       });
@@ -51212,10 +51287,10 @@ function () {
   }, {
     key: "registerHistoryListeners",
     value: function registerHistoryListeners() {
-      var _this4 = this;
+      var _this5 = this;
 
       window.onpopstate = function (state) {
-        _this4.transitionTo(window.location.href, true);
+        _this5.transitionTo(window.location.href, true);
       };
     }
   }]);
