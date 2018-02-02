@@ -61,7 +61,7 @@ export class StreamPage extends Component {
       }
     };
 
-    this.props.api.sendHallAction({
+    this.props.api.hall({
       convey: [message]
     });
 

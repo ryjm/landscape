@@ -46,39 +46,39 @@ export class UrbitApi {
       this.authTokens = authTokens;
       console.log("usership = ", this.authTokens.ship);
       this.runPoll();
-      this.bindThings();
+      this.bindAll();
     });
   }
 
-  bindThings() {
+  bindAll() {
     // parses client-specific info (ship nicknames, glyphs, etc)
-    this.sendBindRequest("/client", "PUT");
+    this.bindHall("/client", "PUT");
 
     // inbox local + remote configs
-    this.sendBindRequest("/circle/inbox/config/0", "PUT");
+    this.bindHall("/circle/inbox/config/0", "PUT");
 
     // inbox messages, remote presences
-    this.sendBindRequest("/circle/inbox/grams/group-r/0/500", "PUT");
+    this.bindHall("/circle/inbox/grams/group-r/0/500", "PUT");
 
     // public membership
-    this.sendBindRequest("/public", "PUT");
+    this.bindHall("/public", "PUT");
 
     // owner's circles
-    this.sendBindRequest(`/circles/~${this.authTokens.ship}`, "PUT");
+    this.bindHall(`/circles/~${this.authTokens.ship}`, "PUT");
 
     // delete subscriptions when you're done with them, like...
-    // this.sendBindRequest("/circle/inbox/grams/0", "DELETE");
+    // this.bindHall("/circle/inbox/grams/0", "DELETE");
 
-    this.sendHallAction({
+    this.hall({
       permit: {
-        nom: "~zod/aefaw",
-        sis: ["~wicwep-panfes-lopryd-tarwyx--timlex-doprev-risren-lorrux"],
+        nom: "eloel",
+        sis: ["polzod"],
         inv: true
       }
     });
   }
 
-  sendBindRequest(path, method) {
+  bindHall(path, method) {
     const params = {
       appl: "hall",
       mark: "json",
@@ -95,7 +95,7 @@ export class UrbitApi {
     });
   }
 
-  sendHallAction(data, transition) {
+  hall(data, transition) {
     const params = {
       appl: "hall",
       mark: "hall-action",
@@ -116,31 +116,28 @@ export class UrbitApi {
     }
   }
 
-  pollServer() {
+  runPoll() {
     console.log('fetching... ', this.seqn);
-    return fetch(`/~/of/${this.authTokens.ixor}?poll=${this.seqn}`, {credentials: "same-origin"})
+    fetch(`/~/of/${this.authTokens.ixor}?poll=${this.seqn}`, {credentials: "same-origin"})
       .then((res) => {
         return res.json();
-      });
-  }
+      })
+      .then((data) => {
+        if (data.beat) {
+          console.log('beat');
+          this.runPoll();
+        } else {
+          console.log("new server data: ", data);
 
-  runPoll() {
-    this.pollServer().then((data) => {
-      if (data.beat) {
-        console.log('beat');
-        this.runPoll();
-      } else {
-        console.log("new server data: ", data);
+          const hallData = this.parseBS(data);
+          this.warehouse.storeData(hallData);
 
-        const hallData = this.parseBS(data);
-        this.warehouse.storeData(hallData);
+          // TODO:  Side effects get processed here, after warehouse data is updated. Would prefer to do this inside warehouse itself, but warehouse doesn't have access to the API. Need to think through this much more carefully, as this is the crux of asychronous state updates in the system.
+          // this.processSideEffects();
 
-        // TODO:  Side effects get processed here, after warehouse data is updated. Would prefer to do this inside warehouse itself, but warehouse doesn't have access to the API. Need to think through this much more carefully, as this is the crux of asychronous state updates in the system.
-        this.processSideEffects();
-
-        this.seqn++;
-        this.runPoll();
-      }
+          this.seqn++;
+          this.runPoll();
+        }
     });
   }
 
@@ -212,6 +209,13 @@ export class UrbitApi {
         configs[circle.config.cir] = circle.config.dif.full;
       }
 
+      // if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
+      //   console.log('circle circle.config.dif.full', circle.config.cir);
+      //
+      //   configs[circle.config.cir] = configs[circle.config.cir] || {};
+      //   configs[circle.config.cir].sis = circle.config.dif.permit.sis;
+      // }
+
       if (circle.cos && circle.cos.loc) {
         // Add inbox config
         console.log('circle config.cos.loc', circle.cos.loc);
@@ -231,7 +235,7 @@ export class UrbitApi {
       Object.keys(configs).forEach(cos => {
         this.warehouse.store.pendingInvites.forEach(inv => {
           if (cos.indexOf(inv.nom) !== -1) {
-            this.sendHallAction({
+            this.hall({
               permit: {
                 nom: inv.nom,
                 sis: inv.aud,
@@ -255,7 +259,7 @@ export class UrbitApi {
       let ownedStations = bs.data.json.circles;
 
       if (ownedStations.cir && ownedStations.add) {
-        this.sendHallAction({
+        this.hall({
           source: {
             nom: `inbox`,
             sub: true,
@@ -285,7 +289,7 @@ export class UrbitApi {
     });
 
     if (pendingStations.length > 0) {
-      this.sendHallAction({
+      this.hall({
         source: {
           nom: `~${this.authTokens.ship}/inbox`,
           sub: true,

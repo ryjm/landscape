@@ -4,6 +4,11 @@ export class UrbitReducer {
     Object.keys(newConfigs).forEach((cos) => {
       if (!storeConfigs[cos]) {
         storeConfigs[cos] = newConfigs[cos];
+        return;
+      }
+
+      if (newConfigs[cos].sis) {
+        storeConfigs[cos].con.sis = storeConfigs[cos].con.sis ? storeConfigs[cos].con.sis.concat(newConfigs.sis) : newConfigs.sis;
       }
     })
 

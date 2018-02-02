@@ -8,10 +8,10 @@ export class StreamCreatePage extends Component {
     this.state = {
       loading: false,
       stream: {
-        dis: "no",
         nom: "",
-        des: "",
-        sec: "",
+        des: "chat",
+        sec: "village",
+        dis: "no",
         aud: [],
         audRaw: []
       }
@@ -24,7 +24,7 @@ export class StreamCreatePage extends Component {
   createStream() {
     let usership = this.props.store.usership;
 
-    this.props.api.sendHallAction({
+    this.props.api.hall({
       create: {
         nom: this.state.stream.nom,
         des: this.state.stream.des,
