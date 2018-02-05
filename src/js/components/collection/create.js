@@ -26,17 +26,18 @@ export class CollectionCreatePage extends Component {
   createCollection() {
     this.props.api.sendCollAction({
       create: {
-        wat: 'blog',
-        des: this.state.collectionName,
-        pub: this.state.visibility,
-        vis: this.state.onProfile,
+        desc: this.state.collectionName,
+        publ: this.state.visibility,
+        visi: this.state.onProfile,
+        comm: this.state.comments,
+        xeno: this.state.foreignPost,
         // ses needs to be an ace separated list of non-sig ships
         // *GOOD* 'zod polryt-tarnyr binzod'
         // *BAD* '~zod ~polryt-tarnyr ~binzod'
         ses: this.state.collectionShips.replace(/~|,/g, '')
       }
     }, {
-      target: '/~~/pages/nutalk/collections'
+      target: '/~~/pages/nutalk'
     });
 ;
   }
