@@ -8,7 +8,7 @@ export class UrbitReducer {
       }
 
       if (newConfigs[cos].sis) {
-        storeConfigs[cos].con.sis = storeConfigs[cos].con.sis ? storeConfigs[cos].con.sis.concat(newConfigs.sis) : newConfigs.sis;
+        storeConfigs[cos].con.sis = storeConfigs[cos].con.sis ? storeConfigs[cos].con.sis.concat(newConfigs[cos].sis) : newConfigs[cos].sis;
       }
     })
 

@@ -12,6 +12,12 @@ input[disabled], label[disabled], select[disabled], textarea[disabled], .select-
   border-color: #aaa;
 }
 
+input.input-sm {
+  font-size: 3rem;
+  padding: 6px;
+  border-width: 1px;
+}
+
 /***
   Shapes
 ***/

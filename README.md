@@ -7,7 +7,7 @@
 Pull the MVE arvo branch. This is a branch that includes the latest `%collections` app and the necessary updates to `%clay` and `%ford`
 > git clone git@github.com:vvisigoth/arvo.git -b mve-ui
 
-*Note* This should be updated to pull the mve branch of urbit/arvo 
+*Note* This should be updated to pull the mve branch of urbit/arvo
 
 Copy the arvo files from the above repo into your pier.
 > cp -r /pulled/arvo/\* /your/ship/home
@@ -28,11 +28,10 @@ To get it running, you'll need to install Gulp globally:
 
 > npm install
 
-Update the `gulpfile.js` with the path to your pier. This will tell the build script where to place the bundled files.
+Copy ".urbitrc-sample" to a new file named ".urbitrc", and fill it with any configuration details:
+  - URBIT_PIERS is an array of mounted "home" desks to output to. This will tell the build script where to place the bundled files.
 
 Run the following to watch the /src directory and update the application bundle and copy it to your pier
 > gulp watch
 
 Navigate to `localhost:8080/~~/pages/nutalk`. You may have to log into your ship (the `~~` means that you're authenticated)
-
-

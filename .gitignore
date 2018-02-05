@@ -1,5 +1,7 @@
 .DS_Store
 
+.urbitrc
+
 node_modules/
 dist/
 urbit-code/web/pages/nutalk/{js,css}/

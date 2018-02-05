@@ -38,12 +38,14 @@ export class StreamCreatePage extends Component {
       loading: true
     });
 
-    this.props.storeData({
-      pendingInvites: [{
-        aud: this.state.stream.aud,
-        nom: this.state.stream.nom
-      }]
-    });
+    if (this.state.stream.aud.length > 0) {
+      this.props.storeData({
+        pendingInvites: [{
+          aud: this.state.stream.aud,
+          nom: this.state.stream.nom
+        }]
+      });
+    }
   }
 
   valueChange(event) {
