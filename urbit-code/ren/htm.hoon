@@ -5,8 +5,9 @@
 /?    310
 ::  put try logic here /|(/collection-config/ /post/ /topic/ etc.)
 /%    /|    /!hymn/ 
-            /hymn/
-            ::/collections-collection/
+            /collections-index/
+            ::/hymn/
+            ::
       ==
 ^-  manx
 -.-
