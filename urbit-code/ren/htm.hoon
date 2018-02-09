@@ -6,7 +6,8 @@
 ::  put try logic here /|(/collection-config/ /post/ /topic/ etc.)
 /%    /|    /!hymn/ 
             /collections-index/
-            ::/hymn/
+            /collections-post/
+            /hymn/
             ::
       ==
 ^-  manx
