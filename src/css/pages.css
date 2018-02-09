@@ -114,3 +114,11 @@
 .cir-red {
   background-color: #FF4444;
 }
+
+textarea.post-edit
+{
+  height: 80%;
+  border: none;
+  resize: none;
+  padding: 8rem 12rem;
+}
