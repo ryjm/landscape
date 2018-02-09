@@ -45,6 +45,17 @@ export class UrbitRouter {
       // grab the name of the component
       let componentName = elem.dataset.component;
 
+      // all remaining data-* are presumed to be props
+      const dataset = elem.dataset
+      const propsReducer = (a, v) => {
+        const x = {}
+        x[v] = dataset[v];
+        return Object.assign(a, x);
+      }
+      const propsObj = Object.keys(elem.dataset)
+                      .filter(e => e != 'component')
+                      .reduce(propsReducer, {});
+
       // look up the component type in component-map, instantiate it
       let component = React.createElement(ComponentMap[componentName].comp, {
         api: this.api,
