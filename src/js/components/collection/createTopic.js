@@ -5,8 +5,6 @@ export class TopicCreatePage extends Component {
   constructor(props) {
     super(props);
 
-    console.log('props', props);
-
     this.createTopic = this.createTopic.bind(this);
     this.valueChange = this.valueChange.bind(this);
     this.state = {

@@ -73,9 +73,6 @@ export class CollectionCreatePage extends Component {
 
   render() {
     return (
-      //<div className="test">
-      //  <button onClick={this.createCollection}>Create</button>
-      //</div>
       <div className="create-collection-page container">
         <div className="input-group">
           <label htmlFor="collectionName">Name</label>
