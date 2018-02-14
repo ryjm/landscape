@@ -122,3 +122,48 @@ textarea.post-edit
   resize: none;
   padding: 8rem 12rem;
 }
+
+textarea.comment-edit
+{
+  border: none;
+  resize: none;
+  padding: 0;
+}
+
+/* collections */
+
+.create-comment button.disabled
+{
+  display: none;
+}
+
+.create-comment .usership
+{
+  color: #000;
+}
+
+div.coll-title
+{
+  font-size: 6rem;
+}
+div.mod
+{
+  font-size: 6rem;
+}
+
+.collection-index li.forum::before {
+    content: "•";
+    position: fixed;
+    font-size: 10rem;
+    margin-left: -12rem;
+    margin-top: 9rem;
+}
+
+.collection-index li.blog::before {
+    content: "•";
+    position: fixed;
+    font-size: 10rem;
+    margin-left: -12rem;
+    margin-top: 11rem;
+}
+
