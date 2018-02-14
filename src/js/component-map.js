@@ -4,6 +4,7 @@ import { StreamEditPage } from './components/stream/edit';
 import { StreamCreatePage } from './components/stream/create';
 import { CollectionCreatePage } from './components/collection/create';
 import { TopicCreatePage } from './components/collection/createTopic';
+import { CommentCreate } from './components/collection/comment';
 
 /**
   Anatomy:
@@ -32,6 +33,9 @@ export var ComponentMap = {
   },
   "StreamEditPage": {
     comp: StreamEditPage
+  },
+  "CommentCreate": {
+    comp: CommentCreate
   },
   "InboxPage": {
     comp: InboxPage
