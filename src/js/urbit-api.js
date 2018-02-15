@@ -68,7 +68,7 @@ export class UrbitApi {
     this.bind(`/circles/~${this.authTokens.ship}`, "PUT");
 
     // bind to collections
-    this.bind("/", "PUT", "collections");
+    // this.bind("/", "PUT", "collections");
 
     // delete subscriptions when you're done with them, like...
     // this.bind("/circle/inbox/grams/0", "DELETE");
