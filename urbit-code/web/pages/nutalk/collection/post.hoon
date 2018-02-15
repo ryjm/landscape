@@ -15,9 +15,13 @@
             ''
 ^-  manx
 ;div
-  ;div.row.coll-title
-    {(trip desc:(need config))} /
+  ;div.topic-info.container.mb-4
+    ;div.row.coll-title
+      {(trip desc:(need config))} /
+    ==
+    ;div.row.mod.text-mono
+      ; @now
+    ==
   ==
-  :: TODO pass text as prop?
   ;div(data-component "TopicCreatePage");
 ==
