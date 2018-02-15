@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { ComponentMap } from './component-map';
 import { UrbitApi } from './urbit-api';
 import { UrbitWarehouse } from './urbit-warehouse';
 import { util } from './util';
+
+class RootComponent extends Component {
+  render() {
+    return (
+      <div dangerouslySetInnerHTML={{__html: this.props.content}}>
+
+      </div>
+    )
+  }
+}
 
 export class UrbitRouter {
   constructor() {
@@ -80,7 +90,13 @@ export class UrbitRouter {
       if (!noHistory) {
         window.history.pushState({}, null, targetUrl);
       }
-      document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
+
+      // let elem = new DOMParser().parseFromString(resText, "text/html").body.childNodes[0];
+      // ReactDOM.render(React.createElement(elem), document.querySelectorAll(this.domRoot)[0]);
+
+      ReactDOM.render(<RootComponent content={resText} />, document.querySelectorAll("#dyna")[0]);
+
+      // document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
       this.instantiateReactComponents();
     });
   }

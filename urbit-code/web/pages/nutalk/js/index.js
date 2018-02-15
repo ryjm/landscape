@@ -51270,7 +51270,11 @@ function (_Component) {
   _createClass(RootComponent, [{
     key: "render",
     value: function render() {
-      return react.createElement("div", null, this.props.children);
+      return react.createElement("div", {
+        dangerouslySetInnerHTML: {
+          __html: this.props.content
+        }
+      });
     }
   }]);
   return RootComponent;
@@ -51285,13 +51289,10 @@ function () {
     // this.pageRoot = "/~~/pages/nutalk/";
     this.pageRoot = "";
     this.domRoot = "#root";
-    this.pendingTransitions = [];
-    this.root = new RootComponent(); // TODO: This... might be a circular dependency? Seems to work though.
+    this.pendingTransitions = []; // TODO: This... might be a circular dependency? Seems to work though.
 
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
-    this.api = new UrbitApi(this.warehouse); // let kids = React.createElement(ExampleComponent);
-    // ReactDOM.render(React.createElement(RootComponent, {}, kids), document.querySelectorAll("#root")[0]);
-
+    this.api = new UrbitApi(this.warehouse);
     this.instantiateReactComponents();
     this.registerAnchorListeners();
     this.registerHistoryListeners();
@@ -51302,6 +51303,7 @@ function () {
     value: function instantiateReactComponents() {
       var _this = this;
 
+      // if userhip is null, auth tokens haven't been loaded yet, so api isn't unavablable. so we wait.
       if (this.warehouse.store.usership === "") {
         return;
       }
@@ -51341,7 +51343,6 @@ function () {
     value: function transitionTo(targetUrl, noHistory) {
       var _this2 = this;
 
-      // return;
       // trim queryparams
       var q = targetUrl.indexOf('?');
       var baseUrl = q !== -1 ? targetUrl.substr(0, q) : targetUrl;
@@ -51354,9 +51355,13 @@ function () {
       }).then(function (resText) {
         if (!noHistory) {
           window.history.pushState({}, null, targetUrl);
-        }
+        } // let elem = new DOMParser().parseFromString(resText, "text/html").body.childNodes[0];
+        // ReactDOM.render(React.createElement(elem), document.querySelectorAll(this.domRoot)[0]);
 
-        document.querySelectorAll(_this2.domRoot)[0].innerHTML = resText; // React.renderDOM(ChildComponent, $(this.domRoot)[0]);
+
+        reactDom.render(react.createElement(RootComponent, {
+          content: resText
+        }), document.querySelectorAll("#dyna")[0]); // document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
 
         _this2.instantiateReactComponents();
       });
@@ -51401,6 +51406,6 @@ function () {
 }();
 
 console.log('app running');
-window.router = new UrbitRouter();
+var router = new UrbitRouter();
 
 })));
