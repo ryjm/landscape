@@ -130,6 +130,24 @@ textarea.comment-edit
   padding: 0;
 }
 
+.coms ol
+{
+  counter-reset: a -1;
+}
+
+.coms ol>li::before
+{
+  font-weight: 400;
+  position: absolute;
+  font-family: Source Code Pro,Roboto mono,Courier New,monospace;
+  color: #9b9b9b;
+}
+
+.coms ol>li>div.da
+{
+  color: #9b9b9b;
+}
+
 /* collections */
 
 .create-comment button.disabled
@@ -152,18 +170,33 @@ div.mod
 }
 
 .collection-index li.forum::before {
-    content: "•";
-    position: fixed;
-    font-size: 10rem;
-    margin-left: -12rem;
-    margin-top: 9rem;
+  content: "•";
+  position: absolute;
+  font-size: 10rem;
+  margin-left: -12rem;
+  margin-top: 9rem;
+}
+
+.collection-index li.forum .meta-cont > div
+{
+  float: left;
 }
 
 .collection-index li.blog::before {
-    content: "•";
-    position: fixed;
-    font-size: 10rem;
-    margin-left: -12rem;
-    margin-top: 11rem;
+  content: "•";
+  position: absolute;
+  font-size: 10rem;
+  margin-left: -12rem;
+  margin-top: 11rem;
+}
+
+.collection-index li.notes .da {
+  position: absolute;
+  margin-left: -12rem;
+  margin-top: 1rem;
+}
+
+.collection-index .note-uuid {
+  font-weight: inherit;
 }
 
