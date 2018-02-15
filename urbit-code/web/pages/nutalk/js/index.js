@@ -32971,76 +32971,6 @@ function () {
         return {};
       }
     }
-  }]);
-  return Utilities;
-}();
-
-var util = new Utilities();
-
-var StreamPageHeader =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(StreamPageHeader, _Component);
-
-  function StreamPageHeader() {
-    _classCallCheck(this, StreamPageHeader);
-    return _possibleConstructorReturn(this, (StreamPageHeader.__proto__ || Object.getPrototypeOf(StreamPageHeader)).apply(this, arguments));
-  }
-
-  _createClass(StreamPageHeader, [{
-    key: "render",
-    value: function render() {
-      return react.createElement("div", {
-        className: "header-subpage"
-      }, react.createElement("h3", {
-        className: "header-sep"
-      }, "/"), react.createElement("h3", {
-        className: "inline text-mono"
-      }, this.props.queryParams.station), react.createElement("a", {
-        className: "header-settings text-sm",
-        href: "/~~/pages/nutalk/stream/edit?station=".concat(this.props.queryParams.station)
-      }, "Settings \u2192"));
-    }
-  }]);
-  return StreamPageHeader;
-}(react_1);
-var StreamPage =
-/*#__PURE__*/
-function (_Component2) {
-  _inherits(StreamPage, _Component2);
-
-  function StreamPage(props) {
-    var _this;
-
-    _classCallCheck(this, StreamPage);
-    _this = _possibleConstructorReturn(this, (StreamPage.__proto__ || Object.getPrototypeOf(StreamPage)).call(this, props));
-    _this.presence = false;
-    _this.state = {
-      message: "",
-      invitee: "",
-      messageSending: false
-    };
-    _this.messageChange = _this.messageChange.bind(_this);
-    _this.messageSubmit = _this.messageSubmit.bind(_this);
-    _this.inviteChange = _this.inviteChange.bind(_this);
-    _this.inviteSubmit = _this.inviteSubmit.bind(_this);
-    return _this;
-  }
-
-  _createClass(StreamPage, [{
-    key: "messageChange",
-    value: function messageChange(event) {
-      this.setState({
-        message: event.target.value
-      });
-    }
-  }, {
-    key: "inviteChange",
-    value: function inviteChange(event) {
-      this.setState({
-        invitee: event.target.value
-      });
-    }
   }, {
     key: "uuid",
     value: function uuid() {
@@ -33056,13 +32986,55 @@ function (_Component2) {
 
       return str.slice(0, -1);
     }
+  }]);
+  return Utilities;
+}();
+
+var util = new Utilities();
+
+var ChatPage =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(ChatPage, _Component);
+
+  function ChatPage(props) {
+    var _this;
+
+    _classCallCheck(this, ChatPage);
+    _this = _possibleConstructorReturn(this, (ChatPage.__proto__ || Object.getPrototypeOf(ChatPage)).call(this, props));
+    _this.presence = false;
+    _this.state = {
+      message: "",
+      invitee: ""
+    };
+    _this.messageChange = _this.messageChange.bind(_this);
+    _this.messageSubmit = _this.messageSubmit.bind(_this);
+    _this.inviteChange = _this.inviteChange.bind(_this);
+    _this.inviteSubmit = _this.inviteSubmit.bind(_this);
+    return _this;
+  }
+
+  _createClass(ChatPage, [{
+    key: "messageChange",
+    value: function messageChange(event) {
+      this.setState({
+        message: event.target.value
+      });
+    }
+  }, {
+    key: "inviteChange",
+    value: function inviteChange(event) {
+      this.setState({
+        invitee: event.target.value
+      });
+    }
   }, {
     key: "messageSubmit",
     value: function messageSubmit(event) {
       event.preventDefault();
       event.stopPropagation();
       var message = {
-        uid: this.uuid(),
+        uid: util.uuid(),
         aud: [this.props.queryParams.station],
         aut: this.props.store.usership,
         wen: Date.now(),
@@ -33127,7 +33099,6 @@ function (_Component2) {
   }, {
     key: "assembleMembers",
     value: function assembleMembers(station) {
-      console.log('configs = ', this.props.store.configs[station]);
       var cos = this.props.store.configs[station] || {
         pes: {},
         con: {
@@ -33268,6 +33239,152 @@ function (_Component2) {
       }, "invite +"))), react.createElement("div", {
         className: "chat-members"
       }, chatMembers));
+    }
+  }]);
+  return ChatPage;
+}(react_1);
+
+var FeedPage =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(FeedPage, _Component);
+
+  function FeedPage(props) {
+    var _this;
+
+    _classCallCheck(this, FeedPage);
+    _this = _possibleConstructorReturn(this, (FeedPage.__proto__ || Object.getPrototypeOf(FeedPage)).call(this, props));
+    _this.state = {
+      message: ""
+    };
+    _this.messageSubmit = _this.messageSubmit.bind(_this);
+    _this.messageChange = _this.messageChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(FeedPage, [{
+    key: "messageChange",
+    value: function messageChange(event) {
+      this.setState({
+        message: event.target.value
+      });
+    }
+  }, {
+    key: "messageSubmit",
+    value: function messageSubmit(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var message = {
+        uid: util.uuid(),
+        aud: [this.props.queryParams.station],
+        aut: this.props.store.usership,
+        wen: Date.now(),
+        sep: {
+          lin: {
+            msg: this.state.message,
+            pat: false
+          }
+        }
+      };
+      this.props.api.hall({
+        convey: [message]
+      });
+      this.setState({
+        message: ""
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var messages = this.props.store.messages[this.props.queryParams.station];
+      var messageElems = null;
+
+      if (messages) {
+        messageElems = messages.messages.slice(0) // creates a shallow copy
+        .sort(function (a, b) {
+          return a.wen < b.wen;
+        }) // sort messages newest-first
+        .map(function (msg) {
+          var displayDate = moment(msg.wen).fromNow();
+          return react.createElement("div", {
+            key: msg.uid,
+            className: "mt-8"
+          }, react.createElement("div", {
+            className: "text-mono"
+          }, displayDate), react.createElement("div", {
+            className: "text-lg"
+          }, msg.sep.lin.msg));
+        });
+      }
+
+      return react.createElement("div", null, react.createElement("b", null, "~", this.props.store.usership), react.createElement("div", {
+        className: "chat-input mt-6"
+      }, react.createElement("div", {
+        className: "col-sm-8"
+      }, react.createElement("form", {
+        onSubmit: this.messageSubmit
+      }, react.createElement("input", {
+        className: "chat-input-field",
+        type: "text",
+        placeholder: "Say something",
+        value: this.state.message,
+        onChange: this.messageChange
+      })))), react.createElement("div", null, messageElems));
+    }
+  }]);
+  return FeedPage;
+}(react_1);
+
+var StreamPageHeader =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(StreamPageHeader, _Component);
+
+  function StreamPageHeader() {
+    _classCallCheck(this, StreamPageHeader);
+    return _possibleConstructorReturn(this, (StreamPageHeader.__proto__ || Object.getPrototypeOf(StreamPageHeader)).apply(this, arguments));
+  }
+
+  _createClass(StreamPageHeader, [{
+    key: "render",
+    value: function render() {
+      return react.createElement("div", {
+        className: "header-subpage"
+      }, react.createElement("h3", {
+        className: "header-sep"
+      }, "/"), react.createElement("h3", {
+        className: "inline text-mono"
+      }, this.props.queryParams.station), react.createElement("a", {
+        className: "header-settings text-sm",
+        href: "/~~/pages/nutalk/stream/edit?station=".concat(this.props.queryParams.station)
+      }, "Settings \u2192"));
+    }
+  }]);
+  return StreamPageHeader;
+}(react_1);
+var StreamPage =
+/*#__PURE__*/
+function (_Component2) {
+  _inherits(StreamPage, _Component2);
+
+  function StreamPage(props) {
+    _classCallCheck(this, StreamPage);
+    return _possibleConstructorReturn(this, (StreamPage.__proto__ || Object.getPrototypeOf(StreamPage)).call(this, props));
+  }
+
+  _createClass(StreamPage, [{
+    key: "render",
+    value: function render() {
+      var cos = this.props.store.configs[this.props.queryParams.station];
+      var subpage = null;
+
+      if (cos && cos.cap === "chat") {
+        subpage = [react.createElement(ChatPage, this.props)];
+      } else if (cos && cos.cap === "feed") {
+        subpage = [react.createElement(FeedPage, this.props)];
+      }
+
+      return react.createElement("div", null, subpage);
     }
   }]);
   return StreamPage;
@@ -33681,8 +33798,8 @@ function () {
       this.bind("/public", "PUT"); // owner's circles
 
       this.bind("/circles/~".concat(this.authTokens.ship), "PUT"); // bind to collections
-
-      this.bind("/", "PUT", "collections"); // delete subscriptions when you're done with them, like...
+      // this.bind("/", "PUT", "collections");
+      // delete subscriptions when you're done with them, like...
       // this.bind("/circle/inbox/grams/0", "DELETE");
     } // keep default bind to hall, since its bind procedure more complex for now AA
 
@@ -51145,30 +51262,15 @@ var RootComponent =
 function (_Component) {
   _inherits(RootComponent, _Component);
 
-  function RootComponent(props) {
-    var _this;
-
+  function RootComponent() {
     _classCallCheck(this, RootComponent);
-    _this = _possibleConstructorReturn(this, (RootComponent.__proto__ || Object.getPrototypeOf(RootComponent)).call(this, props));
-    _this.state = {
-      kids: null
-    };
-    return _this;
+    return _possibleConstructorReturn(this, (RootComponent.__proto__ || Object.getPrototypeOf(RootComponent)).apply(this, arguments));
   }
 
   _createClass(RootComponent, [{
-    key: "renderKids",
-    value: function renderKids(kids) {
-      this.setState({
-        kids: kids
-      });
-    }
-  }, {
     key: "render",
     value: function render() {
-      {
-        this.state.kids;
-      }
+      return react.createElement("div", null, this.props.children);
     }
   }]);
   return RootComponent;
@@ -51187,7 +51289,8 @@ function () {
     this.root = new RootComponent(); // TODO: This... might be a circular dependency? Seems to work though.
 
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
-    this.api = new UrbitApi(this.warehouse); // ReactDOM.render(component, elem);
+    this.api = new UrbitApi(this.warehouse); // let kids = React.createElement(ExampleComponent);
+    // ReactDOM.render(React.createElement(RootComponent, {}, kids), document.querySelectorAll("#root")[0]);
 
     this.instantiateReactComponents();
     this.registerAnchorListeners();
@@ -51197,9 +51300,8 @@ function () {
   _createClass(UrbitRouter, [{
     key: "instantiateReactComponents",
     value: function instantiateReactComponents() {
-      var _this2 = this;
+      var _this = this;
 
-      // if userhip is null, auth tokens haven't been loaded yet, so api isn't unavablable. so we wait.
       if (this.warehouse.store.usership === "") {
         return;
       }
@@ -51219,9 +51321,9 @@ function () {
         var componentName = elem.dataset.component; // look up the component type in component-map, instantiate it
 
         var component = react.createElement(ComponentMap[componentName].comp, {
-          api: _this2.api,
-          store: _this2.warehouse.store,
-          storeData: _this2.warehouse.storeData.bind(_this2.warehouse),
+          api: _this.api,
+          store: _this.warehouse.store,
+          storeData: _this.warehouse.storeData.bind(_this.warehouse),
           queryParams: util.getQueryParams()
         });
         reactDom.render(component, elem);
@@ -51237,8 +51339,9 @@ function () {
   }, {
     key: "transitionTo",
     value: function transitionTo(targetUrl, noHistory) {
-      var _this3 = this;
+      var _this2 = this;
 
+      // return;
       // trim queryparams
       var q = targetUrl.indexOf('?');
       var baseUrl = q !== -1 ? targetUrl.substr(0, q) : targetUrl;
@@ -51253,15 +51356,15 @@ function () {
           window.history.pushState({}, null, targetUrl);
         }
 
-        document.querySelectorAll(_this3.domRoot)[0].innerHTML = resText;
+        document.querySelectorAll(_this2.domRoot)[0].innerHTML = resText; // React.renderDOM(ChildComponent, $(this.domRoot)[0]);
 
-        _this3.instantiateReactComponents();
+        _this2.instantiateReactComponents();
       });
     }
   }, {
     key: "registerAnchorListeners",
     value: function registerAnchorListeners() {
-      var _this4 = this;
+      var _this3 = this;
 
       window.document.addEventListener('click', function (e) {
         // Walk the DOM node's parents to find 'a' tags up the chain
@@ -51277,9 +51380,9 @@ function () {
 
           if (href.indexOf('.') === -1) {
             e.preventDefault();
-            var targetUrl = _this4.pageRoot + href;
+            var targetUrl = _this3.pageRoot + href;
 
-            _this4.transitionTo(targetUrl);
+            _this3.transitionTo(targetUrl);
           }
         }
       });
@@ -51287,10 +51390,10 @@ function () {
   }, {
     key: "registerHistoryListeners",
     value: function registerHistoryListeners() {
-      var _this5 = this;
+      var _this4 = this;
 
       window.onpopstate = function (state) {
-        _this5.transitionTo(window.location.href, true);
+        _this4.transitionTo(window.location.href, true);
       };
     }
   }]);
@@ -51298,6 +51401,6 @@ function () {
 }();
 
 console.log('app running');
-var router = new UrbitRouter();
+window.router = new UrbitRouter();
 
 })));
