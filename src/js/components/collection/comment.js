@@ -38,7 +38,7 @@ export class CommentCreate extends Component {
   render() {
     return (
       <div className="create-comment">
-        <div className="usership">
+        <div className="usership text-mono">
           ~{this.props.store.usership}
         </div>
         <textarea 
