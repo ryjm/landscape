@@ -4,6 +4,7 @@ import { ComponentMap } from './component-map';
 import { UrbitApi } from './urbit-api';
 import { UrbitWarehouse } from './urbit-warehouse';
 import { util } from './util';
+import HtmlToReact from 'html-to-react';
 
 class RootComponent extends Component {
   render() {
@@ -94,7 +95,13 @@ export class UrbitRouter {
       // let elem = new DOMParser().parseFromString(resText, "text/html").body.childNodes[0];
       // ReactDOM.render(React.createElement(elem), document.querySelectorAll(this.domRoot)[0]);
 
-      ReactDOM.render(<RootComponent content={resText} />, document.querySelectorAll("#dyna")[0]);
+      let htmlInput = '<div><h1>Title</h1><p>A paragraph</p></div>';
+      let parser = new HtmlToReact.Parser();
+      let reactElement = parser.parse(htmlInput);
+
+      debugger
+
+      ReactDOM.render(reactElement, document.querySelectorAll("#dyna")[0]);
 
       // document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
       this.instantiateReactComponents();

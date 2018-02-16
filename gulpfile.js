@@ -9,6 +9,7 @@ var babel = require('rollup-plugin-babel');
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
+var json = require('rollup-plugin-json');
 
 var serve = require('gulp-webserver');
 
@@ -43,15 +44,17 @@ gulp.task('bundle-js', function() {
       }),
       commonjs({
         namedExports: {
-          'node_modules/react/index.js': [ 'Component' ]
+          'node_modules/react/index.js': [ 'Component' ],
         }
       }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('development')
       }),
+      json(),
       resolve()
     ]
   }).on('bundle', function(bundle){ cache = bundle; })
+    .on('error', function(e){ console.log(e)})
     .pipe(source('index.js'))
     .pipe(gulp.dest('./urbit-code/web/pages/nutalk/js/'));
 });

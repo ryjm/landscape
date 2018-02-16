@@ -1,8 +1,11 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(factory());
-}(this, (function () { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('util'), require('events')) :
+	typeof define === 'function' && define.amd ? define(['util', 'events'], factory) :
+	(factory(global.util,global.events));
+}(this, (function (util,events) { 'use strict';
+
+util = util && util.hasOwnProperty('default') ? util['default'] : util;
+events = events && events.hasOwnProperty('default') ? events['default'] : events;
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -27,24 +30,10 @@ var global = module.exports = typeof window != 'undefined' && window.Math == Mat
 if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 });
 
-
-
-var _global$2 = Object.freeze({
-	default: _global,
-	__moduleExports: _global
-});
-
 var hasOwnProperty = {}.hasOwnProperty;
 var _has = function (it, key) {
   return hasOwnProperty.call(it, key);
 };
-
-
-
-var _has$2 = Object.freeze({
-	default: _has,
-	__moduleExports: _has
-});
 
 var _fails = function (exec) {
   try {
@@ -54,24 +43,9 @@ var _fails = function (exec) {
   }
 };
 
-
-
-var _fails$2 = Object.freeze({
-	default: _fails,
-	__moduleExports: _fails
-});
-
-var require$$1 = ( _fails$2 && _fails ) || _fails$2;
-
-var _descriptors = !require$$1(function () {
+// Thank's IE8 for his funny defineProperty
+var _descriptors = !_fails(function () {
   return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
-});
-
-
-
-var _descriptors$2 = Object.freeze({
-	default: _descriptors,
-	__moduleExports: _descriptors
 });
 
 var _core = createCommonjsModule(function (module) {
@@ -79,100 +53,46 @@ var core = module.exports = { version: '2.5.3' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 });
 
-var _core_1 = _core.version;
-
-
-var _core$2 = Object.freeze({
-	default: _core,
-	__moduleExports: _core,
-	version: _core_1
-});
-
 var _isObject = function (it) {
   return typeof it === 'object' ? it !== null : typeof it === 'function';
 };
 
-
-
-var _isObject$2 = Object.freeze({
-	default: _isObject,
-	__moduleExports: _isObject
-});
-
-var isObject = ( _isObject$2 && _isObject ) || _isObject$2;
-
 var _anObject = function (it) {
-  if (!isObject(it)) throw TypeError(it + ' is not an object!');
+  if (!_isObject(it)) throw TypeError(it + ' is not an object!');
   return it;
 };
 
-
-
-var _anObject$2 = Object.freeze({
-	default: _anObject,
-	__moduleExports: _anObject
-});
-
-var global$1 = ( _global$2 && _global ) || _global$2;
-
-var document$1 = global$1.document;
+var document$1 = _global.document;
 // typeof document.createElement is 'object' in old IE
-var is = isObject(document$1) && isObject(document$1.createElement);
+var is = _isObject(document$1) && _isObject(document$1.createElement);
 var _domCreate = function (it) {
   return is ? document$1.createElement(it) : {};
 };
 
-
-
-var _domCreate$2 = Object.freeze({
-	default: _domCreate,
-	__moduleExports: _domCreate
+var _ie8DomDefine = !_descriptors && !_fails(function () {
+  return Object.defineProperty(_domCreate('div'), 'a', { get: function () { return 7; } }).a != 7;
 });
 
-var require$$1$1 = ( _descriptors$2 && _descriptors ) || _descriptors$2;
+// 7.1.1 ToPrimitive(input [, PreferredType])
 
-var cel = ( _domCreate$2 && _domCreate ) || _domCreate$2;
-
-var _ie8DomDefine = !require$$1$1 && !require$$1(function () {
-  return Object.defineProperty(cel('div'), 'a', { get: function () { return 7; } }).a != 7;
-});
-
-
-
-var _ie8DomDefine$2 = Object.freeze({
-	default: _ie8DomDefine,
-	__moduleExports: _ie8DomDefine
-});
-
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
 var _toPrimitive = function (it, S) {
-  if (!isObject(it)) return it;
+  if (!_isObject(it)) return it;
   var fn, val;
-  if (S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
-  if (typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it))) return val;
-  if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (S && typeof (fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) return val;
+  if (typeof (fn = it.valueOf) == 'function' && !_isObject(val = fn.call(it))) return val;
+  if (!S && typeof (fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) return val;
   throw TypeError("Can't convert object to primitive value");
 };
 
-
-
-var _toPrimitive$2 = Object.freeze({
-	default: _toPrimitive,
-	__moduleExports: _toPrimitive
-});
-
-var anObject = ( _anObject$2 && _anObject ) || _anObject$2;
-
-var IE8_DOM_DEFINE = ( _ie8DomDefine$2 && _ie8DomDefine ) || _ie8DomDefine$2;
-
-var toPrimitive = ( _toPrimitive$2 && _toPrimitive ) || _toPrimitive$2;
-
 var dP$1 = Object.defineProperty;
 
-var f = require$$1$1 ? Object.defineProperty : function defineProperty(O, P, Attributes) {
-  anObject(O);
-  P = toPrimitive(P, true);
-  anObject(Attributes);
-  if (IE8_DOM_DEFINE) try {
+var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+  _anObject(O);
+  P = _toPrimitive(P, true);
+  _anObject(Attributes);
+  if (_ie8DomDefine) try {
     return dP$1(O, P, Attributes);
   } catch (e) { /* empty */ }
   if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
@@ -184,14 +104,6 @@ var _objectDp = {
 	f: f
 };
 
-
-
-var _objectDp$2 = Object.freeze({
-	default: _objectDp,
-	__moduleExports: _objectDp,
-	f: f
-});
-
 var _propertyDesc = function (bitmap, value) {
   return {
     enumerable: !(bitmap & 1),
@@ -201,30 +113,12 @@ var _propertyDesc = function (bitmap, value) {
   };
 };
 
-
-
-var _propertyDesc$2 = Object.freeze({
-	default: _propertyDesc,
-	__moduleExports: _propertyDesc
-});
-
-var $defineProperty$1 = ( _objectDp$2 && _objectDp ) || _objectDp$2;
-
-var createDesc = ( _propertyDesc$2 && _propertyDesc ) || _propertyDesc$2;
-
-var _hide = require$$1$1 ? function (object, key, value) {
-  return $defineProperty$1.f(object, key, createDesc(1, value));
+var _hide = _descriptors ? function (object, key, value) {
+  return _objectDp.f(object, key, _propertyDesc(1, value));
 } : function (object, key, value) {
   object[key] = value;
   return object;
 };
-
-
-
-var _hide$2 = Object.freeze({
-	default: _hide,
-	__moduleExports: _hide
-});
 
 var id = 0;
 var px = Math.random();
@@ -232,45 +126,30 @@ var _uid = function (key) {
   return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
 };
 
-
-
-var _uid$2 = Object.freeze({
-	default: _uid,
-	__moduleExports: _uid
-});
-
-var hide = ( _hide$2 && _hide ) || _hide$2;
-
-var has = ( _has$2 && _has ) || _has$2;
-
-var require$$26 = ( _uid$2 && _uid ) || _uid$2;
-
-var require$$1$2 = ( _core$2 && _core ) || _core$2;
-
 var _redefine = createCommonjsModule(function (module) {
-var SRC = require$$26('src');
+var SRC = _uid('src');
 var TO_STRING = 'toString';
 var $toString = Function[TO_STRING];
 var TPL = ('' + $toString).split(TO_STRING);
 
-require$$1$2.inspectSource = function (it) {
+_core.inspectSource = function (it) {
   return $toString.call(it);
 };
 
 (module.exports = function (O, key, val, safe) {
   var isFunction = typeof val == 'function';
-  if (isFunction) has(val, 'name') || hide(val, 'name', key);
+  if (isFunction) _has(val, 'name') || _hide(val, 'name', key);
   if (O[key] === val) return;
-  if (isFunction) has(val, SRC) || hide(val, SRC, O[key] ? '' + O[key] : TPL.join(String(key)));
-  if (O === global$1) {
+  if (isFunction) _has(val, SRC) || _hide(val, SRC, O[key] ? '' + O[key] : TPL.join(String(key)));
+  if (O === _global) {
     O[key] = val;
   } else if (!safe) {
     delete O[key];
-    hide(O, key, val);
+    _hide(O, key, val);
   } else if (O[key]) {
     O[key] = val;
   } else {
-    hide(O, key, val);
+    _hide(O, key, val);
   }
 // add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
 })(Function.prototype, TO_STRING, function toString() {
@@ -278,29 +157,15 @@ require$$1$2.inspectSource = function (it) {
 });
 });
 
-
-
-var _redefine$2 = Object.freeze({
-	default: _redefine,
-	__moduleExports: _redefine
-});
-
 var _aFunction = function (it) {
   if (typeof it != 'function') throw TypeError(it + ' is not a function!');
   return it;
 };
 
-
-
-var _aFunction$2 = Object.freeze({
-	default: _aFunction,
-	__moduleExports: _aFunction
-});
-
-var aFunction = ( _aFunction$2 && _aFunction ) || _aFunction$2;
+// optional / simple context binding
 
 var _ctx = function (fn, that, length) {
-  aFunction(fn);
+  _aFunction(fn);
   if (that === undefined) return fn;
   switch (length) {
     case 1: return function (a) {
@@ -318,17 +183,6 @@ var _ctx = function (fn, that, length) {
   };
 };
 
-
-
-var _ctx$2 = Object.freeze({
-	default: _ctx,
-	__moduleExports: _ctx
-});
-
-var redefine = ( _redefine$2 && _redefine ) || _redefine$2;
-
-var ctx = ( _ctx$2 && _ctx ) || _ctx$2;
-
 var PROTOTYPE$1 = 'prototype';
 
 var $export = function (type, name, source) {
@@ -337,8 +191,8 @@ var $export = function (type, name, source) {
   var IS_STATIC = type & $export.S;
   var IS_PROTO = type & $export.P;
   var IS_BIND = type & $export.B;
-  var target = IS_GLOBAL ? global$1 : IS_STATIC ? global$1[name] || (global$1[name] = {}) : (global$1[name] || {})[PROTOTYPE$1];
-  var exports = IS_GLOBAL ? require$$1$2 : require$$1$2[name] || (require$$1$2[name] = {});
+  var target = IS_GLOBAL ? _global : IS_STATIC ? _global[name] || (_global[name] = {}) : (_global[name] || {})[PROTOTYPE$1];
+  var exports = IS_GLOBAL ? _core : _core[name] || (_core[name] = {});
   var expProto = exports[PROTOTYPE$1] || (exports[PROTOTYPE$1] = {});
   var key, own, out, exp;
   if (IS_GLOBAL) source = name;
@@ -348,15 +202,15 @@ var $export = function (type, name, source) {
     // export native or passed
     out = (own ? target : source)[key];
     // bind timers to global for call from export context
-    exp = IS_BIND && own ? ctx(out, global$1) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    exp = IS_BIND && own ? _ctx(out, _global) : IS_PROTO && typeof out == 'function' ? _ctx(Function.call, out) : out;
     // extend global
-    if (target) redefine(target, key, out, type & $export.U);
+    if (target) _redefine(target, key, out, type & $export.U);
     // export
-    if (exports[key] != out) hide(exports, key, exp);
+    if (exports[key] != out) _hide(exports, key, exp);
     if (IS_PROTO && expProto[key] != out) expProto[key] = out;
   }
 };
-global$1.core = require$$1$2;
+_global.core = _core;
 // type bitmap
 $export.F = 1;   // forced
 $export.G = 2;   // global
@@ -368,23 +222,16 @@ $export.U = 64;  // safe
 $export.R = 128; // real proto method for `library`
 var _export = $export;
 
-
-
-var _export$2 = Object.freeze({
-	default: _export,
-	__moduleExports: _export
-});
-
 var _meta = createCommonjsModule(function (module) {
-var META = require$$26('meta');
+var META = _uid('meta');
 
 
-var setDesc = $defineProperty$1.f;
+var setDesc = _objectDp.f;
 var id = 0;
 var isExtensible = Object.isExtensible || function () {
   return true;
 };
-var FREEZE = !require$$1(function () {
+var FREEZE = !_fails(function () {
   return isExtensible(Object.preventExtensions({}));
 });
 var setMeta = function (it) {
@@ -395,8 +242,8 @@ var setMeta = function (it) {
 };
 var fastKey = function (it, create) {
   // return primitive with prefix
-  if (!isObject(it)) return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
-  if (!has(it, META)) {
+  if (!_isObject(it)) return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
+  if (!_has(it, META)) {
     // can't set metadata to uncaught frozen object
     if (!isExtensible(it)) return 'F';
     // not necessary to add metadata
@@ -407,7 +254,7 @@ var fastKey = function (it, create) {
   } return it[META].i;
 };
 var getWeak = function (it, create) {
-  if (!has(it, META)) {
+  if (!_has(it, META)) {
     // can't set metadata to uncaught frozen object
     if (!isExtensible(it)) return true;
     // not necessary to add metadata
@@ -419,7 +266,7 @@ var getWeak = function (it, create) {
 };
 // add metadata on freeze-family methods calling
 var onFreeze = function (it) {
-  if (FREEZE && meta.NEED && isExtensible(it) && !has(it, META)) setMeta(it);
+  if (FREEZE && meta.NEED && isExtensible(it) && !_has(it, META)) setMeta(it);
   return it;
 };
 var meta = module.exports = {
@@ -431,115 +278,47 @@ var meta = module.exports = {
 };
 });
 
-var _meta_1 = _meta.KEY;
-var _meta_2 = _meta.NEED;
-var _meta_3 = _meta.fastKey;
-var _meta_4 = _meta.getWeak;
-var _meta_5 = _meta.onFreeze;
-
-
-var _meta$2 = Object.freeze({
-	default: _meta,
-	__moduleExports: _meta,
-	KEY: _meta_1,
-	NEED: _meta_2,
-	fastKey: _meta_3,
-	getWeak: _meta_4,
-	onFreeze: _meta_5
-});
-
 var SHARED = '__core-js_shared__';
-var store = global$1[SHARED] || (global$1[SHARED] = {});
+var store = _global[SHARED] || (_global[SHARED] = {});
 var _shared = function (key) {
   return store[key] || (store[key] = {});
 };
 
-
-
-var _shared$2 = Object.freeze({
-	default: _shared,
-	__moduleExports: _shared
-});
-
-var require$$0 = ( _shared$2 && _shared ) || _shared$2;
-
 var _wks = createCommonjsModule(function (module) {
-var store = require$$0('wks');
+var store = _shared('wks');
 
-var Symbol = global$1.Symbol;
+var Symbol = _global.Symbol;
 var USE_SYMBOL = typeof Symbol == 'function';
 
 var $exports = module.exports = function (name) {
   return store[name] || (store[name] =
-    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : require$$26)('Symbol.' + name));
+    USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : _uid)('Symbol.' + name));
 };
 
 $exports.store = store;
 });
 
+var def = _objectDp.f;
 
-
-var _wks$2 = Object.freeze({
-	default: _wks,
-	__moduleExports: _wks
-});
-
-var wks = ( _wks$2 && _wks ) || _wks$2;
-
-var def = $defineProperty$1.f;
-
-var TAG = wks('toStringTag');
+var TAG = _wks('toStringTag');
 
 var _setToStringTag = function (it, tag, stat) {
-  if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
+  if (it && !_has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
 };
 
-
-
-var _setToStringTag$2 = Object.freeze({
-	default: _setToStringTag,
-	__moduleExports: _setToStringTag
-});
-
-var f$1 = wks;
+var f$1 = _wks;
 
 var _wksExt = {
 	f: f$1
 };
 
-
-
-var _wksExt$2 = Object.freeze({
-	default: _wksExt,
-	__moduleExports: _wksExt,
-	f: f$1
-});
-
 var _library = false;
 
-
-
-var _library$2 = Object.freeze({
-	default: _library,
-	__moduleExports: _library
-});
-
-var require$$0$1 = ( _library$2 && _library ) || _library$2;
-
-var wksExt = ( _wksExt$2 && _wksExt ) || _wksExt$2;
-
-var defineProperty = $defineProperty$1.f;
+var defineProperty = _objectDp.f;
 var _wksDefine = function (name) {
-  var $Symbol = require$$1$2.Symbol || (require$$1$2.Symbol = require$$0$1 ? {} : global$1.Symbol || {});
-  if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty($Symbol, name, { value: wksExt.f(name) });
+  var $Symbol = _core.Symbol || (_core.Symbol = _library ? {} : _global.Symbol || {});
+  if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty($Symbol, name, { value: _wksExt.f(name) });
 };
-
-
-
-var _wksDefine$2 = Object.freeze({
-	default: _wksDefine,
-	__moduleExports: _wksDefine
-});
 
 var toString = {}.toString;
 
@@ -547,25 +326,12 @@ var _cof = function (it) {
   return toString.call(it).slice(8, -1);
 };
 
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
 
-
-var _cof$2 = Object.freeze({
-	default: _cof,
-	__moduleExports: _cof
-});
-
-var require$$2 = ( _cof$2 && _cof ) || _cof$2;
-
+// eslint-disable-next-line no-prototype-builtins
 var _iobject = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
-  return require$$2(it) == 'String' ? it.split('') : Object(it);
+  return _cof(it) == 'String' ? it.split('') : Object(it);
 };
-
-
-
-var _iobject$2 = Object.freeze({
-	default: _iobject,
-	__moduleExports: _iobject
-});
 
 // 7.2.1 RequireObjectCoercible(argument)
 var _defined = function (it) {
@@ -573,27 +339,12 @@ var _defined = function (it) {
   return it;
 };
 
+// to indexed object, toObject with fallback for non-array-like ES3 strings
 
-
-var _defined$2 = Object.freeze({
-	default: _defined,
-	__moduleExports: _defined
-});
-
-var IObject = ( _iobject$2 && _iobject ) || _iobject$2;
-
-var defined = ( _defined$2 && _defined ) || _defined$2;
 
 var _toIobject = function (it) {
-  return IObject(defined(it));
+  return _iobject(_defined(it));
 };
-
-
-
-var _toIobject$2 = Object.freeze({
-	default: _toIobject,
-	__moduleExports: _toIobject
-});
 
 // 7.1.4 ToInteger
 var ceil = Math.ceil;
@@ -602,52 +353,30 @@ var _toInteger = function (it) {
   return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
 
-
-
-var _toInteger$2 = Object.freeze({
-	default: _toInteger,
-	__moduleExports: _toInteger
-});
-
-var toInteger = ( _toInteger$2 && _toInteger ) || _toInteger$2;
+// 7.1.15 ToLength
 
 var min = Math.min;
 var _toLength = function (it) {
-  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+  return it > 0 ? min(_toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
 };
-
-
-
-var _toLength$2 = Object.freeze({
-	default: _toLength,
-	__moduleExports: _toLength
-});
 
 var max = Math.max;
 var min$1 = Math.min;
 var _toAbsoluteIndex = function (index, length) {
-  index = toInteger(index);
+  index = _toInteger(index);
   return index < 0 ? max(index + length, 0) : min$1(index, length);
 };
 
+// false -> Array#indexOf
+// true  -> Array#includes
 
 
-var _toAbsoluteIndex$2 = Object.freeze({
-	default: _toAbsoluteIndex,
-	__moduleExports: _toAbsoluteIndex
-});
-
-var toIObject = ( _toIobject$2 && _toIobject ) || _toIobject$2;
-
-var toLength = ( _toLength$2 && _toLength ) || _toLength$2;
-
-var require$$15 = ( _toAbsoluteIndex$2 && _toAbsoluteIndex ) || _toAbsoluteIndex$2;
 
 var _arrayIncludes = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
-    var O = toIObject($this);
-    var length = toLength(O.length);
-    var index = require$$15(fromIndex, length);
+    var O = _toIobject($this);
+    var length = _toLength(O.length);
+    var index = _toAbsoluteIndex(fromIndex, length);
     var value;
     // Array#includes uses SameValueZero equality algorithm
     // eslint-disable-next-line no-self-compare
@@ -662,79 +391,40 @@ var _arrayIncludes = function (IS_INCLUDES) {
   };
 };
 
-
-
-var _arrayIncludes$2 = Object.freeze({
-	default: _arrayIncludes,
-	__moduleExports: _arrayIncludes
-});
-
-var shared = require$$0('keys');
+var shared = _shared('keys');
 
 var _sharedKey = function (key) {
-  return shared[key] || (shared[key] = require$$26(key));
+  return shared[key] || (shared[key] = _uid(key));
 };
 
-
-
-var _sharedKey$2 = Object.freeze({
-	default: _sharedKey,
-	__moduleExports: _sharedKey
-});
-
-var require$$0$2 = ( _arrayIncludes$2 && _arrayIncludes ) || _arrayIncludes$2;
-
-var require$$0$3 = ( _sharedKey$2 && _sharedKey ) || _sharedKey$2;
-
-var arrayIndexOf = require$$0$2(false);
-var IE_PROTO = require$$0$3('IE_PROTO');
+var arrayIndexOf = _arrayIncludes(false);
+var IE_PROTO = _sharedKey('IE_PROTO');
 
 var _objectKeysInternal = function (object, names) {
-  var O = toIObject(object);
+  var O = _toIobject(object);
   var i = 0;
   var result = [];
   var key;
-  for (key in O) if (key != IE_PROTO) has(O, key) && result.push(key);
+  for (key in O) if (key != IE_PROTO) _has(O, key) && result.push(key);
   // Don't enum bug & hidden keys
-  while (names.length > i) if (has(O, key = names[i++])) {
+  while (names.length > i) if (_has(O, key = names[i++])) {
     ~arrayIndexOf(result, key) || result.push(key);
   }
   return result;
 };
-
-
-
-var _objectKeysInternal$2 = Object.freeze({
-	default: _objectKeysInternal,
-	__moduleExports: _objectKeysInternal
-});
 
 // IE 8- don't enum bug keys
 var _enumBugKeys = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 ).split(',');
 
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
 
 
-var _enumBugKeys$2 = Object.freeze({
-	default: _enumBugKeys,
-	__moduleExports: _enumBugKeys
-});
-
-var $keys = ( _objectKeysInternal$2 && _objectKeysInternal ) || _objectKeysInternal$2;
-
-var require$$0$4 = ( _enumBugKeys$2 && _enumBugKeys ) || _enumBugKeys$2;
 
 var _objectKeys = Object.keys || function keys(O) {
-  return $keys(O, require$$0$4);
+  return _objectKeysInternal(O, _enumBugKeys);
 };
-
-
-
-var _objectKeys$2 = Object.freeze({
-	default: _objectKeys,
-	__moduleExports: _objectKeys
-});
 
 var f$2 = Object.getOwnPropertySymbols;
 
@@ -742,109 +432,65 @@ var _objectGops = {
 	f: f$2
 };
 
-
-
-var _objectGops$2 = Object.freeze({
-	default: _objectGops,
-	__moduleExports: _objectGops,
-	f: f$2
-});
-
 var f$3 = {}.propertyIsEnumerable;
 
 var _objectPie = {
 	f: f$3
 };
 
+// all enumerable object keys, includes symbols
 
 
-var _objectPie$2 = Object.freeze({
-	default: _objectPie,
-	__moduleExports: _objectPie,
-	f: f$3
-});
-
-var getKeys = ( _objectKeys$2 && _objectKeys ) || _objectKeys$2;
-
-var gOPS = ( _objectGops$2 && _objectGops ) || _objectGops$2;
-
-var require$$0$5 = ( _objectPie$2 && _objectPie ) || _objectPie$2;
 
 var _enumKeys = function (it) {
-  var result = getKeys(it);
-  var getSymbols = gOPS.f;
+  var result = _objectKeys(it);
+  var getSymbols = _objectGops.f;
   if (getSymbols) {
     var symbols = getSymbols(it);
-    var isEnum = require$$0$5.f;
+    var isEnum = _objectPie.f;
     var i = 0;
     var key;
     while (symbols.length > i) if (isEnum.call(it, key = symbols[i++])) result.push(key);
   } return result;
 };
 
-
-
-var _enumKeys$2 = Object.freeze({
-	default: _enumKeys,
-	__moduleExports: _enumKeys
-});
+// 7.2.2 IsArray(argument)
 
 var _isArray = Array.isArray || function isArray(arg) {
-  return require$$2(arg) == 'Array';
+  return _cof(arg) == 'Array';
 };
 
-
-
-var _isArray$2 = Object.freeze({
-	default: _isArray,
-	__moduleExports: _isArray
-});
-
-var _objectDps = require$$1$1 ? Object.defineProperties : function defineProperties(O, Properties) {
-  anObject(O);
-  var keys = getKeys(Properties);
+var _objectDps = _descriptors ? Object.defineProperties : function defineProperties(O, Properties) {
+  _anObject(O);
+  var keys = _objectKeys(Properties);
   var length = keys.length;
   var i = 0;
   var P;
-  while (length > i) $defineProperty$1.f(O, P = keys[i++], Properties[P]);
+  while (length > i) _objectDp.f(O, P = keys[i++], Properties[P]);
   return O;
 };
 
-
-
-var _objectDps$2 = Object.freeze({
-	default: _objectDps,
-	__moduleExports: _objectDps
-});
-
-var document$2 = global$1.document;
+var document$2 = _global.document;
 var _html = document$2 && document$2.documentElement;
 
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 
 
-var _html$2 = Object.freeze({
-	default: _html,
-	__moduleExports: _html
-});
 
-var require$$1$3 = ( _objectDps$2 && _objectDps ) || _objectDps$2;
-
-var html = ( _html$2 && _html ) || _html$2;
-
-var IE_PROTO$1 = require$$0$3('IE_PROTO');
+var IE_PROTO$1 = _sharedKey('IE_PROTO');
 var Empty = function () { /* empty */ };
 var PROTOTYPE$2 = 'prototype';
 
 // Create object with fake `null` prototype: use iframe Object with cleared prototype
 var createDict = function () {
   // Thrash, waste and sodomy: IE GC bug
-  var iframe = cel('iframe');
-  var i = require$$0$4.length;
+  var iframe = _domCreate('iframe');
+  var i = _enumBugKeys.length;
   var lt = '<';
   var gt = '>';
   var iframeDocument;
   iframe.style.display = 'none';
-  html.appendChild(iframe);
+  _html.appendChild(iframe);
   iframe.src = 'javascript:'; // eslint-disable-line no-script-url
   // createDict = iframe.contentWindow.Object;
   // html.removeChild(iframe);
@@ -853,50 +499,37 @@ var createDict = function () {
   iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
   iframeDocument.close();
   createDict = iframeDocument.F;
-  while (i--) delete createDict[PROTOTYPE$2][require$$0$4[i]];
+  while (i--) delete createDict[PROTOTYPE$2][_enumBugKeys[i]];
   return createDict();
 };
 
 var _objectCreate = Object.create || function create(O, Properties) {
   var result;
   if (O !== null) {
-    Empty[PROTOTYPE$2] = anObject(O);
+    Empty[PROTOTYPE$2] = _anObject(O);
     result = new Empty();
     Empty[PROTOTYPE$2] = null;
     // add "__proto__" for Object.getPrototypeOf polyfill
     result[IE_PROTO$1] = O;
   } else result = createDict();
-  return Properties === undefined ? result : require$$1$3(result, Properties);
+  return Properties === undefined ? result : _objectDps(result, Properties);
 };
 
+// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
 
-
-var _objectCreate$2 = Object.freeze({
-	default: _objectCreate,
-	__moduleExports: _objectCreate
-});
-
-var hiddenKeys = require$$0$4.concat('length', 'prototype');
+var hiddenKeys = _enumBugKeys.concat('length', 'prototype');
 
 var f$5 = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
-  return $keys(O, hiddenKeys);
+  return _objectKeysInternal(O, hiddenKeys);
 };
 
 var _objectGopn = {
 	f: f$5
 };
 
+// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 
-
-var _objectGopn$2 = Object.freeze({
-	default: _objectGopn,
-	__moduleExports: _objectGopn,
-	f: f$5
-});
-
-var gOPN$2 = ( _objectGopn$2 && _objectGopn ) || _objectGopn$2;
-
-var gOPN$1 = gOPN$2.f;
+var gOPN$1 = _objectGopn.f;
 var toString$1 = {}.toString;
 
 var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -911,61 +544,27 @@ var getWindowNames = function (it) {
 };
 
 var f$4 = function getOwnPropertyNames(it) {
-  return windowNames && toString$1.call(it) == '[object Window]' ? getWindowNames(it) : gOPN$1(toIObject(it));
+  return windowNames && toString$1.call(it) == '[object Window]' ? getWindowNames(it) : gOPN$1(_toIobject(it));
 };
 
 var _objectGopnExt = {
 	f: f$4
 };
 
-
-
-var _objectGopnExt$2 = Object.freeze({
-	default: _objectGopnExt,
-	__moduleExports: _objectGopnExt,
-	f: f$4
-});
-
 var gOPD$1 = Object.getOwnPropertyDescriptor;
 
-var f$6 = require$$1$1 ? gOPD$1 : function getOwnPropertyDescriptor(O, P) {
-  O = toIObject(O);
-  P = toPrimitive(P, true);
-  if (IE8_DOM_DEFINE) try {
+var f$6 = _descriptors ? gOPD$1 : function getOwnPropertyDescriptor(O, P) {
+  O = _toIobject(O);
+  P = _toPrimitive(P, true);
+  if (_ie8DomDefine) try {
     return gOPD$1(O, P);
   } catch (e) { /* empty */ }
-  if (has(O, P)) return createDesc(!require$$0$5.f.call(O, P), O[P]);
+  if (_has(O, P)) return _propertyDesc(!_objectPie.f.call(O, P), O[P]);
 };
 
 var _objectGopd = {
 	f: f$6
 };
-
-
-
-var _objectGopd$2 = Object.freeze({
-	default: _objectGopd,
-	__moduleExports: _objectGopd,
-	f: f$6
-});
-
-var $export$1 = ( _export$2 && _export ) || _export$2;
-
-var require$$0$6 = ( _meta$2 && _meta ) || _meta$2;
-
-var setToStringTag = ( _setToStringTag$2 && _setToStringTag ) || _setToStringTag$2;
-
-var require$$0$7 = ( _wksDefine$2 && _wksDefine ) || _wksDefine$2;
-
-var enumKeys = ( _enumKeys$2 && _enumKeys ) || _enumKeys$2;
-
-var isArray = ( _isArray$2 && _isArray ) || _isArray$2;
-
-var create = ( _objectCreate$2 && _objectCreate ) || _objectCreate$2;
-
-var require$$1$4 = ( _objectGopnExt$2 && _objectGopnExt ) || _objectGopnExt$2;
-
-var require$$0$8 = ( _objectGopd$2 && _objectGopd ) || _objectGopd$2;
 
 'use strict';
 // ECMAScript 6 symbols shim
@@ -974,7 +573,7 @@ var require$$0$8 = ( _objectGopd$2 && _objectGopd ) || _objectGopd$2;
 
 
 
-var META = require$$0$6.KEY;
+var META = _meta.KEY;
 
 
 
@@ -994,28 +593,28 @@ var META = require$$0$6.KEY;
 
 
 
-var gOPD = require$$0$8.f;
-var dP = $defineProperty$1.f;
-var gOPN = require$$1$4.f;
-var $Symbol = global$1.Symbol;
-var $JSON = global$1.JSON;
+var gOPD = _objectGopd.f;
+var dP = _objectDp.f;
+var gOPN = _objectGopnExt.f;
+var $Symbol = _global.Symbol;
+var $JSON = _global.JSON;
 var _stringify = $JSON && $JSON.stringify;
 var PROTOTYPE = 'prototype';
-var HIDDEN = wks('_hidden');
-var TO_PRIMITIVE = wks('toPrimitive');
+var HIDDEN = _wks('_hidden');
+var TO_PRIMITIVE = _wks('toPrimitive');
 var isEnum = {}.propertyIsEnumerable;
-var SymbolRegistry = require$$0('symbol-registry');
-var AllSymbols = require$$0('symbols');
-var OPSymbols = require$$0('op-symbols');
+var SymbolRegistry = _shared('symbol-registry');
+var AllSymbols = _shared('symbols');
+var OPSymbols = _shared('op-symbols');
 var ObjectProto = Object[PROTOTYPE];
 var USE_NATIVE = typeof $Symbol == 'function';
-var QObject = global$1.QObject;
+var QObject = _global.QObject;
 // Don't use setters in Qt Script, https://github.com/zloirock/core-js/issues/173
 var setter = !QObject || !QObject[PROTOTYPE] || !QObject[PROTOTYPE].findChild;
 
 // fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
-var setSymbolDesc = require$$1$1 && require$$1(function () {
-  return create(dP({}, 'a', {
+var setSymbolDesc = _descriptors && _fails(function () {
+  return _objectCreate(dP({}, 'a', {
     get: function () { return dP(this, 'a', { value: 7 }).a; }
   })).a != 7;
 }) ? function (it, key, D) {
@@ -1026,7 +625,7 @@ var setSymbolDesc = require$$1$1 && require$$1(function () {
 } : dP;
 
 var wrap = function (tag) {
-  var sym = AllSymbols[tag] = create($Symbol[PROTOTYPE]);
+  var sym = AllSymbols[tag] = _objectCreate($Symbol[PROTOTYPE]);
   sym._k = tag;
   return sym;
 };
@@ -1039,22 +638,22 @@ var isSymbol = USE_NATIVE && typeof $Symbol.iterator == 'symbol' ? function (it)
 
 var $defineProperty = function defineProperty(it, key, D) {
   if (it === ObjectProto) $defineProperty(OPSymbols, key, D);
-  anObject(it);
-  key = toPrimitive(key, true);
-  anObject(D);
-  if (has(AllSymbols, key)) {
+  _anObject(it);
+  key = _toPrimitive(key, true);
+  _anObject(D);
+  if (_has(AllSymbols, key)) {
     if (!D.enumerable) {
-      if (!has(it, HIDDEN)) dP(it, HIDDEN, createDesc(1, {}));
+      if (!_has(it, HIDDEN)) dP(it, HIDDEN, _propertyDesc(1, {}));
       it[HIDDEN][key] = true;
     } else {
-      if (has(it, HIDDEN) && it[HIDDEN][key]) it[HIDDEN][key] = false;
-      D = create(D, { enumerable: createDesc(0, false) });
+      if (_has(it, HIDDEN) && it[HIDDEN][key]) it[HIDDEN][key] = false;
+      D = _objectCreate(D, { enumerable: _propertyDesc(0, false) });
     } return setSymbolDesc(it, key, D);
   } return dP(it, key, D);
 };
 var $defineProperties = function defineProperties(it, P) {
-  anObject(it);
-  var keys = enumKeys(P = toIObject(P));
+  _anObject(it);
+  var keys = _enumKeys(P = _toIobject(P));
   var i = 0;
   var l = keys.length;
   var key;
@@ -1062,38 +661,38 @@ var $defineProperties = function defineProperties(it, P) {
   return it;
 };
 var $create = function create$$1(it, P) {
-  return P === undefined ? create(it) : $defineProperties(create(it), P);
+  return P === undefined ? _objectCreate(it) : $defineProperties(_objectCreate(it), P);
 };
 var $propertyIsEnumerable = function propertyIsEnumerable(key) {
-  var E = isEnum.call(this, key = toPrimitive(key, true));
-  if (this === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key)) return false;
-  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
+  var E = isEnum.call(this, key = _toPrimitive(key, true));
+  if (this === ObjectProto && _has(AllSymbols, key) && !_has(OPSymbols, key)) return false;
+  return E || !_has(this, key) || !_has(AllSymbols, key) || _has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
 };
 var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key) {
-  it = toIObject(it);
-  key = toPrimitive(key, true);
-  if (it === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key)) return;
+  it = _toIobject(it);
+  key = _toPrimitive(key, true);
+  if (it === ObjectProto && _has(AllSymbols, key) && !_has(OPSymbols, key)) return;
   var D = gOPD(it, key);
-  if (D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key])) D.enumerable = true;
+  if (D && _has(AllSymbols, key) && !(_has(it, HIDDEN) && it[HIDDEN][key])) D.enumerable = true;
   return D;
 };
 var $getOwnPropertyNames = function getOwnPropertyNames(it) {
-  var names = gOPN(toIObject(it));
+  var names = gOPN(_toIobject(it));
   var result = [];
   var i = 0;
   var key;
   while (names.length > i) {
-    if (!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META) result.push(key);
+    if (!_has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META) result.push(key);
   } return result;
 };
 var $getOwnPropertySymbols = function getOwnPropertySymbols(it) {
   var IS_OP = it === ObjectProto;
-  var names = gOPN(IS_OP ? OPSymbols : toIObject(it));
+  var names = gOPN(IS_OP ? OPSymbols : _toIobject(it));
   var result = [];
   var i = 0;
   var key;
   while (names.length > i) {
-    if (has(AllSymbols, key = names[i++]) && (IS_OP ? has(ObjectProto, key) : true)) result.push(AllSymbols[key]);
+    if (_has(AllSymbols, key = names[i++]) && (IS_OP ? _has(ObjectProto, key) : true)) result.push(AllSymbols[key]);
   } return result;
 };
 
@@ -1101,47 +700,47 @@ var $getOwnPropertySymbols = function getOwnPropertySymbols(it) {
 if (!USE_NATIVE) {
   $Symbol = function Symbol() {
     if (this instanceof $Symbol) throw TypeError('Symbol is not a constructor!');
-    var tag = require$$26(arguments.length > 0 ? arguments[0] : undefined);
+    var tag = _uid(arguments.length > 0 ? arguments[0] : undefined);
     var $set = function (value) {
       if (this === ObjectProto) $set.call(OPSymbols, value);
-      if (has(this, HIDDEN) && has(this[HIDDEN], tag)) this[HIDDEN][tag] = false;
-      setSymbolDesc(this, tag, createDesc(1, value));
+      if (_has(this, HIDDEN) && _has(this[HIDDEN], tag)) this[HIDDEN][tag] = false;
+      setSymbolDesc(this, tag, _propertyDesc(1, value));
     };
-    if (require$$1$1 && setter) setSymbolDesc(ObjectProto, tag, { configurable: true, set: $set });
+    if (_descriptors && setter) setSymbolDesc(ObjectProto, tag, { configurable: true, set: $set });
     return wrap(tag);
   };
-  redefine($Symbol[PROTOTYPE], 'toString', function toString() {
+  _redefine($Symbol[PROTOTYPE], 'toString', function toString() {
     return this._k;
   });
 
-  require$$0$8.f = $getOwnPropertyDescriptor;
-  $defineProperty$1.f = $defineProperty;
-  gOPN$2.f = require$$1$4.f = $getOwnPropertyNames;
-  require$$0$5.f = $propertyIsEnumerable;
-  gOPS.f = $getOwnPropertySymbols;
+  _objectGopd.f = $getOwnPropertyDescriptor;
+  _objectDp.f = $defineProperty;
+  _objectGopn.f = _objectGopnExt.f = $getOwnPropertyNames;
+  _objectPie.f = $propertyIsEnumerable;
+  _objectGops.f = $getOwnPropertySymbols;
 
-  if (require$$1$1 && !require$$0$1) {
-    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+  if (_descriptors && !_library) {
+    _redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
   }
 
-  wksExt.f = function (name) {
-    return wrap(wks(name));
+  _wksExt.f = function (name) {
+    return wrap(_wks(name));
   };
 }
 
-$export$1($export$1.G + $export$1.W + $export$1.F * !USE_NATIVE, { Symbol: $Symbol });
+_export(_export.G + _export.W + _export.F * !USE_NATIVE, { Symbol: $Symbol });
 
 for (var es6Symbols = (
   // 19.4.2.2, 19.4.2.3, 19.4.2.4, 19.4.2.6, 19.4.2.8, 19.4.2.9, 19.4.2.10, 19.4.2.11, 19.4.2.12, 19.4.2.13, 19.4.2.14
   'hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables'
-).split(','), j = 0; es6Symbols.length > j;)wks(es6Symbols[j++]);
+).split(','), j = 0; es6Symbols.length > j;)_wks(es6Symbols[j++]);
 
-for (var wellKnownSymbols = getKeys(wks.store), k = 0; wellKnownSymbols.length > k;) require$$0$7(wellKnownSymbols[k++]);
+for (var wellKnownSymbols = _objectKeys(_wks.store), k = 0; wellKnownSymbols.length > k;) _wksDefine(wellKnownSymbols[k++]);
 
-$export$1($export$1.S + $export$1.F * !USE_NATIVE, 'Symbol', {
+_export(_export.S + _export.F * !USE_NATIVE, 'Symbol', {
   // 19.4.2.1 Symbol.for(key)
   'for': function (key) {
-    return has(SymbolRegistry, key += '')
+    return _has(SymbolRegistry, key += '')
       ? SymbolRegistry[key]
       : SymbolRegistry[key] = $Symbol(key);
   },
@@ -1154,7 +753,7 @@ $export$1($export$1.S + $export$1.F * !USE_NATIVE, 'Symbol', {
   useSimple: function () { setter = false; }
 });
 
-$export$1($export$1.S + $export$1.F * !USE_NATIVE, 'Object', {
+_export(_export.S + _export.F * !USE_NATIVE, 'Object', {
   // 19.1.2.2 Object.create(O [, Properties])
   create: $create,
   // 19.1.2.4 Object.defineProperty(O, P, Attributes)
@@ -1170,7 +769,7 @@ $export$1($export$1.S + $export$1.F * !USE_NATIVE, 'Object', {
 });
 
 // 24.3.2 JSON.stringify(value [, replacer [, space]])
-$JSON && $export$1($export$1.S + $export$1.F * (!USE_NATIVE || require$$1(function () {
+$JSON && _export(_export.S + _export.F * (!USE_NATIVE || _fails(function () {
   var S = $Symbol();
   // MS Edge converts symbol values to JSON as {}
   // WebKit converts symbol values to JSON as null
@@ -1183,8 +782,8 @@ $JSON && $export$1($export$1.S + $export$1.F * (!USE_NATIVE || require$$1(functi
     var replacer, $replacer;
     while (arguments.length > i) args.push(arguments[i++]);
     $replacer = replacer = args[1];
-    if (!isObject(replacer) && it === undefined || isSymbol(it)) return; // IE8 returns string on undefined
-    if (!isArray(replacer)) replacer = function (key, value) {
+    if (!_isObject(replacer) && it === undefined || isSymbol(it)) return; // IE8 returns string on undefined
+    if (!_isArray(replacer)) replacer = function (key, value) {
       if (typeof $replacer == 'function') value = $replacer.call(this, key, value);
       if (!isSymbol(value)) return value;
     };
@@ -1194,132 +793,143 @@ $JSON && $export$1($export$1.S + $export$1.F * (!USE_NATIVE || require$$1(functi
 });
 
 // 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
-$Symbol[PROTOTYPE][TO_PRIMITIVE] || hide($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+$Symbol[PROTOTYPE][TO_PRIMITIVE] || _hide($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
 // 19.4.3.5 Symbol.prototype[@@toStringTag]
-setToStringTag($Symbol, 'Symbol');
+_setToStringTag($Symbol, 'Symbol');
 // 20.2.1.9 Math[@@toStringTag]
-setToStringTag(Math, 'Math', true);
+_setToStringTag(Math, 'Math', true);
 // 24.3.3 JSON[@@toStringTag]
-setToStringTag(global$1.JSON, 'JSON', true);
+_setToStringTag(_global.JSON, 'JSON', true);
 
-$export$1($export$1.S, 'Object', { create: create });
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+_export(_export.S, 'Object', { create: _objectCreate });
 
-$export$1($export$1.S + $export$1.F * !require$$1$1, 'Object', { defineProperty: $defineProperty$1.f });
+// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+_export(_export.S + _export.F * !_descriptors, 'Object', { defineProperty: _objectDp.f });
 
-$export$1($export$1.S + $export$1.F * !require$$1$1, 'Object', { defineProperties: require$$1$3 });
+// 19.1.2.3 / 15.2.3.7 Object.defineProperties(O, Properties)
+_export(_export.S + _export.F * !_descriptors, 'Object', { defineProperties: _objectDps });
+
+// most Object methods by ES6 should accept primitives
+
+
 
 var _objectSap = function (KEY, exec) {
-  var fn = (require$$1$2.Object || {})[KEY] || Object[KEY];
+  var fn = (_core.Object || {})[KEY] || Object[KEY];
   var exp = {};
   exp[KEY] = exec(fn);
-  $export$1($export$1.S + $export$1.F * require$$1(function () { fn(1); }), 'Object', exp);
+  _export(_export.S + _export.F * _fails(function () { fn(1); }), 'Object', exp);
 };
 
+// 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
 
+var $getOwnPropertyDescriptor$1 = _objectGopd.f;
 
-var _objectSap$2 = Object.freeze({
-	default: _objectSap,
-	__moduleExports: _objectSap
-});
-
-var require$$0$9 = ( _objectSap$2 && _objectSap ) || _objectSap$2;
-
-var $getOwnPropertyDescriptor$1 = require$$0$8.f;
-
-require$$0$9('getOwnPropertyDescriptor', function () {
+_objectSap('getOwnPropertyDescriptor', function () {
   return function getOwnPropertyDescriptor(it, key) {
-    return $getOwnPropertyDescriptor$1(toIObject(it), key);
+    return $getOwnPropertyDescriptor$1(_toIobject(it), key);
   };
 });
 
+// 7.1.13 ToObject(argument)
+
 var _toObject = function (it) {
-  return Object(defined(it));
+  return Object(_defined(it));
 };
 
+// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
 
 
-var _toObject$2 = Object.freeze({
-	default: _toObject,
-	__moduleExports: _toObject
-});
-
-var toObject = ( _toObject$2 && _toObject ) || _toObject$2;
-
-var IE_PROTO$2 = require$$0$3('IE_PROTO');
+var IE_PROTO$2 = _sharedKey('IE_PROTO');
 var ObjectProto$1 = Object.prototype;
 
 var _objectGpo = Object.getPrototypeOf || function (O) {
-  O = toObject(O);
-  if (has(O, IE_PROTO$2)) return O[IE_PROTO$2];
+  O = _toObject(O);
+  if (_has(O, IE_PROTO$2)) return O[IE_PROTO$2];
   if (typeof O.constructor == 'function' && O instanceof O.constructor) {
     return O.constructor.prototype;
   } return O instanceof Object ? ObjectProto$1 : null;
 };
 
+// 19.1.2.9 Object.getPrototypeOf(O)
 
 
-var _objectGpo$2 = Object.freeze({
-	default: _objectGpo,
-	__moduleExports: _objectGpo
-});
 
-var getPrototypeOf = ( _objectGpo$2 && _objectGpo ) || _objectGpo$2;
-
-require$$0$9('getPrototypeOf', function () {
+_objectSap('getPrototypeOf', function () {
   return function getPrototypeOf$$1(it) {
-    return getPrototypeOf(toObject(it));
+    return _objectGpo(_toObject(it));
   };
 });
 
-require$$0$9('keys', function () {
+// 19.1.2.14 Object.keys(O)
+
+
+
+_objectSap('keys', function () {
   return function keys(it) {
-    return getKeys(toObject(it));
+    return _objectKeys(_toObject(it));
   };
 });
 
-require$$0$9('getOwnPropertyNames', function () {
-  return require$$1$4.f;
+// 19.1.2.7 Object.getOwnPropertyNames(O)
+_objectSap('getOwnPropertyNames', function () {
+  return _objectGopnExt.f;
 });
 
-var meta = require$$0$6.onFreeze;
+// 19.1.2.5 Object.freeze(O)
 
-require$$0$9('freeze', function ($freeze) {
+var meta = _meta.onFreeze;
+
+_objectSap('freeze', function ($freeze) {
   return function freeze(it) {
-    return $freeze && isObject(it) ? $freeze(meta(it)) : it;
+    return $freeze && _isObject(it) ? $freeze(meta(it)) : it;
   };
 });
 
-var meta$1 = require$$0$6.onFreeze;
+// 19.1.2.17 Object.seal(O)
 
-require$$0$9('seal', function ($seal) {
+var meta$1 = _meta.onFreeze;
+
+_objectSap('seal', function ($seal) {
   return function seal(it) {
-    return $seal && isObject(it) ? $seal(meta$1(it)) : it;
+    return $seal && _isObject(it) ? $seal(meta$1(it)) : it;
   };
 });
 
-var meta$2 = require$$0$6.onFreeze;
+// 19.1.2.15 Object.preventExtensions(O)
 
-require$$0$9('preventExtensions', function ($preventExtensions) {
+var meta$2 = _meta.onFreeze;
+
+_objectSap('preventExtensions', function ($preventExtensions) {
   return function preventExtensions(it) {
-    return $preventExtensions && isObject(it) ? $preventExtensions(meta$2(it)) : it;
+    return $preventExtensions && _isObject(it) ? $preventExtensions(meta$2(it)) : it;
   };
 });
 
-require$$0$9('isFrozen', function ($isFrozen) {
+// 19.1.2.12 Object.isFrozen(O)
+
+
+_objectSap('isFrozen', function ($isFrozen) {
   return function isFrozen(it) {
-    return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
+    return _isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
   };
 });
 
-require$$0$9('isSealed', function ($isSealed) {
+// 19.1.2.13 Object.isSealed(O)
+
+
+_objectSap('isSealed', function ($isSealed) {
   return function isSealed(it) {
-    return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
+    return _isObject(it) ? $isSealed ? $isSealed(it) : false : true;
   };
 });
 
-require$$0$9('isExtensible', function ($isExtensible) {
+// 19.1.2.11 Object.isExtensible(O)
+
+
+_objectSap('isExtensible', function ($isExtensible) {
   return function isExtensible(it) {
-    return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
+    return _isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
   };
 });
 
@@ -1333,7 +943,7 @@ require$$0$9('isExtensible', function ($isExtensible) {
 var $assign = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
-var _objectAssign = !$assign || require$$1(function () {
+var _objectAssign = !$assign || _fails(function () {
   var A = {};
   var B = {};
   // eslint-disable-next-line no-undef
@@ -1343,14 +953,14 @@ var _objectAssign = !$assign || require$$1(function () {
   K.split('').forEach(function (k) { B[k] = k; });
   return $assign({}, A)[S] != 7 || Object.keys($assign({}, B)).join('') != K;
 }) ? function assign(target, source) { // eslint-disable-line no-unused-vars
-  var T = toObject(target);
+  var T = _toObject(target);
   var aLen = arguments.length;
   var index = 1;
-  var getSymbols = gOPS.f;
-  var isEnum = require$$0$5.f;
+  var getSymbols = _objectGops.f;
+  var isEnum = _objectPie.f;
   while (aLen > index) {
-    var S = IObject(arguments[index++]);
-    var keys = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S);
+    var S = _iobject(arguments[index++]);
+    var keys = getSymbols ? _objectKeys(S).concat(getSymbols(S)) : _objectKeys(S);
     var length = keys.length;
     var j = 0;
     var key;
@@ -1358,16 +968,10 @@ var _objectAssign = !$assign || require$$1(function () {
   } return T;
 } : $assign;
 
+// 19.1.3.1 Object.assign(target, source)
 
 
-var _objectAssign$2 = Object.freeze({
-	default: _objectAssign,
-	__moduleExports: _objectAssign
-});
-
-var assign = ( _objectAssign$2 && _objectAssign ) || _objectAssign$2;
-
-$export$1($export$1.S + $export$1.F, 'Object', { assign: assign });
+_export(_export.S + _export.F, 'Object', { assign: _objectAssign });
 
 // 7.2.9 SameValue(x, y)
 var _sameValue = Object.is || function is(x, y) {
@@ -1375,26 +979,23 @@ var _sameValue = Object.is || function is(x, y) {
   return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
 };
 
+// 19.1.3.10 Object.is(value1, value2)
 
+_export(_export.S, 'Object', { is: _sameValue });
 
-var _sameValue$2 = Object.freeze({
-	default: _sameValue,
-	__moduleExports: _sameValue
-});
+// Works with __proto__ only. Old v8 can't work with null proto objects.
+/* eslint-disable no-proto */
 
-var require$$0$10 = ( _sameValue$2 && _sameValue ) || _sameValue$2;
-
-$export$1($export$1.S, 'Object', { is: require$$0$10 });
 
 var check = function (O, proto) {
-  anObject(O);
-  if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
+  _anObject(O);
+  if (!_isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
 };
 var _setProto = {
   set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
     function (test, buggy, set) {
       try {
-        set = ctx(Function.call, require$$0$8.f(Object.prototype, '__proto__').set, 2);
+        set = _ctx(Function.call, _objectGopd.f(Object.prototype, '__proto__').set, 2);
         set(test, []);
         buggy = !(test instanceof Array);
       } catch (e) { buggy = true; }
@@ -1408,20 +1009,15 @@ var _setProto = {
   check: check
 };
 
+// 19.1.3.19 Object.setPrototypeOf(O, proto)
 
+_export(_export.S, 'Object', { setPrototypeOf: _setProto.set });
 
-var _setProto$2 = Object.freeze({
-	default: _setProto,
-	__moduleExports: _setProto
-});
+// getting tag from 19.1.3.6 Object.prototype.toString()
 
-var setProto = ( _setProto$2 && _setProto ) || _setProto$2;
-
-$export$1($export$1.S, 'Object', { setPrototypeOf: setProto.set });
-
-var TAG$1 = wks('toStringTag');
+var TAG$1 = _wks('toStringTag');
 // ES3 wrong here
-var ARG = require$$2(function () { return arguments; }()) == 'Arguments';
+var ARG = _cof(function () { return arguments; }()) == 'Arguments';
 
 // fallback for IE11 Script Access Denied error
 var tryGet = function (it, key) {
@@ -1436,28 +1032,19 @@ var _classof = function (it) {
     // @@toStringTag case
     : typeof (T = tryGet(O = Object(it), TAG$1)) == 'string' ? T
     // builtinTag case
-    : ARG ? require$$2(O)
+    : ARG ? _cof(O)
     // ES3 arguments fallback
-    : (B = require$$2(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
+    : (B = _cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
-
-
-
-var _classof$2 = Object.freeze({
-	default: _classof,
-	__moduleExports: _classof
-});
-
-var classof = ( _classof$2 && _classof ) || _classof$2;
 
 'use strict';
 // 19.1.3.6 Object.prototype.toString()
 
 var test = {};
-test[wks('toStringTag')] = 'z';
+test[_wks('toStringTag')] = 'z';
 if (test + '' != '[object z]') {
-  redefine(Object.prototype, 'toString', function toString() {
-    return '[object ' + classof(this) + ']';
+  _redefine(Object.prototype, 'toString', function toString() {
+    return '[object ' + _classof(this) + ']';
   }, true);
 }
 
@@ -1478,15 +1065,6 @@ var _invoke = function (fn, args, that) {
   } return fn.apply(that, args);
 };
 
-
-
-var _invoke$2 = Object.freeze({
-	default: _invoke,
-	__moduleExports: _invoke
-});
-
-var invoke = ( _invoke$2 && _invoke ) || _invoke$2;
-
 'use strict';
 
 
@@ -1503,34 +1081,28 @@ var construct = function (F, len, args) {
 };
 
 var _bind = Function.bind || function bind(that /* , ...args */) {
-  var fn = aFunction(this);
+  var fn = _aFunction(this);
   var partArgs = arraySlice.call(arguments, 1);
   var bound = function (/* args... */) {
     var args = partArgs.concat(arraySlice.call(arguments));
-    return this instanceof bound ? construct(fn, args.length, args) : invoke(fn, args, that);
+    return this instanceof bound ? construct(fn, args.length, args) : _invoke(fn, args, that);
   };
-  if (isObject(fn.prototype)) bound.prototype = fn.prototype;
+  if (_isObject(fn.prototype)) bound.prototype = fn.prototype;
   return bound;
 };
 
+// 19.2.3.2 / 15.3.4.5 Function.prototype.bind(thisArg, args...)
 
 
-var _bind$2 = Object.freeze({
-	default: _bind,
-	__moduleExports: _bind
-});
+_export(_export.P, 'Function', { bind: _bind });
 
-var bind = ( _bind$2 && _bind ) || _bind$2;
-
-$export$1($export$1.P, 'Function', { bind: bind });
-
-var dP$2 = $defineProperty$1.f;
+var dP$2 = _objectDp.f;
 var FProto = Function.prototype;
 var nameRE = /^\s*function ([^ (]*)/;
 var NAME = 'name';
 
 // 19.2.4.2 name
-NAME in FProto || require$$1$1 && dP$2(FProto, NAME, {
+NAME in FProto || _descriptors && dP$2(FProto, NAME, {
   configurable: true,
   get: function () {
     try {
@@ -1544,49 +1116,40 @@ NAME in FProto || require$$1$1 && dP$2(FProto, NAME, {
 'use strict';
 
 
-var HAS_INSTANCE = wks('hasInstance');
+var HAS_INSTANCE = _wks('hasInstance');
 var FunctionProto = Function.prototype;
 // 19.2.3.6 Function.prototype[@@hasInstance](V)
-if (!(HAS_INSTANCE in FunctionProto)) $defineProperty$1.f(FunctionProto, HAS_INSTANCE, { value: function (O) {
-  if (typeof this != 'function' || !isObject(O)) return false;
-  if (!isObject(this.prototype)) return O instanceof this;
+if (!(HAS_INSTANCE in FunctionProto)) _objectDp.f(FunctionProto, HAS_INSTANCE, { value: function (O) {
+  if (typeof this != 'function' || !_isObject(O)) return false;
+  if (!_isObject(this.prototype)) return O instanceof this;
   // for environment w/o native `@@hasInstance` logic enough `instanceof`, but add this:
-  while (O = getPrototypeOf(O)) if (this.prototype === O) return true;
+  while (O = _objectGpo(O)) if (this.prototype === O) return true;
   return false;
 } });
 
 var _stringWs = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003' +
   '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
 
-
-
-var _stringWs$2 = Object.freeze({
-	default: _stringWs,
-	__moduleExports: _stringWs
-});
-
-var require$$2$1 = ( _stringWs$2 && _stringWs ) || _stringWs$2;
-
-var space = '[' + require$$2$1 + ']';
+var space = '[' + _stringWs + ']';
 var non = '\u200b\u0085';
 var ltrim = RegExp('^' + space + space + '*');
 var rtrim = RegExp(space + space + '*$');
 
 var exporter = function (KEY, exec, ALIAS) {
   var exp = {};
-  var FORCE = require$$1(function () {
-    return !!require$$2$1[KEY]() || non[KEY]() != non;
+  var FORCE = _fails(function () {
+    return !!_stringWs[KEY]() || non[KEY]() != non;
   });
-  var fn = exp[KEY] = FORCE ? exec(trim) : require$$2$1[KEY];
+  var fn = exp[KEY] = FORCE ? exec(trim) : _stringWs[KEY];
   if (ALIAS) exp[ALIAS] = fn;
-  $export$1($export$1.P + $export$1.F * FORCE, 'String', exp);
+  _export(_export.P + _export.F * FORCE, 'String', exp);
 };
 
 // 1 -> String#trimLeft
 // 2 -> String#trimRight
 // 3 -> String#trim
 var trim = exporter.trim = function (string, TYPE) {
-  string = String(defined(string));
+  string = String(_defined(string));
   if (TYPE & 1) string = string.replace(ltrim, '');
   if (TYPE & 2) string = string.replace(rtrim, '');
   return string;
@@ -1594,73 +1157,39 @@ var trim = exporter.trim = function (string, TYPE) {
 
 var _stringTrim = exporter;
 
-
-
-var _stringTrim$2 = Object.freeze({
-	default: _stringTrim,
-	__moduleExports: _stringTrim
-});
-
-var require$$0$11 = ( _stringTrim$2 && _stringTrim ) || _stringTrim$2;
-
-var $parseInt = global$1.parseInt;
-var $trim = require$$0$11.trim;
+var $parseInt = _global.parseInt;
+var $trim = _stringTrim.trim;
 
 var hex = /^[-+]?0[xX]/;
 
-var _parseInt = $parseInt(require$$2$1 + '08') !== 8 || $parseInt(require$$2$1 + '0x16') !== 22 ? function parseInt(str, radix) {
+var _parseInt = $parseInt(_stringWs + '08') !== 8 || $parseInt(_stringWs + '0x16') !== 22 ? function parseInt(str, radix) {
   var string = $trim(String(str), 3);
   return $parseInt(string, (radix >>> 0) || (hex.test(string) ? 16 : 10));
 } : $parseInt;
 
+// 18.2.5 parseInt(string, radix)
+_export(_export.G + _export.F * (parseInt != _parseInt), { parseInt: _parseInt });
 
+var $parseFloat = _global.parseFloat;
+var $trim$1 = _stringTrim.trim;
 
-var _parseInt$2 = Object.freeze({
-	default: _parseInt,
-	__moduleExports: _parseInt
-});
-
-var $parseInt$1 = ( _parseInt$2 && _parseInt ) || _parseInt$2;
-
-$export$1($export$1.G + $export$1.F * (parseInt != $parseInt$1), { parseInt: $parseInt$1 });
-
-var $parseFloat = global$1.parseFloat;
-var $trim$1 = require$$0$11.trim;
-
-var _parseFloat = 1 / $parseFloat(require$$2$1 + '-0') !== -Infinity ? function parseFloat(str) {
+var _parseFloat = 1 / $parseFloat(_stringWs + '-0') !== -Infinity ? function parseFloat(str) {
   var string = $trim$1(String(str), 3);
   var result = $parseFloat(string);
   return result === 0 && string.charAt(0) == '-' ? -0 : result;
 } : $parseFloat;
 
+// 18.2.4 parseFloat(string)
+_export(_export.G + _export.F * (parseFloat != _parseFloat), { parseFloat: _parseFloat });
 
-
-var _parseFloat$2 = Object.freeze({
-	default: _parseFloat,
-	__moduleExports: _parseFloat
-});
-
-var $parseFloat$1 = ( _parseFloat$2 && _parseFloat ) || _parseFloat$2;
-
-$export$1($export$1.G + $export$1.F * (parseFloat != $parseFloat$1), { parseFloat: $parseFloat$1 });
-
-var setPrototypeOf = setProto.set;
+var setPrototypeOf = _setProto.set;
 var _inheritIfRequired = function (that, target, C) {
   var S = target.constructor;
   var P;
-  if (S !== C && typeof S == 'function' && (P = S.prototype) !== C.prototype && isObject(P) && setPrototypeOf) {
+  if (S !== C && typeof S == 'function' && (P = S.prototype) !== C.prototype && _isObject(P) && setPrototypeOf) {
     setPrototypeOf(that, P);
   } return that;
 };
-
-
-
-var _inheritIfRequired$2 = Object.freeze({
-	default: _inheritIfRequired,
-	__moduleExports: _inheritIfRequired
-});
-
-var inheritIfRequired = ( _inheritIfRequired$2 && _inheritIfRequired ) || _inheritIfRequired$2;
 
 'use strict';
 
@@ -1669,21 +1198,21 @@ var inheritIfRequired = ( _inheritIfRequired$2 && _inheritIfRequired ) || _inher
 
 
 
-var gOPN$3 = gOPN$2.f;
-var gOPD$2 = require$$0$8.f;
-var dP$3 = $defineProperty$1.f;
-var $trim$2 = require$$0$11.trim;
+var gOPN$3 = _objectGopn.f;
+var gOPD$2 = _objectGopd.f;
+var dP$3 = _objectDp.f;
+var $trim$2 = _stringTrim.trim;
 var NUMBER = 'Number';
-var $Number = global$1[NUMBER];
+var $Number = _global[NUMBER];
 var Base = $Number;
 var proto = $Number.prototype;
 // Opera ~12 has broken Object#toString
-var BROKEN_COF = require$$2(create(proto)) == NUMBER;
+var BROKEN_COF = _cof(_objectCreate(proto)) == NUMBER;
 var TRIM = 'trim' in String.prototype;
 
 // 7.1.3 ToNumber(argument)
 var toNumber = function (argument) {
-  var it = toPrimitive(argument, false);
+  var it = _toPrimitive(argument, false);
   if (typeof it == 'string' && it.length > 2) {
     it = TRIM ? it.trim() : $trim$2(it, 3);
     var first = it.charCodeAt(0);
@@ -1713,60 +1242,42 @@ if (!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')) {
     var that = this;
     return that instanceof $Number
       // check on 1..constructor(foo) case
-      && (BROKEN_COF ? require$$1(function () { proto.valueOf.call(that); }) : require$$2(that) != NUMBER)
-        ? inheritIfRequired(new Base(toNumber(it)), that, $Number) : toNumber(it);
+      && (BROKEN_COF ? _fails(function () { proto.valueOf.call(that); }) : _cof(that) != NUMBER)
+        ? _inheritIfRequired(new Base(toNumber(it)), that, $Number) : toNumber(it);
   };
-  for (var keys = require$$1$1 ? gOPN$3(Base) : (
+  for (var keys = _descriptors ? gOPN$3(Base) : (
     // ES3:
     'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
     // ES6 (in case, if modules with ES6 Number statics required before):
     'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' +
     'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger'
   ).split(','), j$1 = 0, key; keys.length > j$1; j$1++) {
-    if (has(Base, key = keys[j$1]) && !has($Number, key)) {
+    if (_has(Base, key = keys[j$1]) && !_has($Number, key)) {
       dP$3($Number, key, gOPD$2(Base, key));
     }
   }
   $Number.prototype = proto;
   proto.constructor = $Number;
-  redefine(global$1, NUMBER, $Number);
+  _redefine(_global, NUMBER, $Number);
 }
 
 var _aNumberValue = function (it, msg) {
-  if (typeof it != 'number' && require$$2(it) != 'Number') throw TypeError(msg);
+  if (typeof it != 'number' && _cof(it) != 'Number') throw TypeError(msg);
   return +it;
 };
-
-
-
-var _aNumberValue$2 = Object.freeze({
-	default: _aNumberValue,
-	__moduleExports: _aNumberValue
-});
 
 'use strict';
 
 
 
 var _stringRepeat = function repeat(count) {
-  var str = String(defined(this));
+  var str = String(_defined(this));
   var res = '';
-  var n = toInteger(count);
+  var n = _toInteger(count);
   if (n < 0 || n == Infinity) throw RangeError("Count can't be negative");
   for (;n > 0; (n >>>= 1) && (str += str)) if (n & 1) res += str;
   return res;
 };
-
-
-
-var _stringRepeat$2 = Object.freeze({
-	default: _stringRepeat,
-	__moduleExports: _stringRepeat
-});
-
-var aNumberValue = ( _aNumberValue$2 && _aNumberValue ) || _aNumberValue$2;
-
-var repeat = ( _stringRepeat$2 && _stringRepeat ) || _stringRepeat$2;
 
 'use strict';
 
@@ -1803,7 +1314,7 @@ var numToString = function () {
   while (--i >= 0) {
     if (s !== '' || i === 0 || data[i] !== 0) {
       var t = String(data[i]);
-      s = s === '' ? t : s + repeat.call(ZERO, 7 - t.length) + t;
+      s = s === '' ? t : s + _stringRepeat.call(ZERO, 7 - t.length) + t;
     }
   } return s;
 };
@@ -1823,18 +1334,18 @@ var log = function (x) {
   } return n;
 };
 
-$export$1($export$1.P + $export$1.F * (!!$toFixed && (
+_export(_export.P + _export.F * (!!$toFixed && (
   0.00008.toFixed(3) !== '0.000' ||
   0.9.toFixed(0) !== '1' ||
   1.255.toFixed(2) !== '1.25' ||
   1000000000000000128.0.toFixed(0) !== '1000000000000000128'
-) || !require$$1(function () {
+) || !_fails(function () {
   // V8 ~ Android 4.3-
   $toFixed.call({});
 })), 'Number', {
   toFixed: function toFixed(fractionDigits) {
-    var x = aNumberValue(this, ERROR);
-    var f = toInteger(fractionDigits);
+    var x = _aNumberValue(this, ERROR);
+    var f = _toInteger(fractionDigits);
     var s = '';
     var m = ZERO;
     var e, z, j, k;
@@ -1871,12 +1382,12 @@ $export$1($export$1.P + $export$1.F * (!!$toFixed && (
       } else {
         multiply(0, z);
         multiply(1 << -e, 0);
-        m = numToString() + repeat.call(ZERO, f);
+        m = numToString() + _stringRepeat.call(ZERO, f);
       }
     }
     if (f > 0) {
       k = m.length;
-      m = s + (k <= f ? '0.' + repeat.call(ZERO, f - k) + m : m.slice(0, k - f) + '.' + m.slice(k - f));
+      m = s + (k <= f ? '0.' + _stringRepeat.call(ZERO, f - k) + m : m.slice(0, k - f) + '.' + m.slice(k - f));
     } else {
       m = s + m;
     } return m;
@@ -1889,86 +1400,95 @@ $export$1($export$1.P + $export$1.F * (!!$toFixed && (
 
 var $toPrecision = 1.0.toPrecision;
 
-$export$1($export$1.P + $export$1.F * (require$$1(function () {
+_export(_export.P + _export.F * (_fails(function () {
   // IE7-
   return $toPrecision.call(1, undefined) !== '1';
-}) || !require$$1(function () {
+}) || !_fails(function () {
   // V8 ~ Android 4.3-
   $toPrecision.call({});
 })), 'Number', {
   toPrecision: function toPrecision(precision) {
-    var that = aNumberValue(this, 'Number#toPrecision: incorrect invocation!');
+    var that = _aNumberValue(this, 'Number#toPrecision: incorrect invocation!');
     return precision === undefined ? $toPrecision.call(that) : $toPrecision.call(that, precision);
   }
 });
 
-$export$1($export$1.S, 'Number', { EPSILON: Math.pow(2, -52) });
+// 20.1.2.1 Number.EPSILON
 
-var _isFinite = global$1.isFinite;
 
-$export$1($export$1.S, 'Number', {
+_export(_export.S, 'Number', { EPSILON: Math.pow(2, -52) });
+
+// 20.1.2.2 Number.isFinite(number)
+
+var _isFinite = _global.isFinite;
+
+_export(_export.S, 'Number', {
   isFinite: function isFinite(it) {
     return typeof it == 'number' && _isFinite(it);
   }
 });
 
+// 20.1.2.3 Number.isInteger(number)
+
 var floor$2 = Math.floor;
 var _isInteger = function isInteger(it) {
-  return !isObject(it) && isFinite(it) && floor$2(it) === it;
+  return !_isObject(it) && isFinite(it) && floor$2(it) === it;
 };
 
+// 20.1.2.3 Number.isInteger(number)
 
 
-var _isInteger$2 = Object.freeze({
-	default: _isInteger,
-	__moduleExports: _isInteger
-});
+_export(_export.S, 'Number', { isInteger: _isInteger });
 
-var isInteger = ( _isInteger$2 && _isInteger ) || _isInteger$2;
+// 20.1.2.4 Number.isNaN(number)
 
-$export$1($export$1.S, 'Number', { isInteger: isInteger });
 
-$export$1($export$1.S, 'Number', {
+_export(_export.S, 'Number', {
   isNaN: function isNaN(number) {
     // eslint-disable-next-line no-self-compare
     return number != number;
   }
 });
 
+// 20.1.2.5 Number.isSafeInteger(number)
+
+
 var abs = Math.abs;
 
-$export$1($export$1.S, 'Number', {
+_export(_export.S, 'Number', {
   isSafeInteger: function isSafeInteger(number) {
-    return isInteger(number) && abs(number) <= 0x1fffffffffffff;
+    return _isInteger(number) && abs(number) <= 0x1fffffffffffff;
   }
 });
 
-$export$1($export$1.S, 'Number', { MAX_SAFE_INTEGER: 0x1fffffffffffff });
+// 20.1.2.6 Number.MAX_SAFE_INTEGER
 
-$export$1($export$1.S, 'Number', { MIN_SAFE_INTEGER: -0x1fffffffffffff });
 
-$export$1($export$1.S + $export$1.F * (Number.parseFloat != $parseFloat$1), 'Number', { parseFloat: $parseFloat$1 });
+_export(_export.S, 'Number', { MAX_SAFE_INTEGER: 0x1fffffffffffff });
 
-$export$1($export$1.S + $export$1.F * (Number.parseInt != $parseInt$1), 'Number', { parseInt: $parseInt$1 });
+// 20.1.2.10 Number.MIN_SAFE_INTEGER
+
+
+_export(_export.S, 'Number', { MIN_SAFE_INTEGER: -0x1fffffffffffff });
+
+// 20.1.2.12 Number.parseFloat(string)
+_export(_export.S + _export.F * (Number.parseFloat != _parseFloat), 'Number', { parseFloat: _parseFloat });
+
+// 20.1.2.13 Number.parseInt(string, radix)
+_export(_export.S + _export.F * (Number.parseInt != _parseInt), 'Number', { parseInt: _parseInt });
 
 // 20.2.2.20 Math.log1p(x)
 var _mathLog1p = Math.log1p || function log1p(x) {
   return (x = +x) > -1e-8 && x < 1e-8 ? x - x * x / 2 : Math.log(1 + x);
 };
 
+// 20.2.2.3 Math.acosh(x)
 
-
-var _mathLog1p$2 = Object.freeze({
-	default: _mathLog1p,
-	__moduleExports: _mathLog1p
-});
-
-var require$$0$12 = ( _mathLog1p$2 && _mathLog1p ) || _mathLog1p$2;
 
 var sqrt = Math.sqrt;
 var $acosh = Math.acosh;
 
-$export$1($export$1.S + $export$1.F * !($acosh
+_export(_export.S + _export.F * !($acosh
   // V8 bug: https://code.google.com/p/v8/issues/detail?id=3509
   && Math.floor($acosh(Number.MAX_VALUE)) == 710
   // Tor Browser bug: Math.acosh(Infinity) -> NaN
@@ -1977,9 +1497,11 @@ $export$1($export$1.S + $export$1.F * !($acosh
   acosh: function acosh(x) {
     return (x = +x) < 1 ? NaN : x > 94906265.62425156
       ? Math.log(x) + Math.LN2
-      : require$$0$12(x - 1 + sqrt(x - 1) * sqrt(x + 1));
+      : _mathLog1p(x - 1 + sqrt(x - 1) * sqrt(x + 1));
   }
 });
+
+// 20.2.2.5 Math.asinh(x)
 
 var $asinh = Math.asinh;
 
@@ -1988,12 +1510,14 @@ function asinh(x) {
 }
 
 // Tor Browser bug: Math.asinh(0) -> -0
-$export$1($export$1.S + $export$1.F * !($asinh && 1 / $asinh(0) > 0), 'Math', { asinh: asinh });
+_export(_export.S + _export.F * !($asinh && 1 / $asinh(0) > 0), 'Math', { asinh: asinh });
+
+// 20.2.2.7 Math.atanh(x)
 
 var $atanh = Math.atanh;
 
 // Tor Browser bug: Math.atanh(-0) -> 0
-$export$1($export$1.S + $export$1.F * !($atanh && 1 / $atanh(-0) < 0), 'Math', {
+_export(_export.S + _export.F * !($atanh && 1 / $atanh(-0) < 0), 'Math', {
   atanh: function atanh(x) {
     return (x = +x) == 0 ? x : Math.log((1 + x) / (1 - x)) / 2;
   }
@@ -2005,30 +1529,30 @@ var _mathSign = Math.sign || function sign(x) {
   return (x = +x) == 0 || x != x ? x : x < 0 ? -1 : 1;
 };
 
+// 20.2.2.9 Math.cbrt(x)
 
 
-var _mathSign$2 = Object.freeze({
-	default: _mathSign,
-	__moduleExports: _mathSign
-});
 
-var require$$0$13 = ( _mathSign$2 && _mathSign ) || _mathSign$2;
-
-$export$1($export$1.S, 'Math', {
+_export(_export.S, 'Math', {
   cbrt: function cbrt(x) {
-    return require$$0$13(x = +x) * Math.pow(Math.abs(x), 1 / 3);
+    return _mathSign(x = +x) * Math.pow(Math.abs(x), 1 / 3);
   }
 });
 
-$export$1($export$1.S, 'Math', {
+// 20.2.2.11 Math.clz32(x)
+
+
+_export(_export.S, 'Math', {
   clz32: function clz32(x) {
     return (x >>>= 0) ? 31 - Math.floor(Math.log(x + 0.5) * Math.LOG2E) : 32;
   }
 });
 
+// 20.2.2.12 Math.cosh(x)
+
 var exp = Math.exp;
 
-$export$1($export$1.S, 'Math', {
+_export(_export.S, 'Math', {
   cosh: function cosh(x) {
     return (exp(x = +x) + exp(-x)) / 2;
   }
@@ -2045,16 +1569,13 @@ var _mathExpm1 = (!$expm1
   return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
 } : $expm1;
 
+// 20.2.2.14 Math.expm1(x)
 
 
-var _mathExpm1$2 = Object.freeze({
-	default: _mathExpm1,
-	__moduleExports: _mathExpm1
-});
 
-var expm1 = ( _mathExpm1$2 && _mathExpm1 ) || _mathExpm1$2;
+_export(_export.S + _export.F * (_mathExpm1 != Math.expm1), 'Math', { expm1: _mathExpm1 });
 
-$export$1($export$1.S + $export$1.F * (expm1 != Math.expm1), 'Math', { expm1: expm1 });
+// 20.2.2.16 Math.fround(x)
 
 var pow$1 = Math.pow;
 var EPSILON = pow$1(2, -52);
@@ -2068,7 +1589,7 @@ var roundTiesToEven = function (n) {
 
 var _mathFround = Math.fround || function fround(x) {
   var $abs = Math.abs(x);
-  var $sign = require$$0$13(x);
+  var $sign = _mathSign(x);
   var a, result;
   if ($abs < MIN32) return $sign * roundTiesToEven($abs / MIN32 / EPSILON32) * MIN32 * EPSILON32;
   a = (1 + EPSILON32 / EPSILON) * $abs;
@@ -2078,20 +1599,16 @@ var _mathFround = Math.fround || function fround(x) {
   return $sign * result;
 };
 
+// 20.2.2.16 Math.fround(x)
 
 
-var _mathFround$2 = Object.freeze({
-	default: _mathFround,
-	__moduleExports: _mathFround
-});
+_export(_export.S, 'Math', { fround: _mathFround });
 
-var fround = ( _mathFround$2 && _mathFround ) || _mathFround$2;
-
-$export$1($export$1.S, 'Math', { fround: fround });
+// 20.2.2.17 Math.hypot([value1[, value2[, … ]]])
 
 var abs$1 = Math.abs;
 
-$export$1($export$1.S, 'Math', {
+_export(_export.S, 'Math', {
   hypot: function hypot(value1, value2) { // eslint-disable-line no-unused-vars
     var sum = 0;
     var i = 0;
@@ -2113,10 +1630,12 @@ $export$1($export$1.S, 'Math', {
   }
 });
 
+// 20.2.2.18 Math.imul(x, y)
+
 var $imul = Math.imul;
 
 // some WebKit versions fails with big numbers, some has wrong arity
-$export$1($export$1.S + $export$1.F * require$$1(function () {
+_export(_export.S + _export.F * _fails(function () {
   return $imul(0xffffffff, 5) != -5 || $imul.length != 2;
 }), 'Math', {
   imul: function imul(x, y) {
@@ -2129,46 +1648,67 @@ $export$1($export$1.S + $export$1.F * require$$1(function () {
   }
 });
 
-$export$1($export$1.S, 'Math', {
+// 20.2.2.21 Math.log10(x)
+
+
+_export(_export.S, 'Math', {
   log10: function log10(x) {
     return Math.log(x) * Math.LOG10E;
   }
 });
 
-$export$1($export$1.S, 'Math', { log1p: require$$0$12 });
+// 20.2.2.20 Math.log1p(x)
 
-$export$1($export$1.S, 'Math', {
+
+_export(_export.S, 'Math', { log1p: _mathLog1p });
+
+// 20.2.2.22 Math.log2(x)
+
+
+_export(_export.S, 'Math', {
   log2: function log2(x) {
     return Math.log(x) / Math.LN2;
   }
 });
 
-$export$1($export$1.S, 'Math', { sign: require$$0$13 });
+// 20.2.2.28 Math.sign(x)
+
+
+_export(_export.S, 'Math', { sign: _mathSign });
+
+// 20.2.2.30 Math.sinh(x)
+
 
 var exp$1 = Math.exp;
 
 // V8 near Chromium 38 has a problem with very small numbers
-$export$1($export$1.S + $export$1.F * require$$1(function () {
+_export(_export.S + _export.F * _fails(function () {
   return !Math.sinh(-2e-17) != -2e-17;
 }), 'Math', {
   sinh: function sinh(x) {
     return Math.abs(x = +x) < 1
-      ? (expm1(x) - expm1(-x)) / 2
+      ? (_mathExpm1(x) - _mathExpm1(-x)) / 2
       : (exp$1(x - 1) - exp$1(-x - 1)) * (Math.E / 2);
   }
 });
 
+// 20.2.2.33 Math.tanh(x)
+
+
 var exp$2 = Math.exp;
 
-$export$1($export$1.S, 'Math', {
+_export(_export.S, 'Math', {
   tanh: function tanh(x) {
-    var a = expm1(x = +x);
-    var b = expm1(-x);
+    var a = _mathExpm1(x = +x);
+    var b = _mathExpm1(-x);
     return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp$2(x) + exp$2(-x));
   }
 });
 
-$export$1($export$1.S, 'Math', {
+// 20.2.2.34 Math.trunc(x)
+
+
+_export(_export.S, 'Math', {
   trunc: function trunc(it) {
     return (it > 0 ? Math.floor : Math.ceil)(it);
   }
@@ -2178,7 +1718,7 @@ var fromCharCode = String.fromCharCode;
 var $fromCodePoint = String.fromCodePoint;
 
 // length should be 1, old FF problem
-$export$1($export$1.S + $export$1.F * (!!$fromCodePoint && $fromCodePoint.length != 1), 'String', {
+_export(_export.S + _export.F * (!!$fromCodePoint && $fromCodePoint.length != 1), 'String', {
   // 21.1.2.2 String.fromCodePoint(...codePoints)
   fromCodePoint: function fromCodePoint(x) { // eslint-disable-line no-unused-vars
     var res = [];
@@ -2187,7 +1727,7 @@ $export$1($export$1.S + $export$1.F * (!!$fromCodePoint && $fromCodePoint.length
     var code;
     while (aLen > i) {
       code = +arguments[i++];
-      if (require$$15(code, 0x10ffff) !== code) throw RangeError(code + ' is not a valid code point');
+      if (_toAbsoluteIndex(code, 0x10ffff) !== code) throw RangeError(code + ' is not a valid code point');
       res.push(code < 0x10000
         ? fromCharCode(code)
         : fromCharCode(((code -= 0x10000) >> 10) + 0xd800, code % 0x400 + 0xdc00)
@@ -2196,11 +1736,11 @@ $export$1($export$1.S + $export$1.F * (!!$fromCodePoint && $fromCodePoint.length
   }
 });
 
-$export$1($export$1.S, 'String', {
+_export(_export.S, 'String', {
   // 21.1.2.4 String.raw(callSite, ...substitutions)
   raw: function raw(callSite) {
-    var tpl = toIObject(callSite.raw);
-    var len = toLength(tpl.length);
+    var tpl = _toIobject(callSite.raw);
+    var len = _toLength(tpl.length);
     var aLen = arguments.length;
     var res = [];
     var i = 0;
@@ -2213,16 +1753,18 @@ $export$1($export$1.S, 'String', {
 
 'use strict';
 // 21.1.3.25 String.prototype.trim()
-require$$0$11('trim', function ($trim) {
+_stringTrim('trim', function ($trim) {
   return function trim() {
     return $trim(this, 3);
   };
 });
 
+// true  -> String#at
+// false -> String#codePointAt
 var _stringAt = function (TO_STRING) {
   return function (that, pos) {
-    var s = String(defined(that));
-    var i = toInteger(pos);
+    var s = String(_defined(that));
+    var i = _toInteger(pos);
     var l = s.length;
     var a, b;
     if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
@@ -2233,21 +1775,7 @@ var _stringAt = function (TO_STRING) {
   };
 };
 
-
-
-var _stringAt$2 = Object.freeze({
-	default: _stringAt,
-	__moduleExports: _stringAt
-});
-
 var _iterators = {};
-
-
-
-var _iterators$2 = Object.freeze({
-	default: _iterators,
-	__moduleExports: _iterators
-});
 
 'use strict';
 
@@ -2256,23 +1784,12 @@ var _iterators$2 = Object.freeze({
 var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-hide(IteratorPrototype, wks('iterator'), function () { return this; });
+_hide(IteratorPrototype, _wks('iterator'), function () { return this; });
 
 var _iterCreate = function (Constructor, NAME, next) {
-  Constructor.prototype = create(IteratorPrototype, { next: createDesc(1, next) });
-  setToStringTag(Constructor, NAME + ' Iterator');
+  Constructor.prototype = _objectCreate(IteratorPrototype, { next: _propertyDesc(1, next) });
+  _setToStringTag(Constructor, NAME + ' Iterator');
 };
-
-
-
-var _iterCreate$2 = Object.freeze({
-	default: _iterCreate,
-	__moduleExports: _iterCreate
-});
-
-var Iterators = ( _iterators$2 && _iterators ) || _iterators$2;
-
-var require$$0$14 = ( _iterCreate$2 && _iterCreate ) || _iterCreate$2;
 
 'use strict';
 
@@ -2284,7 +1801,7 @@ var require$$0$14 = ( _iterCreate$2 && _iterCreate ) || _iterCreate$2;
 
 
 
-var ITERATOR = wks('iterator');
+var ITERATOR = _wks('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
 var KEYS = 'keys';
@@ -2293,7 +1810,7 @@ var VALUES = 'values';
 var returnThis = function () { return this; };
 
 var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED) {
-  require$$0$14(Constructor, NAME, next);
+  _iterCreate(Constructor, NAME, next);
   var getMethod = function (kind) {
     if (!BUGGY && kind in proto) return proto[kind];
     switch (kind) {
@@ -2312,12 +1829,12 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
   var methods, key, IteratorPrototype;
   // Fix native
   if ($anyNative) {
-    IteratorPrototype = getPrototypeOf($anyNative.call(new Base()));
+    IteratorPrototype = _objectGpo($anyNative.call(new Base()));
     if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
       // Set @@toStringTag to native iterators
-      setToStringTag(IteratorPrototype, TAG, true);
+      _setToStringTag(IteratorPrototype, TAG, true);
       // fix for some old engines
-      if (!require$$0$1 && !has(IteratorPrototype, ITERATOR)) hide(IteratorPrototype, ITERATOR, returnThis);
+      if (!_library && !_has(IteratorPrototype, ITERATOR)) _hide(IteratorPrototype, ITERATOR, returnThis);
     }
   }
   // fix Array#{values, @@iterator}.name in V8 / FF
@@ -2326,12 +1843,12 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     $default = function values() { return $native.call(this); };
   }
   // Define iterator
-  if ((!require$$0$1 || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
-    hide(proto, ITERATOR, $default);
+  if ((!_library || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+    _hide(proto, ITERATOR, $default);
   }
   // Plug for library
-  Iterators[NAME] = $default;
-  Iterators[TAG] = returnThis;
+  _iterators[NAME] = $default;
+  _iterators[TAG] = returnThis;
   if (DEFAULT) {
     methods = {
       values: DEF_VALUES ? $default : getMethod(VALUES),
@@ -2339,28 +1856,17 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
       entries: $entries
     };
     if (FORCED) for (key in methods) {
-      if (!(key in proto)) redefine(proto, key, methods[key]);
-    } else $export$1($export$1.P + $export$1.F * (BUGGY || VALUES_BUG), NAME, methods);
+      if (!(key in proto)) _redefine(proto, key, methods[key]);
+    } else _export(_export.P + _export.F * (BUGGY || VALUES_BUG), NAME, methods);
   }
   return methods;
 };
 
-
-
-var _iterDefine$2 = Object.freeze({
-	default: _iterDefine,
-	__moduleExports: _iterDefine
-});
-
-var require$$0$15 = ( _stringAt$2 && _stringAt ) || _stringAt$2;
-
-var $iterDefine = ( _iterDefine$2 && _iterDefine ) || _iterDefine$2;
-
 'use strict';
-var $at = require$$0$15(true);
+var $at = _stringAt(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
-$iterDefine(String, 'String', function (iterated) {
+_iterDefine(String, 'String', function (iterated) {
   this._t = String(iterated); // target
   this._i = 0;                // next index
 // 21.1.5.2.1 %StringIteratorPrototype%.next()
@@ -2376,42 +1882,33 @@ $iterDefine(String, 'String', function (iterated) {
 
 'use strict';
 
-var $at$1 = require$$0$15(false);
-$export$1($export$1.P, 'String', {
+var $at$1 = _stringAt(false);
+_export(_export.P, 'String', {
   // 21.1.3.3 String.prototype.codePointAt(pos)
   codePointAt: function codePointAt(pos) {
     return $at$1(this, pos);
   }
 });
 
-var MATCH = wks('match');
+// 7.2.8 IsRegExp(argument)
+
+
+var MATCH = _wks('match');
 var _isRegexp = function (it) {
   var isRegExp;
-  return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : require$$2(it) == 'RegExp');
+  return _isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : _cof(it) == 'RegExp');
 };
 
+// helper for String#{startsWith, endsWith, includes}
 
 
-var _isRegexp$2 = Object.freeze({
-	default: _isRegexp,
-	__moduleExports: _isRegexp
-});
-
-var isRegExp = ( _isRegexp$2 && _isRegexp ) || _isRegexp$2;
 
 var _stringContext = function (that, searchString, NAME) {
-  if (isRegExp(searchString)) throw TypeError('String#' + NAME + " doesn't accept regex!");
-  return String(defined(that));
+  if (_isRegexp(searchString)) throw TypeError('String#' + NAME + " doesn't accept regex!");
+  return String(_defined(that));
 };
 
-
-
-var _stringContext$2 = Object.freeze({
-	default: _stringContext,
-	__moduleExports: _stringContext
-});
-
-var MATCH$1 = wks('match');
+var MATCH$1 = _wks('match');
 var _failsIsRegexp = function (KEY) {
   var re = /./;
   try {
@@ -2424,17 +1921,7 @@ var _failsIsRegexp = function (KEY) {
   } return true;
 };
 
-
-
-var _failsIsRegexp$2 = Object.freeze({
-	default: _failsIsRegexp,
-	__moduleExports: _failsIsRegexp
-});
-
-var context = ( _stringContext$2 && _stringContext ) || _stringContext$2;
-
-var require$$0$16 = ( _failsIsRegexp$2 && _failsIsRegexp ) || _failsIsRegexp$2;
-
+// 21.1.3.6 String.prototype.endsWith(searchString [, endPosition])
 'use strict';
 
 
@@ -2442,12 +1929,12 @@ var require$$0$16 = ( _failsIsRegexp$2 && _failsIsRegexp ) || _failsIsRegexp$2;
 var ENDS_WITH = 'endsWith';
 var $endsWith = ''[ENDS_WITH];
 
-$export$1($export$1.P + $export$1.F * require$$0$16(ENDS_WITH), 'String', {
+_export(_export.P + _export.F * _failsIsRegexp(ENDS_WITH), 'String', {
   endsWith: function endsWith(searchString /* , endPosition = @length */) {
-    var that = context(this, searchString, ENDS_WITH);
+    var that = _stringContext(this, searchString, ENDS_WITH);
     var endPosition = arguments.length > 1 ? arguments[1] : undefined;
-    var len = toLength(that.length);
-    var end = endPosition === undefined ? len : Math.min(toLength(endPosition), len);
+    var len = _toLength(that.length);
+    var end = endPosition === undefined ? len : Math.min(_toLength(endPosition), len);
     var search = String(searchString);
     return $endsWith
       ? $endsWith.call(that, search, end)
@@ -2455,23 +1942,25 @@ $export$1($export$1.P + $export$1.F * require$$0$16(ENDS_WITH), 'String', {
   }
 });
 
+// 21.1.3.7 String.prototype.includes(searchString, position = 0)
 'use strict';
 
 
 var INCLUDES = 'includes';
 
-$export$1($export$1.P + $export$1.F * require$$0$16(INCLUDES), 'String', {
+_export(_export.P + _export.F * _failsIsRegexp(INCLUDES), 'String', {
   includes: function includes(searchString /* , position = 0 */) {
-    return !!~context(this, searchString, INCLUDES)
+    return !!~_stringContext(this, searchString, INCLUDES)
       .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
 
-$export$1($export$1.P, 'String', {
+_export(_export.P, 'String', {
   // 21.1.3.13 String.prototype.repeat(count)
-  repeat: repeat
+  repeat: _stringRepeat
 });
 
+// 21.1.3.18 String.prototype.startsWith(searchString [, position ])
 'use strict';
 
 
@@ -2479,10 +1968,10 @@ $export$1($export$1.P, 'String', {
 var STARTS_WITH = 'startsWith';
 var $startsWith = ''[STARTS_WITH];
 
-$export$1($export$1.P + $export$1.F * require$$0$16(STARTS_WITH), 'String', {
+_export(_export.P + _export.F * _failsIsRegexp(STARTS_WITH), 'String', {
   startsWith: function startsWith(searchString /* , position = 0 */) {
-    var that = context(this, searchString, STARTS_WITH);
-    var index = toLength(Math.min(arguments.length > 1 ? arguments[1] : undefined, that.length));
+    var that = _stringContext(this, searchString, STARTS_WITH);
+    var index = _toLength(Math.min(arguments.length > 1 ? arguments[1] : undefined, that.length));
     var search = String(searchString);
     return $startsWith
       ? $startsWith.call(that, search, index)
@@ -2493,7 +1982,7 @@ $export$1($export$1.P + $export$1.F * require$$0$16(STARTS_WITH), 'String', {
 var quot = /"/g;
 // B.2.3.2.1 CreateHTML(string, tag, attribute, value)
 var createHTML = function (string, tag, attribute, value) {
-  var S = String(defined(string));
+  var S = String(_defined(string));
   var p1 = '<' + tag;
   if (attribute !== '') p1 += ' ' + attribute + '="' + String(value).replace(quot, '&quot;') + '"';
   return p1 + '>' + S + '</' + tag + '>';
@@ -2501,24 +1990,15 @@ var createHTML = function (string, tag, attribute, value) {
 var _stringHtml = function (NAME, exec) {
   var O = {};
   O[NAME] = exec(createHTML);
-  $export$1($export$1.P + $export$1.F * require$$1(function () {
+  _export(_export.P + _export.F * _fails(function () {
     var test = ''[NAME]('"');
     return test !== test.toLowerCase() || test.split('"').length > 3;
   }), 'String', O);
 };
 
-
-
-var _stringHtml$2 = Object.freeze({
-	default: _stringHtml,
-	__moduleExports: _stringHtml
-});
-
-var require$$0$17 = ( _stringHtml$2 && _stringHtml ) || _stringHtml$2;
-
 'use strict';
 // B.2.3.2 String.prototype.anchor(name)
-require$$0$17('anchor', function (createHTML) {
+_stringHtml('anchor', function (createHTML) {
   return function anchor(name) {
     return createHTML(this, 'a', 'name', name);
   };
@@ -2526,7 +2006,7 @@ require$$0$17('anchor', function (createHTML) {
 
 'use strict';
 // B.2.3.3 String.prototype.big()
-require$$0$17('big', function (createHTML) {
+_stringHtml('big', function (createHTML) {
   return function big() {
     return createHTML(this, 'big', '', '');
   };
@@ -2534,7 +2014,7 @@ require$$0$17('big', function (createHTML) {
 
 'use strict';
 // B.2.3.4 String.prototype.blink()
-require$$0$17('blink', function (createHTML) {
+_stringHtml('blink', function (createHTML) {
   return function blink() {
     return createHTML(this, 'blink', '', '');
   };
@@ -2542,7 +2022,7 @@ require$$0$17('blink', function (createHTML) {
 
 'use strict';
 // B.2.3.5 String.prototype.bold()
-require$$0$17('bold', function (createHTML) {
+_stringHtml('bold', function (createHTML) {
   return function bold() {
     return createHTML(this, 'b', '', '');
   };
@@ -2550,7 +2030,7 @@ require$$0$17('bold', function (createHTML) {
 
 'use strict';
 // B.2.3.6 String.prototype.fixed()
-require$$0$17('fixed', function (createHTML) {
+_stringHtml('fixed', function (createHTML) {
   return function fixed() {
     return createHTML(this, 'tt', '', '');
   };
@@ -2558,7 +2038,7 @@ require$$0$17('fixed', function (createHTML) {
 
 'use strict';
 // B.2.3.7 String.prototype.fontcolor(color)
-require$$0$17('fontcolor', function (createHTML) {
+_stringHtml('fontcolor', function (createHTML) {
   return function fontcolor(color) {
     return createHTML(this, 'font', 'color', color);
   };
@@ -2566,7 +2046,7 @@ require$$0$17('fontcolor', function (createHTML) {
 
 'use strict';
 // B.2.3.8 String.prototype.fontsize(size)
-require$$0$17('fontsize', function (createHTML) {
+_stringHtml('fontsize', function (createHTML) {
   return function fontsize(size) {
     return createHTML(this, 'font', 'size', size);
   };
@@ -2574,7 +2054,7 @@ require$$0$17('fontsize', function (createHTML) {
 
 'use strict';
 // B.2.3.9 String.prototype.italics()
-require$$0$17('italics', function (createHTML) {
+_stringHtml('italics', function (createHTML) {
   return function italics() {
     return createHTML(this, 'i', '', '');
   };
@@ -2582,7 +2062,7 @@ require$$0$17('italics', function (createHTML) {
 
 'use strict';
 // B.2.3.10 String.prototype.link(url)
-require$$0$17('link', function (createHTML) {
+_stringHtml('link', function (createHTML) {
   return function link(url) {
     return createHTML(this, 'a', 'href', url);
   };
@@ -2590,7 +2070,7 @@ require$$0$17('link', function (createHTML) {
 
 'use strict';
 // B.2.3.11 String.prototype.small()
-require$$0$17('small', function (createHTML) {
+_stringHtml('small', function (createHTML) {
   return function small() {
     return createHTML(this, 'small', '', '');
   };
@@ -2598,7 +2078,7 @@ require$$0$17('small', function (createHTML) {
 
 'use strict';
 // B.2.3.12 String.prototype.strike()
-require$$0$17('strike', function (createHTML) {
+_stringHtml('strike', function (createHTML) {
   return function strike() {
     return createHTML(this, 'strike', '', '');
   };
@@ -2606,7 +2086,7 @@ require$$0$17('strike', function (createHTML) {
 
 'use strict';
 // B.2.3.13 String.prototype.sub()
-require$$0$17('sub', function (createHTML) {
+_stringHtml('sub', function (createHTML) {
   return function sub() {
     return createHTML(this, 'sub', '', '');
   };
@@ -2614,27 +2094,30 @@ require$$0$17('sub', function (createHTML) {
 
 'use strict';
 // B.2.3.14 String.prototype.sup()
-require$$0$17('sup', function (createHTML) {
+_stringHtml('sup', function (createHTML) {
   return function sup() {
     return createHTML(this, 'sup', '', '');
   };
 });
 
-$export$1($export$1.S, 'Date', { now: function () { return new Date().getTime(); } });
+// 20.3.3.1 / 15.9.4.4 Date.now()
+
+
+_export(_export.S, 'Date', { now: function () { return new Date().getTime(); } });
 
 'use strict';
 
 
 
 
-$export$1($export$1.P + $export$1.F * require$$1(function () {
+_export(_export.P + _export.F * _fails(function () {
   return new Date(NaN).toJSON() !== null
     || Date.prototype.toJSON.call({ toISOString: function () { return 1; } }) !== 1;
 }), 'Date', {
   // eslint-disable-next-line no-unused-vars
   toJSON: function toJSON(key) {
-    var O = toObject(this);
-    var pv = toPrimitive(O);
+    var O = _toObject(this);
+    var pv = _toPrimitive(O);
     return typeof pv == 'number' && !isFinite(pv) ? null : O.toISOString();
   }
 });
@@ -2650,9 +2133,9 @@ var lz = function (num) {
 };
 
 // PhantomJS / old WebKit has a broken implementations
-var _dateToIsoString = (require$$1(function () {
+var _dateToIsoString = (_fails(function () {
   return $toISOString.call(new Date(-5e13 - 1)) != '0385-07-25T07:06:39.999Z';
-}) || !require$$1(function () {
+}) || !_fails(function () {
   $toISOString.call(new Date(NaN));
 })) ? function toISOString() {
   if (!isFinite(getTime.call(this))) throw RangeError('Invalid time value');
@@ -2666,17 +2149,13 @@ var _dateToIsoString = (require$$1(function () {
     ':' + lz(d.getUTCSeconds()) + '.' + (m > 99 ? m : '0' + lz(m)) + 'Z';
 } : $toISOString;
 
+// 20.3.4.36 / 15.9.5.43 Date.prototype.toISOString()
 
 
-var _dateToIsoString$2 = Object.freeze({
-	default: _dateToIsoString,
-	__moduleExports: _dateToIsoString
-});
 
-var toISOString = ( _dateToIsoString$2 && _dateToIsoString ) || _dateToIsoString$2;
-
-$export$1($export$1.P + $export$1.F * (Date.prototype.toISOString !== toISOString), 'Date', {
-  toISOString: toISOString
+// PhantomJS / old WebKit has a broken implementations
+_export(_export.P + _export.F * (Date.prototype.toISOString !== _dateToIsoString), 'Date', {
+  toISOString: _dateToIsoString
 });
 
 var DateProto = Date.prototype;
@@ -2685,7 +2164,7 @@ var TO_STRING = 'toString';
 var $toString = DateProto[TO_STRING];
 var getTime$1 = DateProto.getTime;
 if (new Date(NaN) + '' != INVALID_DATE) {
-  redefine(DateProto, TO_STRING, function toString() {
+  _redefine(DateProto, TO_STRING, function toString() {
     var value = getTime$1.call(this);
     // eslint-disable-next-line no-self-compare
     return value === value ? $toString.call(this) : INVALID_DATE;
@@ -2699,89 +2178,59 @@ var NUMBER$1 = 'number';
 
 var _dateToPrimitive = function (hint) {
   if (hint !== 'string' && hint !== NUMBER$1 && hint !== 'default') throw TypeError('Incorrect hint');
-  return toPrimitive(anObject(this), hint != NUMBER$1);
+  return _toPrimitive(_anObject(this), hint != NUMBER$1);
 };
 
-
-
-var _dateToPrimitive$2 = Object.freeze({
-	default: _dateToPrimitive,
-	__moduleExports: _dateToPrimitive
-});
-
-var require$$2$2 = ( _dateToPrimitive$2 && _dateToPrimitive ) || _dateToPrimitive$2;
-
-var TO_PRIMITIVE$1 = wks('toPrimitive');
+var TO_PRIMITIVE$1 = _wks('toPrimitive');
 var proto$1 = Date.prototype;
 
-if (!(TO_PRIMITIVE$1 in proto$1)) hide(proto$1, TO_PRIMITIVE$1, require$$2$2);
+if (!(TO_PRIMITIVE$1 in proto$1)) _hide(proto$1, TO_PRIMITIVE$1, _dateToPrimitive);
 
-$export$1($export$1.S, 'Array', { isArray: isArray });
+// 22.1.2.2 / 15.4.3.2 Array.isArray(arg)
+
+
+_export(_export.S, 'Array', { isArray: _isArray });
+
+// call something on iterator step with safe closing on error
 
 var _iterCall = function (iterator, fn, value, entries) {
   try {
-    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
+    return entries ? fn(_anObject(value)[0], value[1]) : fn(value);
   // 7.4.6 IteratorClose(iterator, completion)
   } catch (e) {
     var ret = iterator['return'];
-    if (ret !== undefined) anObject(ret.call(iterator));
+    if (ret !== undefined) _anObject(ret.call(iterator));
     throw e;
   }
 };
 
+// check on default Array iterator
 
-
-var _iterCall$2 = Object.freeze({
-	default: _iterCall,
-	__moduleExports: _iterCall
-});
-
-var ITERATOR$1 = wks('iterator');
+var ITERATOR$1 = _wks('iterator');
 var ArrayProto = Array.prototype;
 
 var _isArrayIter = function (it) {
-  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR$1] === it);
+  return it !== undefined && (_iterators.Array === it || ArrayProto[ITERATOR$1] === it);
 };
-
-
-
-var _isArrayIter$2 = Object.freeze({
-	default: _isArrayIter,
-	__moduleExports: _isArrayIter
-});
 
 'use strict';
 
 
 
 var _createProperty = function (object, index, value) {
-  if (index in object) $defineProperty$1.f(object, index, createDesc(0, value));
+  if (index in object) _objectDp.f(object, index, _propertyDesc(0, value));
   else object[index] = value;
 };
 
+var ITERATOR$2 = _wks('iterator');
 
-
-var _createProperty$2 = Object.freeze({
-	default: _createProperty,
-	__moduleExports: _createProperty
-});
-
-var ITERATOR$2 = wks('iterator');
-
-var core_getIteratorMethod = require$$1$2.getIteratorMethod = function (it) {
+var core_getIteratorMethod = _core.getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR$2]
     || it['@@iterator']
-    || Iterators[classof(it)];
+    || _iterators[_classof(it)];
 };
 
-
-
-var core_getIteratorMethod$2 = Object.freeze({
-	default: core_getIteratorMethod,
-	__moduleExports: core_getIteratorMethod
-});
-
-var ITERATOR$3 = wks('iterator');
+var ITERATOR$3 = _wks('iterator');
 var SAFE_CLOSING = false;
 
 try {
@@ -2804,23 +2253,6 @@ var _iterDetect = function (exec, skipClosing) {
   return safe;
 };
 
-
-
-var _iterDetect$2 = Object.freeze({
-	default: _iterDetect,
-	__moduleExports: _iterDetect
-});
-
-var call = ( _iterCall$2 && _iterCall ) || _iterCall$2;
-
-var require$$21 = ( _isArrayIter$2 && _isArrayIter ) || _isArrayIter$2;
-
-var createProperty = ( _createProperty$2 && _createProperty ) || _createProperty$2;
-
-var require$$25 = ( core_getIteratorMethod$2 && core_getIteratorMethod ) || core_getIteratorMethod$2;
-
-var require$$33 = ( _iterDetect$2 && _iterDetect ) || _iterDetect$2;
-
 'use strict';
 
 
@@ -2831,27 +2263,27 @@ var require$$33 = ( _iterDetect$2 && _iterDetect ) || _iterDetect$2;
 
 
 
-$export$1($export$1.S + $export$1.F * !require$$33(function (iter) {  }), 'Array', {
+_export(_export.S + _export.F * !_iterDetect(function (iter) {  }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
-    var O = toObject(arrayLike);
+    var O = _toObject(arrayLike);
     var C = typeof this == 'function' ? this : Array;
     var aLen = arguments.length;
     var mapfn = aLen > 1 ? arguments[1] : undefined;
     var mapping = mapfn !== undefined;
     var index = 0;
-    var iterFn = require$$25(O);
+    var iterFn = core_getIteratorMethod(O);
     var length, result, step, iterator;
-    if (mapping) mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
+    if (mapping) mapfn = _ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
     // if object isn't iterable or it's array with default iterator - use simple case
-    if (iterFn != undefined && !(C == Array && require$$21(iterFn))) {
+    if (iterFn != undefined && !(C == Array && _isArrayIter(iterFn))) {
       for (iterator = iterFn.call(O), result = new C(); !(step = iterator.next()).done; index++) {
-        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
+        _createProperty(result, index, mapping ? _iterCall(iterator, mapfn, [step.value, index], true) : step.value);
       }
     } else {
-      length = toLength(O.length);
+      length = _toLength(O.length);
       for (result = new C(length); length > index; index++) {
-        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+        _createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
       }
     }
     result.length = index;
@@ -2864,7 +2296,7 @@ $export$1($export$1.S + $export$1.F * !require$$33(function (iter) {  }), 'Array
 
 
 // WebKit Array.of isn't generic
-$export$1($export$1.S + $export$1.F * require$$1(function () {
+_export(_export.S + _export.F * _fails(function () {
   function F() { /* empty */ }
   return !(Array.of.call(F) instanceof F);
 }), 'Array', {
@@ -2873,7 +2305,7 @@ $export$1($export$1.S + $export$1.F * require$$1(function () {
     var index = 0;
     var aLen = arguments.length;
     var result = new (typeof this == 'function' ? this : Array)(aLen);
-    while (aLen > index) createProperty(result, index, arguments[index++]);
+    while (aLen > index) _createProperty(result, index, arguments[index++]);
     result.length = aLen;
     return result;
   }
@@ -2883,20 +2315,11 @@ $export$1($export$1.S + $export$1.F * require$$1(function () {
 
 
 var _strictMethod = function (method, arg) {
-  return !!method && require$$1(function () {
+  return !!method && _fails(function () {
     // eslint-disable-next-line no-useless-call
     arg ? method.call(null, function () { /* empty */ }, 1) : method.call(null);
   });
 };
-
-
-
-var _strictMethod$2 = Object.freeze({
-	default: _strictMethod,
-	__moduleExports: _strictMethod
-});
-
-var require$$0$18 = ( _strictMethod$2 && _strictMethod ) || _strictMethod$2;
 
 'use strict';
 // 22.1.3.13 Array.prototype.join(separator)
@@ -2905,9 +2328,9 @@ var require$$0$18 = ( _strictMethod$2 && _strictMethod ) || _strictMethod$2;
 var arrayJoin = [].join;
 
 // fallback for not array-like strings
-$export$1($export$1.P + $export$1.F * (IObject != Object || !require$$0$18(arrayJoin)), 'Array', {
+_export(_export.P + _export.F * (_iobject != Object || !_strictMethod(arrayJoin)), 'Array', {
   join: function join(separator) {
-    return arrayJoin.call(toIObject(this), separator === undefined ? ',' : separator);
+    return arrayJoin.call(_toIobject(this), separator === undefined ? ',' : separator);
   }
 });
 
@@ -2920,17 +2343,17 @@ $export$1($export$1.P + $export$1.F * (IObject != Object || !require$$0$18(array
 var arraySlice$1 = [].slice;
 
 // fallback for not array-like ES3 strings and DOM objects
-$export$1($export$1.P + $export$1.F * require$$1(function () {
-  if (html) arraySlice$1.call(html);
+_export(_export.P + _export.F * _fails(function () {
+  if (_html) arraySlice$1.call(_html);
 }), 'Array', {
   slice: function slice(begin, end) {
-    var len = toLength(this.length);
-    var klass = require$$2(this);
+    var len = _toLength(this.length);
+    var klass = _cof(this);
     end = end === undefined ? len : end;
     if (klass == 'Array') return arraySlice$1.call(this, begin, end);
-    var start = require$$15(begin, len);
-    var upTo = require$$15(end, len);
-    var size = toLength(upTo - start);
+    var start = _toAbsoluteIndex(begin, len);
+    var upTo = _toAbsoluteIndex(end, len);
+    var size = _toLength(upTo - start);
     var cloned = new Array(size);
     var i = 0;
     for (; i < size; i++) cloned[i] = klass == 'String'
@@ -2948,58 +2371,55 @@ $export$1($export$1.P + $export$1.F * require$$1(function () {
 var $sort = [].sort;
 var test$1 = [1, 2, 3];
 
-$export$1($export$1.P + $export$1.F * (require$$1(function () {
+_export(_export.P + _export.F * (_fails(function () {
   // IE8-
   test$1.sort(undefined);
-}) || !require$$1(function () {
+}) || !_fails(function () {
   // V8 bug
   test$1.sort(null);
   // Old WebKit
-}) || !require$$0$18($sort)), 'Array', {
+}) || !_strictMethod($sort)), 'Array', {
   // 22.1.3.25 Array.prototype.sort(comparefn)
   sort: function sort(comparefn) {
     return comparefn === undefined
-      ? $sort.call(toObject(this))
-      : $sort.call(toObject(this), aFunction(comparefn));
+      ? $sort.call(_toObject(this))
+      : $sort.call(_toObject(this), _aFunction(comparefn));
   }
 });
 
-var SPECIES = wks('species');
+var SPECIES = _wks('species');
 
 var _arraySpeciesConstructor = function (original) {
   var C;
-  if (isArray(original)) {
+  if (_isArray(original)) {
     C = original.constructor;
     // cross-realm fallback
-    if (typeof C == 'function' && (C === Array || isArray(C.prototype))) C = undefined;
-    if (isObject(C)) {
+    if (typeof C == 'function' && (C === Array || _isArray(C.prototype))) C = undefined;
+    if (_isObject(C)) {
       C = C[SPECIES];
       if (C === null) C = undefined;
     }
   } return C === undefined ? Array : C;
 };
 
+// 9.4.2.3 ArraySpeciesCreate(originalArray, length)
 
-
-var _arraySpeciesConstructor$2 = Object.freeze({
-	default: _arraySpeciesConstructor,
-	__moduleExports: _arraySpeciesConstructor
-});
-
-var speciesConstructor = ( _arraySpeciesConstructor$2 && _arraySpeciesConstructor ) || _arraySpeciesConstructor$2;
 
 var _arraySpeciesCreate = function (original, length) {
-  return new (speciesConstructor(original))(length);
+  return new (_arraySpeciesConstructor(original))(length);
 };
 
+// 0 -> Array#forEach
+// 1 -> Array#map
+// 2 -> Array#filter
+// 3 -> Array#some
+// 4 -> Array#every
+// 5 -> Array#find
+// 6 -> Array#findIndex
 
 
-var _arraySpeciesCreate$2 = Object.freeze({
-	default: _arraySpeciesCreate,
-	__moduleExports: _arraySpeciesCreate
-});
 
-var arraySpeciesCreate = ( _arraySpeciesCreate$2 && _arraySpeciesCreate ) || _arraySpeciesCreate$2;
+
 
 var _arrayMethods = function (TYPE, $create) {
   var IS_MAP = TYPE == 1;
@@ -3008,12 +2428,12 @@ var _arrayMethods = function (TYPE, $create) {
   var IS_EVERY = TYPE == 4;
   var IS_FIND_INDEX = TYPE == 6;
   var NO_HOLES = TYPE == 5 || IS_FIND_INDEX;
-  var create = $create || arraySpeciesCreate;
+  var create = $create || _arraySpeciesCreate;
   return function ($this, callbackfn, that) {
-    var O = toObject($this);
-    var self = IObject(O);
-    var f = ctx(callbackfn, that, 3);
-    var length = toLength(self.length);
+    var O = _toObject($this);
+    var self = _iobject(O);
+    var f = _ctx(callbackfn, that, 3);
+    var length = _toLength(self.length);
     var index = 0;
     var result = IS_MAP ? create($this, length) : IS_FILTER ? create($this, 0) : undefined;
     var val, res;
@@ -3034,21 +2454,12 @@ var _arrayMethods = function (TYPE, $create) {
   };
 };
 
-
-
-var _arrayMethods$2 = Object.freeze({
-	default: _arrayMethods,
-	__moduleExports: _arrayMethods
-});
-
-var require$$28 = ( _arrayMethods$2 && _arrayMethods ) || _arrayMethods$2;
-
 'use strict';
 
-var $forEach = require$$28(0);
-var STRICT = require$$0$18([].forEach, true);
+var $forEach = _arrayMethods(0);
+var STRICT = _strictMethod([].forEach, true);
 
-$export$1($export$1.P + $export$1.F * !STRICT, 'Array', {
+_export(_export.P + _export.F * !STRICT, 'Array', {
   // 22.1.3.10 / 15.4.4.18 Array.prototype.forEach(callbackfn [, thisArg])
   forEach: function forEach(callbackfn /* , thisArg */) {
     return $forEach(this, callbackfn, arguments[1]);
@@ -3057,9 +2468,9 @@ $export$1($export$1.P + $export$1.F * !STRICT, 'Array', {
 
 'use strict';
 
-var $map = require$$28(1);
+var $map = _arrayMethods(1);
 
-$export$1($export$1.P + $export$1.F * !require$$0$18([].map, true), 'Array', {
+_export(_export.P + _export.F * !_strictMethod([].map, true), 'Array', {
   // 22.1.3.15 / 15.4.4.19 Array.prototype.map(callbackfn [, thisArg])
   map: function map(callbackfn /* , thisArg */) {
     return $map(this, callbackfn, arguments[1]);
@@ -3068,9 +2479,9 @@ $export$1($export$1.P + $export$1.F * !require$$0$18([].map, true), 'Array', {
 
 'use strict';
 
-var $filter = require$$28(2);
+var $filter = _arrayMethods(2);
 
-$export$1($export$1.P + $export$1.F * !require$$0$18([].filter, true), 'Array', {
+_export(_export.P + _export.F * !_strictMethod([].filter, true), 'Array', {
   // 22.1.3.7 / 15.4.4.20 Array.prototype.filter(callbackfn [, thisArg])
   filter: function filter(callbackfn /* , thisArg */) {
     return $filter(this, callbackfn, arguments[1]);
@@ -3079,9 +2490,9 @@ $export$1($export$1.P + $export$1.F * !require$$0$18([].filter, true), 'Array', 
 
 'use strict';
 
-var $some = require$$28(3);
+var $some = _arrayMethods(3);
 
-$export$1($export$1.P + $export$1.F * !require$$0$18([].some, true), 'Array', {
+_export(_export.P + _export.F * !_strictMethod([].some, true), 'Array', {
   // 22.1.3.23 / 15.4.4.17 Array.prototype.some(callbackfn [, thisArg])
   some: function some(callbackfn /* , thisArg */) {
     return $some(this, callbackfn, arguments[1]);
@@ -3090,9 +2501,9 @@ $export$1($export$1.P + $export$1.F * !require$$0$18([].some, true), 'Array', {
 
 'use strict';
 
-var $every = require$$28(4);
+var $every = _arrayMethods(4);
 
-$export$1($export$1.P + $export$1.F * !require$$0$18([].every, true), 'Array', {
+_export(_export.P + _export.F * !_strictMethod([].every, true), 'Array', {
   // 22.1.3.5 / 15.4.4.16 Array.prototype.every(callbackfn [, thisArg])
   every: function every(callbackfn /* , thisArg */) {
     return $every(this, callbackfn, arguments[1]);
@@ -3100,10 +2511,10 @@ $export$1($export$1.P + $export$1.F * !require$$0$18([].every, true), 'Array', {
 });
 
 var _arrayReduce = function (that, callbackfn, aLen, memo, isRight) {
-  aFunction(callbackfn);
-  var O = toObject(that);
-  var self = IObject(O);
-  var length = toLength(O.length);
+  _aFunction(callbackfn);
+  var O = _toObject(that);
+  var self = _iobject(O);
+  var length = _toLength(O.length);
   var index = isRight ? length - 1 : 0;
   var i = isRight ? -1 : 1;
   if (aLen < 2) for (;;) {
@@ -3123,23 +2534,14 @@ var _arrayReduce = function (that, callbackfn, aLen, memo, isRight) {
   return memo;
 };
 
-
-
-var _arrayReduce$2 = Object.freeze({
-	default: _arrayReduce,
-	__moduleExports: _arrayReduce
-});
-
-var $reduce = ( _arrayReduce$2 && _arrayReduce ) || _arrayReduce$2;
-
 'use strict';
 
 
 
-$export$1($export$1.P + $export$1.F * !require$$0$18([].reduce, true), 'Array', {
+_export(_export.P + _export.F * !_strictMethod([].reduce, true), 'Array', {
   // 22.1.3.18 / 15.4.4.21 Array.prototype.reduce(callbackfn [, initialValue])
   reduce: function reduce(callbackfn /* , initialValue */) {
-    return $reduce(this, callbackfn, arguments.length, arguments[1], false);
+    return _arrayReduce(this, callbackfn, arguments.length, arguments[1], false);
   }
 });
 
@@ -3147,20 +2549,20 @@ $export$1($export$1.P + $export$1.F * !require$$0$18([].reduce, true), 'Array', 
 
 
 
-$export$1($export$1.P + $export$1.F * !require$$0$18([].reduceRight, true), 'Array', {
+_export(_export.P + _export.F * !_strictMethod([].reduceRight, true), 'Array', {
   // 22.1.3.19 / 15.4.4.22 Array.prototype.reduceRight(callbackfn [, initialValue])
   reduceRight: function reduceRight(callbackfn /* , initialValue */) {
-    return $reduce(this, callbackfn, arguments.length, arguments[1], true);
+    return _arrayReduce(this, callbackfn, arguments.length, arguments[1], true);
   }
 });
 
 'use strict';
 
-var $indexOf = require$$0$2(false);
+var $indexOf = _arrayIncludes(false);
 var $native = [].indexOf;
 var NEGATIVE_ZERO = !!$native && 1 / [1].indexOf(1, -0) < 0;
 
-$export$1($export$1.P + $export$1.F * (NEGATIVE_ZERO || !require$$0$18($native)), 'Array', {
+_export(_export.P + _export.F * (NEGATIVE_ZERO || !_strictMethod($native)), 'Array', {
   // 22.1.3.11 / 15.4.4.14 Array.prototype.indexOf(searchElement [, fromIndex])
   indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
     return NEGATIVE_ZERO
@@ -3178,33 +2580,34 @@ $export$1($export$1.P + $export$1.F * (NEGATIVE_ZERO || !require$$0$18($native))
 var $native$1 = [].lastIndexOf;
 var NEGATIVE_ZERO$1 = !!$native$1 && 1 / [1].lastIndexOf(1, -0) < 0;
 
-$export$1($export$1.P + $export$1.F * (NEGATIVE_ZERO$1 || !require$$0$18($native$1)), 'Array', {
+_export(_export.P + _export.F * (NEGATIVE_ZERO$1 || !_strictMethod($native$1)), 'Array', {
   // 22.1.3.14 / 15.4.4.15 Array.prototype.lastIndexOf(searchElement [, fromIndex])
   lastIndexOf: function lastIndexOf(searchElement /* , fromIndex = @[*-1] */) {
     // convert -0 to +0
     if (NEGATIVE_ZERO$1) return $native$1.apply(this, arguments) || 0;
-    var O = toIObject(this);
-    var length = toLength(O.length);
+    var O = _toIobject(this);
+    var length = _toLength(O.length);
     var index = length - 1;
-    if (arguments.length > 1) index = Math.min(index, toInteger(arguments[1]));
+    if (arguments.length > 1) index = Math.min(index, _toInteger(arguments[1]));
     if (index < 0) index = length + index;
     for (;index >= 0; index--) if (index in O) if (O[index] === searchElement) return index || 0;
     return -1;
   }
 });
 
+// 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 'use strict';
 
 
 
 
 var _arrayCopyWithin = [].copyWithin || function copyWithin(target /* = 0 */, start /* = 0, end = @length */) {
-  var O = toObject(this);
-  var len = toLength(O.length);
-  var to = require$$15(target, len);
-  var from = require$$15(start, len);
+  var O = _toObject(this);
+  var len = _toLength(O.length);
+  var to = _toAbsoluteIndex(target, len);
+  var from = _toAbsoluteIndex(start, len);
   var end = arguments.length > 2 ? arguments[2] : undefined;
-  var count = Math.min((end === undefined ? len : require$$15(end, len)) - from, len - to);
+  var count = Math.min((end === undefined ? len : _toAbsoluteIndex(end, len)) - from, len - to);
   var inc = 1;
   if (from < to && to < from + count) {
     inc = -1;
@@ -3219,130 +2622,93 @@ var _arrayCopyWithin = [].copyWithin || function copyWithin(target /* = 0 */, st
   } return O;
 };
 
-
-
-var _arrayCopyWithin$2 = Object.freeze({
-	default: _arrayCopyWithin,
-	__moduleExports: _arrayCopyWithin
-});
-
-var UNSCOPABLES = wks('unscopables');
+// 22.1.3.31 Array.prototype[@@unscopables]
+var UNSCOPABLES = _wks('unscopables');
 var ArrayProto$1 = Array.prototype;
-if (ArrayProto$1[UNSCOPABLES] == undefined) hide(ArrayProto$1, UNSCOPABLES, {});
+if (ArrayProto$1[UNSCOPABLES] == undefined) _hide(ArrayProto$1, UNSCOPABLES, {});
 var _addToUnscopables = function (key) {
   ArrayProto$1[UNSCOPABLES][key] = true;
 };
 
+// 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 
 
-var _addToUnscopables$2 = Object.freeze({
-	default: _addToUnscopables,
-	__moduleExports: _addToUnscopables
-});
+_export(_export.P, 'Array', { copyWithin: _arrayCopyWithin });
 
-var require$$36 = ( _arrayCopyWithin$2 && _arrayCopyWithin ) || _arrayCopyWithin$2;
+_addToUnscopables('copyWithin');
 
-var require$$0$19 = ( _addToUnscopables$2 && _addToUnscopables ) || _addToUnscopables$2;
-
-$export$1($export$1.P, 'Array', { copyWithin: require$$36 });
-
-require$$0$19('copyWithin');
-
+// 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
 'use strict';
 
 
 
 var _arrayFill = function fill(value /* , start = 0, end = @length */) {
-  var O = toObject(this);
-  var length = toLength(O.length);
+  var O = _toObject(this);
+  var length = _toLength(O.length);
   var aLen = arguments.length;
-  var index = require$$15(aLen > 1 ? arguments[1] : undefined, length);
+  var index = _toAbsoluteIndex(aLen > 1 ? arguments[1] : undefined, length);
   var end = aLen > 2 ? arguments[2] : undefined;
-  var endPos = end === undefined ? length : require$$15(end, length);
+  var endPos = end === undefined ? length : _toAbsoluteIndex(end, length);
   while (endPos > index) O[index++] = value;
   return O;
 };
 
+// 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
 
 
-var _arrayFill$2 = Object.freeze({
-	default: _arrayFill,
-	__moduleExports: _arrayFill
-});
+_export(_export.P, 'Array', { fill: _arrayFill });
 
-var require$$35 = ( _arrayFill$2 && _arrayFill ) || _arrayFill$2;
-
-$export$1($export$1.P, 'Array', { fill: require$$35 });
-
-require$$0$19('fill');
+_addToUnscopables('fill');
 
 'use strict';
 // 22.1.3.8 Array.prototype.find(predicate, thisArg = undefined)
 
-var $find = require$$28(5);
+var $find = _arrayMethods(5);
 var KEY = 'find';
 var forced = true;
 // Shouldn't skip holes
 if (KEY in []) Array(1)[KEY](function () { forced = false; });
-$export$1($export$1.P + $export$1.F * forced, 'Array', {
+_export(_export.P + _export.F * forced, 'Array', {
   find: function find(callbackfn /* , that = undefined */) {
     return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
-require$$0$19(KEY);
+_addToUnscopables(KEY);
 
 'use strict';
 // 22.1.3.9 Array.prototype.findIndex(predicate, thisArg = undefined)
 
-var $find$1 = require$$28(6);
+var $find$1 = _arrayMethods(6);
 var KEY$1 = 'findIndex';
 var forced$1 = true;
 // Shouldn't skip holes
 if (KEY$1 in []) Array(1)[KEY$1](function () { forced$1 = false; });
-$export$1($export$1.P + $export$1.F * forced$1, 'Array', {
+_export(_export.P + _export.F * forced$1, 'Array', {
   findIndex: function findIndex(callbackfn /* , that = undefined */) {
     return $find$1(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
-require$$0$19(KEY$1);
+_addToUnscopables(KEY$1);
 
 'use strict';
 
 
 
-var SPECIES$1 = wks('species');
+var SPECIES$1 = _wks('species');
 
 var _setSpecies = function (KEY) {
-  var C = global$1[KEY];
-  if (require$$1$1 && C && !C[SPECIES$1]) $defineProperty$1.f(C, SPECIES$1, {
+  var C = _global[KEY];
+  if (_descriptors && C && !C[SPECIES$1]) _objectDp.f(C, SPECIES$1, {
     configurable: true,
     get: function () { return this; }
   });
 };
 
-
-
-var _setSpecies$2 = Object.freeze({
-	default: _setSpecies,
-	__moduleExports: _setSpecies
-});
-
-var require$$2$3 = ( _setSpecies$2 && _setSpecies ) || _setSpecies$2;
-
-require$$2$3('Array');
+_setSpecies('Array');
 
 var _iterStep = function (done, value) {
   return { value: value, done: !!done };
 };
-
-
-
-var _iterStep$2 = Object.freeze({
-	default: _iterStep,
-	__moduleExports: _iterStep
-});
-
-var step = ( _iterStep$2 && _iterStep ) || _iterStep$2;
 
 'use strict';
 
@@ -3354,8 +2720,8 @@ var step = ( _iterStep$2 && _iterStep ) || _iterStep$2;
 // 22.1.3.13 Array.prototype.keys()
 // 22.1.3.29 Array.prototype.values()
 // 22.1.3.30 Array.prototype[@@iterator]()
-var es6_array_iterator = $iterDefine(Array, 'Array', function (iterated, kind) {
-  this._t = toIObject(iterated); // target
+var es6_array_iterator = _iterDefine(Array, 'Array', function (iterated, kind) {
+  this._t = _toIobject(iterated); // target
   this._i = 0;                   // next index
   this._k = kind;                // kind
 // 22.1.5.2.1 %ArrayIteratorPrototype%.next()
@@ -3365,32 +2731,25 @@ var es6_array_iterator = $iterDefine(Array, 'Array', function (iterated, kind) {
   var index = this._i++;
   if (!O || index >= O.length) {
     this._t = undefined;
-    return step(1);
+    return _iterStep(1);
   }
-  if (kind == 'keys') return step(0, index);
-  if (kind == 'values') return step(0, O[index]);
-  return step(0, [index, O[index]]);
+  if (kind == 'keys') return _iterStep(0, index);
+  if (kind == 'values') return _iterStep(0, O[index]);
+  return _iterStep(0, [index, O[index]]);
 }, 'values');
 
 // argumentsList[@@iterator] is %ArrayProto_values% (9.4.4.6, 9.4.4.7)
-Iterators.Arguments = Iterators.Array;
+_iterators.Arguments = _iterators.Array;
 
-require$$0$19('keys');
-require$$0$19('values');
-require$$0$19('entries');
-
-
-
-var es6_array_iterator$2 = Object.freeze({
-	default: es6_array_iterator,
-	__moduleExports: es6_array_iterator
-});
+_addToUnscopables('keys');
+_addToUnscopables('values');
+_addToUnscopables('entries');
 
 'use strict';
 // 21.2.5.3 get RegExp.prototype.flags
 
 var _flags = function () {
-  var that = anObject(this);
+  var that = _anObject(this);
   var result = '';
   if (that.global) result += 'g';
   if (that.ignoreCase) result += 'i';
@@ -3400,20 +2759,11 @@ var _flags = function () {
   return result;
 };
 
+var dP$4 = _objectDp.f;
+var gOPN$4 = _objectGopn.f;
 
 
-var _flags$2 = Object.freeze({
-	default: _flags,
-	__moduleExports: _flags
-});
-
-var getFlags = ( _flags$2 && _flags ) || _flags$2;
-
-var dP$4 = $defineProperty$1.f;
-var gOPN$4 = gOPN$2.f;
-
-
-var $RegExp = global$1.RegExp;
+var $RegExp = _global.RegExp;
 var Base$1 = $RegExp;
 var proto$2 = $RegExp.prototype;
 var re1 = /a/g;
@@ -3421,19 +2771,19 @@ var re2 = /a/g;
 // "new" creates a new object, old webkit buggy here
 var CORRECT_NEW = new $RegExp(re1) !== re1;
 
-if (require$$1$1 && (!CORRECT_NEW || require$$1(function () {
-  re2[wks('match')] = false;
+if (_descriptors && (!CORRECT_NEW || _fails(function () {
+  re2[_wks('match')] = false;
   // RegExp constructor can alter flags and IsRegExp works correct with @@match
   return $RegExp(re1) != re1 || $RegExp(re2) == re2 || $RegExp(re1, 'i') != '/a/i';
 }))) {
   $RegExp = function RegExp(p, f) {
     var tiRE = this instanceof $RegExp;
-    var piRE = isRegExp(p);
+    var piRE = _isRegexp(p);
     var fiU = f === undefined;
     return !tiRE && piRE && p.constructor === $RegExp && fiU ? p
-      : inheritIfRequired(CORRECT_NEW
+      : _inheritIfRequired(CORRECT_NEW
         ? new Base$1(piRE && !fiU ? p.source : p, f)
-        : Base$1((piRE = p instanceof $RegExp) ? p.source : p, piRE && fiU ? getFlags.call(p) : f)
+        : Base$1((piRE = p instanceof $RegExp) ? p.source : p, piRE && fiU ? _flags.call(p) : f)
       , tiRE ? this : proto$2, $RegExp);
   };
   var proxy = function (key) {
@@ -3446,14 +2796,15 @@ if (require$$1$1 && (!CORRECT_NEW || require$$1(function () {
   for (var keys$1 = gOPN$4(Base$1), i = 0; keys$1.length > i;) proxy(keys$1[i++]);
   proto$2.constructor = $RegExp;
   $RegExp.prototype = proto$2;
-  redefine(global$1, 'RegExp', $RegExp);
+  _redefine(_global, 'RegExp', $RegExp);
 }
 
-require$$2$3('RegExp');
+_setSpecies('RegExp');
 
-if (require$$1$1 && /./g.flags != 'g') $defineProperty$1.f(RegExp.prototype, 'flags', {
+// 21.2.5.3 get RegExp.prototype.flags()
+if (_descriptors && /./g.flags != 'g') _objectDp.f(RegExp.prototype, 'flags', {
   configurable: true,
-  get: getFlags
+  get: _flags
 });
 
 'use strict';
@@ -3465,15 +2816,15 @@ var TO_STRING$1 = 'toString';
 var $toString$1 = /./[TO_STRING$1];
 
 var define$1 = function (fn) {
-  redefine(RegExp.prototype, TO_STRING$1, fn, true);
+  _redefine(RegExp.prototype, TO_STRING$1, fn, true);
 };
 
 // 21.2.5.14 RegExp.prototype.toString()
-if (require$$1(function () { return $toString$1.call({ source: 'a', flags: 'b' }) != '/a/b'; })) {
+if (_fails(function () { return $toString$1.call({ source: 'a', flags: 'b' }) != '/a/b'; })) {
   define$1(function toString() {
-    var R = anObject(this);
+    var R = _anObject(this);
     return '/'.concat(R.source, '/',
-      'flags' in R ? R.flags : !require$$1$1 && R instanceof RegExp ? getFlags.call(R) : undefined);
+      'flags' in R ? R.flags : !_descriptors && R instanceof RegExp ? _flags.call(R) : undefined);
   });
 // FF44- RegExp#toString has a wrong name
 } else if ($toString$1.name != TO_STRING$1) {
@@ -3490,17 +2841,17 @@ if (require$$1(function () { return $toString$1.call({ source: 'a', flags: 'b' }
 
 
 var _fixReWks = function (KEY, length, exec) {
-  var SYMBOL = wks(KEY);
-  var fns = exec(defined, SYMBOL, ''[KEY]);
+  var SYMBOL = _wks(KEY);
+  var fns = exec(_defined, SYMBOL, ''[KEY]);
   var strfn = fns[0];
   var rxfn = fns[1];
-  if (require$$1(function () {
+  if (_fails(function () {
     var O = {};
     O[SYMBOL] = function () { return 7; };
     return ''[KEY](O) != 7;
   })) {
-    redefine(String.prototype, KEY, strfn);
-    hide(RegExp.prototype, SYMBOL, length == 2
+    _redefine(String.prototype, KEY, strfn);
+    _hide(RegExp.prototype, SYMBOL, length == 2
       // 21.2.5.8 RegExp.prototype[@@replace](string, replaceValue)
       // 21.2.5.11 RegExp.prototype[@@split](string, limit)
       ? function (string, arg) { return rxfn.call(string, this, arg); }
@@ -3511,16 +2862,8 @@ var _fixReWks = function (KEY, length, exec) {
   }
 };
 
-
-
-var _fixReWks$2 = Object.freeze({
-	default: _fixReWks,
-	__moduleExports: _fixReWks
-});
-
-var require$$0$20 = ( _fixReWks$2 && _fixReWks ) || _fixReWks$2;
-
-require$$0$20('match', 1, function (defined, MATCH, $match) {
+// @@match logic
+_fixReWks('match', 1, function (defined, MATCH, $match) {
   // 21.1.3.11 String.prototype.match(regexp)
   return [function match(regexp) {
     'use strict';
@@ -3530,7 +2873,8 @@ require$$0$20('match', 1, function (defined, MATCH, $match) {
   }, $match];
 });
 
-require$$0$20('replace', 2, function (defined, REPLACE, $replace) {
+// @@replace logic
+_fixReWks('replace', 2, function (defined, REPLACE, $replace) {
   // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
   return [function replace(searchValue, replaceValue) {
     'use strict';
@@ -3542,7 +2886,8 @@ require$$0$20('replace', 2, function (defined, REPLACE, $replace) {
   }, $replace];
 });
 
-require$$0$20('search', 1, function (defined, SEARCH, $search) {
+// @@search logic
+_fixReWks('search', 1, function (defined, SEARCH, $search) {
   // 21.1.3.15 String.prototype.search(regexp)
   return [function search(regexp) {
     'use strict';
@@ -3552,9 +2897,10 @@ require$$0$20('search', 1, function (defined, SEARCH, $search) {
   }, $search];
 });
 
-require$$0$20('split', 2, function (defined, SPLIT, $split) {
+// @@split logic
+_fixReWks('split', 2, function (defined, SPLIT, $split) {
   'use strict';
-  var isRegExp$$1 = isRegExp;
+  var isRegExp = _isRegexp;
   var _split = $split;
   var $push = [].push;
   var $SPLIT = 'split';
@@ -3574,7 +2920,7 @@ require$$0$20('split', 2, function (defined, SPLIT, $split) {
       var string = String(this);
       if (separator === undefined && limit === 0) return [];
       // If `separator` is not a regex, use native split
-      if (!isRegExp$$1(separator)) return _split.call(string, separator, limit);
+      if (!isRegExp(separator)) return _split.call(string, separator, limit);
       var output = [];
       var flags = (separator.ignoreCase ? 'i' : '') +
                   (separator.multiline ? 'm' : '') +
@@ -3629,28 +2975,21 @@ var _anInstance = function (it, Constructor, name, forbiddenField) {
   } return it;
 };
 
-
-
-var _anInstance$2 = Object.freeze({
-	default: _anInstance,
-	__moduleExports: _anInstance
-});
-
 var _forOf = createCommonjsModule(function (module) {
 var BREAK = {};
 var RETURN = {};
 var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) {
-  var iterFn = ITERATOR ? function () { return iterable; } : require$$25(iterable);
-  var f = ctx(fn, that, entries ? 2 : 1);
+  var iterFn = ITERATOR ? function () { return iterable; } : core_getIteratorMethod(iterable);
+  var f = _ctx(fn, that, entries ? 2 : 1);
   var index = 0;
   var length, step, iterator, result;
   if (typeof iterFn != 'function') throw TypeError(iterable + ' is not iterable!');
   // fast case for arrays with default iterator
-  if (require$$21(iterFn)) for (length = toLength(iterable.length); length > index; index++) {
-    result = entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
+  if (_isArrayIter(iterFn)) for (length = _toLength(iterable.length); length > index; index++) {
+    result = entries ? f(_anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
     if (result === BREAK || result === RETURN) return result;
   } else for (iterator = iterFn.call(iterable); !(step = iterator.next()).done;) {
-    result = call(iterator, f, step.value, entries);
+    result = _iterCall(iterator, f, step.value, entries);
     if (result === BREAK || result === RETURN) return result;
   }
 };
@@ -3658,32 +2997,21 @@ exports.BREAK = BREAK;
 exports.RETURN = RETURN;
 });
 
+// 7.3.20 SpeciesConstructor(O, defaultConstructor)
 
 
-var _forOf$2 = Object.freeze({
-	default: _forOf,
-	__moduleExports: _forOf
-});
-
-var SPECIES$2 = wks('species');
+var SPECIES$2 = _wks('species');
 var _speciesConstructor = function (O, D) {
-  var C = anObject(O).constructor;
+  var C = _anObject(O).constructor;
   var S;
-  return C === undefined || (S = anObject(C)[SPECIES$2]) == undefined ? D : aFunction(S);
+  return C === undefined || (S = _anObject(C)[SPECIES$2]) == undefined ? D : _aFunction(S);
 };
 
-
-
-var _speciesConstructor$2 = Object.freeze({
-	default: _speciesConstructor,
-	__moduleExports: _speciesConstructor
-});
-
-var process$2 = global$1.process;
-var setTask = global$1.setImmediate;
-var clearTask = global$1.clearImmediate;
-var MessageChannel = global$1.MessageChannel;
-var Dispatch = global$1.Dispatch;
+var process$2 = _global.process;
+var setTask = _global.setImmediate;
+var clearTask = _global.clearImmediate;
+var MessageChannel = _global.MessageChannel;
+var Dispatch = _global.Dispatch;
 var counter = 0;
 var queue = {};
 var ONREADYSTATECHANGE = 'onreadystatechange';
@@ -3710,7 +3038,7 @@ if (!setTask || !clearTask) {
     while (arguments.length > i) args.push(arguments[i++]);
     queue[++counter] = function () {
       // eslint-disable-next-line no-new-func
-      invoke(typeof fn == 'function' ? fn : Function(fn), args);
+      _invoke(typeof fn == 'function' ? fn : Function(fn), args);
     };
     defer(counter);
     return counter;
@@ -3719,40 +3047,40 @@ if (!setTask || !clearTask) {
     delete queue[id];
   };
   // Node.js 0.8-
-  if (require$$2(process$2) == 'process') {
+  if (_cof(process$2) == 'process') {
     defer = function (id) {
-      process$2.nextTick(ctx(run, id, 1));
+      process$2.nextTick(_ctx(run, id, 1));
     };
   // Sphere (JS game engine) Dispatch API
   } else if (Dispatch && Dispatch.now) {
     defer = function (id) {
-      Dispatch.now(ctx(run, id, 1));
+      Dispatch.now(_ctx(run, id, 1));
     };
   // Browsers with MessageChannel, includes WebWorkers
   } else if (MessageChannel) {
     channel = new MessageChannel();
     port = channel.port2;
     channel.port1.onmessage = listener;
-    defer = ctx(port.postMessage, port, 1);
+    defer = _ctx(port.postMessage, port, 1);
   // Browsers with postMessage, skip WebWorkers
   // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-  } else if (global$1.addEventListener && typeof postMessage == 'function' && !global$1.importScripts) {
+  } else if (_global.addEventListener && typeof postMessage == 'function' && !_global.importScripts) {
     defer = function (id) {
-      global$1.postMessage(id + '', '*');
+      _global.postMessage(id + '', '*');
     };
-    global$1.addEventListener('message', listener, false);
+    _global.addEventListener('message', listener, false);
   // IE8-
-  } else if (ONREADYSTATECHANGE in cel('script')) {
+  } else if (ONREADYSTATECHANGE in _domCreate('script')) {
     defer = function (id) {
-      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function () {
-        html.removeChild(this);
+      _html.appendChild(_domCreate('script'))[ONREADYSTATECHANGE] = function () {
+        _html.removeChild(this);
         run.call(id);
       };
     };
   // Rest old browsers
   } else {
     defer = function (id) {
-      setTimeout(ctx(run, id, 1), 0);
+      setTimeout(_ctx(run, id, 1), 0);
     };
   }
 }
@@ -3761,20 +3089,11 @@ var _task = {
   clear: clearTask
 };
 
-
-
-var _task$2 = Object.freeze({
-	default: _task,
-	__moduleExports: _task
-});
-
-var $task = ( _task$2 && _task ) || _task$2;
-
-var macrotask = $task.set;
-var Observer = global$1.MutationObserver || global$1.WebKitMutationObserver;
-var process$3 = global$1.process;
-var Promise$1 = global$1.Promise;
-var isNode$1 = require$$2(process$3) == 'process';
+var macrotask = _task.set;
+var Observer = _global.MutationObserver || _global.WebKitMutationObserver;
+var process$3 = _global.process;
+var Promise$1 = _global.Promise;
+var isNode$1 = _cof(process$3) == 'process';
 
 var _microtask = function () {
   var head, last, notify;
@@ -3802,7 +3121,7 @@ var _microtask = function () {
       process$3.nextTick(flush);
     };
   // browsers with MutationObserver, except iOS Safari - https://github.com/zloirock/core-js/issues/339
-  } else if (Observer && !(global$1.navigator && global$1.navigator.standalone)) {
+  } else if (Observer && !(_global.navigator && _global.navigator.standalone)) {
     var toggle = true;
     var node = document.createTextNode('');
     new Observer(flush).observe(node, { characterData: true }); // eslint-disable-line no-new
@@ -3824,7 +3143,7 @@ var _microtask = function () {
   } else {
     notify = function () {
       // strange IE + webpack dev server bug - use .call(global)
-      macrotask.call(global$1, flush);
+      macrotask.call(_global, flush);
     };
   }
 
@@ -3838,13 +3157,6 @@ var _microtask = function () {
   };
 };
 
-
-
-var _microtask$2 = Object.freeze({
-	default: _microtask,
-	__moduleExports: _microtask
-});
-
 'use strict';
 // 25.4.1.5 NewPromiseCapability(C)
 
@@ -3856,8 +3168,8 @@ function PromiseCapability(C) {
     resolve = $$resolve;
     reject = $$reject;
   });
-  this.resolve = aFunction(resolve);
-  this.reject = aFunction(reject);
+  this.resolve = _aFunction(resolve);
+  this.reject = _aFunction(reject);
 }
 
 var f$7 = function (C) {
@@ -3868,14 +3180,6 @@ var _newPromiseCapability = {
 	f: f$7
 };
 
-
-
-var _newPromiseCapability$2 = Object.freeze({
-	default: _newPromiseCapability,
-	__moduleExports: _newPromiseCapability,
-	f: f$7
-});
-
 var _perform = function (exec) {
   try {
     return { e: false, v: exec() };
@@ -3884,56 +3188,19 @@ var _perform = function (exec) {
   }
 };
 
-
-
-var _perform$2 = Object.freeze({
-	default: _perform,
-	__moduleExports: _perform
-});
-
-var newPromiseCapability$1 = ( _newPromiseCapability$2 && _newPromiseCapability ) || _newPromiseCapability$2;
-
 var _promiseResolve = function (C, x) {
-  anObject(C);
-  if (isObject(x) && x.constructor === C) return x;
-  var promiseCapability = newPromiseCapability$1.f(C);
+  _anObject(C);
+  if (_isObject(x) && x.constructor === C) return x;
+  var promiseCapability = _newPromiseCapability.f(C);
   var resolve = promiseCapability.resolve;
   resolve(x);
   return promiseCapability.promise;
 };
 
-
-
-var _promiseResolve$2 = Object.freeze({
-	default: _promiseResolve,
-	__moduleExports: _promiseResolve
-});
-
 var _redefineAll = function (target, src, safe) {
-  for (var key in src) redefine(target, key, src[key], safe);
+  for (var key in src) _redefine(target, key, src[key], safe);
   return target;
 };
-
-
-
-var _redefineAll$2 = Object.freeze({
-	default: _redefineAll,
-	__moduleExports: _redefineAll
-});
-
-var anInstance = ( _anInstance$2 && _anInstance ) || _anInstance$2;
-
-var forOf = ( _forOf$2 && _forOf ) || _forOf$2;
-
-var speciesConstructor$1 = ( _speciesConstructor$2 && _speciesConstructor ) || _speciesConstructor$2;
-
-var require$$0$21 = ( _microtask$2 && _microtask ) || _microtask$2;
-
-var perform = ( _perform$2 && _perform ) || _perform$2;
-
-var promiseResolve = ( _promiseResolve$2 && _promiseResolve ) || _promiseResolve$2;
-
-var redefineAll = ( _redefineAll$2 && _redefineAll ) || _redefineAll$2;
 
 'use strict';
 
@@ -3946,28 +3213,28 @@ var redefineAll = ( _redefineAll$2 && _redefineAll ) || _redefineAll$2;
 
 
 
-var task = $task.set;
-var microtask = require$$0$21();
+var task = _task.set;
+var microtask = _microtask();
 
 
 
 var PROMISE = 'Promise';
-var TypeError$1 = global$1.TypeError;
-var process$1 = global$1.process;
-var $Promise = global$1[PROMISE];
-var isNode = classof(process$1) == 'process';
+var TypeError$1 = _global.TypeError;
+var process$1 = _global.process;
+var $Promise = _global[PROMISE];
+var isNode = _classof(process$1) == 'process';
 var empty = function () { /* empty */ };
 var Internal;
 var newGenericPromiseCapability;
 var OwnPromiseCapability;
 var Wrapper;
-var newPromiseCapability = newGenericPromiseCapability = newPromiseCapability$1.f;
+var newPromiseCapability = newGenericPromiseCapability = _newPromiseCapability.f;
 
 var USE_NATIVE$1 = !!function () {
   try {
     // correct subclassing with @@species support
     var promise = $Promise.resolve(1);
-    var FakePromise = (promise.constructor = {})[wks('species')] = function (exec) {
+    var FakePromise = (promise.constructor = {})[_wks('species')] = function (exec) {
       exec(empty, empty);
     };
     // unhandled rejections tracking support, NodeJS Promise without it fails @@species test
@@ -3978,7 +3245,7 @@ var USE_NATIVE$1 = !!function () {
 // helpers
 var isThenable = function (it) {
   var then;
-  return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
+  return _isObject(it) && typeof (then = it.then) == 'function' ? then : false;
 };
 var notify = function (promise, isReject) {
   if (promise._n) return;
@@ -4023,17 +3290,17 @@ var notify = function (promise, isReject) {
   });
 };
 var onUnhandled = function (promise) {
-  task.call(global$1, function () {
+  task.call(_global, function () {
     var value = promise._v;
     var unhandled = isUnhandled(promise);
     var result, handler, console;
     if (unhandled) {
-      result = perform(function () {
+      result = _perform(function () {
         if (isNode) {
           process$1.emit('unhandledRejection', value, promise);
-        } else if (handler = global$1.onunhandledrejection) {
+        } else if (handler = _global.onunhandledrejection) {
           handler({ promise: promise, reason: value });
-        } else if ((console = global$1.console) && console.error) {
+        } else if ((console = _global.console) && console.error) {
           console.error('Unhandled promise rejection', value);
         }
       });
@@ -4047,11 +3314,11 @@ var isUnhandled = function (promise) {
   return promise._h !== 1 && (promise._a || promise._c).length === 0;
 };
 var onHandleUnhandled = function (promise) {
-  task.call(global$1, function () {
+  task.call(_global, function () {
     var handler;
     if (isNode) {
       process$1.emit('rejectionHandled', promise);
-    } else if (handler = global$1.onrejectionhandled) {
+    } else if (handler = _global.onrejectionhandled) {
       handler({ promise: promise, reason: promise._v });
     }
   });
@@ -4078,7 +3345,7 @@ var $resolve = function (value) {
       microtask(function () {
         var wrapper = { _w: promise, _d: false }; // wrap
         try {
-          then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
+          then.call(value, _ctx($resolve, wrapper, 1), _ctx($reject, wrapper, 1));
         } catch (e) {
           $reject.call(wrapper, e);
         }
@@ -4097,11 +3364,11 @@ var $resolve = function (value) {
 if (!USE_NATIVE$1) {
   // 25.4.3.1 Promise(executor)
   $Promise = function Promise(executor) {
-    anInstance(this, $Promise, PROMISE, '_h');
-    aFunction(executor);
+    _anInstance(this, $Promise, PROMISE, '_h');
+    _aFunction(executor);
     Internal.call(this);
     try {
-      executor(ctx($resolve, this, 1), ctx($reject, this, 1));
+      executor(_ctx($resolve, this, 1), _ctx($reject, this, 1));
     } catch (err) {
       $reject.call(this, err);
     }
@@ -4116,10 +3383,10 @@ if (!USE_NATIVE$1) {
     this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
     this._n = false;          // <- notify
   };
-  Internal.prototype = redefineAll($Promise.prototype, {
+  Internal.prototype = _redefineAll($Promise.prototype, {
     // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
     then: function then(onFulfilled, onRejected) {
-      var reaction = newPromiseCapability(speciesConstructor$1(this, $Promise));
+      var reaction = newPromiseCapability(_speciesConstructor(this, $Promise));
       reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
       reaction.fail = typeof onRejected == 'function' && onRejected;
       reaction.domain = isNode ? process$1.domain : undefined;
@@ -4136,23 +3403,23 @@ if (!USE_NATIVE$1) {
   OwnPromiseCapability = function () {
     var promise = new Internal();
     this.promise = promise;
-    this.resolve = ctx($resolve, promise, 1);
-    this.reject = ctx($reject, promise, 1);
+    this.resolve = _ctx($resolve, promise, 1);
+    this.reject = _ctx($reject, promise, 1);
   };
-  newPromiseCapability$1.f = newPromiseCapability = function (C) {
+  _newPromiseCapability.f = newPromiseCapability = function (C) {
     return C === $Promise || C === Wrapper
       ? new OwnPromiseCapability(C)
       : newGenericPromiseCapability(C);
   };
 }
 
-$export$1($export$1.G + $export$1.W + $export$1.F * !USE_NATIVE$1, { Promise: $Promise });
-setToStringTag($Promise, PROMISE);
-require$$2$3(PROMISE);
-Wrapper = require$$1$2[PROMISE];
+_export(_export.G + _export.W + _export.F * !USE_NATIVE$1, { Promise: $Promise });
+_setToStringTag($Promise, PROMISE);
+_setSpecies(PROMISE);
+Wrapper = _core[PROMISE];
 
 // statics
-$export$1($export$1.S + $export$1.F * !USE_NATIVE$1, PROMISE, {
+_export(_export.S + _export.F * !USE_NATIVE$1, PROMISE, {
   // 25.4.4.5 Promise.reject(r)
   reject: function reject(r) {
     var capability = newPromiseCapability(this);
@@ -4161,13 +3428,13 @@ $export$1($export$1.S + $export$1.F * !USE_NATIVE$1, PROMISE, {
     return capability.promise;
   }
 });
-$export$1($export$1.S + $export$1.F * (require$$0$1 || !USE_NATIVE$1), PROMISE, {
+_export(_export.S + _export.F * (_library || !USE_NATIVE$1), PROMISE, {
   // 25.4.4.6 Promise.resolve(x)
   resolve: function resolve(x) {
-    return promiseResolve(require$$0$1 && this === Wrapper ? $Promise : this, x);
+    return _promiseResolve(_library && this === Wrapper ? $Promise : this, x);
   }
 });
-$export$1($export$1.S + $export$1.F * !(USE_NATIVE$1 && require$$33(function (iter) {
+_export(_export.S + _export.F * !(USE_NATIVE$1 && _iterDetect(function (iter) {
   $Promise.all(iter)['catch'](empty);
 })), PROMISE, {
   // 25.4.4.1 Promise.all(iterable)
@@ -4176,11 +3443,11 @@ $export$1($export$1.S + $export$1.F * !(USE_NATIVE$1 && require$$33(function (it
     var capability = newPromiseCapability(C);
     var resolve = capability.resolve;
     var reject = capability.reject;
-    var result = perform(function () {
+    var result = _perform(function () {
       var values = [];
       var index = 0;
       var remaining = 1;
-      forOf(iterable, false, function (promise) {
+      _forOf(iterable, false, function (promise) {
         var $index = index++;
         var alreadyCalled = false;
         values.push(undefined);
@@ -4202,8 +3469,8 @@ $export$1($export$1.S + $export$1.F * !(USE_NATIVE$1 && require$$33(function (it
     var C = this;
     var capability = newPromiseCapability(C);
     var reject = capability.reject;
-    var result = perform(function () {
-      forOf(iterable, false, function (promise) {
+    var result = _perform(function () {
+      _forOf(iterable, false, function (promise) {
         C.resolve(promise).then(capability.resolve, reject);
       });
     });
@@ -4213,21 +3480,12 @@ $export$1($export$1.S + $export$1.F * !(USE_NATIVE$1 && require$$33(function (it
 });
 
 var _validateCollection = function (it, TYPE) {
-  if (!isObject(it) || it._t !== TYPE) throw TypeError('Incompatible receiver, ' + TYPE + ' required!');
+  if (!_isObject(it) || it._t !== TYPE) throw TypeError('Incompatible receiver, ' + TYPE + ' required!');
   return it;
 };
 
-
-
-var _validateCollection$2 = Object.freeze({
-	default: _validateCollection,
-	__moduleExports: _validateCollection
-});
-
-var validate = ( _validateCollection$2 && _validateCollection ) || _validateCollection$2;
-
 'use strict';
-var dP$5 = $defineProperty$1.f;
+var dP$5 = _objectDp.f;
 
 
 
@@ -4237,9 +3495,9 @@ var dP$5 = $defineProperty$1.f;
 
 
 
-var fastKey = require$$0$6.fastKey;
+var fastKey = _meta.fastKey;
 
-var SIZE = require$$1$1 ? '_s' : 'size';
+var SIZE = _descriptors ? '_s' : 'size';
 
 var getEntry = function (that, key) {
   // fast case
@@ -4255,19 +3513,19 @@ var getEntry = function (that, key) {
 var _collectionStrong = {
   getConstructor: function (wrapper, NAME, IS_MAP, ADDER) {
     var C = wrapper(function (that, iterable) {
-      anInstance(that, C, NAME, '_i');
+      _anInstance(that, C, NAME, '_i');
       that._t = NAME;         // collection type
-      that._i = create(null); // index
+      that._i = _objectCreate(null); // index
       that._f = undefined;    // first entry
       that._l = undefined;    // last entry
       that[SIZE] = 0;         // size
-      if (iterable != undefined) forOf(iterable, IS_MAP, that[ADDER], that);
+      if (iterable != undefined) _forOf(iterable, IS_MAP, that[ADDER], that);
     });
-    redefineAll(C.prototype, {
+    _redefineAll(C.prototype, {
       // 23.1.3.1 Map.prototype.clear()
       // 23.2.3.2 Set.prototype.clear()
       clear: function clear() {
-        for (var that = validate(this, NAME), data = that._i, entry = that._f; entry; entry = entry.n) {
+        for (var that = _validateCollection(this, NAME), data = that._i, entry = that._f; entry; entry = entry.n) {
           entry.r = true;
           if (entry.p) entry.p = entry.p.n = undefined;
           delete data[entry.i];
@@ -4278,7 +3536,7 @@ var _collectionStrong = {
       // 23.1.3.3 Map.prototype.delete(key)
       // 23.2.3.4 Set.prototype.delete(value)
       'delete': function (key) {
-        var that = validate(this, NAME);
+        var that = _validateCollection(this, NAME);
         var entry = getEntry(that, key);
         if (entry) {
           var next = entry.n;
@@ -4295,8 +3553,8 @@ var _collectionStrong = {
       // 23.2.3.6 Set.prototype.forEach(callbackfn, thisArg = undefined)
       // 23.1.3.5 Map.prototype.forEach(callbackfn, thisArg = undefined)
       forEach: function forEach(callbackfn /* , that = undefined */) {
-        validate(this, NAME);
-        var f = ctx(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3);
+        _validateCollection(this, NAME);
+        var f = _ctx(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3);
         var entry;
         while (entry = entry ? entry.n : this._f) {
           f(entry.v, entry.k, this);
@@ -4307,12 +3565,12 @@ var _collectionStrong = {
       // 23.1.3.7 Map.prototype.has(key)
       // 23.2.3.7 Set.prototype.has(value)
       has: function has(key) {
-        return !!getEntry(validate(this, NAME), key);
+        return !!getEntry(_validateCollection(this, NAME), key);
       }
     });
-    if (require$$1$1) dP$5(C.prototype, 'size', {
+    if (_descriptors) dP$5(C.prototype, 'size', {
       get: function () {
-        return validate(this, NAME)[SIZE];
+        return _validateCollection(this, NAME)[SIZE];
       }
     });
     return C;
@@ -4344,8 +3602,8 @@ var _collectionStrong = {
   setStrong: function (C, NAME, IS_MAP) {
     // add .keys, .values, .entries, [@@iterator]
     // 23.1.3.4, 23.1.3.8, 23.1.3.11, 23.1.3.12, 23.2.3.5, 23.2.3.8, 23.2.3.10, 23.2.3.11
-    $iterDefine(C, NAME, function (iterated, kind) {
-      this._t = validate(iterated, NAME); // target
+    _iterDefine(C, NAME, function (iterated, kind) {
+      this._t = _validateCollection(iterated, NAME); // target
       this._k = kind;                     // kind
       this._l = undefined;                // previous
     }, function () {
@@ -4358,25 +3616,18 @@ var _collectionStrong = {
       if (!that._t || !(that._l = entry = entry ? entry.n : that._t._f)) {
         // or finish the iteration
         that._t = undefined;
-        return step(1);
+        return _iterStep(1);
       }
       // return step by kind
-      if (kind == 'keys') return step(0, entry.k);
-      if (kind == 'values') return step(0, entry.v);
-      return step(0, [entry.k, entry.v]);
+      if (kind == 'keys') return _iterStep(0, entry.k);
+      if (kind == 'values') return _iterStep(0, entry.v);
+      return _iterStep(0, [entry.k, entry.v]);
     }, IS_MAP ? 'entries' : 'values', !IS_MAP, true);
 
     // add [@@species], 23.1.2.2, 23.2.2.2
-    require$$2$3(NAME);
+    _setSpecies(NAME);
   }
 };
-
-
-
-var _collectionStrong$2 = Object.freeze({
-	default: _collectionStrong,
-	__moduleExports: _collectionStrong
-});
 
 'use strict';
 
@@ -4393,41 +3644,41 @@ var _collectionStrong$2 = Object.freeze({
 
 
 var _collection = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
-  var Base = global$1[NAME];
+  var Base = _global[NAME];
   var C = Base;
   var ADDER = IS_MAP ? 'set' : 'add';
   var proto = C && C.prototype;
   var O = {};
   var fixMethod = function (KEY) {
     var fn = proto[KEY];
-    redefine(proto, KEY,
+    _redefine(proto, KEY,
       KEY == 'delete' ? function (a) {
-        return IS_WEAK && !isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
+        return IS_WEAK && !_isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
       } : KEY == 'has' ? function has(a) {
-        return IS_WEAK && !isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
+        return IS_WEAK && !_isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
       } : KEY == 'get' ? function get(a) {
-        return IS_WEAK && !isObject(a) ? undefined : fn.call(this, a === 0 ? 0 : a);
+        return IS_WEAK && !_isObject(a) ? undefined : fn.call(this, a === 0 ? 0 : a);
       } : KEY == 'add' ? function add(a) { fn.call(this, a === 0 ? 0 : a); return this; }
         : function set(a, b) { fn.call(this, a === 0 ? 0 : a, b); return this; }
     );
   };
-  if (typeof C != 'function' || !(IS_WEAK || proto.forEach && !require$$1(function () {
+  if (typeof C != 'function' || !(IS_WEAK || proto.forEach && !_fails(function () {
     new C().entries().next();
   }))) {
     // create collection constructor
     C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
-    redefineAll(C.prototype, methods);
-    require$$0$6.NEED = true;
+    _redefineAll(C.prototype, methods);
+    _meta.NEED = true;
   } else {
     var instance = new C();
     // early implementations not supports chaining
     var HASNT_CHAINING = instance[ADDER](IS_WEAK ? {} : -0, 1) != instance;
     // V8 ~  Chromium 40- weak-collections throws on primitives, but should return false
-    var THROWS_ON_PRIMITIVES = require$$1(function () { instance.has(1); });
+    var THROWS_ON_PRIMITIVES = _fails(function () { instance.has(1); });
     // most early implementations doesn't supports iterables, most modern - not close it correctly
-    var ACCEPT_ITERABLES = require$$33(function (iter) { new C(iter); }); // eslint-disable-line no-new
+    var ACCEPT_ITERABLES = _iterDetect(function (iter) { new C(iter); }); // eslint-disable-line no-new
     // for early implementations -0 and +0 not the same
-    var BUGGY_ZERO = !IS_WEAK && require$$1(function () {
+    var BUGGY_ZERO = !IS_WEAK && _fails(function () {
       // V8 ~ Chromium 42- fails only with 5+ elements
       var $instance = new C();
       var index = 5;
@@ -4436,9 +3687,9 @@ var _collection = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
     });
     if (!ACCEPT_ITERABLES) {
       C = wrapper(function (target, iterable) {
-        anInstance(target, C, NAME);
-        var that = inheritIfRequired(new Base(), target, C);
-        if (iterable != undefined) forOf(iterable, IS_MAP, that[ADDER], that);
+        _anInstance(target, C, NAME);
+        var that = _inheritIfRequired(new Base(), target, C);
+        if (iterable != undefined) _forOf(iterable, IS_MAP, that[ADDER], that);
         return that;
       });
       C.prototype = proto;
@@ -4454,26 +3705,15 @@ var _collection = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
     if (IS_WEAK && proto.clear) delete proto.clear;
   }
 
-  setToStringTag(C, NAME);
+  _setToStringTag(C, NAME);
 
   O[NAME] = C;
-  $export$1($export$1.G + $export$1.W + $export$1.F * (C != Base), O);
+  _export(_export.G + _export.W + _export.F * (C != Base), O);
 
   if (!IS_WEAK) common.setStrong(C, NAME, IS_MAP);
 
   return C;
 };
-
-
-
-var _collection$2 = Object.freeze({
-	default: _collection,
-	__moduleExports: _collection
-});
-
-var strong = ( _collectionStrong$2 && _collectionStrong ) || _collectionStrong$2;
-
-var require$$0$22 = ( _collection$2 && _collection ) || _collection$2;
 
 'use strict';
 
@@ -4481,26 +3721,19 @@ var require$$0$22 = ( _collection$2 && _collection ) || _collection$2;
 var MAP = 'Map';
 
 // 23.1 Map Objects
-var es6_map = require$$0$22(MAP, function (get) {
+var es6_map = _collection(MAP, function (get) {
   return function Map() { return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.1.3.6 Map.prototype.get(key)
   get: function get(key) {
-    var entry = strong.getEntry(validate(this, MAP), key);
+    var entry = _collectionStrong.getEntry(_validateCollection(this, MAP), key);
     return entry && entry.v;
   },
   // 23.1.3.9 Map.prototype.set(key, value)
   set: function set(key, value) {
-    return strong.def(validate(this, MAP), key === 0 ? 0 : key, value);
+    return _collectionStrong.def(_validateCollection(this, MAP), key === 0 ? 0 : key, value);
   }
-}, strong, true);
-
-
-
-var es6_map$2 = Object.freeze({
-	default: es6_map,
-	__moduleExports: es6_map
-});
+}, _collectionStrong, true);
 
 'use strict';
 
@@ -4508,25 +3741,18 @@ var es6_map$2 = Object.freeze({
 var SET = 'Set';
 
 // 23.2 Set Objects
-var es6_set = require$$0$22(SET, function (get) {
+var es6_set = _collection(SET, function (get) {
   return function Set() { return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.2.3.1 Set.prototype.add(value)
   add: function add(value) {
-    return strong.def(validate(this, SET), value = value === 0 ? 0 : value, value);
+    return _collectionStrong.def(_validateCollection(this, SET), value = value === 0 ? 0 : value, value);
   }
-}, strong);
-
-
-
-var es6_set$2 = Object.freeze({
-	default: es6_set,
-	__moduleExports: es6_set
-});
+}, _collectionStrong);
 
 'use strict';
 
-var getWeak = require$$0$6.getWeak;
+var getWeak = _meta.getWeak;
 
 
 
@@ -4534,8 +3760,8 @@ var getWeak = require$$0$6.getWeak;
 
 
 
-var arrayFind = require$$28(5);
-var arrayFindIndex = require$$28(6);
+var arrayFind = _arrayMethods(5);
+var arrayFindIndex = _arrayMethods(6);
 var id$1 = 0;
 
 // fallback for uncaught frozen keys
@@ -4575,34 +3801,34 @@ UncaughtFrozenStore.prototype = {
 var _collectionWeak = {
   getConstructor: function (wrapper, NAME, IS_MAP, ADDER) {
     var C = wrapper(function (that, iterable) {
-      anInstance(that, C, NAME, '_i');
+      _anInstance(that, C, NAME, '_i');
       that._t = NAME;      // collection type
       that._i = id$1++;      // collection id
       that._l = undefined; // leak store for uncaught frozen objects
-      if (iterable != undefined) forOf(iterable, IS_MAP, that[ADDER], that);
+      if (iterable != undefined) _forOf(iterable, IS_MAP, that[ADDER], that);
     });
-    redefineAll(C.prototype, {
+    _redefineAll(C.prototype, {
       // 23.3.3.2 WeakMap.prototype.delete(key)
       // 23.4.3.3 WeakSet.prototype.delete(value)
       'delete': function (key) {
-        if (!isObject(key)) return false;
+        if (!_isObject(key)) return false;
         var data = getWeak(key);
-        if (data === true) return uncaughtFrozenStore(validate(this, NAME))['delete'](key);
-        return data && has(data, this._i) && delete data[this._i];
+        if (data === true) return uncaughtFrozenStore(_validateCollection(this, NAME))['delete'](key);
+        return data && _has(data, this._i) && delete data[this._i];
       },
       // 23.3.3.4 WeakMap.prototype.has(key)
       // 23.4.3.4 WeakSet.prototype.has(value)
-      has: function has$$1(key) {
-        if (!isObject(key)) return false;
+      has: function has(key) {
+        if (!_isObject(key)) return false;
         var data = getWeak(key);
-        if (data === true) return uncaughtFrozenStore(validate(this, NAME)).has(key);
-        return data && has(data, this._i);
+        if (data === true) return uncaughtFrozenStore(_validateCollection(this, NAME)).has(key);
+        return data && _has(data, this._i);
       }
     });
     return C;
   },
   def: function (that, key, value) {
-    var data = getWeak(anObject(key), true);
+    var data = getWeak(_anObject(key), true);
     if (data === true) uncaughtFrozenStore(that).set(key, value);
     else data[that._i] = value;
     return that;
@@ -4610,18 +3836,9 @@ var _collectionWeak = {
   ufstore: uncaughtFrozenStore
 };
 
-
-
-var _collectionWeak$2 = Object.freeze({
-	default: _collectionWeak,
-	__moduleExports: _collectionWeak
-});
-
-var weak = ( _collectionWeak$2 && _collectionWeak ) || _collectionWeak$2;
-
 var es6_weakMap = createCommonjsModule(function (module) {
 'use strict';
-var each = require$$28(0);
+var each = _arrayMethods(0);
 
 
 
@@ -4630,9 +3847,9 @@ var each = require$$28(0);
 
 
 var WEAK_MAP = 'WeakMap';
-var getWeak = require$$0$6.getWeak;
+var getWeak = _meta.getWeak;
 var isExtensible = Object.isExtensible;
-var uncaughtFrozenStore = weak.ufstore;
+var uncaughtFrozenStore = _collectionWeak.ufstore;
 var tmp = {};
 var InternalMap;
 
@@ -4645,32 +3862,32 @@ var wrapper = function (get) {
 var methods = {
   // 23.3.3.3 WeakMap.prototype.get(key)
   get: function get(key) {
-    if (isObject(key)) {
+    if (_isObject(key)) {
       var data = getWeak(key);
-      if (data === true) return uncaughtFrozenStore(validate(this, WEAK_MAP)).get(key);
+      if (data === true) return uncaughtFrozenStore(_validateCollection(this, WEAK_MAP)).get(key);
       return data ? data[this._i] : undefined;
     }
   },
   // 23.3.3.5 WeakMap.prototype.set(key, value)
   set: function set(key, value) {
-    return weak.def(validate(this, WEAK_MAP), key, value);
+    return _collectionWeak.def(_validateCollection(this, WEAK_MAP), key, value);
   }
 };
 
 // 23.3 WeakMap Objects
-var $WeakMap = module.exports = require$$0$22(WEAK_MAP, wrapper, methods, weak, true, true);
+var $WeakMap = module.exports = _collection(WEAK_MAP, wrapper, methods, _collectionWeak, true, true);
 
 // IE11 WeakMap frozen keys fix
-if (require$$1(function () { return new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7; })) {
-  InternalMap = weak.getConstructor(wrapper, WEAK_MAP);
-  assign(InternalMap.prototype, methods);
-  require$$0$6.NEED = true;
+if (_fails(function () { return new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7; })) {
+  InternalMap = _collectionWeak.getConstructor(wrapper, WEAK_MAP);
+  _objectAssign(InternalMap.prototype, methods);
+  _meta.NEED = true;
   each(['delete', 'has', 'get', 'set'], function (key) {
     var proto = $WeakMap.prototype;
     var method = proto[key];
-    redefine(proto, key, function (a, b) {
+    _redefine(proto, key, function (a, b) {
       // store frozen objects on internal weakmap shim
-      if (isObject(a) && !isExtensible(a)) {
+      if (_isObject(a) && !isExtensible(a)) {
         if (!this._f) this._f = new InternalMap();
         var result = this._f[key](a, b);
         return key == 'set' ? this : result;
@@ -4681,31 +3898,24 @@ if (require$$1(function () { return new $WeakMap().set((Object.freeze || Object)
 }
 });
 
-
-
-var es6_weakMap$2 = Object.freeze({
-	default: es6_weakMap,
-	__moduleExports: es6_weakMap
-});
-
 'use strict';
 
 
 var WEAK_SET = 'WeakSet';
 
 // 23.4 WeakSet Objects
-require$$0$22(WEAK_SET, function (get) {
+_collection(WEAK_SET, function (get) {
   return function WeakSet() { return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.4.3.1 WeakSet.prototype.add(value)
   add: function add(value) {
-    return weak.def(validate(this, WEAK_SET), value, true);
+    return _collectionWeak.def(_validateCollection(this, WEAK_SET), value, true);
   }
-}, weak, false, true);
+}, _collectionWeak, false, true);
 
-var TYPED = require$$26('typed_array');
-var VIEW$1 = require$$26('view');
-var ABV = !!(global$1.ArrayBuffer && global$1.DataView);
+var TYPED = _uid('typed_array');
+var VIEW$1 = _uid('view');
+var ABV = !!(_global.ArrayBuffer && _global.DataView);
 var CONSTR = ABV;
 var i$1 = 0;
 var l = 9;
@@ -4716,9 +3926,9 @@ var TypedArrayConstructors = (
 ).split(',');
 
 while (i$1 < l) {
-  if (Typed = global$1[TypedArrayConstructors[i$1++]]) {
-    hide(Typed.prototype, TYPED, true);
-    hide(Typed.prototype, VIEW$1, true);
+  if (Typed = _global[TypedArrayConstructors[i$1++]]) {
+    _hide(Typed.prototype, TYPED, true);
+    _hide(Typed.prototype, VIEW$1, true);
   } else CONSTR = false;
 }
 
@@ -4729,31 +3939,16 @@ var _typed = {
   VIEW: VIEW$1
 };
 
+// https://tc39.github.io/ecma262/#sec-toindex
 
-
-var _typed$2 = Object.freeze({
-	default: _typed,
-	__moduleExports: _typed
-});
 
 var _toIndex = function (it) {
   if (it === undefined) return 0;
-  var number = toInteger(it);
-  var length = toLength(number);
+  var number = _toInteger(it);
+  var length = _toLength(number);
   if (number !== length) throw RangeError('Wrong length!');
   return length;
 };
-
-
-
-var _toIndex$2 = Object.freeze({
-	default: _toIndex,
-	__moduleExports: _toIndex
-});
-
-var require$$5 = ( _typed$2 && _typed ) || _typed$2;
-
-var require$$14 = ( _toIndex$2 && _toIndex ) || _toIndex$2;
 
 var _typedBuffer = createCommonjsModule(function (module, exports) {
 'use strict';
@@ -4768,8 +3963,8 @@ var _typedBuffer = createCommonjsModule(function (module, exports) {
 
 
 
-var gOPN = gOPN$2.f;
-var dP = $defineProperty$1.f;
+var gOPN = _objectGopn.f;
+var dP = _objectDp.f;
 
 
 var ARRAY_BUFFER = 'ArrayBuffer';
@@ -4777,12 +3972,12 @@ var DATA_VIEW = 'DataView';
 var PROTOTYPE = 'prototype';
 var WRONG_LENGTH = 'Wrong length!';
 var WRONG_INDEX = 'Wrong index!';
-var $ArrayBuffer = global$1[ARRAY_BUFFER];
-var $DataView = global$1[DATA_VIEW];
-var Math = global$1.Math;
-var RangeError = global$1.RangeError;
+var $ArrayBuffer = _global[ARRAY_BUFFER];
+var $DataView = _global[DATA_VIEW];
+var Math = _global.Math;
+var RangeError = _global.RangeError;
 // eslint-disable-next-line no-shadow-restricted-names
-var Infinity = global$1.Infinity;
+var Infinity = _global.Infinity;
 var BaseBuffer = $ArrayBuffer;
 var abs = Math.abs;
 var pow = Math.pow;
@@ -4792,9 +3987,9 @@ var LN2 = Math.LN2;
 var BUFFER = 'buffer';
 var BYTE_LENGTH = 'byteLength';
 var BYTE_OFFSET = 'byteOffset';
-var $BUFFER = require$$1$1 ? '_b' : BUFFER;
-var $LENGTH = require$$1$1 ? '_l' : BYTE_LENGTH;
-var $OFFSET = require$$1$1 ? '_o' : BYTE_OFFSET;
+var $BUFFER = _descriptors ? '_b' : BUFFER;
+var $LENGTH = _descriptors ? '_l' : BYTE_LENGTH;
+var $OFFSET = _descriptors ? '_o' : BYTE_OFFSET;
 
 // IEEE754 conversions based on https://github.com/feross/ieee754
 function packIEEE754(value, mLen, nBytes) {
@@ -4895,7 +4090,7 @@ function addGetter(C, key, internal) {
 
 function get(view, bytes, index, isLittleEndian) {
   var numIndex = +index;
-  var intIndex = require$$14(numIndex);
+  var intIndex = _toIndex(numIndex);
   if (intIndex + bytes > view[$LENGTH]) throw RangeError(WRONG_INDEX);
   var store = view[$BUFFER]._b;
   var start = intIndex + view[$OFFSET];
@@ -4904,7 +4099,7 @@ function get(view, bytes, index, isLittleEndian) {
 }
 function set(view, bytes, index, conversion, value, isLittleEndian) {
   var numIndex = +index;
-  var intIndex = require$$14(numIndex);
+  var intIndex = _toIndex(numIndex);
   if (intIndex + bytes > view[$LENGTH]) throw RangeError(WRONG_INDEX);
   var store = view[$BUFFER]._b;
   var start = intIndex + view[$OFFSET];
@@ -4912,35 +4107,35 @@ function set(view, bytes, index, conversion, value, isLittleEndian) {
   for (var i = 0; i < bytes; i++) store[start + i] = pack[isLittleEndian ? i : bytes - i - 1];
 }
 
-if (!require$$5.ABV) {
+if (!_typed.ABV) {
   $ArrayBuffer = function ArrayBuffer(length) {
-    anInstance(this, $ArrayBuffer, ARRAY_BUFFER);
-    var byteLength = require$$14(length);
-    this._b = require$$35.call(new Array(byteLength), 0);
+    _anInstance(this, $ArrayBuffer, ARRAY_BUFFER);
+    var byteLength = _toIndex(length);
+    this._b = _arrayFill.call(new Array(byteLength), 0);
     this[$LENGTH] = byteLength;
   };
 
   $DataView = function DataView(buffer, byteOffset, byteLength) {
-    anInstance(this, $DataView, DATA_VIEW);
-    anInstance(buffer, $ArrayBuffer, DATA_VIEW);
+    _anInstance(this, $DataView, DATA_VIEW);
+    _anInstance(buffer, $ArrayBuffer, DATA_VIEW);
     var bufferLength = buffer[$LENGTH];
-    var offset = toInteger(byteOffset);
+    var offset = _toInteger(byteOffset);
     if (offset < 0 || offset > bufferLength) throw RangeError('Wrong offset!');
-    byteLength = byteLength === undefined ? bufferLength - offset : toLength(byteLength);
+    byteLength = byteLength === undefined ? bufferLength - offset : _toLength(byteLength);
     if (offset + byteLength > bufferLength) throw RangeError(WRONG_LENGTH);
     this[$BUFFER] = buffer;
     this[$OFFSET] = offset;
     this[$LENGTH] = byteLength;
   };
 
-  if (require$$1$1) {
+  if (_descriptors) {
     addGetter($ArrayBuffer, BYTE_LENGTH, '_l');
     addGetter($DataView, BUFFER, '_b');
     addGetter($DataView, BYTE_LENGTH, '_l');
     addGetter($DataView, BYTE_OFFSET, '_o');
   }
 
-  redefineAll($DataView[PROTOTYPE], {
+  _redefineAll($DataView[PROTOTYPE], {
     getInt8: function getInt8(byteOffset) {
       return get(this, 1, byteOffset)[0] << 24 >> 24;
     },
@@ -4993,32 +4188,32 @@ if (!require$$5.ABV) {
     }
   });
 } else {
-  if (!require$$1(function () {
+  if (!_fails(function () {
     $ArrayBuffer(1);
-  }) || !require$$1(function () {
+  }) || !_fails(function () {
     new $ArrayBuffer(-1); // eslint-disable-line no-new
-  }) || require$$1(function () {
+  }) || _fails(function () {
     new $ArrayBuffer(); // eslint-disable-line no-new
     new $ArrayBuffer(1.5); // eslint-disable-line no-new
     new $ArrayBuffer(NaN); // eslint-disable-line no-new
     return $ArrayBuffer.name != ARRAY_BUFFER;
   })) {
     $ArrayBuffer = function ArrayBuffer(length) {
-      anInstance(this, $ArrayBuffer);
-      return new BaseBuffer(require$$14(length));
+      _anInstance(this, $ArrayBuffer);
+      return new BaseBuffer(_toIndex(length));
     };
     var ArrayBufferProto = $ArrayBuffer[PROTOTYPE] = BaseBuffer[PROTOTYPE];
     for (var keys = gOPN(BaseBuffer), j = 0, key; keys.length > j;) {
-      if (!((key = keys[j++]) in $ArrayBuffer)) hide($ArrayBuffer, key, BaseBuffer[key]);
+      if (!((key = keys[j++]) in $ArrayBuffer)) _hide($ArrayBuffer, key, BaseBuffer[key]);
     }
-    if (!require$$0$1) ArrayBufferProto.constructor = $ArrayBuffer;
+    if (!_library) ArrayBufferProto.constructor = $ArrayBuffer;
   }
   // iOS Safari 7.x bug
   var view = new $DataView(new $ArrayBuffer(2));
   var $setInt8 = $DataView[PROTOTYPE].setInt8;
   view.setInt8(0, 2147483648);
   view.setInt8(1, 2147483649);
-  if (view.getInt8(0) || !view.getInt8(1)) redefineAll($DataView[PROTOTYPE], {
+  if (view.getInt8(0) || !view.getInt8(1)) _redefineAll($DataView[PROTOTYPE], {
     setInt8: function setInt8(byteOffset, value) {
       $setInt8.call(this, byteOffset, value << 24 >> 24);
     },
@@ -5027,21 +4222,12 @@ if (!require$$5.ABV) {
     }
   }, true);
 }
-setToStringTag($ArrayBuffer, ARRAY_BUFFER);
-setToStringTag($DataView, DATA_VIEW);
-hide($DataView[PROTOTYPE], require$$5.VIEW, true);
+_setToStringTag($ArrayBuffer, ARRAY_BUFFER);
+_setToStringTag($DataView, DATA_VIEW);
+_hide($DataView[PROTOTYPE], _typed.VIEW, true);
 exports[ARRAY_BUFFER] = $ArrayBuffer;
 exports[DATA_VIEW] = $DataView;
 });
-
-
-
-var _typedBuffer$2 = Object.freeze({
-	default: _typedBuffer,
-	__moduleExports: _typedBuffer
-});
-
-var require$$6 = ( _typedBuffer$2 && _typedBuffer ) || _typedBuffer$2;
 
 'use strict';
 
@@ -5051,34 +4237,34 @@ var require$$6 = ( _typedBuffer$2 && _typedBuffer ) || _typedBuffer$2;
 
 
 
-var ArrayBuffer$1 = global$1.ArrayBuffer;
+var ArrayBuffer$1 = _global.ArrayBuffer;
 
-var $ArrayBuffer = require$$6.ArrayBuffer;
-var $DataView = require$$6.DataView;
-var $isView = require$$5.ABV && ArrayBuffer$1.isView;
+var $ArrayBuffer = _typedBuffer.ArrayBuffer;
+var $DataView = _typedBuffer.DataView;
+var $isView = _typed.ABV && ArrayBuffer$1.isView;
 var $slice = $ArrayBuffer.prototype.slice;
-var VIEW = require$$5.VIEW;
+var VIEW = _typed.VIEW;
 var ARRAY_BUFFER = 'ArrayBuffer';
 
-$export$1($export$1.G + $export$1.W + $export$1.F * (ArrayBuffer$1 !== $ArrayBuffer), { ArrayBuffer: $ArrayBuffer });
+_export(_export.G + _export.W + _export.F * (ArrayBuffer$1 !== $ArrayBuffer), { ArrayBuffer: $ArrayBuffer });
 
-$export$1($export$1.S + $export$1.F * !require$$5.CONSTR, ARRAY_BUFFER, {
+_export(_export.S + _export.F * !_typed.CONSTR, ARRAY_BUFFER, {
   // 24.1.3.1 ArrayBuffer.isView(arg)
   isView: function isView(it) {
-    return $isView && $isView(it) || isObject(it) && VIEW in it;
+    return $isView && $isView(it) || _isObject(it) && VIEW in it;
   }
 });
 
-$export$1($export$1.P + $export$1.U + $export$1.F * require$$1(function () {
+_export(_export.P + _export.U + _export.F * _fails(function () {
   return !new $ArrayBuffer(2).slice(1, undefined).byteLength;
 }), ARRAY_BUFFER, {
   // 24.1.4.3 ArrayBuffer.prototype.slice(start, end)
   slice: function slice(start, end) {
-    if ($slice !== undefined && end === undefined) return $slice.call(anObject(this), start); // FF fix
-    var len = anObject(this).byteLength;
-    var first = require$$15(start, len);
-    var final = require$$15(end === undefined ? len : end, len);
-    var result = new (speciesConstructor$1(this, $ArrayBuffer))(toLength(final - first));
+    if ($slice !== undefined && end === undefined) return $slice.call(_anObject(this), start); // FF fix
+    var len = _anObject(this).byteLength;
+    var first = _toAbsoluteIndex(start, len);
+    var final = _toAbsoluteIndex(end === undefined ? len : end, len);
+    var result = new (_speciesConstructor(this, $ArrayBuffer))(_toLength(final - first));
     var viewS = new $DataView(this);
     var viewT = new $DataView(result);
     var index = 0;
@@ -5088,55 +4274,53 @@ $export$1($export$1.P + $export$1.U + $export$1.F * require$$1(function () {
   }
 });
 
-require$$2$3(ARRAY_BUFFER);
+_setSpecies(ARRAY_BUFFER);
 
-$export$1($export$1.G + $export$1.W + $export$1.F * !require$$5.ABV, {
-  DataView: require$$6.DataView
+_export(_export.G + _export.W + _export.F * !_typed.ABV, {
+  DataView: _typedBuffer.DataView
 });
-
-var $iterators = ( es6_array_iterator$2 && es6_array_iterator ) || es6_array_iterator$2;
 
 var _typedArray = createCommonjsModule(function (module) {
 'use strict';
-if (require$$1$1) {
-  var LIBRARY = require$$0$1;
-  var global = global$1;
-  var fails = require$$1;
-  var $export = $export$1;
-  var $typed = require$$5;
-  var $buffer = require$$6;
-  var ctx$$1 = ctx;
-  var anInstance$$1 = anInstance;
-  var propertyDesc = createDesc;
-  var hide$$1 = hide;
-  var redefineAll$$1 = redefineAll;
-  var toInteger$$1 = toInteger;
-  var toLength$$1 = toLength;
-  var toIndex = require$$14;
-  var toAbsoluteIndex = require$$15;
-  var toPrimitive$$1 = toPrimitive;
-  var has$$1 = has;
-  var classof$$1 = classof;
-  var isObject$$1 = isObject;
-  var toObject$$1 = toObject;
-  var isArrayIter = require$$21;
-  var create$$1 = create;
-  var getPrototypeOf$$1 = getPrototypeOf;
-  var gOPN = gOPN$2.f;
-  var getIterFn = require$$25;
-  var uid = require$$26;
-  var wks$$1 = wks;
-  var createArrayMethod = require$$28;
-  var createArrayIncludes = require$$0$2;
-  var speciesConstructor = speciesConstructor$1;
-  var ArrayIterators = $iterators;
-  var Iterators$$1 = Iterators;
-  var $iterDetect = require$$33;
-  var setSpecies = require$$2$3;
-  var arrayFill = require$$35;
-  var arrayCopyWithin = require$$36;
-  var $DP = $defineProperty$1;
-  var $GOPD = require$$0$8;
+if (_descriptors) {
+  var LIBRARY = _library;
+  var global = _global;
+  var fails = _fails;
+  var $export = _export;
+  var $typed = _typed;
+  var $buffer = _typedBuffer;
+  var ctx = _ctx;
+  var anInstance = _anInstance;
+  var propertyDesc = _propertyDesc;
+  var hide = _hide;
+  var redefineAll = _redefineAll;
+  var toInteger = _toInteger;
+  var toLength = _toLength;
+  var toIndex = _toIndex;
+  var toAbsoluteIndex = _toAbsoluteIndex;
+  var toPrimitive = _toPrimitive;
+  var has = _has;
+  var classof = _classof;
+  var isObject = _isObject;
+  var toObject = _toObject;
+  var isArrayIter = _isArrayIter;
+  var create = _objectCreate;
+  var getPrototypeOf = _objectGpo;
+  var gOPN = _objectGopn.f;
+  var getIterFn = core_getIteratorMethod;
+  var uid = _uid;
+  var wks = _wks;
+  var createArrayMethod = _arrayMethods;
+  var createArrayIncludes = _arrayIncludes;
+  var speciesConstructor = _speciesConstructor;
+  var ArrayIterators = es6_array_iterator;
+  var Iterators = _iterators;
+  var $iterDetect = _iterDetect;
+  var setSpecies = _setSpecies;
+  var arrayFill = _arrayFill;
+  var arrayCopyWithin = _arrayCopyWithin;
+  var $DP = _objectDp;
+  var $GOPD = _objectGopd;
   var dP = $DP.f;
   var gOPD = $GOPD.f;
   var RangeError = global.RangeError;
@@ -5168,8 +4352,8 @@ if (require$$1$1) {
   var arraySlice = ArrayProto.slice;
   var arrayToString = ArrayProto.toString;
   var arrayToLocaleString = ArrayProto.toLocaleString;
-  var ITERATOR = wks$$1('iterator');
-  var TAG = wks$$1('toStringTag');
+  var ITERATOR = wks('iterator');
+  var TAG = wks('toStringTag');
   var TYPED_CONSTRUCTOR = uid('typed_constructor');
   var DEF_CONSTRUCTOR = uid('def_constructor');
   var ALL_CONSTRUCTORS = $typed.CONSTR;
@@ -5191,18 +4375,18 @@ if (require$$1$1) {
   });
 
   var toOffset = function (it, BYTES) {
-    var offset = toInteger$$1(it);
+    var offset = toInteger(it);
     if (offset < 0 || offset % BYTES) throw RangeError('Wrong offset!');
     return offset;
   };
 
   var validate = function (it) {
-    if (isObject$$1(it) && TYPED_ARRAY in it) return it;
+    if (isObject(it) && TYPED_ARRAY in it) return it;
     throw TypeError(it + ' is not a typed array!');
   };
 
   var allocate = function (C, length) {
-    if (!(isObject$$1(C) && TYPED_CONSTRUCTOR in C)) {
+    if (!(isObject(C) && TYPED_CONSTRUCTOR in C)) {
       throw TypeError('It is not a typed array constructor!');
     } return new C(length);
   };
@@ -5224,7 +4408,7 @@ if (require$$1$1) {
   };
 
   var $from = function from(source /* , mapfn, thisArg */) {
-    var O = toObject$$1(source);
+    var O = toObject(source);
     var aLen = arguments.length;
     var mapfn = aLen > 1 ? arguments[1] : undefined;
     var mapping = mapfn !== undefined;
@@ -5235,8 +4419,8 @@ if (require$$1$1) {
         values.push(step.value);
       } O = values;
     }
-    if (mapping && aLen > 2) mapfn = ctx$$1(mapfn, arguments[2], 2);
-    for (i = 0, length = toLength$$1(O.length), result = allocate(this, length); length > i; i++) {
+    if (mapping && aLen > 2) mapfn = ctx(mapfn, arguments[2], 2);
+    for (i = 0, length = toLength(O.length), result = allocate(this, length); length > i; i++) {
       result[i] = mapping ? mapfn(O[i], i) : O[i];
     }
     return result;
@@ -5326,7 +4510,7 @@ if (require$$1$1) {
       return new (speciesConstructor(O, O[DEF_CONSTRUCTOR]))(
         O.buffer,
         O.byteOffset + $begin * O.BYTES_PER_ELEMENT,
-        toLength$$1((end === undefined ? length : toAbsoluteIndex(end, length)) - $begin)
+        toLength((end === undefined ? length : toAbsoluteIndex(end, length)) - $begin)
       );
     }
   };
@@ -5339,8 +4523,8 @@ if (require$$1$1) {
     validate(this);
     var offset = toOffset(arguments[1], 1);
     var length = this.length;
-    var src = toObject$$1(arrayLike);
-    var len = toLength$$1(src.length);
+    var src = toObject(arrayLike);
+    var len = toLength(src.length);
     var index = 0;
     if (len + offset > length) throw RangeError(WRONG_LENGTH);
     while (index < len) this[offset + index] = src[index++];
@@ -5359,27 +4543,27 @@ if (require$$1$1) {
   };
 
   var isTAIndex = function (target, key) {
-    return isObject$$1(target)
+    return isObject(target)
       && target[TYPED_ARRAY]
       && typeof key != 'symbol'
       && key in target
       && String(+key) == String(key);
   };
   var $getDesc = function getOwnPropertyDescriptor(target, key) {
-    return isTAIndex(target, key = toPrimitive$$1(key, true))
+    return isTAIndex(target, key = toPrimitive(key, true))
       ? propertyDesc(2, target[key])
       : gOPD(target, key);
   };
   var $setDesc = function defineProperty(target, key, desc) {
-    if (isTAIndex(target, key = toPrimitive$$1(key, true))
-      && isObject$$1(desc)
-      && has$$1(desc, 'value')
-      && !has$$1(desc, 'get')
-      && !has$$1(desc, 'set')
+    if (isTAIndex(target, key = toPrimitive(key, true))
+      && isObject(desc)
+      && has(desc, 'value')
+      && !has(desc, 'get')
+      && !has(desc, 'set')
       // TODO: add validation descriptor w/o calling accessors
       && !desc.configurable
-      && (!has$$1(desc, 'writable') || desc.writable)
-      && (!has$$1(desc, 'enumerable') || desc.enumerable)
+      && (!has(desc, 'writable') || desc.writable)
+      && (!has(desc, 'enumerable') || desc.enumerable)
     ) {
       target[key] = desc.value;
       return target;
@@ -5402,10 +4586,10 @@ if (require$$1$1) {
     };
   }
 
-  var $TypedArrayPrototype$ = redefineAll$$1({}, proto);
-  redefineAll$$1($TypedArrayPrototype$, $iterators$$1);
-  hide$$1($TypedArrayPrototype$, ITERATOR, $iterators$$1.values);
-  redefineAll$$1($TypedArrayPrototype$, {
+  var $TypedArrayPrototype$ = redefineAll({}, proto);
+  redefineAll($TypedArrayPrototype$, $iterators$$1);
+  hide($TypedArrayPrototype$, ITERATOR, $iterators$$1.values);
+  redefineAll($TypedArrayPrototype$, {
     slice: $slice,
     set: $set,
     constructor: function () { /* noop */ },
@@ -5428,7 +4612,7 @@ if (require$$1$1) {
     var SETTER = 'set' + KEY;
     var TypedArray = global[NAME];
     var Base = TypedArray || {};
-    var TAC = TypedArray && getPrototypeOf$$1(TypedArray);
+    var TAC = TypedArray && getPrototypeOf(TypedArray);
     var FORCED = !TypedArray || !$typed.ABV;
     var O = {};
     var TypedArrayPrototype = TypedArray && TypedArray[PROTOTYPE];
@@ -5454,15 +4638,15 @@ if (require$$1$1) {
     };
     if (FORCED) {
       TypedArray = wrapper(function (that, data, $offset, $length) {
-        anInstance$$1(that, TypedArray, NAME, '_d');
+        anInstance(that, TypedArray, NAME, '_d');
         var index = 0;
         var offset = 0;
         var buffer, byteLength, length, klass;
-        if (!isObject$$1(data)) {
+        if (!isObject(data)) {
           length = toIndex(data);
           byteLength = length * BYTES;
           buffer = new $ArrayBuffer(byteLength);
-        } else if (data instanceof $ArrayBuffer || (klass = classof$$1(data)) == ARRAY_BUFFER || klass == SHARED_BUFFER) {
+        } else if (data instanceof $ArrayBuffer || (klass = classof(data)) == ARRAY_BUFFER || klass == SHARED_BUFFER) {
           buffer = data;
           offset = toOffset($offset, BYTES);
           var $len = data.byteLength;
@@ -5471,7 +4655,7 @@ if (require$$1$1) {
             byteLength = $len - offset;
             if (byteLength < 0) throw RangeError(WRONG_LENGTH);
           } else {
-            byteLength = toLength$$1($length) * BYTES;
+            byteLength = toLength($length) * BYTES;
             if (byteLength + offset > $len) throw RangeError(WRONG_LENGTH);
           }
           length = byteLength / BYTES;
@@ -5480,7 +4664,7 @@ if (require$$1$1) {
         } else {
           return $from.call(TypedArray, data);
         }
-        hide$$1(that, '_d', {
+        hide(that, '_d', {
           b: buffer,
           o: offset,
           l: byteLength,
@@ -5489,8 +4673,8 @@ if (require$$1$1) {
         });
         while (index < length) addElement(that, index++);
       });
-      TypedArrayPrototype = TypedArray[PROTOTYPE] = create$$1($TypedArrayPrototype$);
-      hide$$1(TypedArrayPrototype, 'constructor', TypedArray);
+      TypedArrayPrototype = TypedArray[PROTOTYPE] = create($TypedArrayPrototype$);
+      hide(TypedArrayPrototype, 'constructor', TypedArray);
     } else if (!fails(function () {
       TypedArray(1);
     }) || !fails(function () {
@@ -5502,12 +4686,12 @@ if (require$$1$1) {
       new TypedArray(iter); // eslint-disable-line no-new
     }, true)) {
       TypedArray = wrapper(function (that, data, $offset, $length) {
-        anInstance$$1(that, TypedArray, NAME);
+        anInstance(that, TypedArray, NAME);
         var klass;
         // `ws` module bug, temporarily remove validation length for Uint8Array
         // https://github.com/websockets/ws/pull/645
-        if (!isObject$$1(data)) return new Base(toIndex(data));
-        if (data instanceof $ArrayBuffer || (klass = classof$$1(data)) == ARRAY_BUFFER || klass == SHARED_BUFFER) {
+        if (!isObject(data)) return new Base(toIndex(data));
+        if (data instanceof $ArrayBuffer || (klass = classof(data)) == ARRAY_BUFFER || klass == SHARED_BUFFER) {
           return $length !== undefined
             ? new Base(data, toOffset($offset, BYTES), $length)
             : $offset !== undefined
@@ -5518,7 +4702,7 @@ if (require$$1$1) {
         return $from.call(TypedArray, data);
       });
       arrayForEach(TAC !== Function.prototype ? gOPN(Base).concat(gOPN(TAC)) : gOPN(Base), function (key) {
-        if (!(key in TypedArray)) hide$$1(TypedArray, key, Base[key]);
+        if (!(key in TypedArray)) hide(TypedArray, key, Base[key]);
       });
       TypedArray[PROTOTYPE] = TypedArrayPrototype;
       if (!LIBRARY) TypedArrayPrototype.constructor = TypedArray;
@@ -5527,10 +4711,10 @@ if (require$$1$1) {
     var CORRECT_ITER_NAME = !!$nativeIterator
       && ($nativeIterator.name == 'values' || $nativeIterator.name == undefined);
     var $iterator = $iterators$$1.values;
-    hide$$1(TypedArray, TYPED_CONSTRUCTOR, true);
-    hide$$1(TypedArrayPrototype, TYPED_ARRAY, NAME);
-    hide$$1(TypedArrayPrototype, VIEW, true);
-    hide$$1(TypedArrayPrototype, DEF_CONSTRUCTOR, TypedArray);
+    hide(TypedArray, TYPED_CONSTRUCTOR, true);
+    hide(TypedArrayPrototype, TYPED_ARRAY, NAME);
+    hide(TypedArrayPrototype, VIEW, true);
+    hide(TypedArrayPrototype, DEF_CONSTRUCTOR, TypedArray);
 
     if (CLAMPED ? new TypedArray(1)[TAG] != NAME : !(TAG in TypedArrayPrototype)) {
       dP(TypedArrayPrototype, TAG, {
@@ -5551,7 +4735,7 @@ if (require$$1$1) {
       of: $of
     });
 
-    if (!(BYTES_PER_ELEMENT in TypedArrayPrototype)) hide$$1(TypedArrayPrototype, BYTES_PER_ELEMENT, BYTES);
+    if (!(BYTES_PER_ELEMENT in TypedArrayPrototype)) hide(TypedArrayPrototype, BYTES_PER_ELEMENT, BYTES);
 
     $export($export.P, NAME, proto);
 
@@ -5573,105 +4757,108 @@ if (require$$1$1) {
       TypedArrayPrototype.toLocaleString.call([1, 2]);
     })), NAME, { toLocaleString: $toLocaleString });
 
-    Iterators$$1[NAME] = CORRECT_ITER_NAME ? $nativeIterator : $iterator;
-    if (!LIBRARY && !CORRECT_ITER_NAME) hide$$1(TypedArrayPrototype, ITERATOR, $iterator);
+    Iterators[NAME] = CORRECT_ITER_NAME ? $nativeIterator : $iterator;
+    if (!LIBRARY && !CORRECT_ITER_NAME) hide(TypedArrayPrototype, ITERATOR, $iterator);
   };
 } else module.exports = function () { /* empty */ };
 });
 
-
-
-var _typedArray$2 = Object.freeze({
-	default: _typedArray,
-	__moduleExports: _typedArray
-});
-
-var require$$0$23 = ( _typedArray$2 && _typedArray ) || _typedArray$2;
-
-require$$0$23('Int8', 1, function (init) {
+_typedArray('Int8', 1, function (init) {
   return function Int8Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 });
 
-require$$0$23('Uint8', 1, function (init) {
+_typedArray('Uint8', 1, function (init) {
   return function Uint8Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 });
 
-require$$0$23('Uint8', 1, function (init) {
+_typedArray('Uint8', 1, function (init) {
   return function Uint8ClampedArray(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 }, true);
 
-require$$0$23('Int16', 2, function (init) {
+_typedArray('Int16', 2, function (init) {
   return function Int16Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 });
 
-require$$0$23('Uint16', 2, function (init) {
+_typedArray('Uint16', 2, function (init) {
   return function Uint16Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 });
 
-require$$0$23('Int32', 4, function (init) {
+_typedArray('Int32', 4, function (init) {
   return function Int32Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 });
 
-require$$0$23('Uint32', 4, function (init) {
+_typedArray('Uint32', 4, function (init) {
   return function Uint32Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 });
 
-require$$0$23('Float32', 4, function (init) {
+_typedArray('Float32', 4, function (init) {
   return function Float32Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 });
 
-require$$0$23('Float64', 8, function (init) {
+_typedArray('Float64', 8, function (init) {
   return function Float64Array(data, byteOffset, length) {
     return init(this, data, byteOffset, length);
   };
 });
 
-var rApply = (global$1.Reflect || {}).apply;
+// 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
+
+
+
+var rApply = (_global.Reflect || {}).apply;
 var fApply = Function.apply;
 // MS Edge argumentsList argument is optional
-$export$1($export$1.S + $export$1.F * !require$$1(function () {
+_export(_export.S + _export.F * !_fails(function () {
   rApply(function () { /* empty */ });
 }), 'Reflect', {
   apply: function apply(target, thisArgument, argumentsList) {
-    var T = aFunction(target);
-    var L = anObject(argumentsList);
+    var T = _aFunction(target);
+    var L = _anObject(argumentsList);
     return rApply ? rApply(T, thisArgument, L) : fApply.call(T, thisArgument, L);
   }
 });
 
-var rConstruct = (global$1.Reflect || {}).construct;
+// 26.1.2 Reflect.construct(target, argumentsList [, newTarget])
+
+
+
+
+
+
+
+var rConstruct = (_global.Reflect || {}).construct;
 
 // MS Edge supports only 2 arguments and argumentsList argument is optional
 // FF Nightly sets third argument as `new.target`, but does not create `this` from it
-var NEW_TARGET_BUG = require$$1(function () {
+var NEW_TARGET_BUG = _fails(function () {
   function F() { /* empty */ }
   return !(rConstruct(function () { /* empty */ }, [], F) instanceof F);
 });
-var ARGS_BUG = !require$$1(function () {
+var ARGS_BUG = !_fails(function () {
   rConstruct(function () { /* empty */ });
 });
 
-$export$1($export$1.S + $export$1.F * (NEW_TARGET_BUG || ARGS_BUG), 'Reflect', {
+_export(_export.S + _export.F * (NEW_TARGET_BUG || ARGS_BUG), 'Reflect', {
   construct: function construct(Target, args /* , newTarget */) {
-    aFunction(Target);
-    anObject(args);
-    var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
+    _aFunction(Target);
+    _anObject(args);
+    var newTarget = arguments.length < 3 ? Target : _aFunction(arguments[2]);
     if (ARGS_BUG && !NEW_TARGET_BUG) return rConstruct(Target, args, newTarget);
     if (Target == newTarget) {
       // w/o altered newTarget, optimization for 0-4 arguments
@@ -5685,26 +4872,33 @@ $export$1($export$1.S + $export$1.F * (NEW_TARGET_BUG || ARGS_BUG), 'Reflect', {
       // w/o altered newTarget, lot of arguments case
       var $args = [null];
       $args.push.apply($args, args);
-      return new (bind.apply(Target, $args))();
+      return new (_bind.apply(Target, $args))();
     }
     // with altered newTarget, not support built-in constructors
     var proto = newTarget.prototype;
-    var instance = create(isObject(proto) ? proto : Object.prototype);
+    var instance = _objectCreate(_isObject(proto) ? proto : Object.prototype);
     var result = Function.apply.call(Target, instance, args);
-    return isObject(result) ? result : instance;
+    return _isObject(result) ? result : instance;
   }
 });
 
-$export$1($export$1.S + $export$1.F * require$$1(function () {
+// 26.1.3 Reflect.defineProperty(target, propertyKey, attributes)
+
+
+
+
+
+// MS Edge has broken Reflect.defineProperty - throwing instead of returning false
+_export(_export.S + _export.F * _fails(function () {
   // eslint-disable-next-line no-undef
-  Reflect.defineProperty($defineProperty$1.f({}, 1, { value: 1 }), 1, { value: 2 });
+  Reflect.defineProperty(_objectDp.f({}, 1, { value: 1 }), 1, { value: 2 });
 }), 'Reflect', {
   defineProperty: function defineProperty(target, propertyKey, attributes) {
-    anObject(target);
-    propertyKey = toPrimitive(propertyKey, true);
-    anObject(attributes);
+    _anObject(target);
+    propertyKey = _toPrimitive(propertyKey, true);
+    _anObject(attributes);
     try {
-      $defineProperty$1.f(target, propertyKey, attributes);
+      _objectDp.f(target, propertyKey, attributes);
       return true;
     } catch (e) {
       return false;
@@ -5712,12 +4906,14 @@ $export$1($export$1.S + $export$1.F * require$$1(function () {
   }
 });
 
-var gOPD$3 = require$$0$8.f;
+// 26.1.4 Reflect.deleteProperty(target, propertyKey)
+
+var gOPD$3 = _objectGopd.f;
 
 
-$export$1($export$1.S, 'Reflect', {
+_export(_export.S, 'Reflect', {
   deleteProperty: function deleteProperty(target, propertyKey) {
-    var desc = gOPD$3(anObject(target), propertyKey);
+    var desc = gOPD$3(_anObject(target), propertyKey);
     return desc && !desc.configurable ? false : delete target[propertyKey];
   }
 });
@@ -5727,13 +4923,13 @@ $export$1($export$1.S, 'Reflect', {
 
 
 var Enumerate = function (iterated) {
-  this._t = anObject(iterated); // target
+  this._t = _anObject(iterated); // target
   this._i = 0;                  // next index
   var keys = this._k = [];      // keys
   var key;
   for (key in iterated) keys.push(key);
 };
-require$$0$14(Enumerate, 'Object', function () {
+_iterCreate(Enumerate, 'Object', function () {
   var that = this;
   var keys = that._k;
   var key;
@@ -5743,76 +4939,101 @@ require$$0$14(Enumerate, 'Object', function () {
   return { value: key, done: false };
 });
 
-$export$1($export$1.S, 'Reflect', {
+_export(_export.S, 'Reflect', {
   enumerate: function enumerate(target) {
     return new Enumerate(target);
   }
 });
 
+// 26.1.6 Reflect.get(target, propertyKey [, receiver])
+
+
+
+
+
+
+
 function get(target, propertyKey /* , receiver */) {
   var receiver = arguments.length < 3 ? target : arguments[2];
   var desc, proto;
-  if (anObject(target) === receiver) return target[propertyKey];
-  if (desc = require$$0$8.f(target, propertyKey)) return has(desc, 'value')
+  if (_anObject(target) === receiver) return target[propertyKey];
+  if (desc = _objectGopd.f(target, propertyKey)) return _has(desc, 'value')
     ? desc.value
     : desc.get !== undefined
       ? desc.get.call(receiver)
       : undefined;
-  if (isObject(proto = getPrototypeOf(target))) return get(proto, propertyKey, receiver);
+  if (_isObject(proto = _objectGpo(target))) return get(proto, propertyKey, receiver);
 }
 
-$export$1($export$1.S, 'Reflect', { get: get });
+_export(_export.S, 'Reflect', { get: get });
 
-$export$1($export$1.S, 'Reflect', {
+// 26.1.7 Reflect.getOwnPropertyDescriptor(target, propertyKey)
+
+
+
+
+_export(_export.S, 'Reflect', {
   getOwnPropertyDescriptor: function getOwnPropertyDescriptor(target, propertyKey) {
-    return require$$0$8.f(anObject(target), propertyKey);
+    return _objectGopd.f(_anObject(target), propertyKey);
   }
 });
 
-$export$1($export$1.S, 'Reflect', {
-  getPrototypeOf: function getPrototypeOf$$1(target) {
-    return getPrototypeOf(anObject(target));
+// 26.1.8 Reflect.getPrototypeOf(target)
+
+
+
+
+_export(_export.S, 'Reflect', {
+  getPrototypeOf: function getPrototypeOf(target) {
+    return _objectGpo(_anObject(target));
   }
 });
 
-$export$1($export$1.S, 'Reflect', {
+// 26.1.9 Reflect.has(target, propertyKey)
+
+
+_export(_export.S, 'Reflect', {
   has: function has(target, propertyKey) {
     return propertyKey in target;
   }
 });
 
+// 26.1.10 Reflect.isExtensible(target)
+
+
 var $isExtensible = Object.isExtensible;
 
-$export$1($export$1.S, 'Reflect', {
+_export(_export.S, 'Reflect', {
   isExtensible: function isExtensible(target) {
-    anObject(target);
+    _anObject(target);
     return $isExtensible ? $isExtensible(target) : true;
   }
 });
 
-var Reflect$1 = global$1.Reflect;
+// all object keys, includes non-enumerable and symbols
+
+
+
+var Reflect$1 = _global.Reflect;
 var _ownKeys = Reflect$1 && Reflect$1.ownKeys || function ownKeys(it) {
-  var keys = gOPN$2.f(anObject(it));
-  var getSymbols = gOPS.f;
+  var keys = _objectGopn.f(_anObject(it));
+  var getSymbols = _objectGops.f;
   return getSymbols ? keys.concat(getSymbols(it)) : keys;
 };
 
+// 26.1.11 Reflect.ownKeys(target)
 
 
-var _ownKeys$2 = Object.freeze({
-	default: _ownKeys,
-	__moduleExports: _ownKeys
-});
+_export(_export.S, 'Reflect', { ownKeys: _ownKeys });
 
-var ownKeys = ( _ownKeys$2 && _ownKeys ) || _ownKeys$2;
+// 26.1.12 Reflect.preventExtensions(target)
 
-$export$1($export$1.S, 'Reflect', { ownKeys: ownKeys });
 
 var $preventExtensions = Object.preventExtensions;
 
-$export$1($export$1.S, 'Reflect', {
+_export(_export.S, 'Reflect', {
   preventExtensions: function preventExtensions(target) {
-    anObject(target);
+    _anObject(target);
     try {
       if ($preventExtensions) $preventExtensions(target);
       return true;
@@ -5822,33 +5043,47 @@ $export$1($export$1.S, 'Reflect', {
   }
 });
 
+// 26.1.13 Reflect.set(target, propertyKey, V [, receiver])
+
+
+
+
+
+
+
+
+
 function set(target, propertyKey, V /* , receiver */) {
   var receiver = arguments.length < 4 ? target : arguments[3];
-  var ownDesc = require$$0$8.f(anObject(target), propertyKey);
+  var ownDesc = _objectGopd.f(_anObject(target), propertyKey);
   var existingDescriptor, proto;
   if (!ownDesc) {
-    if (isObject(proto = getPrototypeOf(target))) {
+    if (_isObject(proto = _objectGpo(target))) {
       return set(proto, propertyKey, V, receiver);
     }
-    ownDesc = createDesc(0);
+    ownDesc = _propertyDesc(0);
   }
-  if (has(ownDesc, 'value')) {
-    if (ownDesc.writable === false || !isObject(receiver)) return false;
-    existingDescriptor = require$$0$8.f(receiver, propertyKey) || createDesc(0);
+  if (_has(ownDesc, 'value')) {
+    if (ownDesc.writable === false || !_isObject(receiver)) return false;
+    existingDescriptor = _objectGopd.f(receiver, propertyKey) || _propertyDesc(0);
     existingDescriptor.value = V;
-    $defineProperty$1.f(receiver, propertyKey, existingDescriptor);
+    _objectDp.f(receiver, propertyKey, existingDescriptor);
     return true;
   }
   return ownDesc.set === undefined ? false : (ownDesc.set.call(receiver, V), true);
 }
 
-$export$1($export$1.S, 'Reflect', { set: set });
+_export(_export.S, 'Reflect', { set: set });
 
-if (setProto) $export$1($export$1.S, 'Reflect', {
+// 26.1.14 Reflect.setPrototypeOf(target, proto)
+
+
+
+if (_setProto) _export(_export.S, 'Reflect', {
   setPrototypeOf: function setPrototypeOf(target, proto) {
-    setProto.check(target, proto);
+    _setProto.check(target, proto);
     try {
-      setProto.set(target, proto);
+      _setProto.set(target, proto);
       return true;
     } catch (e) {
       return false;
@@ -5859,15 +5094,15 @@ if (setProto) $export$1($export$1.S, 'Reflect', {
 'use strict';
 // https://github.com/tc39/Array.prototype.includes
 
-var $includes = require$$0$2(true);
+var $includes = _arrayIncludes(true);
 
-$export$1($export$1.P, 'Array', {
+_export(_export.P, 'Array', {
   includes: function includes(el /* , fromIndex = 0 */) {
     return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
 
-require$$0$19('includes');
+_addToUnscopables('includes');
 
 'use strict';
 // https://tc39.github.io/proposal-flatMap/#sec-FlattenIntoArray
@@ -5875,12 +5110,12 @@ require$$0$19('includes');
 
 
 
-var IS_CONCAT_SPREADABLE = wks('isConcatSpreadable');
+var IS_CONCAT_SPREADABLE = _wks('isConcatSpreadable');
 
 function flattenIntoArray(target, original, source, sourceLen, start, depth, mapper, thisArg) {
   var targetIndex = start;
   var sourceIndex = 0;
-  var mapFn = mapper ? ctx(mapper, thisArg, 3) : false;
+  var mapFn = mapper ? _ctx(mapper, thisArg, 3) : false;
   var element, spreadable;
 
   while (sourceIndex < sourceLen) {
@@ -5888,13 +5123,13 @@ function flattenIntoArray(target, original, source, sourceLen, start, depth, map
       element = mapFn ? mapFn(source[sourceIndex], sourceIndex, original) : source[sourceIndex];
 
       spreadable = false;
-      if (isObject(element)) {
+      if (_isObject(element)) {
         spreadable = element[IS_CONCAT_SPREADABLE];
-        spreadable = spreadable !== undefined ? !!spreadable : isArray(element);
+        spreadable = spreadable !== undefined ? !!spreadable : _isArray(element);
       }
 
       if (spreadable && depth > 0) {
-        targetIndex = flattenIntoArray(target, original, element, toLength(element.length), targetIndex, depth - 1) - 1;
+        targetIndex = flattenIntoArray(target, original, element, _toLength(element.length), targetIndex, depth - 1) - 1;
       } else {
         if (targetIndex >= 0x1fffffffffffff) throw TypeError();
         target[targetIndex] = element;
@@ -5909,15 +5144,6 @@ function flattenIntoArray(target, original, source, sourceLen, start, depth, map
 
 var _flattenIntoArray = flattenIntoArray;
 
-
-
-var _flattenIntoArray$2 = Object.freeze({
-	default: _flattenIntoArray,
-	__moduleExports: _flattenIntoArray
-});
-
-var flattenIntoArray$1 = ( _flattenIntoArray$2 && _flattenIntoArray ) || _flattenIntoArray$2;
-
 'use strict';
 // https://tc39.github.io/proposal-flatMap/#sec-Array.prototype.flatMap
 
@@ -5927,19 +5153,19 @@ var flattenIntoArray$1 = ( _flattenIntoArray$2 && _flattenIntoArray ) || _flatte
 
 
 
-$export$1($export$1.P, 'Array', {
+_export(_export.P, 'Array', {
   flatMap: function flatMap(callbackfn /* , thisArg */) {
-    var O = toObject(this);
+    var O = _toObject(this);
     var sourceLen, A;
-    aFunction(callbackfn);
-    sourceLen = toLength(O.length);
-    A = arraySpeciesCreate(O, 0);
-    flattenIntoArray$1(A, O, O, sourceLen, 0, 1, callbackfn, arguments[1]);
+    _aFunction(callbackfn);
+    sourceLen = _toLength(O.length);
+    A = _arraySpeciesCreate(O, 0);
+    _flattenIntoArray(A, O, O, sourceLen, 0, 1, callbackfn, arguments[1]);
     return A;
   }
 });
 
-require$$0$19('flatMap');
+_addToUnscopables('flatMap');
 
 'use strict';
 // https://tc39.github.io/proposal-flatMap/#sec-Array.prototype.flatten
@@ -5950,63 +5176,50 @@ require$$0$19('flatMap');
 
 
 
-$export$1($export$1.P, 'Array', {
+_export(_export.P, 'Array', {
   flatten: function flatten(/* depthArg = 1 */) {
     var depthArg = arguments[0];
-    var O = toObject(this);
-    var sourceLen = toLength(O.length);
-    var A = arraySpeciesCreate(O, 0);
-    flattenIntoArray$1(A, O, O, sourceLen, 0, depthArg === undefined ? 1 : toInteger(depthArg));
+    var O = _toObject(this);
+    var sourceLen = _toLength(O.length);
+    var A = _arraySpeciesCreate(O, 0);
+    _flattenIntoArray(A, O, O, sourceLen, 0, depthArg === undefined ? 1 : _toInteger(depthArg));
     return A;
   }
 });
 
-require$$0$19('flatten');
+_addToUnscopables('flatten');
 
 'use strict';
 // https://github.com/mathiasbynens/String.prototype.at
 
-var $at$2 = require$$0$15(true);
+var $at$2 = _stringAt(true);
 
-$export$1($export$1.P, 'String', {
+_export(_export.P, 'String', {
   at: function at(pos) {
     return $at$2(this, pos);
   }
 });
 
+// https://github.com/tc39/proposal-string-pad-start-end
+
+
+
+
 var _stringPad = function (that, maxLength, fillString, left) {
-  var S = String(defined(that));
+  var S = String(_defined(that));
   var stringLength = S.length;
   var fillStr = fillString === undefined ? ' ' : String(fillString);
-  var intMaxLength = toLength(maxLength);
+  var intMaxLength = _toLength(maxLength);
   if (intMaxLength <= stringLength || fillStr == '') return S;
   var fillLen = intMaxLength - stringLength;
-  var stringFiller = repeat.call(fillStr, Math.ceil(fillLen / fillStr.length));
+  var stringFiller = _stringRepeat.call(fillStr, Math.ceil(fillLen / fillStr.length));
   if (stringFiller.length > fillLen) stringFiller = stringFiller.slice(0, fillLen);
   return left ? stringFiller + S : S + stringFiller;
 };
 
-
-
-var _stringPad$2 = Object.freeze({
-	default: _stringPad,
-	__moduleExports: _stringPad
-});
-
-var navigator$1 = global$1.navigator;
+var navigator$1 = _global.navigator;
 
 var _userAgent = navigator$1 && navigator$1.userAgent || '';
-
-
-
-var _userAgent$2 = Object.freeze({
-	default: _userAgent,
-	__moduleExports: _userAgent
-});
-
-var $pad = ( _stringPad$2 && _stringPad ) || _stringPad$2;
-
-var userAgent = ( _userAgent$2 && _userAgent ) || _userAgent$2;
 
 'use strict';
 // https://github.com/tc39/proposal-string-pad-start-end
@@ -6015,9 +5228,9 @@ var userAgent = ( _userAgent$2 && _userAgent ) || _userAgent$2;
 
 
 // https://github.com/zloirock/core-js/issues/280
-$export$1($export$1.P + $export$1.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(userAgent), 'String', {
+_export(_export.P + _export.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(_userAgent), 'String', {
   padStart: function padStart(maxLength /* , fillString = ' ' */) {
-    return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, true);
+    return _stringPad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, true);
   }
 });
 
@@ -6028,15 +5241,15 @@ $export$1($export$1.P + $export$1.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(u
 
 
 // https://github.com/zloirock/core-js/issues/280
-$export$1($export$1.P + $export$1.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(userAgent), 'String', {
+_export(_export.P + _export.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(_userAgent), 'String', {
   padEnd: function padEnd(maxLength /* , fillString = ' ' */) {
-    return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, false);
+    return _stringPad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, false);
   }
 });
 
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
-require$$0$11('trimLeft', function ($trim) {
+_stringTrim('trimLeft', function ($trim) {
   return function trimLeft() {
     return $trim(this, 1);
   };
@@ -6044,7 +5257,7 @@ require$$0$11('trimLeft', function ($trim) {
 
 'use strict';
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
-require$$0$11('trimRight', function ($trim) {
+_stringTrim('trimRight', function ($trim) {
   return function trimRight() {
     return $trim(this, 2);
   };
@@ -6064,48 +5277,55 @@ var $RegExpStringIterator = function (regexp, string) {
   this._s = string;
 };
 
-require$$0$14($RegExpStringIterator, 'RegExp String', function next() {
+_iterCreate($RegExpStringIterator, 'RegExp String', function next() {
   var match = this._r.exec(this._s);
   return { value: match, done: match === null };
 });
 
-$export$1($export$1.P, 'String', {
+_export(_export.P, 'String', {
   matchAll: function matchAll(regexp) {
-    defined(this);
-    if (!isRegExp(regexp)) throw TypeError(regexp + ' is not a regexp!');
+    _defined(this);
+    if (!_isRegexp(regexp)) throw TypeError(regexp + ' is not a regexp!');
     var S = String(this);
-    var flags = 'flags' in RegExpProto ? String(regexp.flags) : getFlags.call(regexp);
+    var flags = 'flags' in RegExpProto ? String(regexp.flags) : _flags.call(regexp);
     var rx = new RegExp(regexp.source, ~flags.indexOf('g') ? flags : 'g' + flags);
-    rx.lastIndex = toLength(regexp.lastIndex);
+    rx.lastIndex = _toLength(regexp.lastIndex);
     return new $RegExpStringIterator(rx, S);
   }
 });
 
-require$$0$7('asyncIterator');
+_wksDefine('asyncIterator');
 
-require$$0$7('observable');
+_wksDefine('observable');
 
-$export$1($export$1.S, 'Object', {
+// https://github.com/tc39/proposal-object-getownpropertydescriptors
+
+
+
+
+
+
+_export(_export.S, 'Object', {
   getOwnPropertyDescriptors: function getOwnPropertyDescriptors(object) {
-    var O = toIObject(object);
-    var getDesc = require$$0$8.f;
-    var keys = ownKeys(O);
+    var O = _toIobject(object);
+    var getDesc = _objectGopd.f;
+    var keys = _ownKeys(O);
     var result = {};
     var i = 0;
     var key, desc;
     while (keys.length > i) {
       desc = getDesc(O, key = keys[i++]);
-      if (desc !== undefined) createProperty(result, key, desc);
+      if (desc !== undefined) _createProperty(result, key, desc);
     }
     return result;
   }
 });
 
-var isEnum$1 = require$$0$5.f;
+var isEnum$1 = _objectPie.f;
 var _objectToArray = function (isEntries) {
   return function (it) {
-    var O = toIObject(it);
-    var keys = getKeys(O);
+    var O = _toIobject(it);
+    var keys = _objectKeys(O);
     var length = keys.length;
     var i = 0;
     var result = [];
@@ -6116,26 +5336,21 @@ var _objectToArray = function (isEntries) {
   };
 };
 
+// https://github.com/tc39/proposal-object-values-entries
 
+var $values = _objectToArray(false);
 
-var _objectToArray$2 = Object.freeze({
-	default: _objectToArray,
-	__moduleExports: _objectToArray
-});
-
-var require$$0$24 = ( _objectToArray$2 && _objectToArray ) || _objectToArray$2;
-
-var $values = require$$0$24(false);
-
-$export$1($export$1.S, 'Object', {
+_export(_export.S, 'Object', {
   values: function values(it) {
     return $values(it);
   }
 });
 
-var $entries = require$$0$24(true);
+// https://github.com/tc39/proposal-object-values-entries
 
-$export$1($export$1.S, 'Object', {
+var $entries = _objectToArray(true);
+
+_export(_export.S, 'Object', {
   entries: function entries(it) {
     return $entries(it);
   }
@@ -6143,22 +5358,13 @@ $export$1($export$1.S, 'Object', {
 
 'use strict';
 // Forced replacement prototype accessors methods
-var _objectForcedPam = require$$0$1 || !require$$1(function () {
+var _objectForcedPam = _library || !_fails(function () {
   var K = Math.random();
   // In FF throws only define methods
   // eslint-disable-next-line no-undef, no-useless-call
   __defineSetter__.call(null, K, function () { /* empty */ });
-  delete global$1[K];
+  delete _global[K];
 });
-
-
-
-var _objectForcedPam$2 = Object.freeze({
-	default: _objectForcedPam,
-	__moduleExports: _objectForcedPam
-});
-
-var require$$2$4 = ( _objectForcedPam$2 && _objectForcedPam ) || _objectForcedPam$2;
 
 'use strict';
 
@@ -6167,9 +5373,9 @@ var require$$2$4 = ( _objectForcedPam$2 && _objectForcedPam ) || _objectForcedPa
 
 
 // B.2.2.2 Object.prototype.__defineGetter__(P, getter)
-require$$1$1 && $export$1($export$1.P + require$$2$4, 'Object', {
+_descriptors && _export(_export.P + _objectForcedPam, 'Object', {
   __defineGetter__: function __defineGetter__(P, getter) {
-    $defineProperty$1.f(toObject(this), P, { get: aFunction(getter), enumerable: true, configurable: true });
+    _objectDp.f(_toObject(this), P, { get: _aFunction(getter), enumerable: true, configurable: true });
   }
 });
 
@@ -6180,9 +5386,9 @@ require$$1$1 && $export$1($export$1.P + require$$2$4, 'Object', {
 
 
 // B.2.2.3 Object.prototype.__defineSetter__(P, setter)
-require$$1$1 && $export$1($export$1.P + require$$2$4, 'Object', {
+_descriptors && _export(_export.P + _objectForcedPam, 'Object', {
   __defineSetter__: function __defineSetter__(P, setter) {
-    $defineProperty$1.f(toObject(this), P, { set: aFunction(setter), enumerable: true, configurable: true });
+    _objectDp.f(_toObject(this), P, { set: _aFunction(setter), enumerable: true, configurable: true });
   }
 });
 
@@ -6191,17 +5397,17 @@ require$$1$1 && $export$1($export$1.P + require$$2$4, 'Object', {
 
 
 
-var getOwnPropertyDescriptor = require$$0$8.f;
+var getOwnPropertyDescriptor = _objectGopd.f;
 
 // B.2.2.4 Object.prototype.__lookupGetter__(P)
-require$$1$1 && $export$1($export$1.P + require$$2$4, 'Object', {
+_descriptors && _export(_export.P + _objectForcedPam, 'Object', {
   __lookupGetter__: function __lookupGetter__(P) {
-    var O = toObject(this);
-    var K = toPrimitive(P, true);
+    var O = _toObject(this);
+    var K = _toPrimitive(P, true);
     var D;
     do {
       if (D = getOwnPropertyDescriptor(O, K)) return D.get;
-    } while (O = getPrototypeOf(O));
+    } while (O = _objectGpo(O));
   }
 });
 
@@ -6210,61 +5416,52 @@ require$$1$1 && $export$1($export$1.P + require$$2$4, 'Object', {
 
 
 
-var getOwnPropertyDescriptor$1 = require$$0$8.f;
+var getOwnPropertyDescriptor$1 = _objectGopd.f;
 
 // B.2.2.5 Object.prototype.__lookupSetter__(P)
-require$$1$1 && $export$1($export$1.P + require$$2$4, 'Object', {
+_descriptors && _export(_export.P + _objectForcedPam, 'Object', {
   __lookupSetter__: function __lookupSetter__(P) {
-    var O = toObject(this);
-    var K = toPrimitive(P, true);
+    var O = _toObject(this);
+    var K = _toPrimitive(P, true);
     var D;
     do {
       if (D = getOwnPropertyDescriptor$1(O, K)) return D.set;
-    } while (O = getPrototypeOf(O));
+    } while (O = _objectGpo(O));
   }
 });
 
 var _arrayFromIterable = function (iter, ITERATOR) {
   var result = [];
-  forOf(iter, false, result.push, result, ITERATOR);
+  _forOf(iter, false, result.push, result, ITERATOR);
   return result;
 };
 
+// https://github.com/DavidBruant/Map-Set.prototype.toJSON
 
-
-var _arrayFromIterable$2 = Object.freeze({
-	default: _arrayFromIterable,
-	__moduleExports: _arrayFromIterable
-});
-
-var from = ( _arrayFromIterable$2 && _arrayFromIterable ) || _arrayFromIterable$2;
 
 var _collectionToJson = function (NAME) {
   return function toJSON() {
-    if (classof(this) != NAME) throw TypeError(NAME + "#toJSON isn't generic");
-    return from(this);
+    if (_classof(this) != NAME) throw TypeError(NAME + "#toJSON isn't generic");
+    return _arrayFromIterable(this);
   };
 };
 
+// https://github.com/DavidBruant/Map-Set.prototype.toJSON
 
 
-var _collectionToJson$2 = Object.freeze({
-	default: _collectionToJson,
-	__moduleExports: _collectionToJson
-});
+_export(_export.P + _export.R, 'Map', { toJSON: _collectionToJson('Map') });
 
-var require$$0$25 = ( _collectionToJson$2 && _collectionToJson ) || _collectionToJson$2;
+// https://github.com/DavidBruant/Map-Set.prototype.toJSON
 
-$export$1($export$1.P + $export$1.R, 'Map', { toJSON: require$$0$25('Map') });
 
-$export$1($export$1.P + $export$1.R, 'Set', { toJSON: require$$0$25('Set') });
+_export(_export.P + _export.R, 'Set', { toJSON: _collectionToJson('Set') });
 
 'use strict';
 // https://tc39.github.io/proposal-setmap-offrom/
 
 
 var _setCollectionOf = function (COLLECTION) {
-  $export$1($export$1.S, COLLECTION, { of: function of() {
+  _export(_export.S, COLLECTION, { of: function of() {
     var length = arguments.length;
     var A = new Array(length);
     while (length--) A[length] = arguments[length];
@@ -6272,22 +5469,17 @@ var _setCollectionOf = function (COLLECTION) {
   } });
 };
 
+// https://tc39.github.io/proposal-setmap-offrom/#sec-map.of
+_setCollectionOf('Map');
 
+// https://tc39.github.io/proposal-setmap-offrom/#sec-set.of
+_setCollectionOf('Set');
 
-var _setCollectionOf$2 = Object.freeze({
-	default: _setCollectionOf,
-	__moduleExports: _setCollectionOf
-});
+// https://tc39.github.io/proposal-setmap-offrom/#sec-weakmap.of
+_setCollectionOf('WeakMap');
 
-var require$$0$26 = ( _setCollectionOf$2 && _setCollectionOf ) || _setCollectionOf$2;
-
-require$$0$26('Map');
-
-require$$0$26('Set');
-
-require$$0$26('WeakMap');
-
-require$$0$26('WeakSet');
+// https://tc39.github.io/proposal-setmap-offrom/#sec-weakset.of
+_setCollectionOf('WeakSet');
 
 'use strict';
 // https://tc39.github.io/proposal-setmap-offrom/
@@ -6297,65 +5489,78 @@ require$$0$26('WeakSet');
 
 
 var _setCollectionFrom = function (COLLECTION) {
-  $export$1($export$1.S, COLLECTION, { from: function from(source /* , mapFn, thisArg */) {
+  _export(_export.S, COLLECTION, { from: function from(source /* , mapFn, thisArg */) {
     var mapFn = arguments[1];
     var mapping, A, n, cb;
-    aFunction(this);
+    _aFunction(this);
     mapping = mapFn !== undefined;
-    if (mapping) aFunction(mapFn);
+    if (mapping) _aFunction(mapFn);
     if (source == undefined) return new this();
     A = [];
     if (mapping) {
       n = 0;
-      cb = ctx(mapFn, arguments[2], 2);
-      forOf(source, false, function (nextItem) {
+      cb = _ctx(mapFn, arguments[2], 2);
+      _forOf(source, false, function (nextItem) {
         A.push(cb(nextItem, n++));
       });
     } else {
-      forOf(source, false, A.push, A);
+      _forOf(source, false, A.push, A);
     }
     return new this(A);
   } });
 };
 
+// https://tc39.github.io/proposal-setmap-offrom/#sec-map.from
+_setCollectionFrom('Map');
+
+// https://tc39.github.io/proposal-setmap-offrom/#sec-set.from
+_setCollectionFrom('Set');
+
+// https://tc39.github.io/proposal-setmap-offrom/#sec-weakmap.from
+_setCollectionFrom('WeakMap');
+
+// https://tc39.github.io/proposal-setmap-offrom/#sec-weakset.from
+_setCollectionFrom('WeakSet');
+
+// https://github.com/tc39/proposal-global
 
 
-var _setCollectionFrom$2 = Object.freeze({
-	default: _setCollectionFrom,
-	__moduleExports: _setCollectionFrom
-});
+_export(_export.G, { global: _global });
 
-var require$$0$27 = ( _setCollectionFrom$2 && _setCollectionFrom ) || _setCollectionFrom$2;
+// https://github.com/tc39/proposal-global
 
-require$$0$27('Map');
 
-require$$0$27('Set');
+_export(_export.S, 'System', { global: _global });
 
-require$$0$27('WeakMap');
+// https://github.com/ljharb/proposal-is-error
 
-require$$0$27('WeakSet');
 
-$export$1($export$1.G, { global: global$1 });
 
-$export$1($export$1.S, 'System', { global: global$1 });
-
-$export$1($export$1.S, 'Error', {
+_export(_export.S, 'Error', {
   isError: function isError(it) {
-    return require$$2(it) === 'Error';
+    return _cof(it) === 'Error';
   }
 });
 
-$export$1($export$1.S, 'Math', {
+// https://rwaldron.github.io/proposal-math-extensions/
+
+
+_export(_export.S, 'Math', {
   clamp: function clamp(x, lower, upper) {
     return Math.min(upper, Math.max(lower, x));
   }
 });
 
-$export$1($export$1.S, 'Math', { DEG_PER_RAD: Math.PI / 180 });
+// https://rwaldron.github.io/proposal-math-extensions/
+
+
+_export(_export.S, 'Math', { DEG_PER_RAD: Math.PI / 180 });
+
+// https://rwaldron.github.io/proposal-math-extensions/
 
 var RAD_PER_DEG = 180 / Math.PI;
 
-$export$1($export$1.S, 'Math', {
+_export(_export.S, 'Math', {
   degrees: function degrees(radians) {
     return radians * RAD_PER_DEG;
   }
@@ -6380,22 +5585,21 @@ var _mathScale = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
   return (x - inLow) * (outHigh - outLow) / (inHigh - inLow) + outLow;
 };
 
+// https://rwaldron.github.io/proposal-math-extensions/
 
 
-var _mathScale$2 = Object.freeze({
-	default: _mathScale,
-	__moduleExports: _mathScale
-});
 
-var require$$0$28 = ( _mathScale$2 && _mathScale ) || _mathScale$2;
 
-$export$1($export$1.S, 'Math', {
+_export(_export.S, 'Math', {
   fscale: function fscale(x, inLow, inHigh, outLow, outHigh) {
-    return fround(require$$0$28(x, inLow, inHigh, outLow, outHigh));
+    return _mathFround(_mathScale(x, inLow, inHigh, outLow, outHigh));
   }
 });
 
-$export$1($export$1.S, 'Math', {
+// https://gist.github.com/BrendanEich/4294d5c212a6d2254703
+
+
+_export(_export.S, 'Math', {
   iaddh: function iaddh(x0, x1, y0, y1) {
     var $x0 = x0 >>> 0;
     var $x1 = x1 >>> 0;
@@ -6404,7 +5608,10 @@ $export$1($export$1.S, 'Math', {
   }
 });
 
-$export$1($export$1.S, 'Math', {
+// https://gist.github.com/BrendanEich/4294d5c212a6d2254703
+
+
+_export(_export.S, 'Math', {
   isubh: function isubh(x0, x1, y0, y1) {
     var $x0 = x0 >>> 0;
     var $x1 = x1 >>> 0;
@@ -6413,7 +5620,10 @@ $export$1($export$1.S, 'Math', {
   }
 });
 
-$export$1($export$1.S, 'Math', {
+// https://gist.github.com/BrendanEich/4294d5c212a6d2254703
+
+
+_export(_export.S, 'Math', {
   imulh: function imulh(u, v) {
     var UINT16 = 0xffff;
     var $u = +u;
@@ -6427,19 +5637,30 @@ $export$1($export$1.S, 'Math', {
   }
 });
 
-$export$1($export$1.S, 'Math', { RAD_PER_DEG: 180 / Math.PI });
+// https://rwaldron.github.io/proposal-math-extensions/
+
+
+_export(_export.S, 'Math', { RAD_PER_DEG: 180 / Math.PI });
+
+// https://rwaldron.github.io/proposal-math-extensions/
 
 var DEG_PER_RAD = Math.PI / 180;
 
-$export$1($export$1.S, 'Math', {
+_export(_export.S, 'Math', {
   radians: function radians(degrees) {
     return degrees * DEG_PER_RAD;
   }
 });
 
-$export$1($export$1.S, 'Math', { scale: require$$0$28 });
+// https://rwaldron.github.io/proposal-math-extensions/
 
-$export$1($export$1.S, 'Math', {
+
+_export(_export.S, 'Math', { scale: _mathScale });
+
+// https://gist.github.com/BrendanEich/4294d5c212a6d2254703
+
+
+_export(_export.S, 'Math', {
   umulh: function umulh(u, v) {
     var UINT16 = 0xffff;
     var $u = +u;
@@ -6453,11 +5674,15 @@ $export$1($export$1.S, 'Math', {
   }
 });
 
-$export$1($export$1.S, 'Math', { signbit: function signbit(x) {
+// http://jfbastien.github.io/papers/Math.signbit.html
+
+
+_export(_export.S, 'Math', { signbit: function signbit(x) {
   // eslint-disable-next-line no-self-compare
   return (x = +x) != x ? x : x == 0 ? 1 / x == Infinity : x > 0;
 } });
 
+// https://github.com/tc39/proposal-promise-finally
 'use strict';
 
 
@@ -6465,15 +5690,15 @@ $export$1($export$1.S, 'Math', { signbit: function signbit(x) {
 
 
 
-$export$1($export$1.P + $export$1.R, 'Promise', { 'finally': function (onFinally) {
-  var C = speciesConstructor$1(this, require$$1$2.Promise || global$1.Promise);
+_export(_export.P + _export.R, 'Promise', { 'finally': function (onFinally) {
+  var C = _speciesConstructor(this, _core.Promise || _global.Promise);
   var isFunction = typeof onFinally == 'function';
   return this.then(
     isFunction ? function (x) {
-      return promiseResolve(C, onFinally()).then(function () { return x; });
+      return _promiseResolve(C, onFinally()).then(function () { return x; });
     } : onFinally,
     isFunction ? function (e) {
-      return promiseResolve(C, onFinally()).then(function () { throw e; });
+      return _promiseResolve(C, onFinally()).then(function () { throw e; });
     } : onFinally
   );
 } });
@@ -6484,30 +5709,26 @@ $export$1($export$1.P + $export$1.R, 'Promise', { 'finally': function (onFinally
 
 
 
-$export$1($export$1.S, 'Promise', { 'try': function (callbackfn) {
-  var promiseCapability = newPromiseCapability$1.f(this);
-  var result = perform(callbackfn);
+_export(_export.S, 'Promise', { 'try': function (callbackfn) {
+  var promiseCapability = _newPromiseCapability.f(this);
+  var result = _perform(callbackfn);
   (result.e ? promiseCapability.reject : promiseCapability.resolve)(result.v);
   return promiseCapability.promise;
 } });
 
-var Map$1 = ( es6_map$2 && es6_map ) || es6_map$2;
-
-var require$$1$5 = ( es6_weakMap$2 && es6_weakMap ) || es6_weakMap$2;
-
-var shared$1 = require$$0('metadata');
-var store$1 = shared$1.store || (shared$1.store = new (require$$1$5)());
+var shared$1 = _shared('metadata');
+var store$1 = shared$1.store || (shared$1.store = new (es6_weakMap)());
 
 var getOrCreateMetadataMap = function (target, targetKey, create) {
   var targetMetadata = store$1.get(target);
   if (!targetMetadata) {
     if (!create) return undefined;
-    store$1.set(target, targetMetadata = new Map$1());
+    store$1.set(target, targetMetadata = new es6_map());
   }
   var keyMetadata = targetMetadata.get(targetKey);
   if (!keyMetadata) {
     if (!create) return undefined;
-    targetMetadata.set(targetKey, keyMetadata = new Map$1());
+    targetMetadata.set(targetKey, keyMetadata = new es6_map());
   } return keyMetadata;
 };
 var ordinaryHasOwnMetadata = function (MetadataKey, O, P) {
@@ -6531,7 +5752,7 @@ var toMetaKey$1 = function (it) {
   return it === undefined || typeof it == 'symbol' ? it : String(it);
 };
 var exp$3 = function (O) {
-  $export$1($export$1.S, 'Reflect', O);
+  _export(_export.S, 'Reflect', O);
 };
 
 var _metadata = {
@@ -6545,29 +5766,20 @@ var _metadata = {
   exp: exp$3
 };
 
+var toMetaKey = _metadata.key;
+var ordinaryDefineOwnMetadata = _metadata.set;
 
-
-var _metadata$2 = Object.freeze({
-	default: _metadata,
-	__moduleExports: _metadata
-});
-
-var $metadata = ( _metadata$2 && _metadata ) || _metadata$2;
-
-var toMetaKey = $metadata.key;
-var ordinaryDefineOwnMetadata = $metadata.set;
-
-$metadata.exp({ defineMetadata: function defineMetadata(metadataKey, metadataValue, target, targetKey) {
-  ordinaryDefineOwnMetadata(metadataKey, metadataValue, anObject(target), toMetaKey(targetKey));
+_metadata.exp({ defineMetadata: function defineMetadata(metadataKey, metadataValue, target, targetKey) {
+  ordinaryDefineOwnMetadata(metadataKey, metadataValue, _anObject(target), toMetaKey(targetKey));
 } });
 
-var toMetaKey$2 = $metadata.key;
-var getOrCreateMetadataMap$1 = $metadata.map;
-var store$2 = $metadata.store;
+var toMetaKey$2 = _metadata.key;
+var getOrCreateMetadataMap$1 = _metadata.map;
+var store$2 = _metadata.store;
 
-$metadata.exp({ deleteMetadata: function deleteMetadata(metadataKey, target /* , targetKey */) {
+_metadata.exp({ deleteMetadata: function deleteMetadata(metadataKey, target /* , targetKey */) {
   var targetKey = arguments.length < 3 ? undefined : toMetaKey$2(arguments[2]);
-  var metadataMap = getOrCreateMetadataMap$1(anObject(target), targetKey, false);
+  var metadataMap = getOrCreateMetadataMap$1(_anObject(target), targetKey, false);
   if (metadataMap === undefined || !metadataMap['delete'](metadataKey)) return false;
   if (metadataMap.size) return true;
   var targetMetadata = store$2.get(target);
@@ -6575,93 +5787,93 @@ $metadata.exp({ deleteMetadata: function deleteMetadata(metadataKey, target /* ,
   return !!targetMetadata.size || store$2['delete'](target);
 } });
 
-var ordinaryHasOwnMetadata$1 = $metadata.has;
-var ordinaryGetOwnMetadata$1 = $metadata.get;
-var toMetaKey$3 = $metadata.key;
+var ordinaryHasOwnMetadata$1 = _metadata.has;
+var ordinaryGetOwnMetadata$1 = _metadata.get;
+var toMetaKey$3 = _metadata.key;
 
 var ordinaryGetMetadata = function (MetadataKey, O, P) {
   var hasOwn = ordinaryHasOwnMetadata$1(MetadataKey, O, P);
   if (hasOwn) return ordinaryGetOwnMetadata$1(MetadataKey, O, P);
-  var parent = getPrototypeOf(O);
+  var parent = _objectGpo(O);
   return parent !== null ? ordinaryGetMetadata(MetadataKey, parent, P) : undefined;
 };
 
-$metadata.exp({ getMetadata: function getMetadata(metadataKey, target /* , targetKey */) {
-  return ordinaryGetMetadata(metadataKey, anObject(target), arguments.length < 3 ? undefined : toMetaKey$3(arguments[2]));
+_metadata.exp({ getMetadata: function getMetadata(metadataKey, target /* , targetKey */) {
+  return ordinaryGetMetadata(metadataKey, _anObject(target), arguments.length < 3 ? undefined : toMetaKey$3(arguments[2]));
 } });
 
-var Set$1 = ( es6_set$2 && es6_set ) || es6_set$2;
-
-var ordinaryOwnMetadataKeys$1 = $metadata.keys;
-var toMetaKey$4 = $metadata.key;
+var ordinaryOwnMetadataKeys$1 = _metadata.keys;
+var toMetaKey$4 = _metadata.key;
 
 var ordinaryMetadataKeys = function (O, P) {
   var oKeys = ordinaryOwnMetadataKeys$1(O, P);
-  var parent = getPrototypeOf(O);
+  var parent = _objectGpo(O);
   if (parent === null) return oKeys;
   var pKeys = ordinaryMetadataKeys(parent, P);
-  return pKeys.length ? oKeys.length ? from(new Set$1(oKeys.concat(pKeys))) : pKeys : oKeys;
+  return pKeys.length ? oKeys.length ? _arrayFromIterable(new es6_set(oKeys.concat(pKeys))) : pKeys : oKeys;
 };
 
-$metadata.exp({ getMetadataKeys: function getMetadataKeys(target /* , targetKey */) {
-  return ordinaryMetadataKeys(anObject(target), arguments.length < 2 ? undefined : toMetaKey$4(arguments[1]));
+_metadata.exp({ getMetadataKeys: function getMetadataKeys(target /* , targetKey */) {
+  return ordinaryMetadataKeys(_anObject(target), arguments.length < 2 ? undefined : toMetaKey$4(arguments[1]));
 } });
 
-var ordinaryGetOwnMetadata$2 = $metadata.get;
-var toMetaKey$5 = $metadata.key;
+var ordinaryGetOwnMetadata$2 = _metadata.get;
+var toMetaKey$5 = _metadata.key;
 
-$metadata.exp({ getOwnMetadata: function getOwnMetadata(metadataKey, target /* , targetKey */) {
-  return ordinaryGetOwnMetadata$2(metadataKey, anObject(target)
+_metadata.exp({ getOwnMetadata: function getOwnMetadata(metadataKey, target /* , targetKey */) {
+  return ordinaryGetOwnMetadata$2(metadataKey, _anObject(target)
     , arguments.length < 3 ? undefined : toMetaKey$5(arguments[2]));
 } });
 
-var ordinaryOwnMetadataKeys$2 = $metadata.keys;
-var toMetaKey$6 = $metadata.key;
+var ordinaryOwnMetadataKeys$2 = _metadata.keys;
+var toMetaKey$6 = _metadata.key;
 
-$metadata.exp({ getOwnMetadataKeys: function getOwnMetadataKeys(target /* , targetKey */) {
-  return ordinaryOwnMetadataKeys$2(anObject(target), arguments.length < 2 ? undefined : toMetaKey$6(arguments[1]));
+_metadata.exp({ getOwnMetadataKeys: function getOwnMetadataKeys(target /* , targetKey */) {
+  return ordinaryOwnMetadataKeys$2(_anObject(target), arguments.length < 2 ? undefined : toMetaKey$6(arguments[1]));
 } });
 
-var ordinaryHasOwnMetadata$2 = $metadata.has;
-var toMetaKey$7 = $metadata.key;
+var ordinaryHasOwnMetadata$2 = _metadata.has;
+var toMetaKey$7 = _metadata.key;
 
 var ordinaryHasMetadata = function (MetadataKey, O, P) {
   var hasOwn = ordinaryHasOwnMetadata$2(MetadataKey, O, P);
   if (hasOwn) return true;
-  var parent = getPrototypeOf(O);
+  var parent = _objectGpo(O);
   return parent !== null ? ordinaryHasMetadata(MetadataKey, parent, P) : false;
 };
 
-$metadata.exp({ hasMetadata: function hasMetadata(metadataKey, target /* , targetKey */) {
-  return ordinaryHasMetadata(metadataKey, anObject(target), arguments.length < 3 ? undefined : toMetaKey$7(arguments[2]));
+_metadata.exp({ hasMetadata: function hasMetadata(metadataKey, target /* , targetKey */) {
+  return ordinaryHasMetadata(metadataKey, _anObject(target), arguments.length < 3 ? undefined : toMetaKey$7(arguments[2]));
 } });
 
-var ordinaryHasOwnMetadata$3 = $metadata.has;
-var toMetaKey$8 = $metadata.key;
+var ordinaryHasOwnMetadata$3 = _metadata.has;
+var toMetaKey$8 = _metadata.key;
 
-$metadata.exp({ hasOwnMetadata: function hasOwnMetadata(metadataKey, target /* , targetKey */) {
-  return ordinaryHasOwnMetadata$3(metadataKey, anObject(target)
+_metadata.exp({ hasOwnMetadata: function hasOwnMetadata(metadataKey, target /* , targetKey */) {
+  return ordinaryHasOwnMetadata$3(metadataKey, _anObject(target)
     , arguments.length < 3 ? undefined : toMetaKey$8(arguments[2]));
 } });
 
-var toMetaKey$9 = $metadata.key;
-var ordinaryDefineOwnMetadata$2 = $metadata.set;
+var toMetaKey$9 = _metadata.key;
+var ordinaryDefineOwnMetadata$2 = _metadata.set;
 
-$metadata.exp({ metadata: function metadata(metadataKey, metadataValue) {
+_metadata.exp({ metadata: function metadata(metadataKey, metadataValue) {
   return function decorator(target, targetKey) {
     ordinaryDefineOwnMetadata$2(
       metadataKey, metadataValue,
-      (targetKey !== undefined ? anObject : aFunction)(target),
+      (targetKey !== undefined ? _anObject : _aFunction)(target),
       toMetaKey$9(targetKey)
     );
   };
 } });
 
-var microtask$1 = require$$0$21();
-var process$4 = global$1.process;
-var isNode$2 = require$$2(process$4) == 'process';
+// https://github.com/rwaldron/tc39-notes/blob/master/es6/2014-09/sept-25.md#510-globalasap-for-enqueuing-a-microtask
 
-$export$1($export$1.G, {
+var microtask$1 = _microtask();
+var process$4 = _global.process;
+var isNode$2 = _cof(process$4) == 'process';
+
+_export(_export.G, {
   asap: function asap(fn) {
     var domain = isNode$2 && process$4.domain;
     microtask$1(domain ? domain.bind(fn) : fn);
@@ -6673,18 +5885,18 @@ $export$1($export$1.G, {
 
 
 
-var microtask$2 = require$$0$21();
-var OBSERVABLE = wks('observable');
+var microtask$2 = _microtask();
+var OBSERVABLE = _wks('observable');
 
 
 
 
 
 
-var RETURN = forOf.RETURN;
+var RETURN = _forOf.RETURN;
 
 var getMethod = function (fn) {
-  return fn == null ? undefined : aFunction(fn);
+  return fn == null ? undefined : _aFunction(fn);
 };
 
 var cleanupSubscription = function (subscription) {
@@ -6707,7 +5919,7 @@ var closeSubscription = function (subscription) {
 };
 
 var Subscription = function (observer, subscriber) {
-  anObject(observer);
+  _anObject(observer);
   this._c = undefined;
   this._o = observer;
   observer = new SubscriptionObserver(this);
@@ -6716,7 +5928,7 @@ var Subscription = function (observer, subscriber) {
     var subscription = cleanup;
     if (cleanup != null) {
       if (typeof cleanup.unsubscribe === 'function') cleanup = function () { subscription.unsubscribe(); };
-      else aFunction(cleanup);
+      else _aFunction(cleanup);
       this._c = cleanup;
     }
   } catch (e) {
@@ -6725,7 +5937,7 @@ var Subscription = function (observer, subscriber) {
   } if (subscriptionClosed(this)) cleanupSubscription(this);
 };
 
-Subscription.prototype = redefineAll({}, {
+Subscription.prototype = _redefineAll({}, {
   unsubscribe: function unsubscribe() { closeSubscription(this); }
 });
 
@@ -6733,7 +5945,7 @@ var SubscriptionObserver = function (subscription) {
   this._s = subscription;
 };
 
-SubscriptionObserver.prototype = redefineAll({}, {
+SubscriptionObserver.prototype = _redefineAll({}, {
   next: function next(value) {
     var subscription = this._s;
     if (!subscriptionClosed(subscription)) {
@@ -6789,17 +6001,17 @@ SubscriptionObserver.prototype = redefineAll({}, {
 });
 
 var $Observable = function Observable(subscriber) {
-  anInstance(this, $Observable, 'Observable', '_f')._f = aFunction(subscriber);
+  _anInstance(this, $Observable, 'Observable', '_f')._f = _aFunction(subscriber);
 };
 
-redefineAll($Observable.prototype, {
+_redefineAll($Observable.prototype, {
   subscribe: function subscribe(observer) {
     return new Subscription(observer, this._f);
   },
   forEach: function forEach(fn) {
     var that = this;
-    return new (require$$1$2.Promise || global$1.Promise)(function (resolve, reject) {
-      aFunction(fn);
+    return new (_core.Promise || _global.Promise)(function (resolve, reject) {
+      _aFunction(fn);
       var subscription = that.subscribe({
         next: function (value) {
           try {
@@ -6816,12 +6028,12 @@ redefineAll($Observable.prototype, {
   }
 });
 
-redefineAll($Observable, {
+_redefineAll($Observable, {
   from: function from(x) {
     var C = typeof this === 'function' ? this : $Observable;
-    var method = getMethod(anObject(x)[OBSERVABLE]);
+    var method = getMethod(_anObject(x)[OBSERVABLE]);
     if (method) {
-      var observable = anObject(method.call(x));
+      var observable = _anObject(method.call(x));
       return observable.constructor === C ? observable : new C(function (observer) {
         return observable.subscribe(observer);
       });
@@ -6831,7 +6043,7 @@ redefineAll($Observable, {
       microtask$2(function () {
         if (!done) {
           try {
-            if (forOf(x, false, function (it) {
+            if (_forOf(x, false, function (it) {
               observer.next(it);
               if (done) return RETURN;
             }) === RETURN) return;
@@ -6862,14 +6074,18 @@ redefineAll($Observable, {
   }
 });
 
-hide($Observable.prototype, OBSERVABLE, function () { return this; });
+_hide($Observable.prototype, OBSERVABLE, function () { return this; });
 
-$export$1($export$1.G, { Observable: $Observable });
+_export(_export.G, { Observable: $Observable });
 
-require$$2$3('Observable');
+_setSpecies('Observable');
+
+// ie9- setTimeout & setInterval additional parameters fix
+
+
 
 var slice = [].slice;
-var MSIE = /MSIE .\./.test(userAgent); // <- dirty ie9- check
+var MSIE = /MSIE .\./.test(_userAgent); // <- dirty ie9- check
 var wrap$1 = function (set) {
   return function (fn, time /* , ...args */) {
     var boundArgs = arguments.length > 2;
@@ -6880,19 +6096,19 @@ var wrap$1 = function (set) {
     } : fn, time);
   };
 };
-$export$1($export$1.G + $export$1.B + $export$1.F * MSIE, {
-  setTimeout: wrap$1(global$1.setTimeout),
-  setInterval: wrap$1(global$1.setInterval)
+_export(_export.G + _export.B + _export.F * MSIE, {
+  setTimeout: wrap$1(_global.setTimeout),
+  setInterval: wrap$1(_global.setInterval)
 });
 
-$export$1($export$1.G + $export$1.B, {
-  setImmediate: $task.set,
-  clearImmediate: $task.clear
+_export(_export.G + _export.B, {
+  setImmediate: _task.set,
+  clearImmediate: _task.clear
 });
 
-var ITERATOR$4 = wks('iterator');
-var TO_STRING_TAG = wks('toStringTag');
-var ArrayValues = Iterators.Array;
+var ITERATOR$4 = _wks('iterator');
+var TO_STRING_TAG = _wks('toStringTag');
+var ArrayValues = _iterators.Array;
 
 var DOMIterables = {
   CSSRuleList: true, // TODO: Not spec compliant, should be false.
@@ -6928,17 +6144,17 @@ var DOMIterables = {
   TouchList: false
 };
 
-for (var collections = getKeys(DOMIterables), i$2 = 0; i$2 < collections.length; i$2++) {
+for (var collections = _objectKeys(DOMIterables), i$2 = 0; i$2 < collections.length; i$2++) {
   var NAME$1 = collections[i$2];
   var explicit = DOMIterables[NAME$1];
-  var Collection = global$1[NAME$1];
+  var Collection = _global[NAME$1];
   var proto$3 = Collection && Collection.prototype;
   var key$1;
   if (proto$3) {
-    if (!proto$3[ITERATOR$4]) hide(proto$3, ITERATOR$4, ArrayValues);
-    if (!proto$3[TO_STRING_TAG]) hide(proto$3, TO_STRING_TAG, NAME$1);
-    Iterators[NAME$1] = ArrayValues;
-    if (explicit) for (key$1 in $iterators) if (!proto$3[key$1]) redefine(proto$3, key$1, $iterators[key$1], true);
+    if (!proto$3[ITERATOR$4]) _hide(proto$3, ITERATOR$4, ArrayValues);
+    if (!proto$3[TO_STRING_TAG]) _hide(proto$3, TO_STRING_TAG, NAME$1);
+    _iterators[NAME$1] = ArrayValues;
+    if (explicit) for (key$1 in es6_array_iterator) if (!proto$3[key$1]) _redefine(proto$3, key$1, es6_array_iterator[key$1], true);
   }
 }
 
@@ -7690,18 +6906,11 @@ var _replacer = function (regExp, replace) {
   };
 };
 
+// https://github.com/benjamingr/RexExp.escape
 
+var $re = _replacer(/[\\^$*+?.()|[\]{}]/g, '\\$&');
 
-var _replacer$2 = Object.freeze({
-	default: _replacer,
-	__moduleExports: _replacer
-});
-
-var require$$0$29 = ( _replacer$2 && _replacer ) || _replacer$2;
-
-var $re = require$$0$29(/[\\^$*+?.()|[\]{}]/g, '\\$&');
-
-$export$1($export$1.S, 'RegExp', { escape: function escape(it) { return $re(it); } });
+_export(_export.S, 'RegExp', { escape: function escape(it) { return $re(it); } });
 
 "use strict";
 
@@ -7823,13 +7032,6 @@ var objectAssign = shouldUseNative() ? Object.assign : function (target, source)
 	return to;
 };
 
-
-
-var objectAssign$2 = Object.freeze({
-	default: objectAssign,
-	__moduleExports: objectAssign
-});
-
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -7847,13 +7049,6 @@ var emptyObject = {};
 }
 
 var emptyObject_1 = emptyObject;
-
-
-
-var emptyObject$1 = Object.freeze({
-	default: emptyObject_1,
-	__moduleExports: emptyObject_1
-});
 
 "use strict";
 
@@ -7892,31 +7087,27 @@ emptyFunction.thatReturnsArgument = function (arg) {
 
 var emptyFunction_1 = emptyFunction;
 
-
-
-var emptyFunction$1 = Object.freeze({
-	default: emptyFunction_1,
-	__moduleExports: emptyFunction_1
-});
-
-var require$$0$30 = ( objectAssign$2 && objectAssign ) || objectAssign$2;
-
-var require$$11 = ( emptyObject$1 && emptyObject_1 ) || emptyObject$1;
-
-var emptyFunction$2 = ( emptyFunction$1 && emptyFunction_1 ) || emptyFunction$1;
+/** @license React v16.2.0
+ * react.production.min.js
+ *
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 'use strict';var q="function"===typeof Symbol&&Symbol["for"]; var r=q?Symbol["for"]("react.element"):60103; var t=q?Symbol["for"]("react.call"):60104; var u=q?Symbol["for"]("react.return"):60105; var v=q?Symbol["for"]("react.portal"):60106; var w=q?Symbol["for"]("react.fragment"):60107; var x="function"===typeof Symbol&&Symbol.iterator;
 function y(a){for(var b=arguments.length-1,e="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,c=0;c<b;c++)e+="\x26args[]\x3d"+encodeURIComponent(arguments[c+1]);b=Error(e+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}
-var z={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}};function A(a,b,e){this.props=a;this.context=b;this.refs=require$$11;this.updater=e||z;}A.prototype.isReactComponent={};A.prototype.setState=function(a,b){"object"!==typeof a&&"function"!==typeof a&&null!=a?y("85"):void 0;this.updater.enqueueSetState(this,a,b,"setState");};A.prototype.forceUpdate=function(a){this.updater.enqueueForceUpdate(this,a,"forceUpdate");};
-function B(a,b,e){this.props=a;this.context=b;this.refs=require$$11;this.updater=e||z;}function C(){}C.prototype=A.prototype;var D=B.prototype=new C;D.constructor=B;require$$0$30(D,A.prototype);D.isPureReactComponent=!0;function E(a,b,e){this.props=a;this.context=b;this.refs=require$$11;this.updater=e||z;}var F=E.prototype=new C;F.constructor=E;require$$0$30(F,A.prototype);F.unstable_isAsyncReactComponent=!0;F.render=function(){return this.props.children};var G={current:null}; var H=Object.prototype.hasOwnProperty; var I={key:!0,ref:!0,__self:!0,__source:!0};
+var z={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}};function A(a,b,e){this.props=a;this.context=b;this.refs=emptyObject_1;this.updater=e||z;}A.prototype.isReactComponent={};A.prototype.setState=function(a,b){"object"!==typeof a&&"function"!==typeof a&&null!=a?y("85"):void 0;this.updater.enqueueSetState(this,a,b,"setState");};A.prototype.forceUpdate=function(a){this.updater.enqueueForceUpdate(this,a,"forceUpdate");};
+function B(a,b,e){this.props=a;this.context=b;this.refs=emptyObject_1;this.updater=e||z;}function C(){}C.prototype=A.prototype;var D=B.prototype=new C;D.constructor=B;objectAssign(D,A.prototype);D.isPureReactComponent=!0;function E(a,b,e){this.props=a;this.context=b;this.refs=emptyObject_1;this.updater=e||z;}var F=E.prototype=new C;F.constructor=E;objectAssign(F,A.prototype);F.unstable_isAsyncReactComponent=!0;F.render=function(){return this.props.children};var G={current:null}; var H=Object.prototype.hasOwnProperty; var I={key:!0,ref:!0,__self:!0,__source:!0};
 function J(a,b,e){var c,d={},g=null,k=null;if(null!=b)for(c in void 0!==b.ref&&(k=b.ref),void 0!==b.key&&(g=""+b.key),b)H.call(b,c)&&!I.hasOwnProperty(c)&&(d[c]=b[c]);var f=arguments.length-2;if(1===f)d.children=e;else if(1<f){for(var h=Array(f),l=0;l<f;l++)h[l]=arguments[l+2];d.children=h;}if(a&&a.defaultProps)for(c in f=a.defaultProps,f)void 0===d[c]&&(d[c]=f[c]);return{$$typeof:r,type:a,key:g,ref:k,props:d,_owner:G.current}}function K(a){return"object"===typeof a&&null!==a&&a.$$typeof===r}
 function escape(a){var b={"\x3d":"\x3d0",":":"\x3d2"};return"$"+(""+a).replace(/[=:]/g,function(a){return b[a]})}var L=/\/+/g; var M=[];function N(a,b,e,c){if(M.length){var d=M.pop();d.result=a;d.keyPrefix=b;d.func=e;d.context=c;d.count=0;return d}return{result:a,keyPrefix:b,func:e,context:c,count:0}}function O(a){a.result=null;a.keyPrefix=null;a.func=null;a.context=null;a.count=0;10>M.length&&M.push(a);}
 function P(a,b,e,c){var d=typeof a;if("undefined"===d||"boolean"===d)a=null;var g=!1;if(null===a)g=!0;else switch(d){case "string":case "number":g=!0;break;case "object":switch(a.$$typeof){case r:case t:case u:case v:g=!0;}}if(g)return e(c,a,""===b?"."+Q(a,0):b),1;g=0;b=""===b?".":b+":";if(Array.isArray(a))for(var k=0;k<a.length;k++){d=a[k];var f=b+Q(d,k);g+=P(d,f,e,c);}else if(null===a||"undefined"===typeof a?f=null:(f=x&&a[x]||a["@@iterator"],f="function"===typeof f?f:null),"function"===typeof f)for(a=
 f.call(a),k=0;!(d=a.next()).done;)d=d.value,f=b+Q(d,k++),g+=P(d,f,e,c);else"object"===d&&(e=""+a,y("31","[object Object]"===e?"object with keys {"+Object.keys(a).join(", ")+"}":e,""));return g}function Q(a,b){return"object"===typeof a&&null!==a&&null!=a.key?escape(a.key):b.toString(36)}function R(a,b){a.func.call(a.context,b,a.count++);}
-function S(a,b,e){var c=a.result,d=a.keyPrefix;a=a.func.call(a.context,b,a.count++);Array.isArray(a)?T(a,c,e,emptyFunction$2.thatReturnsArgument):null!=a&&(K(a)&&(b=d+(!a.key||b&&b.key===a.key?"":(""+a.key).replace(L,"$\x26/")+"/")+e,a={$$typeof:r,type:a.type,key:b,ref:a.ref,props:a.props,_owner:a._owner}),c.push(a));}function T(a,b,e,c,d){var g="";null!=e&&(g=(""+e).replace(L,"$\x26/")+"/");b=N(b,g,c,d);null==a||P(a,"",S,b);O(b);}
-var U={Children:{map:function(a,b,e){if(null==a)return a;var c=[];T(a,c,null,b,e);return c},forEach:function(a,b,e){if(null==a)return a;b=N(null,null,b,e);null==a||P(a,"",R,b);O(b);},count:function(a){return null==a?0:P(a,"",emptyFunction$2.thatReturnsNull,null)},toArray:function(a){var b=[];T(a,b,null,emptyFunction$2.thatReturnsArgument);return b},only:function(a){K(a)?void 0:y("143");return a}},Component:A,PureComponent:B,unstable_AsyncComponent:E,Fragment:w,createElement:J,cloneElement:function(a,b,e){var c=require$$0$30({},a.props),
+function S(a,b,e){var c=a.result,d=a.keyPrefix;a=a.func.call(a.context,b,a.count++);Array.isArray(a)?T(a,c,e,emptyFunction_1.thatReturnsArgument):null!=a&&(K(a)&&(b=d+(!a.key||b&&b.key===a.key?"":(""+a.key).replace(L,"$\x26/")+"/")+e,a={$$typeof:r,type:a.type,key:b,ref:a.ref,props:a.props,_owner:a._owner}),c.push(a));}function T(a,b,e,c,d){var g="";null!=e&&(g=(""+e).replace(L,"$\x26/")+"/");b=N(b,g,c,d);null==a||P(a,"",S,b);O(b);}
+var U={Children:{map:function(a,b,e){if(null==a)return a;var c=[];T(a,c,null,b,e);return c},forEach:function(a,b,e){if(null==a)return a;b=N(null,null,b,e);null==a||P(a,"",R,b);O(b);},count:function(a){return null==a?0:P(a,"",emptyFunction_1.thatReturnsNull,null)},toArray:function(a){var b=[];T(a,b,null,emptyFunction_1.thatReturnsArgument);return b},only:function(a){K(a)?void 0:y("143");return a}},Component:A,PureComponent:B,unstable_AsyncComponent:E,Fragment:w,createElement:J,cloneElement:function(a,b,e){var c=objectAssign({},a.props),
 d=a.key,g=a.ref,k=a._owner;if(null!=b){void 0!==b.ref&&(g=b.ref,k=G.current);void 0!==b.key&&(d=""+b.key);if(a.type&&a.type.defaultProps)var f=a.type.defaultProps;for(h in b)H.call(b,h)&&!I.hasOwnProperty(h)&&(c[h]=void 0===b[h]&&void 0!==f?f[h]:b[h]);}var h=arguments.length-2;if(1===h)c.children=e;else if(1<h){f=Array(h);for(var l=0;l<h;l++)f[l]=arguments[l+2];c.children=f;}return{$$typeof:r,type:a.type,key:d,ref:g,props:c,_owner:k}},createFactory:function(a){var b=J.bind(null,a);b.type=a;return b},
-isValidElement:K,version:"16.2.0",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:G,assign:require$$0$30}};
+isValidElement:K,version:"16.2.0",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:G,assign:objectAssign}};
 var V=Object.freeze({default:U});
 
 /**
@@ -7973,12 +7164,13 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 var invariant_1 = invariant;
 
-
-
-var invariant$1 = Object.freeze({
-	default: invariant_1,
-	__moduleExports: invariant_1
-});
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
 
 'use strict';
 
@@ -7991,7 +7183,7 @@ var invariant$1 = Object.freeze({
  * same logic and follow the same code paths.
  */
 
-var warning = emptyFunction$2;
+var warning = emptyFunction_1;
 
 {
   var printWarning = function printWarning(format) {
@@ -8035,13 +7227,6 @@ var warning = emptyFunction$2;
 
 var warning_1 = warning;
 
-
-
-var warning$1 = Object.freeze({
-	default: warning_1,
-	__moduleExports: warning_1
-});
-
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -8055,25 +7240,19 @@ var ReactPropTypesSecret$1 = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 var ReactPropTypesSecret_1 = ReactPropTypesSecret$1;
 
-
-
-var ReactPropTypesSecret$2 = Object.freeze({
-	default: ReactPropTypesSecret_1,
-	__moduleExports: ReactPropTypesSecret_1
-});
-
-var invariant$3 = ( invariant$1 && invariant_1 ) || invariant$1;
-
-var warning$3 = ( warning$1 && warning_1 ) || warning$1;
-
-var ReactPropTypesSecret$3 = ( ReactPropTypesSecret$2 && ReactPropTypesSecret_1 ) || ReactPropTypesSecret$2;
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 'use strict';
 
 {
-  var invariant$2 = invariant$3;
-  var warning$2 = warning$3;
-  var ReactPropTypesSecret = ReactPropTypesSecret$3;
+  var invariant$1 = invariant_1;
+  var warning$1 = warning_1;
+  var ReactPropTypesSecret = ReactPropTypesSecret_1;
   var loggedTypeFailures = {};
 }
 
@@ -8099,12 +7278,12 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
         try {
           // This is intentionally an invariant that gets caught. It's the same
           // behavior as without this statement except with a better message.
-          invariant$2(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
+          invariant$1(typeof typeSpecs[typeSpecName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'the `prop-types` package, but received `%s`.', componentName || 'React class', location, typeSpecName, typeof typeSpecs[typeSpecName]);
           error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
         } catch (ex) {
           error = ex;
         }
-        warning$2(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error);
+        warning$1(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error);
         if (error instanceof Error && !(error.message in loggedTypeFailures)) {
           // Only monitor this failure once because there tends to be a lot of the
           // same error.
@@ -8112,7 +7291,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 
           var stack = getStack ? getStack() : '';
 
-          warning$2(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
+          warning$1(false, 'Failed %s type: %s%s', location, error.message, stack != null ? stack : '');
         }
       }
     }
@@ -8120,15 +7299,6 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 }
 
 var checkPropTypes_1 = checkPropTypes;
-
-
-
-var checkPropTypes$1 = Object.freeze({
-	default: checkPropTypes_1,
-	__moduleExports: checkPropTypes_1
-});
-
-var checkPropTypes$2 = ( checkPropTypes$1 && checkPropTypes_1 ) || checkPropTypes$1;
 
 var react_development = createCommonjsModule(function (module) {
 /** @license React v16.2.0
@@ -8148,12 +7318,12 @@ var react_development = createCommonjsModule(function (module) {
   (function() {
 'use strict';
 
-var _assign = require$$0$30;
-var emptyObject = require$$11;
-var invariant = invariant$3;
-var warning = warning$3;
-var emptyFunction = emptyFunction$2;
-var checkPropTypes = checkPropTypes$2;
+var _assign = objectAssign;
+var emptyObject = emptyObject_1;
+var invariant = invariant_1;
+var warning = warning_1;
+var emptyFunction = emptyFunction_1;
+var checkPropTypes = checkPropTypes_1;
 
 // TODO: this is special because it gets imported during build.
 
@@ -9490,31 +8660,15 @@ module.exports = react;
 }
 });
 
-
-
-var react_development$2 = Object.freeze({
-	default: react_development,
-	__moduleExports: react_development
-});
-
-var require$$1$6 = ( react_development$2 && react_development ) || react_development$2;
-
 var react = createCommonjsModule(function (module) {
 'use strict';
 
 {
-  module.exports = require$$1$6;
+  module.exports = react_development;
 }
 });
 
 var react_1 = react.Component;
-
-
-var react$1 = Object.freeze({
-	default: react,
-	__moduleExports: react,
-	Component: react_1
-});
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -9549,13 +8703,6 @@ var ExecutionEnvironment = {
 };
 
 var ExecutionEnvironment_1 = ExecutionEnvironment;
-
-
-
-var ExecutionEnvironment$1 = Object.freeze({
-	default: ExecutionEnvironment_1,
-	__moduleExports: ExecutionEnvironment_1
-});
 
 /*
 object-assign
@@ -9621,7 +8768,7 @@ function shouldUseNative$1() {
 	}
 }
 
-var objectAssign$3 = shouldUseNative$1() ? Object.assign : function (target, source) {
+var objectAssign$2 = shouldUseNative$1() ? Object.assign : function (target, source) {
 	var from;
 	var to = toObject$2(target);
 	var symbols;
@@ -9647,13 +8794,6 @@ var objectAssign$3 = shouldUseNative$1() ? Object.assign : function (target, sou
 
 	return to;
 };
-
-
-
-var objectAssign$5 = Object.freeze({
-	default: objectAssign$3,
-	__moduleExports: objectAssign$3
-});
 
 'use strict';
 
@@ -9720,7 +8860,7 @@ var EventListener = {
         console.error('Attempted to listen to events during the capture phase on a ' + 'browser that does not support the capture phase. Your application ' + 'will not receive some events.');
       }
       return {
-        remove: emptyFunction$2
+        remove: emptyFunction_1
       };
     }
   },
@@ -9729,13 +8869,6 @@ var EventListener = {
 };
 
 var EventListener_1 = EventListener;
-
-
-
-var EventListener$1 = Object.freeze({
-	default: EventListener_1,
-	__moduleExports: EventListener_1
-});
 
 'use strict';
 
@@ -9773,13 +8906,6 @@ function getActiveElement(doc) /*?DOMElement*/{
 }
 
 var getActiveElement_1 = getActiveElement;
-
-
-
-var getActiveElement$1 = Object.freeze({
-	default: getActiveElement_1,
-	__moduleExports: getActiveElement_1
-});
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -9847,13 +8973,6 @@ function shallowEqual(objA, objB) {
 
 var shallowEqual_1 = shallowEqual;
 
-
-
-var shallowEqual$1 = Object.freeze({
-	default: shallowEqual_1,
-	__moduleExports: shallowEqual_1
-});
-
 'use strict';
 
 /**
@@ -9877,15 +8996,6 @@ function isNode$3(object) {
 
 var isNode_1 = isNode$3;
 
-
-
-var isNode$4 = Object.freeze({
-	default: isNode_1,
-	__moduleExports: isNode_1
-});
-
-var isNode$5 = ( isNode$4 && isNode_1 ) || isNode$4;
-
 'use strict';
 
 /**
@@ -9904,19 +9014,10 @@ var isNode$5 = ( isNode$4 && isNode_1 ) || isNode$4;
  * @return {boolean} Whether or not the object is a DOM text node.
  */
 function isTextNode(object) {
-  return isNode$5(object) && object.nodeType == 3;
+  return isNode_1(object) && object.nodeType == 3;
 }
 
 var isTextNode_1 = isTextNode;
-
-
-
-var isTextNode$1 = Object.freeze({
-	default: isTextNode_1,
-	__moduleExports: isTextNode_1
-});
-
-var isTextNode$2 = ( isTextNode$1 && isTextNode_1 ) || isTextNode$1;
 
 'use strict';
 
@@ -9941,9 +9042,9 @@ function containsNode(outerNode, innerNode) {
     return false;
   } else if (outerNode === innerNode) {
     return true;
-  } else if (isTextNode$2(outerNode)) {
+  } else if (isTextNode_1(outerNode)) {
     return false;
-  } else if (isTextNode$2(innerNode)) {
+  } else if (isTextNode_1(innerNode)) {
     return containsNode(outerNode, innerNode.parentNode);
   } else if ('contains' in outerNode) {
     return outerNode.contains(innerNode);
@@ -9955,13 +9056,6 @@ function containsNode(outerNode, innerNode) {
 }
 
 var containsNode_1 = containsNode;
-
-
-
-var containsNode$1 = Object.freeze({
-	default: containsNode_1,
-	__moduleExports: containsNode_1
-});
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -9988,31 +9082,20 @@ function focusNode(node) {
 
 var focusNode_1 = focusNode;
 
+/** @license React v16.2.0
+ * react-dom.production.min.js
+ *
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
-
-var focusNode$1 = Object.freeze({
-	default: focusNode_1,
-	__moduleExports: focusNode_1
-});
-
-var _react = ( react$1 && react ) || react$1;
-
-var require$$3 = ( ExecutionEnvironment$1 && ExecutionEnvironment_1 ) || ExecutionEnvironment$1;
-
-var require$$4 = ( objectAssign$5 && objectAssign$3 ) || objectAssign$5;
-
-var require$$6$1 = ( EventListener$1 && EventListener_1 ) || EventListener$1;
-
-var require$$7 = ( getActiveElement$1 && getActiveElement_1 ) || getActiveElement$1;
-
-var require$$8 = ( shallowEqual$1 && shallowEqual_1 ) || shallowEqual$1;
-
-var require$$9 = ( containsNode$1 && containsNode_1 ) || containsNode$1;
-
-var require$$10 = ( focusNode$1 && focusNode_1 ) || focusNode$1;
-
+/*
+ Modernizr 3.0.0pre (Custom Build) | MIT
+*/
 'use strict';
-function E$1(a){for(var b=arguments.length-1,c="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,d=0;d<b;d++)c+="\x26args[]\x3d"+encodeURIComponent(arguments[d+1]);b=Error(c+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}_react?void 0:E$1("227");
+function E$1(a){for(var b=arguments.length-1,c="Minified React error #"+a+"; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d"+a,d=0;d<b;d++)c+="\x26args[]\x3d"+encodeURIComponent(arguments[d+1]);b=Error(c+" for the full message or use the non-minified dev environment for full errors and additional helpful warnings.");b.name="Invariant Violation";b.framesToPop=1;throw b;}react?void 0:E$1("227");
 var oa={children:!0,dangerouslySetInnerHTML:!0,defaultValue:!0,defaultChecked:!0,innerHTML:!0,suppressContentEditableWarning:!0,suppressHydrationWarning:!0,style:!0};function pa(a,b){return(a&b)===b}
 var ta={MUST_USE_PROPERTY:1,HAS_BOOLEAN_VALUE:4,HAS_NUMERIC_VALUE:8,HAS_POSITIVE_NUMERIC_VALUE:24,HAS_OVERLOADED_BOOLEAN_VALUE:32,HAS_STRING_BOOLEAN_VALUE:64,injectDOMPropertyConfig:function(a){var b=ta,c=a.Properties||{},d=a.DOMAttributeNamespaces||{},e=a.DOMAttributeNames||{};a=a.DOMMutationMethods||{};for(var f in c){ua.hasOwnProperty(f)?E$1("48",f):void 0;var g=f.toLowerCase(),h=c[f];g={attributeName:g,attributeNamespace:null,propertyName:f,mutationMethod:null,mustUseProperty:pa(h,b.MUST_USE_PROPERTY),
 hasBooleanValue:pa(h,b.HAS_BOOLEAN_VALUE),hasNumericValue:pa(h,b.HAS_NUMERIC_VALUE),hasPositiveNumericValue:pa(h,b.HAS_POSITIVE_NUMERIC_VALUE),hasOverloadedBooleanValue:pa(h,b.HAS_OVERLOADED_BOOLEAN_VALUE),hasStringBooleanValue:pa(h,b.HAS_STRING_BOOLEAN_VALUE)};1>=g.hasBooleanValue+g.hasNumericValue+g.hasOverloadedBooleanValue?void 0:E$1("50",f);e.hasOwnProperty(f)&&(g.attributeName=e[f]);d.hasOwnProperty(f)&&(g.attributeNamespace=d[f]);a.hasOwnProperty(f)&&(g.mutationMethod=a[f]);ua[f]=g;}}};
@@ -10054,17 +9137,17 @@ function vb(a,b,c){if(b=ib(a,c.dispatchConfig.phasedRegistrationNames[b]))c._dis
 function yb(a,b,c){a&&c&&c.dispatchConfig.registrationName&&(b=ib(a,c.dispatchConfig.registrationName))&&(c._dispatchListeners=$a(c._dispatchListeners,b),c._dispatchInstances=$a(c._dispatchInstances,a));}function zb(a){a&&a.dispatchConfig.registrationName&&yb(a._targetInst,null,a);}function Ab(a){ab(a,wb);}
 function Bb(a,b,c,d){if(c&&d)a:{var e=c;for(var f=d,g=0,h=e;h;h=tb(h))g++;h=0;for(var k=f;k;k=tb(k))h++;for(;0<g-h;)e=tb(e),g--;for(;0<h-g;)f=tb(f),h--;for(;g--;){if(e===f||e===f.alternate)break a;e=tb(e);f=tb(f);}e=null;}else e=null;f=e;for(e=[];c&&c!==f;){g=c.alternate;if(null!==g&&g===f)break;e.push(c);c=tb(c);}for(c=[];d&&d!==f;){g=d.alternate;if(null!==g&&g===f)break;c.push(d);d=tb(d);}for(d=0;d<e.length;d++)yb(e[d],"bubbled",a);for(a=c.length;0<a--;)yb(c[a],"captured",b);}
 var Cb=Object.freeze({accumulateTwoPhaseDispatches:Ab,accumulateTwoPhaseDispatchesSkipTarget:function(a){ab(a,xb);},accumulateEnterLeaveDispatches:Bb,accumulateDirectDispatches:function(a){ab(a,zb);}});
-var Db=null;function Eb(){!Db&&require$$3.canUseDOM&&(Db="textContent"in document.documentElement?"textContent":"innerText");return Db}var S$1={_root:null,_startText:null,_fallbackText:null};
+var Db=null;function Eb(){!Db&&ExecutionEnvironment_1.canUseDOM&&(Db="textContent"in document.documentElement?"textContent":"innerText");return Db}var S$1={_root:null,_startText:null,_fallbackText:null};
 function Fb(){if(S$1._fallbackText)return S$1._fallbackText;var a,b=S$1._startText,c=b.length,d,e=Gb(),f=e.length;for(a=0;a<c&&b[a]===e[a];a++);var g=c-a;for(d=1;d<=g&&b[c-d]===e[f-d];d++);S$1._fallbackText=e.slice(a,1<d?1-d:void 0);return S$1._fallbackText}function Gb(){return"value"in S$1._root?S$1._root.value:S$1._root[Eb()]}
 var Hb="dispatchConfig _targetInst nativeEvent isDefaultPrevented isPropagationStopped _dispatchListeners _dispatchInstances".split(" ");
-var Ib={type:null,target:null,currentTarget:emptyFunction$2.thatReturnsNull,eventPhase:null,bubbles:null,cancelable:null,timeStamp:function(a){return a.timeStamp||Date.now()},defaultPrevented:null,isTrusted:null};
-function T$1(a,b,c,d){this.dispatchConfig=a;this._targetInst=b;this.nativeEvent=c;a=this.constructor.Interface;for(var e in a)a.hasOwnProperty(e)&&((b=a[e])?this[e]=b(c):"target"===e?this.target=d:this[e]=c[e]);this.isDefaultPrevented=(null!=c.defaultPrevented?c.defaultPrevented:!1===c.returnValue)?emptyFunction$2.thatReturnsTrue:emptyFunction$2.thatReturnsFalse;this.isPropagationStopped=emptyFunction$2.thatReturnsFalse;return this}
-require$$4(T$1.prototype,{preventDefault:function(){this.defaultPrevented=!0;var a=this.nativeEvent;a&&(a.preventDefault?a.preventDefault():"unknown"!==typeof a.returnValue&&(a.returnValue=!1),this.isDefaultPrevented=emptyFunction$2.thatReturnsTrue);},stopPropagation:function(){var a=this.nativeEvent;a&&(a.stopPropagation?a.stopPropagation():"unknown"!==typeof a.cancelBubble&&(a.cancelBubble=!0),this.isPropagationStopped=emptyFunction$2.thatReturnsTrue);},persist:function(){this.isPersistent=emptyFunction$2.thatReturnsTrue;},isPersistent:emptyFunction$2.thatReturnsFalse,
-destructor:function(){var a=this.constructor.Interface,b;for(b in a)this[b]=null;for(a=0;a<Hb.length;a++)this[Hb[a]]=null;}});T$1.Interface=Ib;T$1.augmentClass=function(a,b){function c(){}c.prototype=this.prototype;var d=new c;require$$4(d,a.prototype);a.prototype=d;a.prototype.constructor=a;a.Interface=require$$4({},this.Interface,b);a.augmentClass=this.augmentClass;Jb(a);};Jb(T$1);function Kb(a,b,c,d){if(this.eventPool.length){var e=this.eventPool.pop();this.call(e,a,b,c,d);return e}return new this(a,b,c,d)}
-function Lb(a){a instanceof this?void 0:E$1("223");a.destructor();10>this.eventPool.length&&this.eventPool.push(a);}function Jb(a){a.eventPool=[];a.getPooled=Kb;a.release=Lb;}function Mb(a,b,c,d){return T$1.call(this,a,b,c,d)}T$1.augmentClass(Mb,{data:null});function Nb(a,b,c,d){return T$1.call(this,a,b,c,d)}T$1.augmentClass(Nb,{data:null});var Pb=[9,13,27,32]; var Vb=require$$3.canUseDOM&&"CompositionEvent"in window; var Wb=null;require$$3.canUseDOM&&"documentMode"in document&&(Wb=document.documentMode);var Xb;
-if(Xb=require$$3.canUseDOM&&"TextEvent"in window&&!Wb){var Yb=window.opera;Xb=!("object"===typeof Yb&&"function"===typeof Yb.version&&12>=parseInt(Yb.version(),10));}
+var Ib={type:null,target:null,currentTarget:emptyFunction_1.thatReturnsNull,eventPhase:null,bubbles:null,cancelable:null,timeStamp:function(a){return a.timeStamp||Date.now()},defaultPrevented:null,isTrusted:null};
+function T$1(a,b,c,d){this.dispatchConfig=a;this._targetInst=b;this.nativeEvent=c;a=this.constructor.Interface;for(var e in a)a.hasOwnProperty(e)&&((b=a[e])?this[e]=b(c):"target"===e?this.target=d:this[e]=c[e]);this.isDefaultPrevented=(null!=c.defaultPrevented?c.defaultPrevented:!1===c.returnValue)?emptyFunction_1.thatReturnsTrue:emptyFunction_1.thatReturnsFalse;this.isPropagationStopped=emptyFunction_1.thatReturnsFalse;return this}
+objectAssign$2(T$1.prototype,{preventDefault:function(){this.defaultPrevented=!0;var a=this.nativeEvent;a&&(a.preventDefault?a.preventDefault():"unknown"!==typeof a.returnValue&&(a.returnValue=!1),this.isDefaultPrevented=emptyFunction_1.thatReturnsTrue);},stopPropagation:function(){var a=this.nativeEvent;a&&(a.stopPropagation?a.stopPropagation():"unknown"!==typeof a.cancelBubble&&(a.cancelBubble=!0),this.isPropagationStopped=emptyFunction_1.thatReturnsTrue);},persist:function(){this.isPersistent=emptyFunction_1.thatReturnsTrue;},isPersistent:emptyFunction_1.thatReturnsFalse,
+destructor:function(){var a=this.constructor.Interface,b;for(b in a)this[b]=null;for(a=0;a<Hb.length;a++)this[Hb[a]]=null;}});T$1.Interface=Ib;T$1.augmentClass=function(a,b){function c(){}c.prototype=this.prototype;var d=new c;objectAssign$2(d,a.prototype);a.prototype=d;a.prototype.constructor=a;a.Interface=objectAssign$2({},this.Interface,b);a.augmentClass=this.augmentClass;Jb(a);};Jb(T$1);function Kb(a,b,c,d){if(this.eventPool.length){var e=this.eventPool.pop();this.call(e,a,b,c,d);return e}return new this(a,b,c,d)}
+function Lb(a){a instanceof this?void 0:E$1("223");a.destructor();10>this.eventPool.length&&this.eventPool.push(a);}function Jb(a){a.eventPool=[];a.getPooled=Kb;a.release=Lb;}function Mb(a,b,c,d){return T$1.call(this,a,b,c,d)}T$1.augmentClass(Mb,{data:null});function Nb(a,b,c,d){return T$1.call(this,a,b,c,d)}T$1.augmentClass(Nb,{data:null});var Pb=[9,13,27,32]; var Vb=ExecutionEnvironment_1.canUseDOM&&"CompositionEvent"in window; var Wb=null;ExecutionEnvironment_1.canUseDOM&&"documentMode"in document&&(Wb=document.documentMode);var Xb;
+if(Xb=ExecutionEnvironment_1.canUseDOM&&"TextEvent"in window&&!Wb){var Yb=window.opera;Xb=!("object"===typeof Yb&&"function"===typeof Yb.version&&12>=parseInt(Yb.version(),10));}
 var Zb=Xb;
-var $b=require$$3.canUseDOM&&(!Vb||Wb&&8<Wb&&11>=Wb);
+var $b=ExecutionEnvironment_1.canUseDOM&&(!Vb||Wb&&8<Wb&&11>=Wb);
 var ac=String.fromCharCode(32);
 var bc={beforeInput:{phasedRegistrationNames:{bubbled:"onBeforeInput",captured:"onBeforeInputCapture"},dependencies:["topCompositionEnd","topKeyPress","topTextInput","topPaste"]},compositionEnd:{phasedRegistrationNames:{bubbled:"onCompositionEnd",captured:"onCompositionEndCapture"},dependencies:"topBlur topCompositionEnd topKeyDown topKeyPress topKeyUp topMouseDown".split(" ")},compositionStart:{phasedRegistrationNames:{bubbled:"onCompositionStart",
 captured:"onCompositionStartCapture"},dependencies:"topBlur topCompositionStart topKeyDown topKeyPress topKeyUp topMouseDown".split(" ")},compositionUpdate:{phasedRegistrationNames:{bubbled:"onCompositionUpdate",captured:"onCompositionUpdateCapture"},dependencies:"topBlur topCompositionUpdate topKeyDown topKeyPress topKeyUp topMouseDown".split(" ")}};
@@ -10077,11 +9160,11 @@ var jc=null;
 var kc=null;
 var lc=null;function mc(a){if(a=Xa(a)){jc&&"function"===typeof jc.restoreControlledState?void 0:E$1("194");var b=Wa(a.stateNode);jc.restoreControlledState(a.stateNode,a.type,b);}}var nc={injectFiberControlledHostComponent:function(a){jc=a;}};function oc(a){kc?lc?lc.push(a):lc=[a]:kc=a;}
 function pc(){if(kc){var a=kc,b=lc;lc=kc=null;mc(a);if(b)for(a=0;a<b.length;a++)mc(b[a]);}}var qc=Object.freeze({injection:nc,enqueueStateRestore:oc,restoreStateIfNeeded:pc});function rc(a,b){return a(b)}var sc=!1;function tc(a,b){if(sc)return rc(a,b);sc=!0;try{return rc(a,b)}finally{sc=!1,pc();}}var uc={color:!0,date:!0,datetime:!0,"datetime-local":!0,email:!0,month:!0,number:!0,password:!0,range:!0,search:!0,tel:!0,text:!0,time:!0,url:!0,week:!0};
-function vc(a){var b=a&&a.nodeName&&a.nodeName.toLowerCase();return"input"===b?!!uc[a.type]:"textarea"===b?!0:!1}function wc(a){a=a.target||a.srcElement||window;a.correspondingUseElement&&(a=a.correspondingUseElement);return 3===a.nodeType?a.parentNode:a}var xc;require$$3.canUseDOM&&(xc=document.implementation&&document.implementation.hasFeature&&!0!==document.implementation.hasFeature("",""));
-function yc(a,b){if(!require$$3.canUseDOM||b&&!("addEventListener"in document))return!1;b="on"+a;var c=b in document;c||(c=document.createElement("div"),c.setAttribute(b,"return;"),c="function"===typeof c[b]);!c&&xc&&"wheel"===a&&(c=document.implementation.hasFeature("Events.wheel","3.0"));return c}function zc(a){var b=a.type;return(a=a.nodeName)&&"input"===a.toLowerCase()&&("checkbox"===b||"radio"===b)}
+function vc(a){var b=a&&a.nodeName&&a.nodeName.toLowerCase();return"input"===b?!!uc[a.type]:"textarea"===b?!0:!1}function wc(a){a=a.target||a.srcElement||window;a.correspondingUseElement&&(a=a.correspondingUseElement);return 3===a.nodeType?a.parentNode:a}var xc;ExecutionEnvironment_1.canUseDOM&&(xc=document.implementation&&document.implementation.hasFeature&&!0!==document.implementation.hasFeature("",""));
+function yc(a,b){if(!ExecutionEnvironment_1.canUseDOM||b&&!("addEventListener"in document))return!1;b="on"+a;var c=b in document;c||(c=document.createElement("div"),c.setAttribute(b,"return;"),c="function"===typeof c[b]);!c&&xc&&"wheel"===a&&(c=document.implementation.hasFeature("Events.wheel","3.0"));return c}function zc(a){var b=a.type;return(a=a.nodeName)&&"input"===a.toLowerCase()&&("checkbox"===b||"radio"===b)}
 function Ac(a){var b=zc(a)?"checked":"value",c=Object.getOwnPropertyDescriptor(a.constructor.prototype,b),d=""+a[b];if(!a.hasOwnProperty(b)&&"function"===typeof c.get&&"function"===typeof c.set)return Object.defineProperty(a,b,{enumerable:c.enumerable,configurable:!0,get:function(){return c.get.call(this)},set:function(a){d=""+a;c.set.call(this,a);}}),{getValue:function(){return d},setValue:function(a){d=""+a;},stopTracking:function(){a._valueTracker=null;delete a[b];}}}
 function Bc(a){a._valueTracker||(a._valueTracker=Ac(a));}function Cc(a){if(!a)return!1;var b=a._valueTracker;if(!b)return!0;var c=b.getValue();var d="";a&&(d=zc(a)?a.checked?"true":"false":a.value);a=d;return a!==c?(b.setValue(a),!0):!1}var Dc={change:{phasedRegistrationNames:{bubbled:"onChange",captured:"onChangeCapture"},dependencies:"topBlur topChange topClick topFocus topInput topKeyDown topKeyUp topSelectionChange".split(" ")}};
-function Ec(a,b,c){a=T$1.getPooled(Dc.change,a,b,c);a.type="change";oc(c);Ab(a);return a}var Fc=null; var Gc=null;function Hc(a){kb(a);lb(!1);}function Ic(a){var b=qb(a);if(Cc(b))return a}function Jc(a,b){if("topChange"===a)return b}var Kc=!1;require$$3.canUseDOM&&(Kc=yc("input")&&(!document.documentMode||9<document.documentMode));function Lc(){Fc&&(Fc.detachEvent("onpropertychange",Mc),Gc=Fc=null);}function Mc(a){"value"===a.propertyName&&Ic(Gc)&&(a=Ec(Gc,a,wc(a)),tc(Hc,a));}
+function Ec(a,b,c){a=T$1.getPooled(Dc.change,a,b,c);a.type="change";oc(c);Ab(a);return a}var Fc=null; var Gc=null;function Hc(a){kb(a);lb(!1);}function Ic(a){var b=qb(a);if(Cc(b))return a}function Jc(a,b){if("topChange"===a)return b}var Kc=!1;ExecutionEnvironment_1.canUseDOM&&(Kc=yc("input")&&(!document.documentMode||9<document.documentMode));function Lc(){Fc&&(Fc.detachEvent("onpropertychange",Mc),Gc=Fc=null);}function Mc(a){"value"===a.propertyName&&Ic(Gc)&&(a=Ec(Gc,a,wc(a)),tc(Hc,a));}
 function Nc(a,b,c){"topFocus"===a?(Lc(),Fc=b,Gc=c,Fc.attachEvent("onpropertychange",Mc)):"topBlur"===a&&Lc();}function Oc(a){if("topSelectionChange"===a||"topKeyUp"===a||"topKeyDown"===a)return Ic(Gc)}function Pc(a,b){if("topClick"===a)return Ic(b)}function $c(a,b){if("topInput"===a||"topChange"===a)return Ic(b)}
 var ad={eventTypes:Dc,_isInputEventSupported:Kc,extractEvents:function(a,b,c,d){var e=b?qb(b):window,f=e.nodeName&&e.nodeName.toLowerCase();if("select"===f||"input"===f&&"file"===e.type)var g=Jc;else if(vc(e))if(Kc)g=$c;else{g=Oc;var h=Nc;}else f=e.nodeName,!f||"input"!==f.toLowerCase()||"checkbox"!==e.type&&"radio"!==e.type||(g=Pc);if(g&&(g=g(a,b)))return Ec(g,c,d);h&&h(a,e,b);"topBlur"===a&&null!=b&&(a=b._wrapperState||e._wrapperState)&&a.controlled&&"number"===e.type&&(a=""+e.value,e.getAttribute("value")!==
 a&&e.setAttribute("value",a));}};function bd(a,b,c,d){return T$1.call(this,a,b,c,d)}T$1.augmentClass(bd,{view:null,detail:null});var cd={Alt:"altKey",Control:"ctrlKey",Meta:"metaKey",Shift:"shiftKey"};function dd(a){var b=this.nativeEvent;return b.getModifierState?b.getModifierState(a):(a=cd[a])?!!b[a]:!1}function ed(){return dd}function fd(a,b,c,d){return T$1.call(this,a,b,c,d)}
@@ -10089,17 +9172,17 @@ bd.augmentClass(fd,{screenX:null,screenY:null,clientX:null,clientY:null,pageX:nu
 var gd={mouseEnter:{registrationName:"onMouseEnter",dependencies:["topMouseOut","topMouseOver"]},mouseLeave:{registrationName:"onMouseLeave",dependencies:["topMouseOut","topMouseOver"]}};
 var hd={eventTypes:gd,extractEvents:function(a,b,c,d){if("topMouseOver"===a&&(c.relatedTarget||c.fromElement)||"topMouseOut"!==a&&"topMouseOver"!==a)return null;var e=d.window===d?d:(e=d.ownerDocument)?e.defaultView||e.parentWindow:window;"topMouseOut"===a?(a=b,b=(b=c.relatedTarget||c.toElement)?pb(b):null):a=null;if(a===
 b)return null;var f=null==a?e:qb(a);e=null==b?e:qb(b);var g=fd.getPooled(gd.mouseLeave,a,c,d);g.type="mouseleave";g.target=f;g.relatedTarget=e;c=fd.getPooled(gd.mouseEnter,b,c,d);c.type="mouseenter";c.target=e;c.relatedTarget=f;Bb(g,c,a,b);return[g,c]}};
-var id$2=_react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner;function jd(a){a=a.type;return"string"===typeof a?a:"function"===typeof a?a.displayName||a.name:null}
+var id$2=react.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner;function jd(a){a=a.type;return"string"===typeof a?a:"function"===typeof a?a.displayName||a.name:null}
 function kd(a){var b=a;if(a.alternate)for(;b["return"];)b=b["return"];else{if(0!==(b.effectTag&2))return 1;for(;b["return"];)if(b=b["return"],0!==(b.effectTag&2))return 1}return 3===b.tag?2:3}function ld(a){return(a=a._reactInternalFiber)?2===kd(a):!1}function md(a){2!==kd(a)?E$1("188"):void 0;}
 function nd(a){var b=a.alternate;if(!b)return b=kd(a),3===b?E$1("188"):void 0,1===b?null:a;for(var c=a,d=b;;){var e=c["return"],f=e?e.alternate:null;if(!e||!f)break;if(e.child===f.child){for(var g=e.child;g;){if(g===c)return md(e),a;if(g===d)return md(e),b;g=g.sibling;}E$1("188");}if(c["return"]!==d["return"])c=e,d=f;else{g=!1;for(var h=e.child;h;){if(h===c){g=!0;c=e;d=f;break}if(h===d){g=!0;d=e;c=f;break}h=h.sibling;}if(!g){for(h=f.child;h;){if(h===c){g=!0;c=f;d=e;break}if(h===d){g=!0;d=f;c=e;break}h=h.sibling;}g?
 void 0:E$1("189");}}c.alternate!==d?E$1("190"):void 0;}3!==c.tag?E$1("188"):void 0;return c.stateNode.current===c?a:b}function od(a){a=nd(a);if(!a)return null;for(var b=a;;){if(5===b.tag||6===b.tag)return b;if(b.child)b.child["return"]=b,b=b.child;else{if(b===a)break;for(;!b.sibling;){if(!b["return"]||b["return"]===a)return null;b=b["return"];}b.sibling["return"]=b["return"];b=b.sibling;}}return null}
 function pd(a){a=nd(a);if(!a)return null;for(var b=a;;){if(5===b.tag||6===b.tag)return b;if(b.child&&4!==b.tag)b.child["return"]=b,b=b.child;else{if(b===a)break;for(;!b.sibling;){if(!b["return"]||b["return"]===a)return null;b=b["return"];}b.sibling["return"]=b["return"];b=b.sibling;}}return null}var qd=[];
-function rd(a){var b=a.targetInst;do{if(!b){a.ancestors.push(b);break}var c;for(c=b;c["return"];)c=c["return"];c=3!==c.tag?null:c.stateNode.containerInfo;if(!c)break;a.ancestors.push(b);b=pb(c);}while(b);for(c=0;c<a.ancestors.length;c++)b=a.ancestors[c],sd(a.topLevelType,b,a.nativeEvent,wc(a.nativeEvent));}var td=!0; var sd=void 0;function ud(a){td=!!a;}function U$1(a,b,c){return c?require$$6$1.listen(c,b,vd.bind(null,a)):null}function wd(a,b,c){return c?require$$6$1.capture(c,b,vd.bind(null,a)):null}
+function rd(a){var b=a.targetInst;do{if(!b){a.ancestors.push(b);break}var c;for(c=b;c["return"];)c=c["return"];c=3!==c.tag?null:c.stateNode.containerInfo;if(!c)break;a.ancestors.push(b);b=pb(c);}while(b);for(c=0;c<a.ancestors.length;c++)b=a.ancestors[c],sd(a.topLevelType,b,a.nativeEvent,wc(a.nativeEvent));}var td=!0; var sd=void 0;function ud(a){td=!!a;}function U$1(a,b,c){return c?EventListener_1.listen(c,b,vd.bind(null,a)):null}function wd(a,b,c){return c?EventListener_1.capture(c,b,vd.bind(null,a)):null}
 function vd(a,b){if(td){var c=wc(b);c=pb(c);null===c||"number"!==typeof c.tag||2===kd(c)||(c=null);if(qd.length){var d=qd.pop();d.topLevelType=a;d.nativeEvent=b;d.targetInst=c;a=d;}else a={topLevelType:a,nativeEvent:b,targetInst:c,ancestors:[]};try{tc(rd,a);}finally{a.topLevelType=null,a.nativeEvent=null,a.targetInst=null,a.ancestors.length=0,10>qd.length&&qd.push(a);}}}
 var xd=Object.freeze({get _enabled(){return td},get _handleTopLevel(){return sd},setHandleTopLevel:function(a){sd=a;},setEnabled:ud,isEnabled:function(){return td},trapBubbledEvent:U$1,trapCapturedEvent:wd,dispatchEvent:vd});function yd(a,b){var c={};c[a.toLowerCase()]=b.toLowerCase();c["Webkit"+a]="webkit"+b;c["Moz"+a]="moz"+b;c["ms"+a]="MS"+b;c["O"+a]="o"+b.toLowerCase();return c}
 var zd={animationend:yd("Animation","AnimationEnd"),animationiteration:yd("Animation","AnimationIteration"),animationstart:yd("Animation","AnimationStart"),transitionend:yd("Transition","TransitionEnd")};
 var Ad={};
-var Bd={};require$$3.canUseDOM&&(Bd=document.createElement("div").style,"AnimationEvent"in window||(delete zd.animationend.animation,delete zd.animationiteration.animation,delete zd.animationstart.animation),"TransitionEvent"in window||delete zd.transitionend.transition);
+var Bd={};ExecutionEnvironment_1.canUseDOM&&(Bd=document.createElement("div").style,"AnimationEvent"in window||(delete zd.animationend.animation,delete zd.animationiteration.animation,delete zd.animationstart.animation),"TransitionEvent"in window||delete zd.transitionend.transition);
 function Cd(a){if(Ad[a])return Ad[a];if(!zd[a])return a;var b=zd[a],c;for(c in b)if(b.hasOwnProperty(c)&&c in Bd)return Ad[a]=b[c];return""}
 var Dd={topAbort:"abort",topAnimationEnd:Cd("animationend")||"animationend",topAnimationIteration:Cd("animationiteration")||"animationiteration",topAnimationStart:Cd("animationstart")||"animationstart",topBlur:"blur",topCancel:"cancel",topCanPlay:"canplay",topCanPlayThrough:"canplaythrough",topChange:"change",topClick:"click",topClose:"close",topCompositionEnd:"compositionend",topCompositionStart:"compositionstart",topCompositionUpdate:"compositionupdate",topContextMenu:"contextmenu",topCopy:"copy",
 topCut:"cut",topDoubleClick:"dblclick",topDrag:"drag",topDragEnd:"dragend",topDragEnter:"dragenter",topDragExit:"dragexit",topDragLeave:"dragleave",topDragOver:"dragover",topDragStart:"dragstart",topDrop:"drop",topDurationChange:"durationchange",topEmptied:"emptied",topEncrypted:"encrypted",topEnded:"ended",topError:"error",topFocus:"focus",topInput:"input",topKeyDown:"keydown",topKeyPress:"keypress",topKeyUp:"keyup",topLoadedData:"loadeddata",topLoad:"load",topLoadedMetadata:"loadedmetadata",topLoadStart:"loadstart",
@@ -10109,13 +9192,13 @@ var Ed={};
 var Fd=0;
 var Gd="_reactListenersID"+(""+Math.random()).slice(2);function Hd(a){Object.prototype.hasOwnProperty.call(a,Gd)||(a[Gd]=Fd++,Ed[a[Gd]]={});return Ed[a[Gd]]}function Id(a){for(;a&&a.firstChild;)a=a.firstChild;return a}
 function Jd(a,b){var c=Id(a);a=0;for(var d;c;){if(3===c.nodeType){d=a+c.textContent.length;if(a<=b&&d>=b)return{node:c,offset:b-a};a=d;}a:{for(;c;){if(c.nextSibling){c=c.nextSibling;break a}c=c.parentNode;}c=void 0;}c=Id(c);}}function Kd(a){var b=a&&a.nodeName&&a.nodeName.toLowerCase();return b&&("input"===b&&"text"===a.type||"textarea"===b||"true"===a.contentEditable)}
-var Ld=require$$3.canUseDOM&&"documentMode"in document&&11>=document.documentMode;
+var Ld=ExecutionEnvironment_1.canUseDOM&&"documentMode"in document&&11>=document.documentMode;
 var Md={select:{phasedRegistrationNames:{bubbled:"onSelect",captured:"onSelectCapture"},dependencies:"topBlur topContextMenu topFocus topKeyDown topKeyUp topMouseDown topMouseUp topSelectionChange".split(" ")}};
 var Nd=null;
 var Od=null;
 var Pd=null;
 var Qd=!1;
-function Rd(a,b){if(Qd||null==Nd||Nd!==require$$7())return null;var c=Nd;"selectionStart"in c&&Kd(c)?c={start:c.selectionStart,end:c.selectionEnd}:window.getSelection?(c=window.getSelection(),c={anchorNode:c.anchorNode,anchorOffset:c.anchorOffset,focusNode:c.focusNode,focusOffset:c.focusOffset}):c=void 0;return Pd&&require$$8(Pd,c)?null:(Pd=c,a=T$1.getPooled(Md.select,Od,a,b),a.type="select",a.target=Nd,Ab(a),a)}
+function Rd(a,b){if(Qd||null==Nd||Nd!==getActiveElement_1())return null;var c=Nd;"selectionStart"in c&&Kd(c)?c={start:c.selectionStart,end:c.selectionEnd}:window.getSelection?(c=window.getSelection(),c={anchorNode:c.anchorNode,anchorOffset:c.anchorOffset,focusNode:c.focusNode,focusOffset:c.focusOffset}):c=void 0;return Pd&&shallowEqual_1(Pd,c)?null:(Pd=c,a=T$1.getPooled(Md.select,Od,a,b),a.type="select",a.target=Nd,Ab(a),a)}
 var Sd={eventTypes:Md,extractEvents:function(a,b,c,d){var e=d.window===d?d.document:9===d.nodeType?d:d.ownerDocument,f;if(!(f=!e)){a:{e=Hd(e);f=Sa.onSelect;for(var g=0;g<f.length;g++){var h=f[g];if(!e.hasOwnProperty(h)||!e[h]){e=!1;break a}}e=!0;}f=!e;}if(f)return null;e=b?qb(b):window;switch(a){case "topFocus":if(vc(e)||"true"===e.contentEditable)Nd=e,Od=b,Pd=null;break;case "topBlur":Pd=Od=Nd=null;break;case "topMouseDown":Qd=!0;break;case "topContextMenu":case "topMouseUp":return Qd=!1,Rd(c,d);case "topSelectionChange":if(Ld)break;
 case "topKeyDown":case "topKeyUp":return Rd(c,d)}return null}};function Td(a,b,c,d){return T$1.call(this,a,b,c,d)}T$1.augmentClass(Td,{animationName:null,elapsedTime:null,pseudoElement:null});function Ud(a,b,c,d){return T$1.call(this,a,b,c,d)}T$1.augmentClass(Ud,{clipboardData:function(a){return"clipboardData"in a?a.clipboardData:window.clipboardData}});function Vd(a,b,c,d){return T$1.call(this,a,b,c,d)}bd.augmentClass(Vd,{relatedTarget:null});
 function Wd(a){var b=a.keyCode;"charCode"in a?(a=a.charCode,0===a&&13===b&&(a=13)):a=b;return 32<=a||13===a?a:0}
@@ -10129,9 +9212,9 @@ function ce(a,b,c,d){return T$1.call(this,a,b,c,d)}fd.augmentClass(ce,{deltaX:fu
 a.slice(1),c="on"+b;b="top"+b;c={phasedRegistrationNames:{bubbled:c,captured:c+"Capture"},dependencies:[b]};de[a]=c;ee[b]=c;});
 var fe={eventTypes:de,extractEvents:function(a,b,c,d){var e=ee[a];if(!e)return null;switch(a){case "topKeyPress":if(0===Wd(c))return null;case "topKeyDown":case "topKeyUp":a=Zd;break;case "topBlur":case "topFocus":a=Vd;break;case "topClick":if(2===c.button)return null;case "topDoubleClick":case "topMouseDown":case "topMouseMove":case "topMouseUp":case "topMouseOut":case "topMouseOver":case "topContextMenu":a=fd;break;case "topDrag":case "topDragEnd":case "topDragEnter":case "topDragExit":case "topDragLeave":case "topDragOver":case "topDragStart":case "topDrop":a=
 $d;break;case "topTouchCancel":case "topTouchEnd":case "topTouchMove":case "topTouchStart":a=ae;break;case "topAnimationEnd":case "topAnimationIteration":case "topAnimationStart":a=Td;break;case "topTransitionEnd":a=be;break;case "topScroll":a=bd;break;case "topWheel":a=ce;break;case "topCopy":case "topCut":case "topPaste":a=Ud;break;default:a=T$1;}b=a.getPooled(e,b,c,d);Ab(b);return b}};sd=function(a,b,c,d){a=jb(a,b,c,d);kb(a);lb(!1);};hb.injectEventPluginOrder("ResponderEventPlugin SimpleEventPlugin TapEventPlugin EnterLeaveEventPlugin ChangeEventPlugin SelectEventPlugin BeforeInputEventPlugin".split(" "));
-Wa=sb.getFiberCurrentPropsFromNode;Xa=sb.getInstanceFromNode;Ya=sb.getNodeFromInstance;hb.injectEventPluginsByName({SimpleEventPlugin:fe,EnterLeaveEventPlugin:hd,ChangeEventPlugin:ad,SelectEventPlugin:Sd,BeforeInputEventPlugin:ic});var ge=[]; var he=-1;function V$1(a){0>he||(a.current=ge[he],ge[he]=null,he--);}function W$1(a,b){he++;ge[he]=a.current;a.current=b;}new Set;var ie={current:require$$11}; var X={current:!1}; var je=require$$11;function ke(a){return le(a)?je:ie.current}
-function me(a,b){var c=a.type.contextTypes;if(!c)return require$$11;var d=a.stateNode;if(d&&d.__reactInternalMemoizedUnmaskedChildContext===b)return d.__reactInternalMemoizedMaskedChildContext;var e={},f;for(f in c)e[f]=b[f];d&&(a=a.stateNode,a.__reactInternalMemoizedUnmaskedChildContext=b,a.__reactInternalMemoizedMaskedChildContext=e);return e}function le(a){return 2===a.tag&&null!=a.type.childContextTypes}function ne(a){le(a)&&(V$1(X,a),V$1(ie,a));}
-function oe(a,b,c){null!=ie.cursor?E$1("168"):void 0;W$1(ie,b,a);W$1(X,c,a);}function pe(a,b){var c=a.stateNode,d=a.type.childContextTypes;if("function"!==typeof c.getChildContext)return b;c=c.getChildContext();for(var e in c)e in d?void 0:E$1("108",jd(a)||"Unknown",e);return require$$4({},b,c)}function qe(a){if(!le(a))return!1;var b=a.stateNode;b=b&&b.__reactInternalMemoizedMergedChildContext||require$$11;je=ie.current;W$1(ie,b,a);W$1(X,X.current,a);return!0}
+Wa=sb.getFiberCurrentPropsFromNode;Xa=sb.getInstanceFromNode;Ya=sb.getNodeFromInstance;hb.injectEventPluginsByName({SimpleEventPlugin:fe,EnterLeaveEventPlugin:hd,ChangeEventPlugin:ad,SelectEventPlugin:Sd,BeforeInputEventPlugin:ic});var ge=[]; var he=-1;function V$1(a){0>he||(a.current=ge[he],ge[he]=null,he--);}function W$1(a,b){he++;ge[he]=a.current;a.current=b;}new Set;var ie={current:emptyObject_1}; var X={current:!1}; var je=emptyObject_1;function ke(a){return le(a)?je:ie.current}
+function me(a,b){var c=a.type.contextTypes;if(!c)return emptyObject_1;var d=a.stateNode;if(d&&d.__reactInternalMemoizedUnmaskedChildContext===b)return d.__reactInternalMemoizedMaskedChildContext;var e={},f;for(f in c)e[f]=b[f];d&&(a=a.stateNode,a.__reactInternalMemoizedUnmaskedChildContext=b,a.__reactInternalMemoizedMaskedChildContext=e);return e}function le(a){return 2===a.tag&&null!=a.type.childContextTypes}function ne(a){le(a)&&(V$1(X,a),V$1(ie,a));}
+function oe(a,b,c){null!=ie.cursor?E$1("168"):void 0;W$1(ie,b,a);W$1(X,c,a);}function pe(a,b){var c=a.stateNode,d=a.type.childContextTypes;if("function"!==typeof c.getChildContext)return b;c=c.getChildContext();for(var e in c)e in d?void 0:E$1("108",jd(a)||"Unknown",e);return objectAssign$2({},b,c)}function qe(a){if(!le(a))return!1;var b=a.stateNode;b=b&&b.__reactInternalMemoizedMergedChildContext||emptyObject_1;je=ie.current;W$1(ie,b,a);W$1(X,X.current,a);return!0}
 function re(a,b){var c=a.stateNode;c?void 0:E$1("169");if(b){var d=pe(a,je);c.__reactInternalMemoizedMergedChildContext=d;V$1(X,a);V$1(ie,a);W$1(ie,d,a);}else V$1(X,a);W$1(X,b,a);}
 function Y(a,b,c){this.tag=a;this.key=b;this.stateNode=this.type=null;this.sibling=this.child=this["return"]=null;this.index=0;this.memoizedState=this.updateQueue=this.memoizedProps=this.pendingProps=this.ref=null;this.internalContextTag=c;this.effectTag=0;this.lastEffect=this.firstEffect=this.nextEffect=null;this.expirationTime=0;this.alternate=null;}
 function se(a,b,c){var d=a.alternate;null===d?(d=new Y(a.tag,a.key,a.internalContextTag),d.type=a.type,d.stateNode=a.stateNode,d.alternate=a,a.alternate=d):(d.effectTag=0,d.nextEffect=null,d.firstEffect=null,d.lastEffect=null);d.expirationTime=c;d.pendingProps=b;d.child=a.child;d.memoizedProps=a.memoizedProps;d.memoizedState=a.memoizedState;d.updateQueue=a.updateQueue;d.sibling=a.sibling;d.index=a.index;d.ref=a.ref;return d}
@@ -10141,16 +9224,16 @@ function Be(a){return function(b){try{return a(b)}catch(c){}}}function Ce(a){if(
 function Fe(a){return{baseState:a,expirationTime:0,first:null,last:null,callbackList:null,hasForceUpdate:!1,isInitialized:!1}}function Ge(a,b){null===a.last?a.first=a.last=b:(a.last.next=b,a.last=b);if(0===a.expirationTime||a.expirationTime>b.expirationTime)a.expirationTime=b.expirationTime;}
 function He(a,b){var c=a.alternate,d=a.updateQueue;null===d&&(d=a.updateQueue=Fe(null));null!==c?(a=c.updateQueue,null===a&&(a=c.updateQueue=Fe(null))):a=null;a=a!==d?a:null;null===a?Ge(d,b):null===d.last||null===a.last?(Ge(d,b),Ge(a,b)):(Ge(d,b),a.last=b);}function Ie(a,b,c,d){a=a.partialState;return"function"===typeof a?a.call(b,c,d):a}
 function Je(a,b,c,d,e,f){null!==a&&a.updateQueue===c&&(c=b.updateQueue={baseState:c.baseState,expirationTime:c.expirationTime,first:c.first,last:c.last,isInitialized:c.isInitialized,callbackList:null,hasForceUpdate:!1});c.expirationTime=0;c.isInitialized?a=c.baseState:(a=c.baseState=b.memoizedState,c.isInitialized=!0);for(var g=!0,h=c.first,k=!1;null!==h;){var q=h.expirationTime;if(q>f){var v=c.expirationTime;if(0===v||v>q)c.expirationTime=q;k||(k=!0,c.baseState=a);}else{k||(c.first=h.next,null===
-c.first&&(c.last=null));if(h.isReplace)a=Ie(h,d,a,e),g=!0;else if(q=Ie(h,d,a,e))a=g?require$$4({},a,q):require$$4(a,q),g=!1;h.isForced&&(c.hasForceUpdate=!0);null!==h.callback&&(q=c.callbackList,null===q&&(q=c.callbackList=[]),q.push(h));}h=h.next;}null!==c.callbackList?b.effectTag|=32:null!==c.first||c.hasForceUpdate||(b.updateQueue=null);k||(c.baseState=a);return a}
+c.first&&(c.last=null));if(h.isReplace)a=Ie(h,d,a,e),g=!0;else if(q=Ie(h,d,a,e))a=g?objectAssign$2({},a,q):objectAssign$2(a,q),g=!1;h.isForced&&(c.hasForceUpdate=!0);null!==h.callback&&(q=c.callbackList,null===q&&(q=c.callbackList=[]),q.push(h));}h=h.next;}null!==c.callbackList?b.effectTag|=32:null!==c.first||c.hasForceUpdate||(b.updateQueue=null);k||(c.baseState=a);return a}
 function Ke(a,b){var c=a.callbackList;if(null!==c)for(a.callbackList=null,a=0;a<c.length;a++){var d=c[a],e=d.callback;d.callback=null;"function"!==typeof e?E$1("191",e):void 0;e.call(b);}}
 function Le(a,b,c,d){function e(a,b){b.updater=f;a.stateNode=b;b._reactInternalFiber=a;}var f={isMounted:ld,enqueueSetState:function(c,d,e){c=c._reactInternalFiber;e=void 0===e?null:e;var g=b(c);He(c,{expirationTime:g,partialState:d,callback:e,isReplace:!1,isForced:!1,nextCallback:null,next:null});a(c,g);},enqueueReplaceState:function(c,d,e){c=c._reactInternalFiber;e=void 0===e?null:e;var g=b(c);He(c,{expirationTime:g,partialState:d,callback:e,isReplace:!0,isForced:!1,nextCallback:null,next:null});
-a(c,g);},enqueueForceUpdate:function(c,d){c=c._reactInternalFiber;d=void 0===d?null:d;var e=b(c);He(c,{expirationTime:e,partialState:null,callback:d,isReplace:!1,isForced:!0,nextCallback:null,next:null});a(c,e);}};return{adoptClassInstance:e,constructClassInstance:function(a,b){var c=a.type,d=ke(a),f=2===a.tag&&null!=a.type.contextTypes,g=f?me(a,d):require$$11;b=new c(b,g);e(a,b);f&&(a=a.stateNode,a.__reactInternalMemoizedUnmaskedChildContext=d,a.__reactInternalMemoizedMaskedChildContext=g);return b},mountClassInstance:function(a,
-b){var c=a.alternate,d=a.stateNode,e=d.state||null,g=a.pendingProps;g?void 0:E$1("158");var h=ke(a);d.props=g;d.state=a.memoizedState=e;d.refs=require$$11;d.context=me(a,h);null!=a.type&&null!=a.type.prototype&&!0===a.type.prototype.unstable_isAsyncReactComponent&&(a.internalContextTag|=1);"function"===typeof d.componentWillMount&&(e=d.state,d.componentWillMount(),e!==d.state&&f.enqueueReplaceState(d,d.state,null),e=a.updateQueue,null!==e&&(d.state=Je(c,a,e,d,g,b)));"function"===typeof d.componentDidMount&&(a.effectTag|=
+a(c,g);},enqueueForceUpdate:function(c,d){c=c._reactInternalFiber;d=void 0===d?null:d;var e=b(c);He(c,{expirationTime:e,partialState:null,callback:d,isReplace:!1,isForced:!0,nextCallback:null,next:null});a(c,e);}};return{adoptClassInstance:e,constructClassInstance:function(a,b){var c=a.type,d=ke(a),f=2===a.tag&&null!=a.type.contextTypes,g=f?me(a,d):emptyObject_1;b=new c(b,g);e(a,b);f&&(a=a.stateNode,a.__reactInternalMemoizedUnmaskedChildContext=d,a.__reactInternalMemoizedMaskedChildContext=g);return b},mountClassInstance:function(a,
+b){var c=a.alternate,d=a.stateNode,e=d.state||null,g=a.pendingProps;g?void 0:E$1("158");var h=ke(a);d.props=g;d.state=a.memoizedState=e;d.refs=emptyObject_1;d.context=me(a,h);null!=a.type&&null!=a.type.prototype&&!0===a.type.prototype.unstable_isAsyncReactComponent&&(a.internalContextTag|=1);"function"===typeof d.componentWillMount&&(e=d.state,d.componentWillMount(),e!==d.state&&f.enqueueReplaceState(d,d.state,null),e=a.updateQueue,null!==e&&(d.state=Je(c,a,e,d,g,b)));"function"===typeof d.componentDidMount&&(a.effectTag|=
 4);},updateClassInstance:function(a,b,e){var g=b.stateNode;g.props=b.memoizedProps;g.state=b.memoizedState;var h=b.memoizedProps,k=b.pendingProps;k||(k=h,null==k?E$1("159"):void 0);var u=g.context,z=ke(b);z=me(b,z);"function"!==typeof g.componentWillReceiveProps||h===k&&u===z||(u=g.state,g.componentWillReceiveProps(k,z),g.state!==u&&f.enqueueReplaceState(g,g.state,null));u=b.memoizedState;e=null!==b.updateQueue?Je(a,b,b.updateQueue,g,k,e):u;if(!(h!==k||u!==e||X.current||null!==b.updateQueue&&b.updateQueue.hasForceUpdate))return"function"!==
-typeof g.componentDidUpdate||h===a.memoizedProps&&u===a.memoizedState||(b.effectTag|=4),!1;var G=k;if(null===h||null!==b.updateQueue&&b.updateQueue.hasForceUpdate)G=!0;else{var I=b.stateNode,L=b.type;G="function"===typeof I.shouldComponentUpdate?I.shouldComponentUpdate(G,e,z):L.prototype&&L.prototype.isPureReactComponent?!require$$8(h,G)||!require$$8(u,e):!0;}G?("function"===typeof g.componentWillUpdate&&g.componentWillUpdate(k,e,z),"function"===typeof g.componentDidUpdate&&(b.effectTag|=4)):("function"!==typeof g.componentDidUpdate||
+typeof g.componentDidUpdate||h===a.memoizedProps&&u===a.memoizedState||(b.effectTag|=4),!1;var G=k;if(null===h||null!==b.updateQueue&&b.updateQueue.hasForceUpdate)G=!0;else{var I=b.stateNode,L=b.type;G="function"===typeof I.shouldComponentUpdate?I.shouldComponentUpdate(G,e,z):L.prototype&&L.prototype.isPureReactComponent?!shallowEqual_1(h,G)||!shallowEqual_1(u,e):!0;}G?("function"===typeof g.componentWillUpdate&&g.componentWillUpdate(k,e,z),"function"===typeof g.componentDidUpdate&&(b.effectTag|=4)):("function"!==typeof g.componentDidUpdate||
 h===a.memoizedProps&&u===a.memoizedState||(b.effectTag|=4),c(b,k),d(b,e));g.props=k;g.state=e;g.context=z;return G}}}var Qe="function"===typeof Symbol&&Symbol["for"]; var Re=Qe?Symbol["for"]("react.element"):60103; var Se=Qe?Symbol["for"]("react.call"):60104; var Te=Qe?Symbol["for"]("react.return"):60105; var Ue=Qe?Symbol["for"]("react.portal"):60106; var Ve=Qe?Symbol["for"]("react.fragment"):60107; var We="function"===typeof Symbol&&Symbol.iterator;
 function Xe(a){if(null===a||"undefined"===typeof a)return null;a=We&&a[We]||a["@@iterator"];return"function"===typeof a?a:null}var Ye=Array.isArray;
-function Ze(a,b){var c=b.ref;if(null!==c&&"function"!==typeof c){if(b._owner){b=b._owner;var d=void 0;b&&(2!==b.tag?E$1("110"):void 0,d=b.stateNode);d?void 0:E$1("147",c);var e=""+c;if(null!==a&&null!==a.ref&&a.ref._stringRef===e)return a.ref;a=function(a){var b=d.refs===require$$11?d.refs={}:d.refs;null===a?delete b[e]:b[e]=a;};a._stringRef=e;return a}"string"!==typeof c?E$1("148"):void 0;b._owner?void 0:E$1("149",c);}return c}
+function Ze(a,b){var c=b.ref;if(null!==c&&"function"!==typeof c){if(b._owner){b=b._owner;var d=void 0;b&&(2!==b.tag?E$1("110"):void 0,d=b.stateNode);d?void 0:E$1("147",c);var e=""+c;if(null!==a&&null!==a.ref&&a.ref._stringRef===e)return a.ref;a=function(a){var b=d.refs===emptyObject_1?d.refs={}:d.refs;null===a?delete b[e]:b[e]=a;};a._stringRef=e;return a}"string"!==typeof c?E$1("148"):void 0;b._owner?void 0:E$1("149",c);}return c}
 function $e(a,b){"textarea"!==a.type&&E$1("31","[object Object]"===Object.prototype.toString.call(b)?"object with keys {"+Object.keys(b).join(", ")+"}":b,"");}
 function af(a){function b(b,c){if(a){var d=b.lastEffect;null!==d?(d.nextEffect=c,b.lastEffect=c):b.firstEffect=b.lastEffect=c;c.nextEffect=null;c.effectTag=8;}}function c(c,d){if(!a)return null;for(;null!==d;)b(c,d),d=d.sibling;return null}function d(a,b){for(a=new Map;null!==b;)null!==b.key?a.set(b.key,b):a.set(b.index,b),b=b.sibling;return a}function e(a,b,c){a=se(a,b,c);a.index=0;a.sibling=null;return a}function f(b,c,d){b.index=d;if(!a)return c;d=b.alternate;if(null!==d)return d=d.index,d<c?(b.effectTag=
 2,c):d;b.effectTag=2;return c}function g(b){a&&null===b.alternate&&(b.effectTag=2);return b}function h(a,b,c,d){if(null===b||6!==b.tag)return b=ve(c,a.internalContextTag,d),b["return"]=a,b;b=e(b,c,d);b["return"]=a;return b}function k(a,b,c,d){if(null!==b&&b.type===c.type)return d=e(b,c.props,d),d.ref=Ze(b,c),d["return"]=a,d;d=te(c,a.internalContextTag,d);d.ref=Ze(b,c);d["return"]=a;return d}function q(a,b,c,d){if(null===b||7!==b.tag)return b=we(c,a.internalContextTag,d),b["return"]=a,b;b=e(b,c,d);
@@ -10198,7 +9281,7 @@ t);break;case 8:Sc=!0,Bg(t),Sc=!1;}t=t.nextEffect;}}catch(Tc){d=!0,e=Tc;}d&&(nul
 break;case 3:null===ca&&(ca=f.error);break;default:E$1("157");}var Qc=t.nextEffect;t.nextEffect=null;t=Qc;}}catch(Tc){c=!0,d=Tc;}c&&(null===t?E$1("178"):void 0,h(t,d),null!==t&&(t=t.nextEffect));}ja=Qb=!1;"function"===typeof De&&De(a.stateNode);ha&&(ha.forEach(G),ha=null);null!==ca&&(a=ca,ca=null,Ob(a));b=b.current.expirationTime;0===b&&(qa=R=null);return b}function c(a){for(;;){var b=Fg(a.alternate,a,H),c=a["return"],d=a.sibling;var e=a;if(2147483647===H||2147483647!==e.expirationTime){if(2!==e.tag&&3!==
 e.tag)var f=0;else f=e.updateQueue,f=null===f?0:f.expirationTime;for(var g=e.child;null!==g;)0!==g.expirationTime&&(0===f||f>g.expirationTime)&&(f=g.expirationTime),g=g.sibling;e.expirationTime=f;}if(null!==b)return b;null!==c&&(null===c.firstEffect&&(c.firstEffect=a.firstEffect),null!==a.lastEffect&&(null!==c.lastEffect&&(c.lastEffect.nextEffect=a.firstEffect),c.lastEffect=a.lastEffect),1<a.effectTag&&(null!==c.lastEffect?c.lastEffect.nextEffect=a:c.firstEffect=a,c.lastEffect=a));if(null!==d)return d;
 if(null!==c)a=c;else{a.stateNode.isReadyForCommit=!0;break}}return null}function d(a){var b=rg(a.alternate,a,H);null===b&&(b=c(a));id$2.current=null;return b}function e(a){var b=Gg(a.alternate,a,H);null===b&&(b=c(a));id$2.current=null;return b}function f(a){if(null!==R){if(!(0===H||H>a))if(H<=Uc)for(;null!==F;)F=k(F)?e(F):d(F);else for(;null!==F&&!A();)F=k(F)?e(F):d(F);}else if(!(0===H||H>a))if(H<=Uc)for(;null!==F;)F=d(F);else for(;null!==F&&!A();)F=d(F);}function g(a,b){ja?E$1("243"):void 0;ja=!0;a.isReadyForCommit=
-!1;if(a!==ra||b!==H||null===F){for(;-1<he;)ge[he]=null,he--;je=require$$11;ie.current=require$$11;X.current=!1;x();ra=a;H=b;F=se(ra.current,null,b);}var c=!1,d=null;try{f(b);}catch(Rc){c=!0,d=Rc;}for(;c;){if(eb){ca=d;break}var g=F;if(null===g)eb=!0;else{var k=h(g,d);null===k?E$1("183"):void 0;if(!eb){try{c=k;d=b;for(k=c;null!==g;){switch(g.tag){case 2:ne(g);break;case 5:qg(g);break;case 3:p(g);break;case 4:p(g);}if(g===k||g.alternate===k)break;g=g["return"];}F=e(c);f(d);}catch(Rc){c=!0;d=Rc;continue}break}}}b=ca;eb=ja=!1;ca=
+!1;if(a!==ra||b!==H||null===F){for(;-1<he;)ge[he]=null,he--;je=emptyObject_1;ie.current=emptyObject_1;X.current=!1;x();ra=a;H=b;F=se(ra.current,null,b);}var c=!1,d=null;try{f(b);}catch(Rc){c=!0,d=Rc;}for(;c;){if(eb){ca=d;break}var g=F;if(null===g)eb=!0;else{var k=h(g,d);null===k?E$1("183"):void 0;if(!eb){try{c=k;d=b;for(k=c;null!==g;){switch(g.tag){case 2:ne(g);break;case 5:qg(g);break;case 3:p(g);break;case 4:p(g);}if(g===k||g.alternate===k)break;g=g["return"];}F=e(c);f(d);}catch(Rc){c=!0;d=Rc;continue}break}}}b=ca;eb=ja=!1;ca=
 null;null!==b&&Ob(b);return a.isReadyForCommit?a.current.alternate:null}function h(a,b){var c=id$2.current=null,d=!1,e=!1,f=null;if(3===a.tag)c=a,q(a)&&(eb=!0);else for(var g=a["return"];null!==g&&null===c;){2===g.tag?"function"===typeof g.stateNode.componentDidCatch&&(d=!0,f=jd(g),c=g,e=!0):3===g.tag&&(c=g);if(q(g)){if(Sc||null!==ha&&(ha.has(g)||null!==g.alternate&&ha.has(g.alternate)))return null;c=null;e=!1;}g=g["return"];}if(null!==c){null===qa&&(qa=new Set);qa.add(c);var h="";g=a;do{a:switch(g.tag){case 0:case 1:case 2:case 5:var k=
 g._debugOwner,Qc=g._debugSource;var m=jd(g);var n=null;k&&(n=jd(k));k=Qc;m="\n    in "+(m||"Unknown")+(k?" (at "+k.fileName.replace(/^.*[\\\/]/,"")+":"+k.lineNumber+")":n?" (created by "+n+")":"");break a;default:m="";}h+=m;g=g["return"];}while(g);g=h;a=jd(a);null===R&&(R=new Map);b={componentName:a,componentStack:g,error:b,errorBoundary:d?c.stateNode:null,errorBoundaryFound:d,errorBoundaryName:f,willRetry:e};R.set(c,b);try{var p=b.error;p&&p.suppressReactErrorLogging||console.error(p);}catch(Vc){Vc&&
 Vc.suppressReactErrorLogging||console.error(Vc);}Qb?(null===ha&&(ha=new Set),ha.add(c)):G(c);return c}null===ca&&(ca=b);return null}function k(a){return null!==R&&(R.has(a)||null!==a.alternate&&R.has(a.alternate))}function q(a){return null!==qa&&(qa.has(a)||null!==a.alternate&&qa.has(a.alternate))}function v(){return 20*(((I()+100)/20|0)+1)}function y(a){return 0!==ka?ka:ja?Qb?1:H:!Hg||a.internalContextTag&1?v():1}function u(a,b){return z(a,b,!1)}function z(a,b){for(;null!==a;){if(0===a.expirationTime||
@@ -10210,22 +9293,22 @@ void 0;ma.remainingExpirationTime=0;Ub||(Ub=!0,Zc=a);}var r=hf(a),n=jf(a),p=r.po
 Pe=Wc(),Uc=2,ka=0,ja=!1,F=null,ra=null,H=0,t=null,R=null,qa=null,ha=null,ca=null,eb=!1,Qb=!1,Sc=!1,sa=null,O=null,Tb=0,Xc=-1,Fa=!1,ma=null,na=0,Yc=!1,Ub=!1,Zc=null,fb=null,la=!1,Sb=!1,Ig=1E3,Rb=0,Lg=1;return{computeAsyncExpiration:v,computeExpirationForFiber:y,scheduleWork:u,batchedUpdates:function(a,b){var c=la;la=!0;try{return a(b)}finally{(la=c)||Fa||w(1,null);}},unbatchedUpdates:function(a){if(la&&!Sb){Sb=!0;try{return a()}finally{Sb=!1;}}return a()},flushSync:function(a){var b=la;la=!0;try{a:{var c=
 ka;ka=1;try{var d=a();break a}finally{ka=c;}d=void 0;}return d}finally{la=b,Fa?E$1("187"):void 0,w(1,null);}},deferredUpdates:function(a){var b=ka;ka=v();try{return a()}finally{ka=b;}}}}
 function lf(a){function b(a){a=od(a);return null===a?null:a.stateNode}var c=a.getPublicInstance;a=kf(a);var d=a.computeAsyncExpiration,e=a.computeExpirationForFiber,f=a.scheduleWork;return{createContainer:function(a,b){var c=new Y(3,null,0);a={current:c,containerInfo:a,pendingChildren:null,remainingExpirationTime:0,isReadyForCommit:!1,finishedWork:null,context:null,pendingContext:null,hydrate:b,nextScheduledRoot:null};return c.stateNode=a},updateContainer:function(a,b,c,q){var g=b.current;if(c){c=
-c._reactInternalFiber;var h;b:{2===kd(c)&&2===c.tag?void 0:E$1("170");for(h=c;3!==h.tag;){if(le(h)){h=h.stateNode.__reactInternalMemoizedMergedChildContext;break b}(h=h["return"])?void 0:E$1("171");}h=h.stateNode.context;}c=le(c)?pe(c,h):h;}else c=require$$11;null===b.context?b.context=c:b.pendingContext=c;b=q;b=void 0===b?null:b;q=null!=a&&null!=a.type&&null!=a.type.prototype&&!0===a.type.prototype.unstable_isAsyncReactComponent?d():e(g);He(g,{expirationTime:q,partialState:{element:a},callback:b,isReplace:!1,isForced:!1,
-nextCallback:null,next:null});f(g,q);},batchedUpdates:a.batchedUpdates,unbatchedUpdates:a.unbatchedUpdates,deferredUpdates:a.deferredUpdates,flushSync:a.flushSync,getPublicRootInstance:function(a){a=a.current;if(!a.child)return null;switch(a.child.tag){case 5:return c(a.child.stateNode);default:return a.child.stateNode}},findHostInstance:b,findHostInstanceWithNoPortals:function(a){a=pd(a);return null===a?null:a.stateNode},injectIntoDevTools:function(a){var c=a.findFiberByHostInstance;return Ce(require$$4({},
+c._reactInternalFiber;var h;b:{2===kd(c)&&2===c.tag?void 0:E$1("170");for(h=c;3!==h.tag;){if(le(h)){h=h.stateNode.__reactInternalMemoizedMergedChildContext;break b}(h=h["return"])?void 0:E$1("171");}h=h.stateNode.context;}c=le(c)?pe(c,h):h;}else c=emptyObject_1;null===b.context?b.context=c:b.pendingContext=c;b=q;b=void 0===b?null:b;q=null!=a&&null!=a.type&&null!=a.type.prototype&&!0===a.type.prototype.unstable_isAsyncReactComponent?d():e(g);He(g,{expirationTime:q,partialState:{element:a},callback:b,isReplace:!1,isForced:!1,
+nextCallback:null,next:null});f(g,q);},batchedUpdates:a.batchedUpdates,unbatchedUpdates:a.unbatchedUpdates,deferredUpdates:a.deferredUpdates,flushSync:a.flushSync,getPublicRootInstance:function(a){a=a.current;if(!a.child)return null;switch(a.child.tag){case 5:return c(a.child.stateNode);default:return a.child.stateNode}},findHostInstance:b,findHostInstanceWithNoPortals:function(a){a=pd(a);return null===a?null:a.stateNode},injectIntoDevTools:function(a){var c=a.findFiberByHostInstance;return Ce(objectAssign$2({},
 a,{findHostInstanceByFiber:function(a){return b(a)},findFiberByHostInstance:function(a){return c?c(a):null}}))}}}var mf=Object.freeze({default:lf}); var nf=mf&&lf||mf; var of=nf["default"]?nf["default"]:nf;function pf(a,b,c){var d=3<arguments.length&&void 0!==arguments[3]?arguments[3]:null;return{$$typeof:Ue,key:null==d?null:""+d,children:a,containerInfo:b,implementation:c}}var qf="object"===typeof performance&&"function"===typeof performance.now; var rf=void 0;rf=qf?function(){return performance.now()}:function(){return Date.now()};
 var sf=void 0;
 var tf=void 0;
-if(require$$3.canUseDOM)if("function"!==typeof requestIdleCallback||"function"!==typeof cancelIdleCallback){var uf=null,vf=!1,wf=-1,xf=!1,yf=0,zf=33,Af=33,Bf;Bf=qf?{didTimeout:!1,timeRemaining:function(){var a=yf-performance.now();return 0<a?a:0}}:{didTimeout:!1,timeRemaining:function(){var a=yf-Date.now();return 0<a?a:0}};var Cf="__reactIdleCallback$"+Math.random().toString(36).slice(2);window.addEventListener("message",function(a){if(a.source===window&&a.data===Cf){vf=!1;a=rf();if(0>=yf-a)if(-1!==wf&&wf<=
+if(ExecutionEnvironment_1.canUseDOM)if("function"!==typeof requestIdleCallback||"function"!==typeof cancelIdleCallback){var uf=null,vf=!1,wf=-1,xf=!1,yf=0,zf=33,Af=33,Bf;Bf=qf?{didTimeout:!1,timeRemaining:function(){var a=yf-performance.now();return 0<a?a:0}}:{didTimeout:!1,timeRemaining:function(){var a=yf-Date.now();return 0<a?a:0}};var Cf="__reactIdleCallback$"+Math.random().toString(36).slice(2);window.addEventListener("message",function(a){if(a.source===window&&a.data===Cf){vf=!1;a=rf();if(0>=yf-a)if(-1!==wf&&wf<=
 a)Bf.didTimeout=!0;else{xf||(xf=!0,requestAnimationFrame(Df));return}else Bf.didTimeout=!1;wf=-1;a=uf;uf=null;null!==a&&a(Bf);}},!1);var Df=function(a){xf=!1;var b=a-yf+Af;b<Af&&zf<Af?(8>b&&(b=8),Af=b<zf?zf:b):zf=b;yf=a+Af;vf||(vf=!0,window.postMessage(Cf,"*"));};sf=function(a,b){uf=a;null!=b&&"number"===typeof b.timeout&&(wf=rf()+b.timeout);xf||(xf=!0,requestAnimationFrame(Df));return 0};tf=function(){uf=null;vf=!1;wf=-1;};}else sf=window.requestIdleCallback,tf=window.cancelIdleCallback;else sf=function(a){return setTimeout(function(){a({timeRemaining:function(){return Infinity}});})},
 tf=function(a){clearTimeout(a);};var Ef=/^[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\-.0-9\u00B7\u0300-\u036F\u203F-\u2040]*$/; var Ff={}; var Gf={};
 function Hf(a){if(Gf.hasOwnProperty(a))return!0;if(Ff.hasOwnProperty(a))return!1;if(Ef.test(a))return Gf[a]=!0;Ff[a]=!0;return!1}
 function If(a,b,c){var d=wa(b);if(d&&va(b,c)){var e=d.mutationMethod;e?e(a,c):null==c||d.hasBooleanValue&&!c||d.hasNumericValue&&isNaN(c)||d.hasPositiveNumericValue&&1>c||d.hasOverloadedBooleanValue&&!1===c?Jf(a,b):d.mustUseProperty?a[d.propertyName]=c:(b=d.attributeName,(e=d.attributeNamespace)?a.setAttributeNS(e,b,""+c):d.hasBooleanValue||d.hasOverloadedBooleanValue&&!0===c?a.setAttribute(b,""):a.setAttribute(b,""+c));}else Kf(a,b,va(b,c)?c:null);}
 function Kf(a,b,c){Hf(b)&&(null==c?a.removeAttribute(b):a.setAttribute(b,""+c));}function Jf(a,b){var c=wa(b);c?(b=c.mutationMethod)?b(a,void 0):c.mustUseProperty?a[c.propertyName]=c.hasBooleanValue?!1:"":a.removeAttribute(c.attributeName):a.removeAttribute(b);}
-function Lf(a,b){var c=b.value,d=b.checked;return require$$4({type:void 0,step:void 0,min:void 0,max:void 0},b,{defaultChecked:void 0,defaultValue:void 0,value:null!=c?c:a._wrapperState.initialValue,checked:null!=d?d:a._wrapperState.initialChecked})}function Mf(a,b){var c=b.defaultValue;a._wrapperState={initialChecked:null!=b.checked?b.checked:b.defaultChecked,initialValue:null!=b.value?b.value:c,controlled:"checkbox"===b.type||"radio"===b.type?null!=b.checked:null!=b.value};}
+function Lf(a,b){var c=b.value,d=b.checked;return objectAssign$2({type:void 0,step:void 0,min:void 0,max:void 0},b,{defaultChecked:void 0,defaultValue:void 0,value:null!=c?c:a._wrapperState.initialValue,checked:null!=d?d:a._wrapperState.initialChecked})}function Mf(a,b){var c=b.defaultValue;a._wrapperState={initialChecked:null!=b.checked?b.checked:b.defaultChecked,initialValue:null!=b.value?b.value:c,controlled:"checkbox"===b.type||"radio"===b.type?null!=b.checked:null!=b.value};}
 function Nf(a,b){b=b.checked;null!=b&&If(a,"checked",b);}function Of(a,b){Nf(a,b);var c=b.value;if(null!=c)if(0===c&&""===a.value)a.value="0";else if("number"===b.type){if(b=parseFloat(a.value)||0,c!=b||c==b&&a.value!=c)a.value=""+c;}else a.value!==""+c&&(a.value=""+c);else null==b.value&&null!=b.defaultValue&&a.defaultValue!==""+b.defaultValue&&(a.defaultValue=""+b.defaultValue),null==b.checked&&null!=b.defaultChecked&&(a.defaultChecked=!!b.defaultChecked);}
-function Pf(a,b){switch(b.type){case "submit":case "reset":break;case "color":case "date":case "datetime":case "datetime-local":case "month":case "time":case "week":a.value="";a.value=a.defaultValue;break;default:a.value=a.value;}b=a.name;""!==b&&(a.name="");a.defaultChecked=!a.defaultChecked;a.defaultChecked=!a.defaultChecked;""!==b&&(a.name=b);}function Qf(a){var b="";_react.Children.forEach(a,function(a){null==a||"string"!==typeof a&&"number"!==typeof a||(b+=a);});return b}
-function Rf(a,b){a=require$$4({children:void 0},b);if(b=Qf(b.children))a.children=b;return a}function Sf(a,b,c,d){a=a.options;if(b){b={};for(var e=0;e<c.length;e++)b["$"+c[e]]=!0;for(c=0;c<a.length;c++)e=b.hasOwnProperty("$"+a[c].value),a[c].selected!==e&&(a[c].selected=e),e&&d&&(a[c].defaultSelected=!0);}else{c=""+c;b=null;for(e=0;e<a.length;e++){if(a[e].value===c){a[e].selected=!0;d&&(a[e].defaultSelected=!0);return}null!==b||a[e].disabled||(b=a[e]);}null!==b&&(b.selected=!0);}}
-function Tf(a,b){var c=b.value;a._wrapperState={initialValue:null!=c?c:b.defaultValue,wasMultiple:!!b.multiple};}function Uf(a,b){null!=b.dangerouslySetInnerHTML?E$1("91"):void 0;return require$$4({},b,{value:void 0,defaultValue:void 0,children:""+a._wrapperState.initialValue})}function Vf(a,b){var c=b.value;null==c&&(c=b.defaultValue,b=b.children,null!=b&&(null!=c?E$1("92"):void 0,Array.isArray(b)&&(1>=b.length?void 0:E$1("93"),b=b[0]),c=""+b),null==c&&(c=""));a._wrapperState={initialValue:""+c};}
+function Pf(a,b){switch(b.type){case "submit":case "reset":break;case "color":case "date":case "datetime":case "datetime-local":case "month":case "time":case "week":a.value="";a.value=a.defaultValue;break;default:a.value=a.value;}b=a.name;""!==b&&(a.name="");a.defaultChecked=!a.defaultChecked;a.defaultChecked=!a.defaultChecked;""!==b&&(a.name=b);}function Qf(a){var b="";react.Children.forEach(a,function(a){null==a||"string"!==typeof a&&"number"!==typeof a||(b+=a);});return b}
+function Rf(a,b){a=objectAssign$2({children:void 0},b);if(b=Qf(b.children))a.children=b;return a}function Sf(a,b,c,d){a=a.options;if(b){b={};for(var e=0;e<c.length;e++)b["$"+c[e]]=!0;for(c=0;c<a.length;c++)e=b.hasOwnProperty("$"+a[c].value),a[c].selected!==e&&(a[c].selected=e),e&&d&&(a[c].defaultSelected=!0);}else{c=""+c;b=null;for(e=0;e<a.length;e++){if(a[e].value===c){a[e].selected=!0;d&&(a[e].defaultSelected=!0);return}null!==b||a[e].disabled||(b=a[e]);}null!==b&&(b.selected=!0);}}
+function Tf(a,b){var c=b.value;a._wrapperState={initialValue:null!=c?c:b.defaultValue,wasMultiple:!!b.multiple};}function Uf(a,b){null!=b.dangerouslySetInnerHTML?E$1("91"):void 0;return objectAssign$2({},b,{value:void 0,defaultValue:void 0,children:""+a._wrapperState.initialValue})}function Vf(a,b){var c=b.value;null==c&&(c=b.defaultValue,b=b.children,null!=b&&(null!=c?E$1("92"):void 0,Array.isArray(b)&&(1>=b.length?void 0:E$1("93"),b=b[0]),c=""+b),null==c&&(c=""));a._wrapperState={initialValue:""+c};}
 function Wf(a,b){var c=b.value;null!=c&&(c=""+c,c!==a.value&&(a.value=c),null==b.defaultValue&&(a.defaultValue=c));null!=b.defaultValue&&(a.defaultValue=b.defaultValue);}function Xf(a){var b=a.textContent;b===a._wrapperState.initialValue&&(a.value=b);}var Yf={html:"http://www.w3.org/1999/xhtml",mathml:"http://www.w3.org/1998/Math/MathML",svg:"http://www.w3.org/2000/svg"};
 function Zf(a){switch(a){case "svg":return"http://www.w3.org/2000/svg";case "math":return"http://www.w3.org/1998/Math/MathML";default:return"http://www.w3.org/1999/xhtml"}}function $f(a,b){return null==a||"http://www.w3.org/1999/xhtml"===a?Zf(b):"http://www.w3.org/2000/svg"===a&&"foreignObject"===b?"http://www.w3.org/1999/xhtml":a}
 var ag=void 0;
@@ -10234,31 +9317,31 @@ function cg(a,b){if(b){var c=a.firstChild;if(c&&c===a.lastChild&&3===c.nodeType)
 var dg={animationIterationCount:!0,borderImageOutset:!0,borderImageSlice:!0,borderImageWidth:!0,boxFlex:!0,boxFlexGroup:!0,boxOrdinalGroup:!0,columnCount:!0,columns:!0,flex:!0,flexGrow:!0,flexPositive:!0,flexShrink:!0,flexNegative:!0,flexOrder:!0,gridRow:!0,gridRowEnd:!0,gridRowSpan:!0,gridRowStart:!0,gridColumn:!0,gridColumnEnd:!0,gridColumnSpan:!0,gridColumnStart:!0,fontWeight:!0,lineClamp:!0,lineHeight:!0,opacity:!0,order:!0,orphans:!0,tabSize:!0,widows:!0,zIndex:!0,zoom:!0,fillOpacity:!0,floodOpacity:!0,
 stopOpacity:!0,strokeDasharray:!0,strokeDashoffset:!0,strokeMiterlimit:!0,strokeOpacity:!0,strokeWidth:!0};
 var eg=["Webkit","ms","Moz","O"];Object.keys(dg).forEach(function(a){eg.forEach(function(b){b=b+a.charAt(0).toUpperCase()+a.substring(1);dg[b]=dg[a];});});
-function fg(a,b){a=a.style;for(var c in b)if(b.hasOwnProperty(c)){var d=0===c.indexOf("--");var e=c;var f=b[c];e=null==f||"boolean"===typeof f||""===f?"":d||"number"!==typeof f||0===f||dg.hasOwnProperty(e)&&dg[e]?(""+f).trim():f+"px";"float"===c&&(c="cssFloat");d?a.setProperty(c,e):a[c]=e;}}var gg=require$$4({menuitem:!0},{area:!0,base:!0,br:!0,col:!0,embed:!0,hr:!0,img:!0,input:!0,keygen:!0,link:!0,meta:!0,param:!0,source:!0,track:!0,wbr:!0});
+function fg(a,b){a=a.style;for(var c in b)if(b.hasOwnProperty(c)){var d=0===c.indexOf("--");var e=c;var f=b[c];e=null==f||"boolean"===typeof f||""===f?"":d||"number"!==typeof f||0===f||dg.hasOwnProperty(e)&&dg[e]?(""+f).trim():f+"px";"float"===c&&(c="cssFloat");d?a.setProperty(c,e):a[c]=e;}}var gg=objectAssign$2({menuitem:!0},{area:!0,base:!0,br:!0,col:!0,embed:!0,hr:!0,img:!0,input:!0,keygen:!0,link:!0,meta:!0,param:!0,source:!0,track:!0,wbr:!0});
 function hg(a,b,c){b&&(gg[a]&&(null!=b.children||null!=b.dangerouslySetInnerHTML?E$1("137",a,c()):void 0),null!=b.dangerouslySetInnerHTML&&(null!=b.children?E$1("60"):void 0,"object"===typeof b.dangerouslySetInnerHTML&&"__html"in b.dangerouslySetInnerHTML?void 0:E$1("61")),null!=b.style&&"object"!==typeof b.style?E$1("62",c()):void 0);}
-function ig(a,b){if(-1===a.indexOf("-"))return"string"===typeof b.is;switch(a){case "annotation-xml":case "color-profile":case "font-face":case "font-face-src":case "font-face-uri":case "font-face-format":case "font-face-name":case "missing-glyph":return!1;default:return!0}}var jg=Yf.html; var kg=emptyFunction$2.thatReturns("");
+function ig(a,b){if(-1===a.indexOf("-"))return"string"===typeof b.is;switch(a){case "annotation-xml":case "color-profile":case "font-face":case "font-face-src":case "font-face-uri":case "font-face-format":case "font-face-name":case "missing-glyph":return!1;default:return!0}}var jg=Yf.html; var kg=emptyFunction_1.thatReturns("");
 function lg(a,b){a=9===a.nodeType||11===a.nodeType?a:a.ownerDocument;var c=Hd(a);b=Sa[b];for(var d=0;d<b.length;d++){var e=b[d];c.hasOwnProperty(e)&&c[e]||("topScroll"===e?wd("topScroll","scroll",a):"topFocus"===e||"topBlur"===e?(wd("topFocus","focus",a),wd("topBlur","blur",a),c.topBlur=!0,c.topFocus=!0):"topCancel"===e?(yc("cancel",!0)&&wd("topCancel","cancel",a),c.topCancel=!0):"topClose"===e?(yc("close",!0)&&wd("topClose","close",a),c.topClose=!0):Dd.hasOwnProperty(e)&&U$1(e,Dd[e],a),c[e]=!0);}}
 var mg={topAbort:"abort",topCanPlay:"canplay",topCanPlayThrough:"canplaythrough",topDurationChange:"durationchange",topEmptied:"emptied",topEncrypted:"encrypted",topEnded:"ended",topError:"error",topLoadedData:"loadeddata",topLoadedMetadata:"loadedmetadata",topLoadStart:"loadstart",topPause:"pause",topPlay:"play",topPlaying:"playing",topProgress:"progress",topRateChange:"ratechange",topSeeked:"seeked",topSeeking:"seeking",topStalled:"stalled",topSuspend:"suspend",topTimeUpdate:"timeupdate",topVolumeChange:"volumechange",
 topWaiting:"waiting"};function ng(a,b,c,d){c=9===c.nodeType?c:c.ownerDocument;d===jg&&(d=Zf(a));d===jg?"script"===a?(a=c.createElement("div"),a.innerHTML="\x3cscript\x3e\x3c/script\x3e",a=a.removeChild(a.firstChild)):a="string"===typeof b.is?c.createElement(a,{is:b.is}):c.createElement(a):a=c.createElementNS(d,a);return a}function og(a,b){return(9===b.nodeType?b:b.ownerDocument).createTextNode(a)}
 function pg(a,b,c,d){var e=ig(b,c);switch(b){case "iframe":case "object":U$1("topLoad","load",a);var f=c;break;case "video":case "audio":for(f in mg)mg.hasOwnProperty(f)&&U$1(f,mg[f],a);f=c;break;case "source":U$1("topError","error",a);f=c;break;case "img":case "image":U$1("topError","error",a);U$1("topLoad","load",a);f=c;break;case "form":U$1("topReset","reset",a);U$1("topSubmit","submit",a);f=c;break;case "details":U$1("topToggle","toggle",a);f=c;break;case "input":Mf(a,c);f=Lf(a,c);U$1("topInvalid","invalid",a);
-lg(d,"onChange");break;case "option":f=Rf(a,c);break;case "select":Tf(a,c);f=require$$4({},c,{value:void 0});U$1("topInvalid","invalid",a);lg(d,"onChange");break;case "textarea":Vf(a,c);f=Uf(a,c);U$1("topInvalid","invalid",a);lg(d,"onChange");break;default:f=c;}hg(b,f,kg);var g=f,h;for(h in g)if(g.hasOwnProperty(h)){var k=g[h];"style"===h?fg(a,k,kg):"dangerouslySetInnerHTML"===h?(k=k?k.__html:void 0,null!=k&&bg(a,k)):"children"===h?"string"===typeof k?("textarea"!==b||""!==k)&&cg(a,k):"number"===typeof k&&cg(a,
+lg(d,"onChange");break;case "option":f=Rf(a,c);break;case "select":Tf(a,c);f=objectAssign$2({},c,{value:void 0});U$1("topInvalid","invalid",a);lg(d,"onChange");break;case "textarea":Vf(a,c);f=Uf(a,c);U$1("topInvalid","invalid",a);lg(d,"onChange");break;default:f=c;}hg(b,f,kg);var g=f,h;for(h in g)if(g.hasOwnProperty(h)){var k=g[h];"style"===h?fg(a,k,kg):"dangerouslySetInnerHTML"===h?(k=k?k.__html:void 0,null!=k&&bg(a,k)):"children"===h?"string"===typeof k?("textarea"!==b||""!==k)&&cg(a,k):"number"===typeof k&&cg(a,
 ""+k):"suppressContentEditableWarning"!==h&&"suppressHydrationWarning"!==h&&"autoFocus"!==h&&(Ra.hasOwnProperty(h)?null!=k&&lg(d,h):e?Kf(a,h,k):null!=k&&If(a,h,k));}switch(b){case "input":Bc(a);Pf(a,c);break;case "textarea":Bc(a);Xf(a,c);break;case "option":null!=c.value&&a.setAttribute("value",c.value);break;case "select":a.multiple=!!c.multiple;b=c.value;null!=b?Sf(a,!!c.multiple,b,!1):null!=c.defaultValue&&Sf(a,!!c.multiple,c.defaultValue,!0);break;default:"function"===typeof f.onClick&&(a.onclick=
-emptyFunction$2);}}
-function sg(a,b,c,d,e){var f=null;switch(b){case "input":c=Lf(a,c);d=Lf(a,d);f=[];break;case "option":c=Rf(a,c);d=Rf(a,d);f=[];break;case "select":c=require$$4({},c,{value:void 0});d=require$$4({},d,{value:void 0});f=[];break;case "textarea":c=Uf(a,c);d=Uf(a,d);f=[];break;default:"function"!==typeof c.onClick&&"function"===typeof d.onClick&&(a.onclick=emptyFunction$2);}hg(b,d,kg);var g,h;a=null;for(g in c)if(!d.hasOwnProperty(g)&&c.hasOwnProperty(g)&&null!=c[g])if("style"===g)for(h in b=c[g],b)b.hasOwnProperty(h)&&(a||(a={}),a[h]=
+emptyFunction_1);}}
+function sg(a,b,c,d,e){var f=null;switch(b){case "input":c=Lf(a,c);d=Lf(a,d);f=[];break;case "option":c=Rf(a,c);d=Rf(a,d);f=[];break;case "select":c=objectAssign$2({},c,{value:void 0});d=objectAssign$2({},d,{value:void 0});f=[];break;case "textarea":c=Uf(a,c);d=Uf(a,d);f=[];break;default:"function"!==typeof c.onClick&&"function"===typeof d.onClick&&(a.onclick=emptyFunction_1);}hg(b,d,kg);var g,h;a=null;for(g in c)if(!d.hasOwnProperty(g)&&c.hasOwnProperty(g)&&null!=c[g])if("style"===g)for(h in b=c[g],b)b.hasOwnProperty(h)&&(a||(a={}),a[h]=
 "");else"dangerouslySetInnerHTML"!==g&&"children"!==g&&"suppressContentEditableWarning"!==g&&"suppressHydrationWarning"!==g&&"autoFocus"!==g&&(Ra.hasOwnProperty(g)?f||(f=[]):(f=f||[]).push(g,null));for(g in d){var k=d[g];b=null!=c?c[g]:void 0;if(d.hasOwnProperty(g)&&k!==b&&(null!=k||null!=b))if("style"===g)if(b){for(h in b)!b.hasOwnProperty(h)||k&&k.hasOwnProperty(h)||(a||(a={}),a[h]="");for(h in k)k.hasOwnProperty(h)&&b[h]!==k[h]&&(a||(a={}),a[h]=k[h]);}else a||(f||(f=[]),f.push(g,a)),a=k;else"dangerouslySetInnerHTML"===
 g?(k=k?k.__html:void 0,b=b?b.__html:void 0,null!=k&&b!==k&&(f=f||[]).push(g,""+k)):"children"===g?b===k||"string"!==typeof k&&"number"!==typeof k||(f=f||[]).push(g,""+k):"suppressContentEditableWarning"!==g&&"suppressHydrationWarning"!==g&&(Ra.hasOwnProperty(g)?(null!=k&&lg(e,g),f||b===k||(f=[])):(f=f||[]).push(g,k));}a&&(f=f||[]).push("style",a);return f}
 function tg(a,b,c,d,e){"input"===c&&"radio"===e.type&&null!=e.name&&Nf(a,e);ig(c,d);d=ig(c,e);for(var f=0;f<b.length;f+=2){var g=b[f],h=b[f+1];"style"===g?fg(a,h,kg):"dangerouslySetInnerHTML"===g?bg(a,h):"children"===g?cg(a,h):d?null!=h?Kf(a,g,h):a.removeAttribute(g):null!=h?If(a,g,h):Jf(a,g);}switch(c){case "input":Of(a,e);break;case "textarea":Wf(a,e);break;case "select":a._wrapperState.initialValue=void 0,b=a._wrapperState.wasMultiple,a._wrapperState.wasMultiple=!!e.multiple,c=e.value,null!=c?Sf(a,
 !!e.multiple,c,!1):b!==!!e.multiple&&(null!=e.defaultValue?Sf(a,!!e.multiple,e.defaultValue,!0):Sf(a,!!e.multiple,e.multiple?[]:"",!1));}}
 function ug(a,b,c,d,e){switch(b){case "iframe":case "object":U$1("topLoad","load",a);break;case "video":case "audio":for(var f in mg)mg.hasOwnProperty(f)&&U$1(f,mg[f],a);break;case "source":U$1("topError","error",a);break;case "img":case "image":U$1("topError","error",a);U$1("topLoad","load",a);break;case "form":U$1("topReset","reset",a);U$1("topSubmit","submit",a);break;case "details":U$1("topToggle","toggle",a);break;case "input":Mf(a,c);U$1("topInvalid","invalid",a);lg(e,"onChange");break;case "select":Tf(a,c);
 U$1("topInvalid","invalid",a);lg(e,"onChange");break;case "textarea":Vf(a,c),U$1("topInvalid","invalid",a),lg(e,"onChange");}hg(b,c,kg);d=null;for(var g in c)c.hasOwnProperty(g)&&(f=c[g],"children"===g?"string"===typeof f?a.textContent!==f&&(d=["children",f]):"number"===typeof f&&a.textContent!==""+f&&(d=["children",""+f]):Ra.hasOwnProperty(g)&&null!=f&&lg(e,g));switch(b){case "input":Bc(a);Pf(a,c);break;case "textarea":Bc(a);Xf(a,c);break;case "select":case "option":break;default:"function"===typeof c.onClick&&
-(a.onclick=emptyFunction$2);}return d}function vg(a,b){return a.nodeValue!==b}
+(a.onclick=emptyFunction_1);}return d}function vg(a,b){return a.nodeValue!==b}
 var wg=Object.freeze({createElement:ng,createTextNode:og,setInitialProperties:pg,diffProperties:sg,updateProperties:tg,diffHydratedProperties:ug,diffHydratedText:vg,warnForUnmatchedText:function(){},warnForDeletedHydratableElement:function(){},warnForDeletedHydratableText:function(){},warnForInsertedHydratedElement:function(){},warnForInsertedHydratedText:function(){},restoreControlledState:function(a,b,c){switch(b){case "input":Of(a,c);b=c.name;if("radio"===c.type&&null!=b){for(c=a;c.parentNode;)c=
 c.parentNode;c=c.querySelectorAll("input[name\x3d"+JSON.stringify(""+b)+'][type\x3d"radio"]');for(b=0;b<c.length;b++){var d=c[b];if(d!==a&&d.form===a.form){var e=rb(d);e?void 0:E$1("90");Cc(d);Of(d,e);}}}break;case "textarea":Wf(a,c);break;case "select":b=c.value,null!=b&&Sf(a,!!c.multiple,b,!1);}}});nc.injectFiberControlledHostComponent(wg);var xg=null; var Mg=null;function Ng(a){return!(!a||1!==a.nodeType&&9!==a.nodeType&&11!==a.nodeType&&(8!==a.nodeType||" react-mount-point-unstable "!==a.nodeValue))}
 function Og(a){a=a?9===a.nodeType?a.documentElement:a.firstChild:null;return!(!a||1!==a.nodeType||!a.hasAttribute("data-reactroot"))}
-var Z=of({getRootHostContext:function(a){var b=a.nodeType;switch(b){case 9:case 11:a=(a=a.documentElement)?a.namespaceURI:$f(null,"");break;default:b=8===b?a.parentNode:a,a=b.namespaceURI||null,b=b.tagName,a=$f(a,b);}return a},getChildHostContext:function(a,b){return $f(a,b)},getPublicInstance:function(a){return a},prepareForCommit:function(){xg=td;var a=require$$7();if(Kd(a)){if("selectionStart"in a)var b={start:a.selectionStart,end:a.selectionEnd};else a:{var c=window.getSelection&&window.getSelection();
+var Z=of({getRootHostContext:function(a){var b=a.nodeType;switch(b){case 9:case 11:a=(a=a.documentElement)?a.namespaceURI:$f(null,"");break;default:b=8===b?a.parentNode:a,a=b.namespaceURI||null,b=b.tagName,a=$f(a,b);}return a},getChildHostContext:function(a,b){return $f(a,b)},getPublicInstance:function(a){return a},prepareForCommit:function(){xg=td;var a=getActiveElement_1();if(Kd(a)){if("selectionStart"in a)var b={start:a.selectionStart,end:a.selectionEnd};else a:{var c=window.getSelection&&window.getSelection();
 if(c&&0!==c.rangeCount){b=c.anchorNode;var d=c.anchorOffset,e=c.focusNode;c=c.focusOffset;try{b.nodeType,e.nodeType;}catch(z){b=null;break a}var f=0,g=-1,h=-1,k=0,q=0,v=a,y=null;b:for(;;){for(var u;;){v!==b||0!==d&&3!==v.nodeType||(g=f+d);v!==e||0!==c&&3!==v.nodeType||(h=f+c);3===v.nodeType&&(f+=v.nodeValue.length);if(null===(u=v.firstChild))break;y=v;v=u;}for(;;){if(v===a)break b;y===b&&++k===d&&(g=f);y===e&&++q===c&&(h=f);if(null!==(u=v.nextSibling))break;v=y;y=v.parentNode;}v=u;}b=-1===g||-1===h?null:
-{start:g,end:h};}else b=null;}b=b||{start:0,end:0};}else b=null;Mg={focusedElem:a,selectionRange:b};ud(!1);},resetAfterCommit:function(){var a=Mg,b=require$$7(),c=a.focusedElem,d=a.selectionRange;if(b!==c&&require$$9(document.documentElement,c)){if(Kd(c))if(b=d.start,a=d.end,void 0===a&&(a=b),"selectionStart"in c)c.selectionStart=b,c.selectionEnd=Math.min(a,c.value.length);else if(window.getSelection){b=window.getSelection();var e=c[Eb()].length;a=Math.min(d.start,e);d=void 0===d.end?a:Math.min(d.end,e);!b.extend&&a>
-d&&(e=d,d=a,a=e);e=Jd(c,a);var f=Jd(c,d);if(e&&f&&(1!==b.rangeCount||b.anchorNode!==e.node||b.anchorOffset!==e.offset||b.focusNode!==f.node||b.focusOffset!==f.offset)){var g=document.createRange();g.setStart(e.node,e.offset);b.removeAllRanges();a>d?(b.addRange(g),b.extend(f.node,f.offset)):(g.setEnd(f.node,f.offset),b.addRange(g));}}b=[];for(a=c;a=a.parentNode;)1===a.nodeType&&b.push({element:a,left:a.scrollLeft,top:a.scrollTop});require$$10(c);for(c=0;c<b.length;c++)a=b[c],a.element.scrollLeft=a.left,a.element.scrollTop=
+{start:g,end:h};}else b=null;}b=b||{start:0,end:0};}else b=null;Mg={focusedElem:a,selectionRange:b};ud(!1);},resetAfterCommit:function(){var a=Mg,b=getActiveElement_1(),c=a.focusedElem,d=a.selectionRange;if(b!==c&&containsNode_1(document.documentElement,c)){if(Kd(c))if(b=d.start,a=d.end,void 0===a&&(a=b),"selectionStart"in c)c.selectionStart=b,c.selectionEnd=Math.min(a,c.value.length);else if(window.getSelection){b=window.getSelection();var e=c[Eb()].length;a=Math.min(d.start,e);d=void 0===d.end?a:Math.min(d.end,e);!b.extend&&a>
+d&&(e=d,d=a,a=e);e=Jd(c,a);var f=Jd(c,d);if(e&&f&&(1!==b.rangeCount||b.anchorNode!==e.node||b.anchorOffset!==e.offset||b.focusNode!==f.node||b.focusOffset!==f.offset)){var g=document.createRange();g.setStart(e.node,e.offset);b.removeAllRanges();a>d?(b.addRange(g),b.extend(f.node,f.offset)):(g.setEnd(f.node,f.offset),b.addRange(g));}}b=[];for(a=c;a=a.parentNode;)1===a.nodeType&&b.push({element:a,left:a.scrollLeft,top:a.scrollTop});focusNode_1(c);for(c=0;c<b.length;c++)a=b[c],a.element.scrollLeft=a.left,a.element.scrollTop=
 a.top;}Mg=null;ud(xg);xg=null;},createInstance:function(a,b,c,d,e){a=ng(a,b,c,d);a[Q$1]=e;a[ob]=b;return a},appendInitialChild:function(a,b){a.appendChild(b);},finalizeInitialChildren:function(a,b,c,d){pg(a,b,c,d);a:{switch(b){case "button":case "input":case "select":case "textarea":a=!!c.autoFocus;break a}a=!1;}return a},prepareUpdate:function(a,b,c,d,e){return sg(a,b,c,d,e)},shouldSetTextContent:function(a,b){return"textarea"===a||"string"===typeof b.children||"number"===typeof b.children||"object"===
 typeof b.dangerouslySetInnerHTML&&null!==b.dangerouslySetInnerHTML&&"string"===typeof b.dangerouslySetInnerHTML.__html},shouldDeprioritizeSubtree:function(a,b){return!!b.hidden},createTextInstance:function(a,b,c,d){a=og(a,b);a[Q$1]=d;return a},now:rf,mutation:{commitMount:function(a){a.focus();},commitUpdate:function(a,b,c,d,e){a[ob]=e;tg(a,b,c,d,e);},resetTextContent:function(a){a.textContent="";},commitTextUpdate:function(a,b,c){a.nodeValue=c;},appendChild:function(a,b){a.appendChild(b);},appendChildToContainer:function(a,
 b){8===a.nodeType?a.parentNode.insertBefore(b,a):a.appendChild(b);},insertBefore:function(a,b,c){a.insertBefore(b,c);},insertInContainerBefore:function(a,b,c){8===a.nodeType?a.parentNode.insertBefore(b,c):a.insertBefore(b,c);},removeChild:function(a,b){a.removeChild(b);},removeChildFromContainer:function(a,b){8===a.nodeType?a.parentNode.removeChild(b):a.removeChild(b);}},hydration:{canHydrateInstance:function(a,b){return 1!==a.nodeType||b.toLowerCase()!==a.nodeName.toLowerCase()?null:a},canHydrateTextInstance:function(a,
@@ -10301,14 +9384,14 @@ function hyphenate(string) {
 
 var hyphenate_1 = hyphenate;
 
-
-
-var hyphenate$1 = Object.freeze({
-	default: hyphenate_1,
-	__moduleExports: hyphenate_1
-});
-
-var hyphenate$2 = ( hyphenate$1 && hyphenate_1 ) || hyphenate$1;
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @typechecks
+ */
 
 'use strict';
 
@@ -10333,17 +9416,10 @@ var msPattern = /^ms-/;
  * @return {string}
  */
 function hyphenateStyleName(string) {
-  return hyphenate$2(string).replace(msPattern, '-ms-');
+  return hyphenate_1(string).replace(msPattern, '-ms-');
 }
 
 var hyphenateStyleName_1 = hyphenateStyleName;
-
-
-
-var hyphenateStyleName$1 = Object.freeze({
-	default: hyphenateStyleName_1,
-	__moduleExports: hyphenateStyleName_1
-});
 
 "use strict";
 
@@ -10375,14 +9451,14 @@ function camelize(string) {
 
 var camelize_1 = camelize;
 
-
-
-var camelize$1 = Object.freeze({
-	default: camelize_1,
-	__moduleExports: camelize_1
-});
-
-var camelize$2 = ( camelize$1 && camelize_1 ) || camelize$1;
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @typechecks
+ */
 
 'use strict';
 
@@ -10408,21 +9484,10 @@ var msPattern$1 = /^-ms-/;
  * @return {string}
  */
 function camelizeStyleName(string) {
-  return camelize$2(string.replace(msPattern$1, 'ms-'));
+  return camelize_1(string.replace(msPattern$1, 'ms-'));
 }
 
 var camelizeStyleName_1 = camelizeStyleName;
-
-
-
-var camelizeStyleName$1 = Object.freeze({
-	default: camelizeStyleName_1,
-	__moduleExports: camelizeStyleName_1
-});
-
-var require$$13 = ( hyphenateStyleName$1 && hyphenateStyleName_1 ) || hyphenateStyleName$1;
-
-var require$$14$1 = ( camelizeStyleName$1 && camelizeStyleName_1 ) || camelizeStyleName$1;
 
 var reactDom_development = createCommonjsModule(function (module) {
 /** @license React v16.2.0
@@ -10442,21 +9507,21 @@ var reactDom_development = createCommonjsModule(function (module) {
   (function() {
 'use strict';
 
-var React = _react;
-var invariant = invariant$3;
-var warning = warning$3;
-var ExecutionEnvironment = require$$3;
-var _assign = require$$4;
-var emptyFunction = emptyFunction$2;
-var EventListener = require$$6$1;
-var getActiveElement = require$$7;
-var shallowEqual = require$$8;
-var containsNode = require$$9;
-var focusNode = require$$10;
-var emptyObject = require$$11;
-var checkPropTypes = checkPropTypes$2;
-var hyphenateStyleName = require$$13;
-var camelizeStyleName = require$$14$1;
+var React = react;
+var invariant = invariant_1;
+var warning = warning_1;
+var ExecutionEnvironment = ExecutionEnvironment_1;
+var _assign = objectAssign$2;
+var emptyFunction = emptyFunction_1;
+var EventListener = EventListener_1;
+var getActiveElement = getActiveElement_1;
+var shallowEqual = shallowEqual_1;
+var containsNode = containsNode_1;
+var focusNode = focusNode_1;
+var emptyObject = emptyObject_1;
+var checkPropTypes = checkPropTypes_1;
+var hyphenateStyleName = hyphenateStyleName_1;
+var camelizeStyleName = camelizeStyleName_1;
 
 /**
  * WARNING: DO NOT manually require this module.
@@ -11491,18 +10556,18 @@ function getListener(inst, registrationName) {
  * @internal
  */
 function extractEvents(topLevelType, targetInst, nativeEvent, nativeEventTarget) {
-  var events;
+  var events$$1;
   for (var i = 0; i < plugins.length; i++) {
     // Not every plugin in the ordering may be loaded at runtime.
     var possiblePlugin = plugins[i];
     if (possiblePlugin) {
       var extractedEvents = possiblePlugin.extractEvents(topLevelType, targetInst, nativeEvent, nativeEventTarget);
       if (extractedEvents) {
-        events = accumulateInto(events, extractedEvents);
+        events$$1 = accumulateInto(events$$1, extractedEvents);
       }
     }
   }
-  return events;
+  return events$$1;
 }
 
 /**
@@ -11512,9 +10577,9 @@ function extractEvents(topLevelType, targetInst, nativeEvent, nativeEventTarget)
  * @param {*} events An accumulation of synthetic events.
  * @internal
  */
-function enqueueEvents(events) {
-  if (events) {
-    eventQueue = accumulateInto(eventQueue, events);
+function enqueueEvents(events$$1) {
+  if (events$$1) {
+    eventQueue = accumulateInto(eventQueue, events$$1);
   }
 }
 
@@ -11872,20 +10937,20 @@ function accumulateDirectDispatchesSingle(event) {
   }
 }
 
-function accumulateTwoPhaseDispatches(events) {
-  forEachAccumulated(events, accumulateTwoPhaseDispatchesSingle);
+function accumulateTwoPhaseDispatches(events$$1) {
+  forEachAccumulated(events$$1, accumulateTwoPhaseDispatchesSingle);
 }
 
-function accumulateTwoPhaseDispatchesSkipTarget(events) {
-  forEachAccumulated(events, accumulateTwoPhaseDispatchesSingleSkipTarget);
+function accumulateTwoPhaseDispatchesSkipTarget(events$$1) {
+  forEachAccumulated(events$$1, accumulateTwoPhaseDispatchesSingleSkipTarget);
 }
 
 function accumulateEnterLeaveDispatches(leave, enter, from, to) {
   traverseEnterLeave(from, to, accumulateDispatches, leave, enter);
 }
 
-function accumulateDirectDispatches(events) {
-  forEachAccumulated(events, accumulateDirectDispatchesSingle);
+function accumulateDirectDispatches(events$$1) {
+  forEachAccumulated(events$$1, accumulateDirectDispatchesSingle);
 }
 
 var EventPropagators = Object.freeze({
@@ -14029,8 +13094,8 @@ var BrowserEventConstants = {
   topLevelTypes: topLevelTypes$1
 };
 
-function runEventQueueInBatch(events) {
-  enqueueEvents(events);
+function runEventQueueInBatch(events$$1) {
+  enqueueEvents(events$$1);
   processEventQueue(false);
 }
 
@@ -14039,8 +13104,8 @@ function runEventQueueInBatch(events) {
  * opportunity to create `ReactEvent`s to be dispatched.
  */
 function handleTopLevel(topLevelType, targetInst, nativeEvent, nativeEventTarget) {
-  var events = extractEvents(topLevelType, targetInst, nativeEvent, nativeEventTarget);
-  runEventQueueInBatch(events);
+  var events$$1 = extractEvents(topLevelType, targetInst, nativeEvent, nativeEventTarget);
+  runEventQueueInBatch(events$$1);
 }
 
 var topLevelTypes = BrowserEventConstants.topLevelTypes;
@@ -25817,20 +24882,11 @@ module.exports = reactDom;
 }
 });
 
-
-
-var reactDom_development$2 = Object.freeze({
-	default: reactDom_development,
-	__moduleExports: reactDom_development
-});
-
-var require$$1$7 = ( reactDom_development$2 && reactDom_development ) || reactDom_development$2;
-
 var reactDom = createCommonjsModule(function (module) {
 'use strict';
 
 {
-  module.exports = require$$1$7;
+  module.exports = reactDom_development;
 }
 });
 
@@ -30704,17 +29760,8 @@ var performanceNow = createCommonjsModule(function (module) {
 
 }).call(commonjsGlobal);
 
-//# sourceMappingURL=performance-now.js.map
+
 });
-
-
-
-var performanceNow$2 = Object.freeze({
-	default: performanceNow,
-	__moduleExports: performanceNow
-});
-
-var now = ( performanceNow$2 && performanceNow ) || performanceNow$2;
 
 var root = typeof window === 'undefined' ? commonjsGlobal : window;
 var vendors = ['moz', 'webkit'];
@@ -30737,7 +29784,7 @@ if(!raf || !caf) {
 
   raf = function(callback) {
     if(queue$1.length === 0) {
-      var _now = now()
+      var _now = performanceNow()
         , next = Math.max(0, frameDuration - (_now - last));
       last = next + _now;
       setTimeout(function() {
@@ -30794,13 +29841,6 @@ var polyfill = function(object) {
 raf_1.cancel = cancel;
 raf_1.polyfill = polyfill;
 
-var raf$1 = Object.freeze({
-	default: raf_1,
-	__moduleExports: raf_1,
-	cancel: cancel,
-	polyfill: polyfill
-});
-
 var div = null;
 var prefixes = [ 'Webkit', 'Moz', 'O', 'ms' ];
 
@@ -30831,13 +29871,6 @@ var prefixStyle = function prefixStyle (prop) {
 
   return false
 };
-
-
-
-var prefixStyle$2 = Object.freeze({
-	default: prefixStyle,
-	__moduleExports: prefixStyle
-});
 
 /**
  * Export.
@@ -30906,14 +29939,9 @@ function uncamelize(string) {
   })
 }
 
-
-
-var toNoCase$1 = Object.freeze({
-	default: toNoCase_1,
-	__moduleExports: toNoCase_1
-});
-
-var clean = ( toNoCase$1 && toNoCase_1 ) || toNoCase$1;
+/**
+ * Export.
+ */
 
 var toSpaceCase_1 = toSpaceCase;
 
@@ -30925,19 +29953,14 @@ var toSpaceCase_1 = toSpaceCase;
  */
 
 function toSpaceCase(string) {
-  return clean(string).replace(/[\W_]+(.|$)/g, function (matches, match) {
+  return toNoCase_1(string).replace(/[\W_]+(.|$)/g, function (matches, match) {
     return match ? ' ' + match : ''
   }).trim()
 }
 
-
-
-var toSpaceCase$1 = Object.freeze({
-	default: toSpaceCase_1,
-	__moduleExports: toSpaceCase_1
-});
-
-var space$1 = ( toSpaceCase$1 && toSpaceCase_1 ) || toSpaceCase$1;
+/**
+ * Export.
+ */
 
 var toCamelCase_1 = toCamelCase;
 
@@ -30949,17 +29972,10 @@ var toCamelCase_1 = toCamelCase;
  */
 
 function toCamelCase(string) {
-  return space$1(string).replace(/\s(\w)/g, function (matches, letter) {
+  return toSpaceCase_1(string).replace(/\s(\w)/g, function (matches, letter) {
     return letter.toUpperCase()
   })
 }
-
-
-
-var toCamelCase$1 = Object.freeze({
-	default: toCamelCase_1,
-	__moduleExports: toCamelCase_1
-});
 
 /* The following list is defined in React's core */
 var IS_UNITLESS = {
@@ -31003,19 +30019,6 @@ var addPxToStyle = function(name, value) {
   }
 };
 
-
-
-var addPxToStyle$2 = Object.freeze({
-	default: addPxToStyle,
-	__moduleExports: addPxToStyle
-});
-
-var prefix = ( prefixStyle$2 && prefixStyle ) || prefixStyle$2;
-
-var toCamelCase$2 = ( toCamelCase$1 && toCamelCase_1 ) || toCamelCase$1;
-
-var addPxToStyle$3 = ( addPxToStyle$2 && addPxToStyle ) || addPxToStyle$2;
-
 var cache = { 'float': 'cssFloat' };
 
 
@@ -31031,7 +30034,7 @@ function style (element, property, value) {
       return element.style[camel]
     }
 
-    element.style[camel] = addPxToStyle$3(camel, value);
+    element.style[camel] = addPxToStyle(camel, value);
   }
 }
 
@@ -31044,8 +30047,8 @@ function each (element, properties) {
 }
 
 function detect (cssProp) {
-  var camel = toCamelCase$2(cssProp);
-  var result = prefix(camel);
+  var camel = toCamelCase_1(cssProp);
+  var result = prefixStyle(camel);
   cache[camel] = cache[cssProp] = cache[result] = result;
   return result
 }
@@ -31078,13 +30081,6 @@ var get$1 = function (element, properties) {
 
 domCss.set = set_1;
 domCss.get = get$1;
-
-var domCss$2 = Object.freeze({
-	default: domCss,
-	__moduleExports: domCss,
-	set: set_1,
-	get: get$1
-});
 
 /*
 object-assign
@@ -31150,7 +30146,7 @@ function shouldUseNative$2() {
 	}
 }
 
-var objectAssign$6 = shouldUseNative$2() ? Object.assign : function (target, source) {
+var objectAssign$4 = shouldUseNative$2() ? Object.assign : function (target, source) {
 	var from;
 	var to = toObject$3(target);
 	var symbols;
@@ -31177,14 +30173,12 @@ var objectAssign$6 = shouldUseNative$2() ? Object.assign : function (target, sou
 	return to;
 };
 
-
-
-var objectAssign$8 = Object.freeze({
-	default: objectAssign$6,
-	__moduleExports: objectAssign$6
-});
-
-var assign$1 = ( objectAssign$8 && objectAssign$6 ) || objectAssign$8;
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 'use strict';
 
@@ -31335,10 +30329,10 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       componentName = componentName || ANONYMOUS;
       propFullName = propFullName || propName;
 
-      if (secret !== ReactPropTypesSecret$3) {
+      if (secret !== ReactPropTypesSecret_1) {
         if (throwOnDirectAccess) {
           // New behavior only for users of `prop-types` package
-          invariant$3(
+          invariant_1(
             false,
             'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
             'Use `PropTypes.checkPropTypes()` to call them. ' +
@@ -31352,7 +30346,7 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
             // Avoid spamming the console because they are often not actionable except for lib authors
             manualPropTypeWarningCount < 3
           ) {
-            warning$3(
+            warning_1(
               false,
               'You are manually calling a React.PropTypes validation ' +
               'function for the `%s` prop on `%s`. This is deprecated ' +
@@ -31404,7 +30398,7 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
   }
 
   function createAnyTypeChecker() {
-    return createChainableTypeChecker(emptyFunction$2.thatReturnsNull);
+    return createChainableTypeChecker(emptyFunction_1.thatReturnsNull);
   }
 
   function createArrayOfTypeChecker(typeChecker) {
@@ -31418,7 +30412,7 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
         return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an array.'));
       }
       for (var i = 0; i < propValue.length; i++) {
-        var error = typeChecker(propValue, i, componentName, location, propFullName + '[' + i + ']', ReactPropTypesSecret$3);
+        var error = typeChecker(propValue, i, componentName, location, propFullName + '[' + i + ']', ReactPropTypesSecret_1);
         if (error instanceof Error) {
           return error;
         }
@@ -31454,8 +30448,8 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
 
   function createEnumTypeChecker(expectedValues) {
     if (!Array.isArray(expectedValues)) {
-      warning$3(false, 'Invalid argument supplied to oneOf, expected an instance of array.');
-      return emptyFunction$2.thatReturnsNull;
+      warning_1(false, 'Invalid argument supplied to oneOf, expected an instance of array.');
+      return emptyFunction_1.thatReturnsNull;
     }
 
     function validate(props, propName, componentName, location, propFullName) {
@@ -31484,7 +30478,7 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       }
       for (var key in propValue) {
         if (propValue.hasOwnProperty(key)) {
-          var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret$3);
+          var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret_1);
           if (error instanceof Error) {
             return error;
           }
@@ -31497,28 +30491,28 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
 
   function createUnionTypeChecker(arrayOfTypeCheckers) {
     if (!Array.isArray(arrayOfTypeCheckers)) {
-      warning$3(false, 'Invalid argument supplied to oneOfType, expected an instance of array.');
-      return emptyFunction$2.thatReturnsNull;
+      warning_1(false, 'Invalid argument supplied to oneOfType, expected an instance of array.');
+      return emptyFunction_1.thatReturnsNull;
     }
 
     for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
       var checker = arrayOfTypeCheckers[i];
       if (typeof checker !== 'function') {
-        warning$3(
+        warning_1(
           false,
           'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
           'received %s at index %s.',
           getPostfixForTypeWarning(checker),
           i
         );
-        return emptyFunction$2.thatReturnsNull;
+        return emptyFunction_1.thatReturnsNull;
       }
     }
 
     function validate(props, propName, componentName, location, propFullName) {
       for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
         var checker = arrayOfTypeCheckers[i];
-        if (checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret$3) == null) {
+        if (checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret_1) == null) {
           return null;
         }
       }
@@ -31550,7 +30544,7 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
         if (!checker) {
           continue;
         }
-        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret$3);
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret_1);
         if (error) {
           return error;
         }
@@ -31569,7 +30563,7 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
       }
       // We need to check all keys in case some are required but missing from
       // props.
-      var allKeys = assign$1({}, props[propName], shapeTypes);
+      var allKeys = objectAssign$4({}, props[propName], shapeTypes);
       for (var key in allKeys) {
         var checker = shapeTypes[key];
         if (!checker) {
@@ -31579,7 +30573,7 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
             '\nValid keys: ' +  JSON.stringify(Object.keys(shapeTypes), null, '  ')
           );
         }
-        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret$3);
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret_1);
         if (error) {
           return error;
         }
@@ -31716,22 +30710,20 @@ var factoryWithTypeCheckers = function(isValidElement, throwOnDirectAccess) {
     return propValue.constructor.name;
   }
 
-  ReactPropTypes.checkPropTypes = checkPropTypes$2;
+  ReactPropTypes.checkPropTypes = checkPropTypes_1;
   ReactPropTypes.PropTypes = ReactPropTypes;
 
   return ReactPropTypes;
 };
 
-
-
-var factoryWithTypeCheckers$2 = Object.freeze({
-	default: factoryWithTypeCheckers,
-	__moduleExports: factoryWithTypeCheckers
-});
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 'use strict';
-
-var require$$0$31 = ( factoryWithTypeCheckers$2 && factoryWithTypeCheckers ) || factoryWithTypeCheckers$2;
 
 var propTypes = createCommonjsModule(function (module) {
 /**
@@ -31756,15 +30748,8 @@ var propTypes = createCommonjsModule(function (module) {
   // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
   var throwOnDirectAccess = true;
-  module.exports = require$$0$31(isValidElement, throwOnDirectAccess);
+  module.exports = factoryWithTypeCheckers(isValidElement, throwOnDirectAccess);
 }
-});
-
-
-
-var propTypes$2 = Object.freeze({
-	default: propTypes,
-	__moduleExports: propTypes
 });
 
 var isString_1 = createCommonjsModule(function (module, exports) {
@@ -31779,15 +30764,7 @@ function isString(maybe) {
 }
 });
 
-var isString = unwrapExports(isString_1);
-
-
-var isString$1 = Object.freeze({
-	default: isString,
-	__moduleExports: isString_1
-});
-
-var _domCss = ( domCss$2 && domCss ) || domCss$2;
+unwrapExports(isString_1);
 
 var getScrollbarWidth_1 = createCommonjsModule(function (module, exports) {
 'use strict';
@@ -31799,7 +30776,7 @@ exports["default"] = getScrollbarWidth;
 
 
 
-var _domCss2 = _interopRequireDefault(_domCss);
+var _domCss2 = _interopRequireDefault(domCss);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -31828,13 +30805,7 @@ function getScrollbarWidth() {
 }
 });
 
-var getScrollbarWidth = unwrapExports(getScrollbarWidth_1);
-
-
-var getScrollbarWidth$1 = Object.freeze({
-	default: getScrollbarWidth,
-	__moduleExports: getScrollbarWidth_1
-});
+unwrapExports(getScrollbarWidth_1);
 
 var returnFalse_1 = createCommonjsModule(function (module, exports) {
 "use strict";
@@ -31848,13 +30819,7 @@ function returnFalse() {
 }
 });
 
-var returnFalse = unwrapExports(returnFalse_1);
-
-
-var returnFalse$1 = Object.freeze({
-	default: returnFalse,
-	__moduleExports: returnFalse_1
-});
+unwrapExports(returnFalse_1);
 
 var getInnerWidth_1 = createCommonjsModule(function (module, exports) {
 "use strict";
@@ -31874,13 +30839,7 @@ function getInnerWidth(el) {
 }
 });
 
-var getInnerWidth = unwrapExports(getInnerWidth_1);
-
-
-var getInnerWidth$1 = Object.freeze({
-	default: getInnerWidth,
-	__moduleExports: getInnerWidth_1
-});
+unwrapExports(getInnerWidth_1);
 
 var getInnerHeight_1 = createCommonjsModule(function (module, exports) {
 "use strict";
@@ -31900,13 +30859,7 @@ function getInnerHeight(el) {
 }
 });
 
-var getInnerHeight = unwrapExports(getInnerHeight_1);
-
-
-var getInnerHeight$1 = Object.freeze({
-	default: getInnerHeight,
-	__moduleExports: getInnerHeight_1
-});
+unwrapExports(getInnerHeight_1);
 
 var styles = createCommonjsModule(function (module, exports) {
 'use strict';
@@ -31982,35 +30935,7 @@ var disableSelectStyleReset = exports.disableSelectStyleReset = {
 };
 });
 
-var styles$1 = unwrapExports(styles);
-var styles_1 = styles.containerStyleDefault;
-var styles_2 = styles.containerStyleAutoHeight;
-var styles_3 = styles.viewStyleDefault;
-var styles_4 = styles.viewStyleAutoHeight;
-var styles_5 = styles.viewStyleUniversalInitial;
-var styles_6 = styles.trackHorizontalStyleDefault;
-var styles_7 = styles.trackVerticalStyleDefault;
-var styles_8 = styles.thumbHorizontalStyleDefault;
-var styles_9 = styles.thumbVerticalStyleDefault;
-var styles_10 = styles.disableSelectStyle;
-var styles_11 = styles.disableSelectStyleReset;
-
-
-var styles$2 = Object.freeze({
-	default: styles$1,
-	__moduleExports: styles,
-	containerStyleDefault: styles_1,
-	containerStyleAutoHeight: styles_2,
-	viewStyleDefault: styles_3,
-	viewStyleAutoHeight: styles_4,
-	viewStyleUniversalInitial: styles_5,
-	trackHorizontalStyleDefault: styles_6,
-	trackVerticalStyleDefault: styles_7,
-	thumbHorizontalStyleDefault: styles_8,
-	thumbVerticalStyleDefault: styles_9,
-	disableSelectStyle: styles_10,
-	disableSelectStyleReset: styles_11
-});
+unwrapExports(styles);
 
 var defaultRenderElements = createCommonjsModule(function (module, exports) {
 'use strict';
@@ -32029,7 +30954,7 @@ exports.renderThumbVerticalDefault = renderThumbVerticalDefault;
 
 
 
-var _react2 = _interopRequireDefault(_react);
+var _react2 = _interopRequireDefault(react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -32092,41 +31017,7 @@ function renderThumbVerticalDefault(_ref4) {
 }
 });
 
-var defaultRenderElements$1 = unwrapExports(defaultRenderElements);
-var defaultRenderElements_1 = defaultRenderElements.renderViewDefault;
-var defaultRenderElements_2 = defaultRenderElements.renderTrackHorizontalDefault;
-var defaultRenderElements_3 = defaultRenderElements.renderTrackVerticalDefault;
-var defaultRenderElements_4 = defaultRenderElements.renderThumbHorizontalDefault;
-var defaultRenderElements_5 = defaultRenderElements.renderThumbVerticalDefault;
-
-
-var defaultRenderElements$2 = Object.freeze({
-	default: defaultRenderElements$1,
-	__moduleExports: defaultRenderElements,
-	renderViewDefault: defaultRenderElements_1,
-	renderTrackHorizontalDefault: defaultRenderElements_2,
-	renderTrackVerticalDefault: defaultRenderElements_3,
-	renderThumbHorizontalDefault: defaultRenderElements_4,
-	renderThumbVerticalDefault: defaultRenderElements_5
-});
-
-var _raf2 = ( raf$1 && raf_1 ) || raf$1;
-
-var _propTypes = ( propTypes$2 && propTypes ) || propTypes$2;
-
-var _isString = ( isString$1 && isString ) || isString$1;
-
-var _getScrollbarWidth = ( getScrollbarWidth$1 && getScrollbarWidth ) || getScrollbarWidth$1;
-
-var _returnFalse = ( returnFalse$1 && returnFalse ) || returnFalse$1;
-
-var _getInnerWidth = ( getInnerWidth$1 && getInnerWidth ) || getInnerWidth$1;
-
-var _getInnerHeight = ( getInnerHeight$1 && getInnerHeight ) || getInnerHeight$1;
-
-var _styles = ( styles$2 && styles$1 ) || styles$2;
-
-var _defaultRenderElements = ( defaultRenderElements$2 && defaultRenderElements$1 ) || defaultRenderElements$2;
+unwrapExports(defaultRenderElements);
 
 var Scrollbars_1 = createCommonjsModule(function (module, exports) {
 'use strict';
@@ -32141,37 +31032,37 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 
 
-var _raf3 = _interopRequireDefault(_raf2);
+var _raf3 = _interopRequireDefault(raf_1);
 
 
 
-var _domCss2 = _interopRequireDefault(_domCss);
+var _domCss2 = _interopRequireDefault(domCss);
 
 
 
 
 
-var _propTypes2 = _interopRequireDefault(_propTypes);
+var _propTypes2 = _interopRequireDefault(propTypes);
 
 
 
-var _isString2 = _interopRequireDefault(_isString);
+var _isString2 = _interopRequireDefault(isString_1);
 
 
 
-var _getScrollbarWidth2 = _interopRequireDefault(_getScrollbarWidth);
+var _getScrollbarWidth2 = _interopRequireDefault(getScrollbarWidth_1);
 
 
 
-var _returnFalse2 = _interopRequireDefault(_returnFalse);
+var _returnFalse2 = _interopRequireDefault(returnFalse_1);
 
 
 
-var _getInnerWidth2 = _interopRequireDefault(_getInnerWidth);
+var _getInnerWidth2 = _interopRequireDefault(getInnerWidth_1);
 
 
 
-var _getInnerHeight2 = _interopRequireDefault(_getInnerHeight);
+var _getInnerHeight2 = _interopRequireDefault(getInnerHeight_1);
 
 
 
@@ -32262,7 +31153,7 @@ var Scrollbars = function (_Component) {
         key: 'componentWillUnmount',
         value: function componentWillUnmount() {
             this.removeListeners();
-            (0, _raf2.cancel)(this.requestFrame);
+            (0, raf_1.cancel)(this.requestFrame);
             clearTimeout(this.hideTracksTimeout);
             clearInterval(this.detectScrollingInterval);
         }
@@ -32588,7 +31479,7 @@ var Scrollbars = function (_Component) {
     }, {
         key: 'setupDragging',
         value: function setupDragging() {
-            (0, _domCss2["default"])(document.body, _styles.disableSelectStyle);
+            (0, _domCss2["default"])(document.body, styles.disableSelectStyle);
             document.addEventListener('mousemove', this.handleDrag);
             document.addEventListener('mouseup', this.handleDragEnd);
             document.onselectstart = _returnFalse2["default"];
@@ -32596,7 +31487,7 @@ var Scrollbars = function (_Component) {
     }, {
         key: 'teardownDragging',
         value: function teardownDragging() {
-            (0, _domCss2["default"])(document.body, _styles.disableSelectStyleReset);
+            (0, _domCss2["default"])(document.body, styles.disableSelectStyleReset);
             document.removeEventListener('mousemove', this.handleDrag);
             document.removeEventListener('mouseup', this.handleDragEnd);
             document.onselectstart = undefined;
@@ -32826,55 +31717,55 @@ var Scrollbars = function (_Component) {
             var didMountUniversal = this.state.didMountUniversal;
 
 
-            var containerStyle = _extends({}, _styles.containerStyleDefault, autoHeight && _extends({}, _styles.containerStyleAutoHeight, {
+            var containerStyle = _extends({}, styles.containerStyleDefault, autoHeight && _extends({}, styles.containerStyleAutoHeight, {
                 minHeight: autoHeightMin,
                 maxHeight: autoHeightMax
             }), style);
 
-            var viewStyle = _extends({}, _styles.viewStyleDefault, {
+            var viewStyle = _extends({}, styles.viewStyleDefault, {
                 // Hide scrollbars by setting a negative margin
                 marginRight: scrollbarWidth ? -scrollbarWidth : 0,
                 marginBottom: scrollbarWidth ? -scrollbarWidth : 0
-            }, autoHeight && _extends({}, _styles.viewStyleAutoHeight, {
+            }, autoHeight && _extends({}, styles.viewStyleAutoHeight, {
                 // Add scrollbarWidth to autoHeight in order to compensate negative margins
                 minHeight: (0, _isString2["default"])(autoHeightMin) ? 'calc(' + autoHeightMin + ' + ' + scrollbarWidth + 'px)' : autoHeightMin + scrollbarWidth,
                 maxHeight: (0, _isString2["default"])(autoHeightMax) ? 'calc(' + autoHeightMax + ' + ' + scrollbarWidth + 'px)' : autoHeightMax + scrollbarWidth
             }), autoHeight && universal && !didMountUniversal && {
                 minHeight: autoHeightMin,
                 maxHeight: autoHeightMax
-            }, universal && !didMountUniversal && _styles.viewStyleUniversalInitial);
+            }, universal && !didMountUniversal && styles.viewStyleUniversalInitial);
 
             var trackAutoHeightStyle = {
                 transition: 'opacity ' + autoHideDuration + 'ms',
                 opacity: 0
             };
 
-            var trackHorizontalStyle = _extends({}, _styles.trackHorizontalStyleDefault, autoHide && trackAutoHeightStyle, (!scrollbarWidth || universal && !didMountUniversal) && {
+            var trackHorizontalStyle = _extends({}, styles.trackHorizontalStyleDefault, autoHide && trackAutoHeightStyle, (!scrollbarWidth || universal && !didMountUniversal) && {
                 display: 'none'
             });
 
-            var trackVerticalStyle = _extends({}, _styles.trackVerticalStyleDefault, autoHide && trackAutoHeightStyle, (!scrollbarWidth || universal && !didMountUniversal) && {
+            var trackVerticalStyle = _extends({}, styles.trackVerticalStyleDefault, autoHide && trackAutoHeightStyle, (!scrollbarWidth || universal && !didMountUniversal) && {
                 display: 'none'
             });
 
-            return (0, _react.createElement)(tagName, _extends({}, props, { style: containerStyle, ref: function ref(_ref3) {
+            return (0, react.createElement)(tagName, _extends({}, props, { style: containerStyle, ref: function ref(_ref3) {
                     _this7.container = _ref3;
-                } }), [(0, _react.cloneElement)(renderView({ style: viewStyle }), { key: 'view', ref: function ref(_ref4) {
+                } }), [(0, react.cloneElement)(renderView({ style: viewStyle }), { key: 'view', ref: function ref(_ref4) {
                     _this7.view = _ref4;
-                } }, children), (0, _react.cloneElement)(renderTrackHorizontal({ style: trackHorizontalStyle }), { key: 'trackHorizontal', ref: function ref(_ref5) {
+                } }, children), (0, react.cloneElement)(renderTrackHorizontal({ style: trackHorizontalStyle }), { key: 'trackHorizontal', ref: function ref(_ref5) {
                     _this7.trackHorizontal = _ref5;
-                } }, (0, _react.cloneElement)(renderThumbHorizontal({ style: _styles.thumbHorizontalStyleDefault }), { ref: function ref(_ref6) {
+                } }, (0, react.cloneElement)(renderThumbHorizontal({ style: styles.thumbHorizontalStyleDefault }), { ref: function ref(_ref6) {
                     _this7.thumbHorizontal = _ref6;
-                } })), (0, _react.cloneElement)(renderTrackVertical({ style: trackVerticalStyle }), { key: 'trackVertical', ref: function ref(_ref7) {
+                } })), (0, react.cloneElement)(renderTrackVertical({ style: trackVerticalStyle }), { key: 'trackVertical', ref: function ref(_ref7) {
                     _this7.trackVertical = _ref7;
-                } }, (0, _react.cloneElement)(renderThumbVertical({ style: _styles.thumbVerticalStyleDefault }), { ref: function ref(_ref8) {
+                } }, (0, react.cloneElement)(renderThumbVertical({ style: styles.thumbVerticalStyleDefault }), { ref: function ref(_ref8) {
                     _this7.thumbVertical = _ref8;
                 } }))]);
         }
     }]);
 
     return Scrollbars;
-}(_react.Component);
+}(react.Component);
 
 exports["default"] = Scrollbars;
 
@@ -32906,11 +31797,11 @@ Scrollbars.propTypes = {
 };
 
 Scrollbars.defaultProps = {
-    renderView: _defaultRenderElements.renderViewDefault,
-    renderTrackHorizontal: _defaultRenderElements.renderTrackHorizontalDefault,
-    renderTrackVertical: _defaultRenderElements.renderTrackVerticalDefault,
-    renderThumbHorizontal: _defaultRenderElements.renderThumbHorizontalDefault,
-    renderThumbVertical: _defaultRenderElements.renderThumbVerticalDefault,
+    renderView: defaultRenderElements.renderViewDefault,
+    renderTrackHorizontal: defaultRenderElements.renderTrackHorizontalDefault,
+    renderTrackVertical: defaultRenderElements.renderTrackVerticalDefault,
+    renderThumbHorizontal: defaultRenderElements.renderThumbHorizontalDefault,
+    renderThumbVertical: defaultRenderElements.renderThumbVerticalDefault,
     tagName: 'div',
     thumbMinSize: 30,
     hideTracksWhenNotNeeded: false,
@@ -32924,15 +31815,7 @@ Scrollbars.defaultProps = {
 };
 });
 
-var index$1 = unwrapExports(Scrollbars_1);
-
-
-var Scrollbars = Object.freeze({
-	default: index$1,
-	__moduleExports: Scrollbars_1
-});
-
-var _Scrollbars = ( Scrollbars && index$1 ) || Scrollbars;
+unwrapExports(Scrollbars_1);
 
 var lib$2 = createCommonjsModule(function (module, exports) {
 'use strict';
@@ -32944,7 +31827,7 @@ exports.Scrollbars = undefined;
 
 
 
-var _Scrollbars2 = _interopRequireDefault(_Scrollbars);
+var _Scrollbars2 = _interopRequireDefault(Scrollbars_1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -32990,7 +31873,7 @@ function () {
   return Utilities;
 }();
 
-var util = new Utilities();
+var util$1 = new Utilities();
 
 var ChatPage =
 /*#__PURE__*/
@@ -33034,7 +31917,7 @@ function (_Component) {
       event.preventDefault();
       event.stopPropagation();
       var message = {
-        uid: util.uuid(),
+        uid: util$1.uuid(),
         aud: [this.props.queryParams.station],
         aut: this.props.store.usership,
         wen: Date.now(),
@@ -33275,7 +32158,7 @@ function (_Component) {
       event.preventDefault();
       event.stopPropagation();
       var message = {
-        uid: util.uuid(),
+        uid: util$1.uuid(),
         aud: [this.props.queryParams.station],
         aut: this.props.store.usership,
         wen: Date.now(),
@@ -33737,6 +32620,17 @@ function (_Component) {
   return CollectionCreatePage;
 }(react_1);
 
+/**
+  Anatomy:
+
+  "ComponentLabel": {
+    comp:         // main component
+    compProps:    // props for main component
+    head:         // header component
+    headProps:    // props for header
+}
+**/
+
 var ComponentMap = {
   "StreamPage": {
     comp: StreamPage,
@@ -33755,6 +32649,35 @@ var ComponentMap = {
     comp: InboxPage
   }
 };
+
+/**
+  Response format
+
+  {
+    data: {
+      json: {
+        circle: {   // *.loc for local, *.rem for remote
+          cos:      // config
+          pes:      // presence
+          nes:      // messages
+          gram:     // message (individual)
+        }
+        circles:    // circles you own
+        public:     // circles in your public membership list
+        client: {
+          gys:      // glyphs
+          nis:      // nicknames
+        }
+        peers:      // subscribers to your circles
+        status:     // rumor, presence -- TODO?
+      }
+    }
+    from: {
+      path:    // Subscription path that triggered response
+      ship:    // Subscription requestor
+    }
+  }
+**/
 
 var UrbitApi =
 /*#__PURE__*/
@@ -51257,6 +50180,9811 @@ function () {
   return UrbitWarehouse;
 }();
 
+function _isPlaceholder(a) {
+       return a != null && typeof a === 'object' && a['@@functional/placeholder'] === true;
+}
+var _isPlaceholder_1 = _isPlaceholder;
+
+/**
+ * Optimized internal one-arity curry function.
+ *
+ * @private
+ * @category Function
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+
+
+function _curry1(fn) {
+  return function f1(a) {
+    if (arguments.length === 0 || _isPlaceholder_1(a)) {
+      return f1;
+    } else {
+      return fn.apply(this, arguments);
+    }
+  };
+}
+var _curry1_1 = _curry1;
+
+/**
+ * Optimized internal two-arity curry function.
+ *
+ * @private
+ * @category Function
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+
+
+function _curry2(fn) {
+  return function f2(a, b) {
+    switch (arguments.length) {
+      case 0:
+        return f2;
+      case 1:
+        return _isPlaceholder_1(a) ? f2 : _curry1_1(function (_b) {
+          return fn(a, _b);
+        });
+      default:
+        return _isPlaceholder_1(a) && _isPlaceholder_1(b) ? f2 : _isPlaceholder_1(a) ? _curry1_1(function (_a) {
+          return fn(_a, b);
+        }) : _isPlaceholder_1(b) ? _curry1_1(function (_b) {
+          return fn(a, _b);
+        }) : fn(a, b);
+    }
+  };
+}
+var _curry2_1 = _curry2;
+
+/**
+ * Tests whether or not an object is an array.
+ *
+ * @private
+ * @param {*} val The object to test.
+ * @return {Boolean} `true` if `val` is an array, `false` otherwise.
+ * @example
+ *
+ *      _isArray([]); //=> true
+ *      _isArray(null); //=> false
+ *      _isArray({}); //=> false
+ */
+var _isArray$2 = Array.isArray || function _isArray(val) {
+  return val != null && val.length >= 0 && Object.prototype.toString.call(val) === '[object Array]';
+};
+
+function _isTransformer(obj) {
+  return typeof obj['@@transducer/step'] === 'function';
+}
+var _isTransformer_1 = _isTransformer;
+
+/**
+ * Returns a function that dispatches with different strategies based on the
+ * object in list position (last argument). If it is an array, executes [fn].
+ * Otherwise, if it has a function with one of the given method names, it will
+ * execute that function (functor case). Otherwise, if it is a transformer,
+ * uses transducer [xf] to return a new transformer (transducer case).
+ * Otherwise, it will default to executing [fn].
+ *
+ * @private
+ * @param {Array} methodNames properties to check for a custom implementation
+ * @param {Function} xf transducer to initialize if object is transformer
+ * @param {Function} fn default ramda implementation
+ * @return {Function} A function that dispatches on object in list position
+ */
+
+
+function _dispatchable(methodNames, xf, fn) {
+  return function () {
+    if (arguments.length === 0) {
+      return fn();
+    }
+    var args = Array.prototype.slice.call(arguments, 0);
+    var obj = args.pop();
+    if (!_isArray$2(obj)) {
+      var idx = 0;
+      while (idx < methodNames.length) {
+        if (typeof obj[methodNames[idx]] === 'function') {
+          return obj[methodNames[idx]].apply(obj, args);
+        }
+        idx += 1;
+      }
+      if (_isTransformer_1(obj)) {
+        var transducer = xf.apply(null, args);
+        return transducer(obj);
+      }
+    }
+    return fn.apply(this, arguments);
+  };
+}
+var _dispatchable_1 = _dispatchable;
+
+function _reduced(x) {
+  return x && x['@@transducer/reduced'] ? x : {
+    '@@transducer/value': x,
+    '@@transducer/reduced': true
+  };
+}
+var _reduced_1 = _reduced;
+
+var _xfBase = {
+  init: function () {
+    return this.xf['@@transducer/init']();
+  },
+  result: function (result) {
+    return this.xf['@@transducer/result'](result);
+  }
+};
+
+var XFind = /*#__PURE__*/function () {
+
+  function XFind(f, xf) {
+    this.xf = xf;
+    this.f = f;
+    this.found = false;
+  }
+  XFind.prototype['@@transducer/init'] = _xfBase.init;
+  XFind.prototype['@@transducer/result'] = function (result) {
+    if (!this.found) {
+      result = this.xf['@@transducer/step'](result, void 0);
+    }
+    return this.xf['@@transducer/result'](result);
+  };
+  XFind.prototype['@@transducer/step'] = function (result, input) {
+    if (this.f(input)) {
+      this.found = true;
+      result = _reduced_1(this.xf['@@transducer/step'](result, input));
+    }
+    return result;
+  };
+
+  return XFind;
+}();
+
+var _xfind = /*#__PURE__*/_curry2_1(function _xfind(f, xf) {
+  return new XFind(f, xf);
+});
+var _xfind_1 = _xfind;
+
+/**
+ * Returns the first element of the list which matches the predicate, or
+ * `undefined` if no element matches.
+ *
+ * Dispatches to the `find` method of the second argument, if present.
+ *
+ * Acts as a transducer if a transformer is given in list position.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category List
+ * @sig (a -> Boolean) -> [a] -> a | undefined
+ * @param {Function} fn The predicate function used to determine if the element is the
+ *        desired one.
+ * @param {Array} list The array to consider.
+ * @return {Object} The element found, or `undefined`.
+ * @see R.transduce
+ * @example
+ *
+ *      var xs = [{a: 1}, {a: 2}, {a: 3}];
+ *      R.find(R.propEq('a', 2))(xs); //=> {a: 2}
+ *      R.find(R.propEq('a', 4))(xs); //=> undefined
+ */
+
+
+var find = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['find'], _xfind_1, function find(fn, list) {
+  var idx = 0;
+  var len = list.length;
+  while (idx < len) {
+    if (fn(list[idx])) {
+      return list[idx];
+    }
+    idx += 1;
+  }
+}));
+var find_1 = find;
+
+function _complement(f) {
+  return function () {
+    return !f.apply(this, arguments);
+  };
+}
+var _complement_1 = _complement;
+
+function _filter(fn, list) {
+  var idx = 0;
+  var len = list.length;
+  var result = [];
+
+  while (idx < len) {
+    if (fn(list[idx])) {
+      result[result.length] = list[idx];
+    }
+    idx += 1;
+  }
+  return result;
+}
+var _filter_1 = _filter;
+
+function _isObject$2(x) {
+  return Object.prototype.toString.call(x) === '[object Object]';
+}
+var _isObject_1 = _isObject$2;
+
+function _isString$1(x) {
+  return Object.prototype.toString.call(x) === '[object String]';
+}
+var _isString_1 = _isString$1;
+
+/**
+ * Tests whether or not an object is similar to an array.
+ *
+ * @private
+ * @category Type
+ * @category List
+ * @sig * -> Boolean
+ * @param {*} x The object to test.
+ * @return {Boolean} `true` if `x` has a numeric length property and extreme indices defined; `false` otherwise.
+ * @example
+ *
+ *      _isArrayLike([]); //=> true
+ *      _isArrayLike(true); //=> false
+ *      _isArrayLike({}); //=> false
+ *      _isArrayLike({length: 10}); //=> false
+ *      _isArrayLike({0: 'zero', 9: 'nine', length: 10}); //=> true
+ */
+
+
+var _isArrayLike = /*#__PURE__*/_curry1_1(function isArrayLike(x) {
+  if (_isArray$2(x)) {
+    return true;
+  }
+  if (!x) {
+    return false;
+  }
+  if (typeof x !== 'object') {
+    return false;
+  }
+  if (_isString_1(x)) {
+    return false;
+  }
+  if (x.nodeType === 1) {
+    return !!x.length;
+  }
+  if (x.length === 0) {
+    return true;
+  }
+  if (x.length > 0) {
+    return x.hasOwnProperty(0) && x.hasOwnProperty(x.length - 1);
+  }
+  return false;
+});
+var _isArrayLike_1 = _isArrayLike;
+
+var XWrap = /*#__PURE__*/function () {
+  function XWrap(fn) {
+    this.f = fn;
+  }
+  XWrap.prototype['@@transducer/init'] = function () {
+    throw new Error('init not implemented on XWrap');
+  };
+  XWrap.prototype['@@transducer/result'] = function (acc) {
+    return acc;
+  };
+  XWrap.prototype['@@transducer/step'] = function (acc, x) {
+    return this.f(acc, x);
+  };
+
+  return XWrap;
+}();
+
+function _xwrap(fn) {
+  return new XWrap(fn);
+}
+var _xwrap_1 = _xwrap;
+
+function _arity(n, fn) {
+  /* eslint-disable no-unused-vars */
+  switch (n) {
+    case 0:
+      return function () {
+        return fn.apply(this, arguments);
+      };
+    case 1:
+      return function (a0) {
+        return fn.apply(this, arguments);
+      };
+    case 2:
+      return function (a0, a1) {
+        return fn.apply(this, arguments);
+      };
+    case 3:
+      return function (a0, a1, a2) {
+        return fn.apply(this, arguments);
+      };
+    case 4:
+      return function (a0, a1, a2, a3) {
+        return fn.apply(this, arguments);
+      };
+    case 5:
+      return function (a0, a1, a2, a3, a4) {
+        return fn.apply(this, arguments);
+      };
+    case 6:
+      return function (a0, a1, a2, a3, a4, a5) {
+        return fn.apply(this, arguments);
+      };
+    case 7:
+      return function (a0, a1, a2, a3, a4, a5, a6) {
+        return fn.apply(this, arguments);
+      };
+    case 8:
+      return function (a0, a1, a2, a3, a4, a5, a6, a7) {
+        return fn.apply(this, arguments);
+      };
+    case 9:
+      return function (a0, a1, a2, a3, a4, a5, a6, a7, a8) {
+        return fn.apply(this, arguments);
+      };
+    case 10:
+      return function (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
+        return fn.apply(this, arguments);
+      };
+    default:
+      throw new Error('First argument to _arity must be a non-negative integer no greater than ten');
+  }
+}
+var _arity_1 = _arity;
+
+/**
+ * Creates a function that is bound to a context.
+ * Note: `R.bind` does not provide the additional argument-binding capabilities of
+ * [Function.prototype.bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind).
+ *
+ * @func
+ * @memberOf R
+ * @since v0.6.0
+ * @category Function
+ * @category Object
+ * @sig (* -> *) -> {*} -> (* -> *)
+ * @param {Function} fn The function to bind to context
+ * @param {Object} thisObj The context to bind `fn` to
+ * @return {Function} A function that will execute in the context of `thisObj`.
+ * @see R.partial
+ * @example
+ *
+ *      var log = R.bind(console.log, console);
+ *      R.pipe(R.assoc('a', 2), R.tap(log), R.assoc('a', 3))({a: 1}); //=> {a: 3}
+ *      // logs {a: 2}
+ * @symb R.bind(f, o)(a, b) = f.call(o, a, b)
+ */
+
+
+var bind$1 = /*#__PURE__*/_curry2_1(function bind(fn, thisObj) {
+  return _arity_1(fn.length, function () {
+    return fn.apply(thisObj, arguments);
+  });
+});
+var bind_1 = bind$1;
+
+function _arrayReduce$2(xf, acc, list) {
+  var idx = 0;
+  var len = list.length;
+  while (idx < len) {
+    acc = xf['@@transducer/step'](acc, list[idx]);
+    if (acc && acc['@@transducer/reduced']) {
+      acc = acc['@@transducer/value'];
+      break;
+    }
+    idx += 1;
+  }
+  return xf['@@transducer/result'](acc);
+}
+
+function _iterableReduce(xf, acc, iter) {
+  var step = iter.next();
+  while (!step.done) {
+    acc = xf['@@transducer/step'](acc, step.value);
+    if (acc && acc['@@transducer/reduced']) {
+      acc = acc['@@transducer/value'];
+      break;
+    }
+    step = iter.next();
+  }
+  return xf['@@transducer/result'](acc);
+}
+
+function _methodReduce(xf, acc, obj, methodName) {
+  return xf['@@transducer/result'](obj[methodName](bind_1(xf['@@transducer/step'], xf), acc));
+}
+
+var symIterator = typeof Symbol !== 'undefined' ? Symbol.iterator : '@@iterator';
+
+function _reduce(fn, acc, list) {
+  if (typeof fn === 'function') {
+    fn = _xwrap_1(fn);
+  }
+  if (_isArrayLike_1(list)) {
+    return _arrayReduce$2(fn, acc, list);
+  }
+  if (typeof list['fantasy-land/reduce'] === 'function') {
+    return _methodReduce(fn, acc, list, 'fantasy-land/reduce');
+  }
+  if (list[symIterator] != null) {
+    return _iterableReduce(fn, acc, list[symIterator]());
+  }
+  if (typeof list.next === 'function') {
+    return _iterableReduce(fn, acc, list);
+  }
+  if (typeof list.reduce === 'function') {
+    return _methodReduce(fn, acc, list, 'reduce');
+  }
+
+  throw new TypeError('reduce: list must be array or iterable');
+}
+var _reduce_1 = _reduce;
+
+var XFilter = /*#__PURE__*/function () {
+
+  function XFilter(f, xf) {
+    this.xf = xf;
+    this.f = f;
+  }
+  XFilter.prototype['@@transducer/init'] = _xfBase.init;
+  XFilter.prototype['@@transducer/result'] = _xfBase.result;
+  XFilter.prototype['@@transducer/step'] = function (result, input) {
+    return this.f(input) ? this.xf['@@transducer/step'](result, input) : result;
+  };
+
+  return XFilter;
+}();
+
+var _xfilter = /*#__PURE__*/_curry2_1(function _xfilter(f, xf) {
+  return new XFilter(f, xf);
+});
+var _xfilter_1 = _xfilter;
+
+function _has$2(prop, obj) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+var _has_1 = _has$2;
+
+var toString$2 = Object.prototype.toString;
+var _isArguments = function () {
+  return toString$2.call(arguments) === '[object Arguments]' ? function _isArguments(x) {
+    return toString$2.call(x) === '[object Arguments]';
+  } : function _isArguments(x) {
+    return _has_1('callee', x);
+  };
+};
+
+var _isArguments_1 = _isArguments;
+
+// cover IE < 9 keys issues
+
+
+var hasEnumBug = ! /*#__PURE__*/{ toString: null }.propertyIsEnumerable('toString');
+var nonEnumerableProps = ['constructor', 'valueOf', 'isPrototypeOf', 'toString', 'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
+// Safari bug
+var hasArgsEnumBug = /*#__PURE__*/function () {
+  'use strict';
+
+  return arguments.propertyIsEnumerable('length');
+}();
+
+var contains = function contains(list, item) {
+  var idx = 0;
+  while (idx < list.length) {
+    if (list[idx] === item) {
+      return true;
+    }
+    idx += 1;
+  }
+  return false;
+};
+
+/**
+ * Returns a list containing the names of all the enumerable own properties of
+ * the supplied object.
+ * Note that the order of the output array is not guaranteed to be consistent
+ * across different JS platforms.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category Object
+ * @sig {k: v} -> [k]
+ * @param {Object} obj The object to extract properties from
+ * @return {Array} An array of the object's own properties.
+ * @see R.keysIn, R.values
+ * @example
+ *
+ *      R.keys({a: 1, b: 2, c: 3}); //=> ['a', 'b', 'c']
+ */
+var _keys = typeof Object.keys === 'function' && !hasArgsEnumBug ? function keys(obj) {
+  return Object(obj) !== obj ? [] : Object.keys(obj);
+} : function keys(obj) {
+  if (Object(obj) !== obj) {
+    return [];
+  }
+  var prop, nIdx;
+  var ks = [];
+  var checkArgsLength = hasArgsEnumBug && _isArguments_1(obj);
+  for (prop in obj) {
+    if (_has_1(prop, obj) && (!checkArgsLength || prop !== 'length')) {
+      ks[ks.length] = prop;
+    }
+  }
+  if (hasEnumBug) {
+    nIdx = nonEnumerableProps.length - 1;
+    while (nIdx >= 0) {
+      prop = nonEnumerableProps[nIdx];
+      if (_has_1(prop, obj) && !contains(ks, prop)) {
+        ks[ks.length] = prop;
+      }
+      nIdx -= 1;
+    }
+  }
+  return ks;
+};
+var keys$2 = /*#__PURE__*/_curry1_1(_keys);
+var keys_1 = keys$2;
+
+/**
+ * Takes a predicate and a `Filterable`, and returns a new filterable of the
+ * same type containing the members of the given filterable which satisfy the
+ * given predicate. Filterable objects include plain objects or any object
+ * that has a filter method such as `Array`.
+ *
+ * Dispatches to the `filter` method of the second argument, if present.
+ *
+ * Acts as a transducer if a transformer is given in list position.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category List
+ * @sig Filterable f => (a -> Boolean) -> f a -> f a
+ * @param {Function} pred
+ * @param {Array} filterable
+ * @return {Array} Filterable
+ * @see R.reject, R.transduce, R.addIndex
+ * @example
+ *
+ *      var isEven = n => n % 2 === 0;
+ *
+ *      R.filter(isEven, [1, 2, 3, 4]); //=> [2, 4]
+ *
+ *      R.filter(isEven, {a: 1, b: 2, c: 3, d: 4}); //=> {b: 2, d: 4}
+ */
+
+
+var filter = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['filter'], _xfilter_1, function (pred, filterable) {
+  return _isObject_1(filterable) ? _reduce_1(function (acc, key) {
+    if (pred(filterable[key])) {
+      acc[key] = filterable[key];
+    }
+    return acc;
+  }, {}, keys_1(filterable)) :
+  // else
+  _filter_1(pred, filterable);
+}));
+var filter_1 = filter;
+
+/**
+ * The complement of [`filter`](#filter).
+ *
+ * Acts as a transducer if a transformer is given in list position. Filterable
+ * objects include plain objects or any object that has a filter method such
+ * as `Array`.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category List
+ * @sig Filterable f => (a -> Boolean) -> f a -> f a
+ * @param {Function} pred
+ * @param {Array} filterable
+ * @return {Array}
+ * @see R.filter, R.transduce, R.addIndex
+ * @example
+ *
+ *      var isOdd = (n) => n % 2 === 1;
+ *
+ *      R.reject(isOdd, [1, 2, 3, 4]); //=> [2, 4]
+ *
+ *      R.reject(isOdd, {a: 1, b: 2, c: 3, d: 4}); //=> {b: 2, d: 4}
+ */
+
+
+var reject = /*#__PURE__*/_curry2_1(function reject(pred, filterable) {
+  return filter_1(_complement_1(pred), filterable);
+});
+var reject_1 = reject;
+
+/**
+ * Private `concat` function to merge two array-like objects.
+ *
+ * @private
+ * @param {Array|Arguments} [set1=[]] An array-like object.
+ * @param {Array|Arguments} [set2=[]] An array-like object.
+ * @return {Array} A new, merged array.
+ * @example
+ *
+ *      _concat([4, 5, 6], [1, 2, 3]); //=> [4, 5, 6, 1, 2, 3]
+ */
+function _concat(set1, set2) {
+  set1 = set1 || [];
+  set2 = set2 || [];
+  var idx;
+  var len1 = set1.length;
+  var len2 = set2.length;
+  var result = [];
+
+  idx = 0;
+  while (idx < len1) {
+    result[result.length] = set1[idx];
+    idx += 1;
+  }
+  idx = 0;
+  while (idx < len2) {
+    result[result.length] = set2[idx];
+    idx += 1;
+  }
+  return result;
+}
+var _concat_1 = _concat;
+
+/**
+ * Internal curryN function.
+ *
+ * @private
+ * @category Function
+ * @param {Number} length The arity of the curried function.
+ * @param {Array} received An array of arguments received thus far.
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+
+
+function _curryN(length, received, fn) {
+  return function () {
+    var combined = [];
+    var argsIdx = 0;
+    var left = length;
+    var combinedIdx = 0;
+    while (combinedIdx < received.length || argsIdx < arguments.length) {
+      var result;
+      if (combinedIdx < received.length && (!_isPlaceholder_1(received[combinedIdx]) || argsIdx >= arguments.length)) {
+        result = received[combinedIdx];
+      } else {
+        result = arguments[argsIdx];
+        argsIdx += 1;
+      }
+      combined[combinedIdx] = result;
+      if (!_isPlaceholder_1(result)) {
+        left -= 1;
+      }
+      combinedIdx += 1;
+    }
+    return left <= 0 ? fn.apply(this, combined) : _arity_1(left, _curryN(length, combined, fn));
+  };
+}
+var _curryN_1 = _curryN;
+
+/**
+ * Returns a curried equivalent of the provided function, with the specified
+ * arity. The curried function has two unusual capabilities. First, its
+ * arguments needn't be provided one at a time. If `g` is `R.curryN(3, f)`, the
+ * following are equivalent:
+ *
+ *   - `g(1)(2)(3)`
+ *   - `g(1)(2, 3)`
+ *   - `g(1, 2)(3)`
+ *   - `g(1, 2, 3)`
+ *
+ * Secondly, the special placeholder value [`R.__`](#__) may be used to specify
+ * "gaps", allowing partial application of any combination of arguments,
+ * regardless of their positions. If `g` is as above and `_` is [`R.__`](#__),
+ * the following are equivalent:
+ *
+ *   - `g(1, 2, 3)`
+ *   - `g(_, 2, 3)(1)`
+ *   - `g(_, _, 3)(1)(2)`
+ *   - `g(_, _, 3)(1, 2)`
+ *   - `g(_, 2)(1)(3)`
+ *   - `g(_, 2)(1, 3)`
+ *   - `g(_, 2)(_, 3)(1)`
+ *
+ * @func
+ * @memberOf R
+ * @since v0.5.0
+ * @category Function
+ * @sig Number -> (* -> a) -> (* -> a)
+ * @param {Number} length The arity for the returned function.
+ * @param {Function} fn The function to curry.
+ * @return {Function} A new, curried function.
+ * @see R.curry
+ * @example
+ *
+ *      var sumArgs = (...args) => R.sum(args);
+ *
+ *      var curriedAddFourNumbers = R.curryN(4, sumArgs);
+ *      var f = curriedAddFourNumbers(1, 2);
+ *      var g = f(3);
+ *      g(4); //=> 10
+ */
+
+
+var curryN = /*#__PURE__*/_curry2_1(function curryN(length, fn) {
+  if (length === 1) {
+    return _curry1_1(fn);
+  }
+  return _arity_1(length, _curryN_1(length, [], fn));
+});
+var curryN_1 = curryN;
+
+/**
+ * Creates a new list iteration function from an existing one by adding two new
+ * parameters to its callback function: the current index, and the entire list.
+ *
+ * This would turn, for instance, [`R.map`](#map) function into one that
+ * more closely resembles `Array.prototype.map`. Note that this will only work
+ * for functions in which the iteration callback function is the first
+ * parameter, and where the list is the last parameter. (This latter might be
+ * unimportant if the list parameter is not used.)
+ *
+ * @func
+ * @memberOf R
+ * @since v0.15.0
+ * @category Function
+ * @category List
+ * @sig ((a ... -> b) ... -> [a] -> *) -> (a ..., Int, [a] -> b) ... -> [a] -> *)
+ * @param {Function} fn A list iteration function that does not pass index or list to its callback
+ * @return {Function} An altered list iteration function that passes (item, index, list) to its callback
+ * @example
+ *
+ *      var mapIndexed = R.addIndex(R.map);
+ *      mapIndexed((val, idx) => idx + '-' + val, ['f', 'o', 'o', 'b', 'a', 'r']);
+ *      //=> ['0-f', '1-o', '2-o', '3-b', '4-a', '5-r']
+ */
+
+
+var addIndex = /*#__PURE__*/_curry1_1(function addIndex(fn) {
+  return curryN_1(fn.length, function () {
+    var idx = 0;
+    var origFn = arguments[0];
+    var list = arguments[arguments.length - 1];
+    var args = Array.prototype.slice.call(arguments, 0);
+    args[0] = function () {
+      var result = origFn.apply(this, _concat_1(arguments, [idx, list]));
+      idx += 1;
+      return result;
+    };
+    return fn.apply(this, args);
+  });
+});
+var addIndex_1 = addIndex;
+
+function _map(fn, functor) {
+  var idx = 0;
+  var len = functor.length;
+  var result = Array(len);
+  while (idx < len) {
+    result[idx] = fn(functor[idx]);
+    idx += 1;
+  }
+  return result;
+}
+var _map_1 = _map;
+
+var XMap = /*#__PURE__*/function () {
+
+  function XMap(f, xf) {
+    this.xf = xf;
+    this.f = f;
+  }
+  XMap.prototype['@@transducer/init'] = _xfBase.init;
+  XMap.prototype['@@transducer/result'] = _xfBase.result;
+  XMap.prototype['@@transducer/step'] = function (result, input) {
+    return this.xf['@@transducer/step'](result, this.f(input));
+  };
+
+  return XMap;
+}();
+
+var _xmap = /*#__PURE__*/_curry2_1(function _xmap(f, xf) {
+  return new XMap(f, xf);
+});
+var _xmap_1 = _xmap;
+
+/**
+ * Takes a function and
+ * a [functor](https://github.com/fantasyland/fantasy-land#functor),
+ * applies the function to each of the functor's values, and returns
+ * a functor of the same shape.
+ *
+ * Ramda provides suitable `map` implementations for `Array` and `Object`,
+ * so this function may be applied to `[1, 2, 3]` or `{x: 1, y: 2, z: 3}`.
+ *
+ * Dispatches to the `map` method of the second argument, if present.
+ *
+ * Acts as a transducer if a transformer is given in list position.
+ *
+ * Also treats functions as functors and will compose them together.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category List
+ * @sig Functor f => (a -> b) -> f a -> f b
+ * @param {Function} fn The function to be called on every element of the input `list`.
+ * @param {Array} list The list to be iterated over.
+ * @return {Array} The new list.
+ * @see R.transduce, R.addIndex
+ * @example
+ *
+ *      var double = x => x * 2;
+ *
+ *      R.map(double, [1, 2, 3]); //=> [2, 4, 6]
+ *
+ *      R.map(double, {x: 1, y: 2, z: 3}); //=> {x: 2, y: 4, z: 6}
+ * @symb R.map(f, [a, b]) = [f(a), f(b)]
+ * @symb R.map(f, { x: a, y: b }) = { x: f(a), y: f(b) }
+ * @symb R.map(f, functor_o) = functor_o.map(f)
+ */
+
+
+var map = /*#__PURE__*/_curry2_1( /*#__PURE__*/_dispatchable_1(['fantasy-land/map', 'map'], _xmap_1, function map(fn, functor) {
+  switch (Object.prototype.toString.call(functor)) {
+    case '[object Function]':
+      return curryN_1(functor.length, function () {
+        return fn.call(this, functor.apply(this, arguments));
+      });
+    case '[object Object]':
+      return _reduce_1(function (acc, key) {
+        acc[key] = fn(functor[key]);
+        return acc;
+      }, {}, keys_1(functor));
+    default:
+      return _map_1(fn, functor);
+  }
+}));
+var map_1 = map;
+
+var decode = {
+	"0": 65533,
+	"128": 8364,
+	"130": 8218,
+	"131": 402,
+	"132": 8222,
+	"133": 8230,
+	"134": 8224,
+	"135": 8225,
+	"136": 710,
+	"137": 8240,
+	"138": 352,
+	"139": 8249,
+	"140": 338,
+	"142": 381,
+	"145": 8216,
+	"146": 8217,
+	"147": 8220,
+	"148": 8221,
+	"149": 8226,
+	"150": 8211,
+	"151": 8212,
+	"152": 732,
+	"153": 8482,
+	"154": 353,
+	"155": 8250,
+	"156": 339,
+	"158": 382,
+	"159": 376
+};
+
+var decode$1 = Object.freeze({
+	default: decode
+});
+
+var decodeMap = ( decode$1 && decode ) || decode$1;
+
+var decode_codepoint = decodeCodePoint;
+
+// modified version of https://github.com/mathiasbynens/he/blob/master/src/he.js#L94-L119
+function decodeCodePoint(codePoint){
+
+	if((codePoint >= 0xD800 && codePoint <= 0xDFFF) || codePoint > 0x10FFFF){
+		return "\uFFFD";
+	}
+
+	if(codePoint in decodeMap){
+		codePoint = decodeMap[codePoint];
+	}
+
+	var output = "";
+
+	if(codePoint > 0xFFFF){
+		codePoint -= 0x10000;
+		output += String.fromCharCode(codePoint >>> 10 & 0x3FF | 0xD800);
+		codePoint = 0xDC00 | codePoint & 0x3FF;
+	}
+
+	output += String.fromCharCode(codePoint);
+	return output;
+}
+
+var Aacute = "Á";
+var aacute = "á";
+var Abreve = "Ă";
+var abreve = "ă";
+var ac$1 = "∾";
+var acd = "∿";
+var acE = "∾̳";
+var Acirc = "Â";
+var acirc = "â";
+var acute = "´";
+var Acy = "А";
+var acy = "а";
+var AElig = "Æ";
+var aelig = "æ";
+var af$1 = "⁡";
+var Afr = "𝔄";
+var afr = "𝔞";
+var Agrave = "À";
+var agrave = "à";
+var alefsym = "ℵ";
+var aleph = "ℵ";
+var Alpha = "Α";
+var alpha = "α";
+var Amacr = "Ā";
+var amacr = "ā";
+var amalg = "⨿";
+var amp = "&";
+var AMP = "&";
+var andand = "⩕";
+var And = "⩓";
+var and = "∧";
+var andd = "⩜";
+var andslope = "⩘";
+var andv = "⩚";
+var ang = "∠";
+var ange = "⦤";
+var angle = "∠";
+var angmsdaa = "⦨";
+var angmsdab = "⦩";
+var angmsdac = "⦪";
+var angmsdad = "⦫";
+var angmsdae = "⦬";
+var angmsdaf = "⦭";
+var angmsdag = "⦮";
+var angmsdah = "⦯";
+var angmsd = "∡";
+var angrt = "∟";
+var angrtvb = "⊾";
+var angrtvbd = "⦝";
+var angsph = "∢";
+var angst = "Å";
+var angzarr = "⍼";
+var Aogon = "Ą";
+var aogon = "ą";
+var Aopf = "𝔸";
+var aopf = "𝕒";
+var apacir = "⩯";
+var ap = "≈";
+var apE = "⩰";
+var ape = "≊";
+var apid = "≋";
+var apos = "'";
+var ApplyFunction = "⁡";
+var approx = "≈";
+var approxeq = "≊";
+var Aring = "Å";
+var aring = "å";
+var Ascr = "𝒜";
+var ascr = "𝒶";
+var Assign = "≔";
+var ast = "*";
+var asymp = "≈";
+var asympeq = "≍";
+var Atilde = "Ã";
+var atilde = "ã";
+var Auml = "Ä";
+var auml = "ä";
+var awconint = "∳";
+var awint = "⨑";
+var backcong = "≌";
+var backepsilon = "϶";
+var backprime = "‵";
+var backsim = "∽";
+var backsimeq = "⋍";
+var Backslash = "∖";
+var Barv = "⫧";
+var barvee = "⊽";
+var barwed = "⌅";
+var Barwed = "⌆";
+var barwedge = "⌅";
+var bbrk = "⎵";
+var bbrktbrk = "⎶";
+var bcong = "≌";
+var Bcy = "Б";
+var bcy = "б";
+var bdquo = "„";
+var becaus = "∵";
+var because = "∵";
+var Because = "∵";
+var bemptyv = "⦰";
+var bepsi = "϶";
+var bernou = "ℬ";
+var Bernoullis = "ℬ";
+var Beta = "Β";
+var beta = "β";
+var beth = "ℶ";
+var between = "≬";
+var Bfr = "𝔅";
+var bfr = "𝔟";
+var bigcap = "⋂";
+var bigcirc = "◯";
+var bigcup = "⋃";
+var bigodot = "⨀";
+var bigoplus = "⨁";
+var bigotimes = "⨂";
+var bigsqcup = "⨆";
+var bigstar = "★";
+var bigtriangledown = "▽";
+var bigtriangleup = "△";
+var biguplus = "⨄";
+var bigvee = "⋁";
+var bigwedge = "⋀";
+var bkarow = "⤍";
+var blacklozenge = "⧫";
+var blacksquare = "▪";
+var blacktriangle = "▴";
+var blacktriangledown = "▾";
+var blacktriangleleft = "◂";
+var blacktriangleright = "▸";
+var blank = "␣";
+var blk12 = "▒";
+var blk14 = "░";
+var blk34 = "▓";
+var block = "█";
+var bne = "=⃥";
+var bnequiv = "≡⃥";
+var bNot = "⫭";
+var bnot = "⌐";
+var Bopf = "𝔹";
+var bopf = "𝕓";
+var bot = "⊥";
+var bottom = "⊥";
+var bowtie = "⋈";
+var boxbox = "⧉";
+var boxdl = "┐";
+var boxdL = "╕";
+var boxDl = "╖";
+var boxDL = "╗";
+var boxdr = "┌";
+var boxdR = "╒";
+var boxDr = "╓";
+var boxDR = "╔";
+var boxh = "─";
+var boxH = "═";
+var boxhd = "┬";
+var boxHd = "╤";
+var boxhD = "╥";
+var boxHD = "╦";
+var boxhu = "┴";
+var boxHu = "╧";
+var boxhU = "╨";
+var boxHU = "╩";
+var boxminus = "⊟";
+var boxplus = "⊞";
+var boxtimes = "⊠";
+var boxul = "┘";
+var boxuL = "╛";
+var boxUl = "╜";
+var boxUL = "╝";
+var boxur = "└";
+var boxuR = "╘";
+var boxUr = "╙";
+var boxUR = "╚";
+var boxv = "│";
+var boxV = "║";
+var boxvh = "┼";
+var boxvH = "╪";
+var boxVh = "╫";
+var boxVH = "╬";
+var boxvl = "┤";
+var boxvL = "╡";
+var boxVl = "╢";
+var boxVL = "╣";
+var boxvr = "├";
+var boxvR = "╞";
+var boxVr = "╟";
+var boxVR = "╠";
+var bprime = "‵";
+var breve = "˘";
+var Breve = "˘";
+var brvbar = "¦";
+var bscr = "𝒷";
+var Bscr = "ℬ";
+var bsemi = "⁏";
+var bsim = "∽";
+var bsime = "⋍";
+var bsolb = "⧅";
+var bsol = "\\";
+var bsolhsub = "⟈";
+var bull = "•";
+var bullet = "•";
+var bump = "≎";
+var bumpE = "⪮";
+var bumpe = "≏";
+var Bumpeq = "≎";
+var bumpeq = "≏";
+var Cacute = "Ć";
+var cacute = "ć";
+var capand = "⩄";
+var capbrcup = "⩉";
+var capcap = "⩋";
+var cap = "∩";
+var Cap = "⋒";
+var capcup = "⩇";
+var capdot = "⩀";
+var CapitalDifferentialD = "ⅅ";
+var caps = "∩︀";
+var caret = "⁁";
+var caron = "ˇ";
+var Cayleys = "ℭ";
+var ccaps = "⩍";
+var Ccaron = "Č";
+var ccaron = "č";
+var Ccedil = "Ç";
+var ccedil = "ç";
+var Ccirc = "Ĉ";
+var ccirc = "ĉ";
+var Cconint = "∰";
+var ccups = "⩌";
+var ccupssm = "⩐";
+var Cdot = "Ċ";
+var cdot = "ċ";
+var cedil = "¸";
+var Cedilla = "¸";
+var cemptyv = "⦲";
+var cent = "¢";
+var centerdot = "·";
+var CenterDot = "·";
+var cfr = "𝔠";
+var Cfr = "ℭ";
+var CHcy = "Ч";
+var chcy = "ч";
+var check$1 = "✓";
+var checkmark = "✓";
+var Chi = "Χ";
+var chi = "χ";
+var circ = "ˆ";
+var circeq = "≗";
+var circlearrowleft = "↺";
+var circlearrowright = "↻";
+var circledast = "⊛";
+var circledcirc = "⊚";
+var circleddash = "⊝";
+var CircleDot = "⊙";
+var circledR = "®";
+var circledS = "Ⓢ";
+var CircleMinus = "⊖";
+var CirclePlus = "⊕";
+var CircleTimes = "⊗";
+var cir = "○";
+var cirE = "⧃";
+var cire = "≗";
+var cirfnint = "⨐";
+var cirmid = "⫯";
+var cirscir = "⧂";
+var ClockwiseContourIntegral = "∲";
+var CloseCurlyDoubleQuote = "”";
+var CloseCurlyQuote = "’";
+var clubs = "♣";
+var clubsuit = "♣";
+var colon = ":";
+var Colon = "∷";
+var Colone = "⩴";
+var colone = "≔";
+var coloneq = "≔";
+var comma = ",";
+var commat = "@";
+var comp = "∁";
+var compfn = "∘";
+var complement = "∁";
+var complexes = "ℂ";
+var cong = "≅";
+var congdot = "⩭";
+var Congruent = "≡";
+var conint = "∮";
+var Conint = "∯";
+var ContourIntegral = "∮";
+var copf = "𝕔";
+var Copf = "ℂ";
+var coprod = "∐";
+var Coproduct = "∐";
+var copy = "©";
+var COPY = "©";
+var copysr = "℗";
+var CounterClockwiseContourIntegral = "∳";
+var crarr = "↵";
+var cross = "✗";
+var Cross = "⨯";
+var Cscr = "𝒞";
+var cscr = "𝒸";
+var csub = "⫏";
+var csube = "⫑";
+var csup = "⫐";
+var csupe = "⫒";
+var ctdot = "⋯";
+var cudarrl = "⤸";
+var cudarrr = "⤵";
+var cuepr = "⋞";
+var cuesc = "⋟";
+var cularr = "↶";
+var cularrp = "⤽";
+var cupbrcap = "⩈";
+var cupcap = "⩆";
+var CupCap = "≍";
+var cup = "∪";
+var Cup = "⋓";
+var cupcup = "⩊";
+var cupdot = "⊍";
+var cupor = "⩅";
+var cups = "∪︀";
+var curarr = "↷";
+var curarrm = "⤼";
+var curlyeqprec = "⋞";
+var curlyeqsucc = "⋟";
+var curlyvee = "⋎";
+var curlywedge = "⋏";
+var curren = "¤";
+var curvearrowleft = "↶";
+var curvearrowright = "↷";
+var cuvee = "⋎";
+var cuwed = "⋏";
+var cwconint = "∲";
+var cwint = "∱";
+var cylcty = "⌭";
+var dagger = "†";
+var Dagger = "‡";
+var daleth = "ℸ";
+var darr = "↓";
+var Darr = "↡";
+var dArr = "⇓";
+var dash = "‐";
+var Dashv = "⫤";
+var dashv = "⊣";
+var dbkarow = "⤏";
+var dblac = "˝";
+var Dcaron = "Ď";
+var dcaron = "ď";
+var Dcy = "Д";
+var dcy = "д";
+var ddagger = "‡";
+var ddarr = "⇊";
+var DD = "ⅅ";
+var dd$1 = "ⅆ";
+var DDotrahd = "⤑";
+var ddotseq = "⩷";
+var deg = "°";
+var Del = "∇";
+var Delta = "Δ";
+var delta = "δ";
+var demptyv = "⦱";
+var dfisht = "⥿";
+var Dfr = "𝔇";
+var dfr = "𝔡";
+var dHar = "⥥";
+var dharl = "⇃";
+var dharr = "⇂";
+var DiacriticalAcute = "´";
+var DiacriticalDot = "˙";
+var DiacriticalDoubleAcute = "˝";
+var DiacriticalGrave = "`";
+var DiacriticalTilde = "˜";
+var diam = "⋄";
+var diamond = "⋄";
+var Diamond = "⋄";
+var diamondsuit = "♦";
+var diams = "♦";
+var die = "¨";
+var DifferentialD = "ⅆ";
+var digamma = "ϝ";
+var disin = "⋲";
+var div$1 = "÷";
+var divide$1 = "÷";
+var divideontimes = "⋇";
+var divonx = "⋇";
+var DJcy = "Ђ";
+var djcy = "ђ";
+var dlcorn = "⌞";
+var dlcrop = "⌍";
+var dollar = "$";
+var Dopf = "𝔻";
+var dopf = "𝕕";
+var Dot = "¨";
+var dot = "˙";
+var DotDot = "⃜";
+var doteq = "≐";
+var doteqdot = "≑";
+var DotEqual = "≐";
+var dotminus = "∸";
+var dotplus = "∔";
+var dotsquare = "⊡";
+var doublebarwedge = "⌆";
+var DoubleContourIntegral = "∯";
+var DoubleDot = "¨";
+var DoubleDownArrow = "⇓";
+var DoubleLeftArrow = "⇐";
+var DoubleLeftRightArrow = "⇔";
+var DoubleLeftTee = "⫤";
+var DoubleLongLeftArrow = "⟸";
+var DoubleLongLeftRightArrow = "⟺";
+var DoubleLongRightArrow = "⟹";
+var DoubleRightArrow = "⇒";
+var DoubleRightTee = "⊨";
+var DoubleUpArrow = "⇑";
+var DoubleUpDownArrow = "⇕";
+var DoubleVerticalBar = "∥";
+var DownArrowBar = "⤓";
+var downarrow = "↓";
+var DownArrow = "↓";
+var Downarrow = "⇓";
+var DownArrowUpArrow = "⇵";
+var DownBreve = "̑";
+var downdownarrows = "⇊";
+var downharpoonleft = "⇃";
+var downharpoonright = "⇂";
+var DownLeftRightVector = "⥐";
+var DownLeftTeeVector = "⥞";
+var DownLeftVectorBar = "⥖";
+var DownLeftVector = "↽";
+var DownRightTeeVector = "⥟";
+var DownRightVectorBar = "⥗";
+var DownRightVector = "⇁";
+var DownTeeArrow = "↧";
+var DownTee = "⊤";
+var drbkarow = "⤐";
+var drcorn = "⌟";
+var drcrop = "⌌";
+var Dscr = "𝒟";
+var dscr = "𝒹";
+var DScy = "Ѕ";
+var dscy = "ѕ";
+var dsol = "⧶";
+var Dstrok = "Đ";
+var dstrok = "đ";
+var dtdot = "⋱";
+var dtri = "▿";
+var dtrif = "▾";
+var duarr = "⇵";
+var duhar = "⥯";
+var dwangle = "⦦";
+var DZcy = "Џ";
+var dzcy = "џ";
+var dzigrarr = "⟿";
+var Eacute = "É";
+var eacute = "é";
+var easter = "⩮";
+var Ecaron = "Ě";
+var ecaron = "ě";
+var Ecirc = "Ê";
+var ecirc = "ê";
+var ecir = "≖";
+var ecolon = "≕";
+var Ecy = "Э";
+var ecy = "э";
+var eDDot = "⩷";
+var Edot = "Ė";
+var edot = "ė";
+var eDot = "≑";
+var ee$1 = "ⅇ";
+var efDot = "≒";
+var Efr = "𝔈";
+var efr = "𝔢";
+var eg$1 = "⪚";
+var Egrave = "È";
+var egrave = "è";
+var egs = "⪖";
+var egsdot = "⪘";
+var el = "⪙";
+var Element = "∈";
+var elinters = "⏧";
+var ell = "ℓ";
+var els = "⪕";
+var elsdot = "⪗";
+var Emacr = "Ē";
+var emacr = "ē";
+var empty$1 = "∅";
+var emptyset = "∅";
+var EmptySmallSquare = "◻";
+var emptyv = "∅";
+var EmptyVerySmallSquare = "▫";
+var emsp13 = " ";
+var emsp14 = " ";
+var emsp = " ";
+var ENG = "Ŋ";
+var eng = "ŋ";
+var ensp = " ";
+var Eogon = "Ę";
+var eogon = "ę";
+var Eopf = "𝔼";
+var eopf = "𝕖";
+var epar = "⋕";
+var eparsl = "⧣";
+var eplus = "⩱";
+var epsi = "ε";
+var Epsilon = "Ε";
+var epsilon = "ε";
+var epsiv = "ϵ";
+var eqcirc = "≖";
+var eqcolon = "≕";
+var eqsim = "≂";
+var eqslantgtr = "⪖";
+var eqslantless = "⪕";
+var Equal = "⩵";
+var equals = "=";
+var EqualTilde = "≂";
+var equest = "≟";
+var Equilibrium = "⇌";
+var equiv = "≡";
+var equivDD = "⩸";
+var eqvparsl = "⧥";
+var erarr = "⥱";
+var erDot = "≓";
+var escr = "ℯ";
+var Escr = "ℰ";
+var esdot = "≐";
+var Esim = "⩳";
+var esim = "≂";
+var Eta = "Η";
+var eta = "η";
+var ETH = "Ð";
+var eth = "ð";
+var Euml = "Ë";
+var euml = "ë";
+var euro = "€";
+var excl = "!";
+var exist = "∃";
+var Exists = "∃";
+var expectation = "ℰ";
+var exponentiale = "ⅇ";
+var ExponentialE = "ⅇ";
+var fallingdotseq = "≒";
+var Fcy = "Ф";
+var fcy = "ф";
+var female = "♀";
+var ffilig = "ﬃ";
+var fflig = "ﬀ";
+var ffllig = "ﬄ";
+var Ffr = "𝔉";
+var ffr = "𝔣";
+var filig = "ﬁ";
+var FilledSmallSquare = "◼";
+var FilledVerySmallSquare = "▪";
+var fjlig = "fj";
+var flat = "♭";
+var fllig = "ﬂ";
+var fltns = "▱";
+var fnof = "ƒ";
+var Fopf = "𝔽";
+var fopf = "𝕗";
+var forall = "∀";
+var ForAll = "∀";
+var fork = "⋔";
+var forkv = "⫙";
+var Fouriertrf = "ℱ";
+var fpartint = "⨍";
+var frac12 = "½";
+var frac13 = "⅓";
+var frac14 = "¼";
+var frac15 = "⅕";
+var frac16 = "⅙";
+var frac18 = "⅛";
+var frac23 = "⅔";
+var frac25 = "⅖";
+var frac34 = "¾";
+var frac35 = "⅗";
+var frac38 = "⅜";
+var frac45 = "⅘";
+var frac56 = "⅚";
+var frac58 = "⅝";
+var frac78 = "⅞";
+var frasl = "⁄";
+var frown = "⌢";
+var fscr = "𝒻";
+var Fscr = "ℱ";
+var gacute = "ǵ";
+var Gamma = "Γ";
+var gamma = "γ";
+var Gammad = "Ϝ";
+var gammad = "ϝ";
+var gap = "⪆";
+var Gbreve = "Ğ";
+var gbreve = "ğ";
+var Gcedil = "Ģ";
+var Gcirc = "Ĝ";
+var gcirc = "ĝ";
+var Gcy = "Г";
+var gcy = "г";
+var Gdot = "Ġ";
+var gdot = "ġ";
+var ge$1 = "≥";
+var gE = "≧";
+var gEl = "⪌";
+var gel = "⋛";
+var geq = "≥";
+var geqq = "≧";
+var geqslant = "⩾";
+var gescc = "⪩";
+var ges = "⩾";
+var gesdot = "⪀";
+var gesdoto = "⪂";
+var gesdotol = "⪄";
+var gesl = "⋛︀";
+var gesles = "⪔";
+var Gfr = "𝔊";
+var gfr = "𝔤";
+var gg$1 = "≫";
+var Gg = "⋙";
+var ggg = "⋙";
+var gimel = "ℷ";
+var GJcy = "Ѓ";
+var gjcy = "ѓ";
+var gla = "⪥";
+var gl = "≷";
+var glE = "⪒";
+var glj = "⪤";
+var gnap = "⪊";
+var gnapprox = "⪊";
+var gne = "⪈";
+var gnE = "≩";
+var gneq = "⪈";
+var gneqq = "≩";
+var gnsim = "⋧";
+var Gopf = "𝔾";
+var gopf = "𝕘";
+var grave = "`";
+var GreaterEqual = "≥";
+var GreaterEqualLess = "⋛";
+var GreaterFullEqual = "≧";
+var GreaterGreater = "⪢";
+var GreaterLess = "≷";
+var GreaterSlantEqual = "⩾";
+var GreaterTilde = "≳";
+var Gscr = "𝒢";
+var gscr = "ℊ";
+var gsim = "≳";
+var gsime = "⪎";
+var gsiml = "⪐";
+var gtcc = "⪧";
+var gtcir = "⩺";
+var gt = ">";
+var GT = ">";
+var Gt = "≫";
+var gtdot = "⋗";
+var gtlPar = "⦕";
+var gtquest = "⩼";
+var gtrapprox = "⪆";
+var gtrarr = "⥸";
+var gtrdot = "⋗";
+var gtreqless = "⋛";
+var gtreqqless = "⪌";
+var gtrless = "≷";
+var gtrsim = "≳";
+var gvertneqq = "≩︀";
+var gvnE = "≩︀";
+var Hacek = "ˇ";
+var hairsp = " ";
+var half = "½";
+var hamilt = "ℋ";
+var HARDcy = "Ъ";
+var hardcy = "ъ";
+var harrcir = "⥈";
+var harr = "↔";
+var hArr = "⇔";
+var harrw = "↭";
+var Hat = "^";
+var hbar = "ℏ";
+var Hcirc = "Ĥ";
+var hcirc = "ĥ";
+var hearts = "♥";
+var heartsuit = "♥";
+var hellip = "…";
+var hercon = "⊹";
+var hfr = "𝔥";
+var Hfr = "ℌ";
+var HilbertSpace = "ℋ";
+var hksearow = "⤥";
+var hkswarow = "⤦";
+var hoarr = "⇿";
+var homtht = "∻";
+var hookleftarrow = "↩";
+var hookrightarrow = "↪";
+var hopf = "𝕙";
+var Hopf = "ℍ";
+var horbar = "―";
+var HorizontalLine = "─";
+var hscr = "𝒽";
+var Hscr = "ℋ";
+var hslash = "ℏ";
+var Hstrok = "Ħ";
+var hstrok = "ħ";
+var HumpDownHump = "≎";
+var HumpEqual = "≏";
+var hybull = "⁃";
+var hyphen = "‐";
+var Iacute = "Í";
+var iacute = "í";
+var ic$1 = "⁣";
+var Icirc = "Î";
+var icirc = "î";
+var Icy = "И";
+var icy = "и";
+var Idot = "İ";
+var IEcy = "Е";
+var iecy = "е";
+var iexcl = "¡";
+var iff = "⇔";
+var ifr = "𝔦";
+var Ifr = "ℑ";
+var Igrave = "Ì";
+var igrave = "ì";
+var ii = "ⅈ";
+var iiiint = "⨌";
+var iiint = "∭";
+var iinfin = "⧜";
+var iiota = "℩";
+var IJlig = "Ĳ";
+var ijlig = "ĳ";
+var Imacr = "Ī";
+var imacr = "ī";
+var image = "ℑ";
+var ImaginaryI = "ⅈ";
+var imagline = "ℐ";
+var imagpart = "ℑ";
+var imath = "ı";
+var Im = "ℑ";
+var imof = "⊷";
+var imped = "Ƶ";
+var Implies = "⇒";
+var incare = "℅";
+var infin = "∞";
+var infintie = "⧝";
+var inodot = "ı";
+var intcal = "⊺";
+var int = "∫";
+var Int = "∬";
+var integers = "ℤ";
+var Integral = "∫";
+var intercal = "⊺";
+var Intersection = "⋂";
+var intlarhk = "⨗";
+var intprod = "⨼";
+var InvisibleComma = "⁣";
+var InvisibleTimes = "⁢";
+var IOcy = "Ё";
+var iocy = "ё";
+var Iogon = "Į";
+var iogon = "į";
+var Iopf = "𝕀";
+var iopf = "𝕚";
+var Iota = "Ι";
+var iota = "ι";
+var iprod = "⨼";
+var iquest = "¿";
+var iscr = "𝒾";
+var Iscr = "ℐ";
+var isin = "∈";
+var isindot = "⋵";
+var isinE = "⋹";
+var isins = "⋴";
+var isinsv = "⋳";
+var isinv = "∈";
+var it = "⁢";
+var Itilde = "Ĩ";
+var itilde = "ĩ";
+var Iukcy = "І";
+var iukcy = "і";
+var Iuml = "Ï";
+var iuml = "ï";
+var Jcirc = "Ĵ";
+var jcirc = "ĵ";
+var Jcy = "Й";
+var jcy = "й";
+var Jfr = "𝔍";
+var jfr = "𝔧";
+var jmath = "ȷ";
+var Jopf = "𝕁";
+var jopf = "𝕛";
+var Jscr = "𝒥";
+var jscr = "𝒿";
+var Jsercy = "Ј";
+var jsercy = "ј";
+var Jukcy = "Є";
+var jukcy = "є";
+var Kappa = "Κ";
+var kappa = "κ";
+var kappav = "ϰ";
+var Kcedil = "Ķ";
+var kcedil = "ķ";
+var Kcy = "К";
+var kcy = "к";
+var Kfr = "𝔎";
+var kfr = "𝔨";
+var kgreen = "ĸ";
+var KHcy = "Х";
+var khcy = "х";
+var KJcy = "Ќ";
+var kjcy = "ќ";
+var Kopf = "𝕂";
+var kopf = "𝕜";
+var Kscr = "𝒦";
+var kscr = "𝓀";
+var lAarr = "⇚";
+var Lacute = "Ĺ";
+var lacute = "ĺ";
+var laemptyv = "⦴";
+var lagran = "ℒ";
+var Lambda = "Λ";
+var lambda = "λ";
+var lang = "⟨";
+var Lang = "⟪";
+var langd = "⦑";
+var langle = "⟨";
+var lap = "⪅";
+var Laplacetrf = "ℒ";
+var laquo = "«";
+var larrb = "⇤";
+var larrbfs = "⤟";
+var larr = "←";
+var Larr = "↞";
+var lArr = "⇐";
+var larrfs = "⤝";
+var larrhk = "↩";
+var larrlp = "↫";
+var larrpl = "⤹";
+var larrsim = "⥳";
+var larrtl = "↢";
+var latail = "⤙";
+var lAtail = "⤛";
+var lat = "⪫";
+var late = "⪭";
+var lates = "⪭︀";
+var lbarr = "⤌";
+var lBarr = "⤎";
+var lbbrk = "❲";
+var lbrace = "{";
+var lbrack = "[";
+var lbrke = "⦋";
+var lbrksld = "⦏";
+var lbrkslu = "⦍";
+var Lcaron = "Ľ";
+var lcaron = "ľ";
+var Lcedil = "Ļ";
+var lcedil = "ļ";
+var lceil = "⌈";
+var lcub = "{";
+var Lcy = "Л";
+var lcy = "л";
+var ldca = "⤶";
+var ldquo = "“";
+var ldquor = "„";
+var ldrdhar = "⥧";
+var ldrushar = "⥋";
+var ldsh = "↲";
+var le$1 = "≤";
+var lE = "≦";
+var LeftAngleBracket = "⟨";
+var LeftArrowBar = "⇤";
+var leftarrow = "←";
+var LeftArrow = "←";
+var Leftarrow = "⇐";
+var LeftArrowRightArrow = "⇆";
+var leftarrowtail = "↢";
+var LeftCeiling = "⌈";
+var LeftDoubleBracket = "⟦";
+var LeftDownTeeVector = "⥡";
+var LeftDownVectorBar = "⥙";
+var LeftDownVector = "⇃";
+var LeftFloor = "⌊";
+var leftharpoondown = "↽";
+var leftharpoonup = "↼";
+var leftleftarrows = "⇇";
+var leftrightarrow = "↔";
+var LeftRightArrow = "↔";
+var Leftrightarrow = "⇔";
+var leftrightarrows = "⇆";
+var leftrightharpoons = "⇋";
+var leftrightsquigarrow = "↭";
+var LeftRightVector = "⥎";
+var LeftTeeArrow = "↤";
+var LeftTee = "⊣";
+var LeftTeeVector = "⥚";
+var leftthreetimes = "⋋";
+var LeftTriangleBar = "⧏";
+var LeftTriangle = "⊲";
+var LeftTriangleEqual = "⊴";
+var LeftUpDownVector = "⥑";
+var LeftUpTeeVector = "⥠";
+var LeftUpVectorBar = "⥘";
+var LeftUpVector = "↿";
+var LeftVectorBar = "⥒";
+var LeftVector = "↼";
+var lEg = "⪋";
+var leg = "⋚";
+var leq = "≤";
+var leqq = "≦";
+var leqslant = "⩽";
+var lescc = "⪨";
+var les = "⩽";
+var lesdot = "⩿";
+var lesdoto = "⪁";
+var lesdotor = "⪃";
+var lesg = "⋚︀";
+var lesges = "⪓";
+var lessapprox = "⪅";
+var lessdot = "⋖";
+var lesseqgtr = "⋚";
+var lesseqqgtr = "⪋";
+var LessEqualGreater = "⋚";
+var LessFullEqual = "≦";
+var LessGreater = "≶";
+var lessgtr = "≶";
+var LessLess = "⪡";
+var lesssim = "≲";
+var LessSlantEqual = "⩽";
+var LessTilde = "≲";
+var lfisht = "⥼";
+var lfloor = "⌊";
+var Lfr = "𝔏";
+var lfr = "𝔩";
+var lg$1 = "≶";
+var lgE = "⪑";
+var lHar = "⥢";
+var lhard = "↽";
+var lharu = "↼";
+var lharul = "⥪";
+var lhblk = "▄";
+var LJcy = "Љ";
+var ljcy = "љ";
+var llarr = "⇇";
+var ll = "≪";
+var Ll = "⋘";
+var llcorner = "⌞";
+var Lleftarrow = "⇚";
+var llhard = "⥫";
+var lltri = "◺";
+var Lmidot = "Ŀ";
+var lmidot = "ŀ";
+var lmoustache = "⎰";
+var lmoust = "⎰";
+var lnap = "⪉";
+var lnapprox = "⪉";
+var lne = "⪇";
+var lnE = "≨";
+var lneq = "⪇";
+var lneqq = "≨";
+var lnsim = "⋦";
+var loang = "⟬";
+var loarr = "⇽";
+var lobrk = "⟦";
+var longleftarrow = "⟵";
+var LongLeftArrow = "⟵";
+var Longleftarrow = "⟸";
+var longleftrightarrow = "⟷";
+var LongLeftRightArrow = "⟷";
+var Longleftrightarrow = "⟺";
+var longmapsto = "⟼";
+var longrightarrow = "⟶";
+var LongRightArrow = "⟶";
+var Longrightarrow = "⟹";
+var looparrowleft = "↫";
+var looparrowright = "↬";
+var lopar = "⦅";
+var Lopf = "𝕃";
+var lopf = "𝕝";
+var loplus = "⨭";
+var lotimes = "⨴";
+var lowast = "∗";
+var lowbar = "_";
+var LowerLeftArrow = "↙";
+var LowerRightArrow = "↘";
+var loz = "◊";
+var lozenge = "◊";
+var lozf = "⧫";
+var lpar = "(";
+var lparlt = "⦓";
+var lrarr = "⇆";
+var lrcorner = "⌟";
+var lrhar = "⇋";
+var lrhard = "⥭";
+var lrm = "‎";
+var lrtri = "⊿";
+var lsaquo = "‹";
+var lscr = "𝓁";
+var Lscr = "ℒ";
+var lsh = "↰";
+var Lsh = "↰";
+var lsim = "≲";
+var lsime = "⪍";
+var lsimg = "⪏";
+var lsqb = "[";
+var lsquo = "‘";
+var lsquor = "‚";
+var Lstrok = "Ł";
+var lstrok = "ł";
+var ltcc = "⪦";
+var ltcir = "⩹";
+var lt = "<";
+var LT = "<";
+var Lt = "≪";
+var ltdot = "⋖";
+var lthree = "⋋";
+var ltimes = "⋉";
+var ltlarr = "⥶";
+var ltquest = "⩻";
+var ltri = "◃";
+var ltrie = "⊴";
+var ltrif = "◂";
+var ltrPar = "⦖";
+var lurdshar = "⥊";
+var luruhar = "⥦";
+var lvertneqq = "≨︀";
+var lvnE = "≨︀";
+var macr = "¯";
+var male = "♂";
+var malt = "✠";
+var maltese = "✠";
+var map$1 = "↦";
+var mapsto = "↦";
+var mapstodown = "↧";
+var mapstoleft = "↤";
+var mapstoup = "↥";
+var marker = "▮";
+var mcomma = "⨩";
+var Mcy = "М";
+var mcy = "м";
+var mdash = "—";
+var mDDot = "∺";
+var measuredangle = "∡";
+var MediumSpace = " ";
+var Mellintrf = "ℳ";
+var Mfr = "𝔐";
+var mfr = "𝔪";
+var mho = "℧";
+var micro = "µ";
+var midast = "*";
+var midcir = "⫰";
+var mid = "∣";
+var middot = "·";
+var minusb = "⊟";
+var minus = "−";
+var minusd = "∸";
+var minusdu = "⨪";
+var MinusPlus = "∓";
+var mlcp = "⫛";
+var mldr = "…";
+var mnplus = "∓";
+var models = "⊧";
+var Mopf = "𝕄";
+var mopf = "𝕞";
+var mp = "∓";
+var mscr = "𝓂";
+var Mscr = "ℳ";
+var mstpos = "∾";
+var Mu = "Μ";
+var mu = "μ";
+var multimap = "⊸";
+var mumap = "⊸";
+var nabla = "∇";
+var Nacute = "Ń";
+var nacute = "ń";
+var nang = "∠⃒";
+var nap = "≉";
+var napE = "⩰̸";
+var napid = "≋̸";
+var napos = "ŉ";
+var napprox = "≉";
+var natural = "♮";
+var naturals = "ℕ";
+var natur = "♮";
+var nbsp = " ";
+var nbump = "≎̸";
+var nbumpe = "≏̸";
+var ncap = "⩃";
+var Ncaron = "Ň";
+var ncaron = "ň";
+var Ncedil = "Ņ";
+var ncedil = "ņ";
+var ncong = "≇";
+var ncongdot = "⩭̸";
+var ncup = "⩂";
+var Ncy = "Н";
+var ncy = "н";
+var ndash = "–";
+var nearhk = "⤤";
+var nearr = "↗";
+var neArr = "⇗";
+var nearrow = "↗";
+var ne$1 = "≠";
+var nedot = "≐̸";
+var NegativeMediumSpace = "​";
+var NegativeThickSpace = "​";
+var NegativeThinSpace = "​";
+var NegativeVeryThinSpace = "​";
+var nequiv = "≢";
+var nesear = "⤨";
+var nesim = "≂̸";
+var NestedGreaterGreater = "≫";
+var NestedLessLess = "≪";
+var NewLine = "\n";
+var nexist = "∄";
+var nexists = "∄";
+var Nfr = "𝔑";
+var nfr = "𝔫";
+var ngE = "≧̸";
+var nge = "≱";
+var ngeq = "≱";
+var ngeqq = "≧̸";
+var ngeqslant = "⩾̸";
+var nges = "⩾̸";
+var nGg = "⋙̸";
+var ngsim = "≵";
+var nGt = "≫⃒";
+var ngt = "≯";
+var ngtr = "≯";
+var nGtv = "≫̸";
+var nharr = "↮";
+var nhArr = "⇎";
+var nhpar = "⫲";
+var ni = "∋";
+var nis = "⋼";
+var nisd = "⋺";
+var niv = "∋";
+var NJcy = "Њ";
+var njcy = "њ";
+var nlarr = "↚";
+var nlArr = "⇍";
+var nldr = "‥";
+var nlE = "≦̸";
+var nle = "≰";
+var nleftarrow = "↚";
+var nLeftarrow = "⇍";
+var nleftrightarrow = "↮";
+var nLeftrightarrow = "⇎";
+var nleq = "≰";
+var nleqq = "≦̸";
+var nleqslant = "⩽̸";
+var nles = "⩽̸";
+var nless = "≮";
+var nLl = "⋘̸";
+var nlsim = "≴";
+var nLt = "≪⃒";
+var nlt = "≮";
+var nltri = "⋪";
+var nltrie = "⋬";
+var nLtv = "≪̸";
+var nmid = "∤";
+var NoBreak = "⁠";
+var NonBreakingSpace = " ";
+var nopf = "𝕟";
+var Nopf = "ℕ";
+var Not = "⫬";
+var not = "¬";
+var NotCongruent = "≢";
+var NotCupCap = "≭";
+var NotDoubleVerticalBar = "∦";
+var NotElement = "∉";
+var NotEqual = "≠";
+var NotEqualTilde = "≂̸";
+var NotExists = "∄";
+var NotGreater = "≯";
+var NotGreaterEqual = "≱";
+var NotGreaterFullEqual = "≧̸";
+var NotGreaterGreater = "≫̸";
+var NotGreaterLess = "≹";
+var NotGreaterSlantEqual = "⩾̸";
+var NotGreaterTilde = "≵";
+var NotHumpDownHump = "≎̸";
+var NotHumpEqual = "≏̸";
+var notin = "∉";
+var notindot = "⋵̸";
+var notinE = "⋹̸";
+var notinva = "∉";
+var notinvb = "⋷";
+var notinvc = "⋶";
+var NotLeftTriangleBar = "⧏̸";
+var NotLeftTriangle = "⋪";
+var NotLeftTriangleEqual = "⋬";
+var NotLess = "≮";
+var NotLessEqual = "≰";
+var NotLessGreater = "≸";
+var NotLessLess = "≪̸";
+var NotLessSlantEqual = "⩽̸";
+var NotLessTilde = "≴";
+var NotNestedGreaterGreater = "⪢̸";
+var NotNestedLessLess = "⪡̸";
+var notni = "∌";
+var notniva = "∌";
+var notnivb = "⋾";
+var notnivc = "⋽";
+var NotPrecedes = "⊀";
+var NotPrecedesEqual = "⪯̸";
+var NotPrecedesSlantEqual = "⋠";
+var NotReverseElement = "∌";
+var NotRightTriangleBar = "⧐̸";
+var NotRightTriangle = "⋫";
+var NotRightTriangleEqual = "⋭";
+var NotSquareSubset = "⊏̸";
+var NotSquareSubsetEqual = "⋢";
+var NotSquareSuperset = "⊐̸";
+var NotSquareSupersetEqual = "⋣";
+var NotSubset = "⊂⃒";
+var NotSubsetEqual = "⊈";
+var NotSucceeds = "⊁";
+var NotSucceedsEqual = "⪰̸";
+var NotSucceedsSlantEqual = "⋡";
+var NotSucceedsTilde = "≿̸";
+var NotSuperset = "⊃⃒";
+var NotSupersetEqual = "⊉";
+var NotTilde = "≁";
+var NotTildeEqual = "≄";
+var NotTildeFullEqual = "≇";
+var NotTildeTilde = "≉";
+var NotVerticalBar = "∤";
+var nparallel = "∦";
+var npar = "∦";
+var nparsl = "⫽⃥";
+var npart = "∂̸";
+var npolint = "⨔";
+var npr = "⊀";
+var nprcue = "⋠";
+var nprec = "⊀";
+var npreceq = "⪯̸";
+var npre = "⪯̸";
+var nrarrc = "⤳̸";
+var nrarr = "↛";
+var nrArr = "⇏";
+var nrarrw = "↝̸";
+var nrightarrow = "↛";
+var nRightarrow = "⇏";
+var nrtri = "⋫";
+var nrtrie = "⋭";
+var nsc = "⊁";
+var nsccue = "⋡";
+var nsce = "⪰̸";
+var Nscr = "𝒩";
+var nscr = "𝓃";
+var nshortmid = "∤";
+var nshortparallel = "∦";
+var nsim = "≁";
+var nsime = "≄";
+var nsimeq = "≄";
+var nsmid = "∤";
+var nspar = "∦";
+var nsqsube = "⋢";
+var nsqsupe = "⋣";
+var nsub = "⊄";
+var nsubE = "⫅̸";
+var nsube = "⊈";
+var nsubset = "⊂⃒";
+var nsubseteq = "⊈";
+var nsubseteqq = "⫅̸";
+var nsucc = "⊁";
+var nsucceq = "⪰̸";
+var nsup = "⊅";
+var nsupE = "⫆̸";
+var nsupe = "⊉";
+var nsupset = "⊃⃒";
+var nsupseteq = "⊉";
+var nsupseteqq = "⫆̸";
+var ntgl = "≹";
+var Ntilde = "Ñ";
+var ntilde = "ñ";
+var ntlg = "≸";
+var ntriangleleft = "⋪";
+var ntrianglelefteq = "⋬";
+var ntriangleright = "⋫";
+var ntrianglerighteq = "⋭";
+var Nu = "Ν";
+var nu = "ν";
+var num = "#";
+var numero = "№";
+var numsp = " ";
+var nvap = "≍⃒";
+var nvdash = "⊬";
+var nvDash = "⊭";
+var nVdash = "⊮";
+var nVDash = "⊯";
+var nvge = "≥⃒";
+var nvgt = ">⃒";
+var nvHarr = "⤄";
+var nvinfin = "⧞";
+var nvlArr = "⤂";
+var nvle = "≤⃒";
+var nvlt = "<⃒";
+var nvltrie = "⊴⃒";
+var nvrArr = "⤃";
+var nvrtrie = "⊵⃒";
+var nvsim = "∼⃒";
+var nwarhk = "⤣";
+var nwarr = "↖";
+var nwArr = "⇖";
+var nwarrow = "↖";
+var nwnear = "⤧";
+var Oacute = "Ó";
+var oacute = "ó";
+var oast = "⊛";
+var Ocirc = "Ô";
+var ocirc = "ô";
+var ocir = "⊚";
+var Ocy = "О";
+var ocy = "о";
+var odash = "⊝";
+var Odblac = "Ő";
+var odblac = "ő";
+var odiv = "⨸";
+var odot = "⊙";
+var odsold = "⦼";
+var OElig = "Œ";
+var oelig = "œ";
+var ofcir = "⦿";
+var Ofr = "𝔒";
+var ofr = "𝔬";
+var ogon = "˛";
+var Ograve = "Ò";
+var ograve = "ò";
+var ogt = "⧁";
+var ohbar = "⦵";
+var ohm = "Ω";
+var oint = "∮";
+var olarr = "↺";
+var olcir = "⦾";
+var olcross = "⦻";
+var oline = "‾";
+var olt = "⧀";
+var Omacr = "Ō";
+var omacr = "ō";
+var Omega = "Ω";
+var omega = "ω";
+var Omicron = "Ο";
+var omicron = "ο";
+var omid = "⦶";
+var ominus = "⊖";
+var Oopf = "𝕆";
+var oopf = "𝕠";
+var opar = "⦷";
+var OpenCurlyDoubleQuote = "“";
+var OpenCurlyQuote = "‘";
+var operp = "⦹";
+var oplus = "⊕";
+var orarr = "↻";
+var Or = "⩔";
+var or = "∨";
+var ord = "⩝";
+var order = "ℴ";
+var orderof = "ℴ";
+var ordf = "ª";
+var ordm = "º";
+var origof = "⊶";
+var oror = "⩖";
+var orslope = "⩗";
+var orv = "⩛";
+var oS = "Ⓢ";
+var Oscr = "𝒪";
+var oscr = "ℴ";
+var Oslash = "Ø";
+var oslash = "ø";
+var osol = "⊘";
+var Otilde = "Õ";
+var otilde = "õ";
+var otimesas = "⨶";
+var Otimes = "⨷";
+var otimes = "⊗";
+var Ouml = "Ö";
+var ouml = "ö";
+var ovbar = "⌽";
+var OverBar = "‾";
+var OverBrace = "⏞";
+var OverBracket = "⎴";
+var OverParenthesis = "⏜";
+var para = "¶";
+var parallel = "∥";
+var par = "∥";
+var parsim = "⫳";
+var parsl = "⫽";
+var part = "∂";
+var PartialD = "∂";
+var Pcy = "П";
+var pcy = "п";
+var percnt = "%";
+var period = ".";
+var permil = "‰";
+var perp = "⊥";
+var pertenk = "‱";
+var Pfr = "𝔓";
+var pfr = "𝔭";
+var Phi = "Φ";
+var phi = "φ";
+var phiv = "ϕ";
+var phmmat = "ℳ";
+var phone = "☎";
+var Pi = "Π";
+var pi = "π";
+var pitchfork = "⋔";
+var piv = "ϖ";
+var planck = "ℏ";
+var planckh = "ℎ";
+var plankv = "ℏ";
+var plusacir = "⨣";
+var plusb = "⊞";
+var pluscir = "⨢";
+var plus = "+";
+var plusdo = "∔";
+var plusdu = "⨥";
+var pluse = "⩲";
+var PlusMinus = "±";
+var plusmn = "±";
+var plussim = "⨦";
+var plustwo = "⨧";
+var pm = "±";
+var Poincareplane = "ℌ";
+var pointint = "⨕";
+var popf = "𝕡";
+var Popf = "ℙ";
+var pound = "£";
+var prap = "⪷";
+var Pr = "⪻";
+var pr = "≺";
+var prcue = "≼";
+var precapprox = "⪷";
+var prec = "≺";
+var preccurlyeq = "≼";
+var Precedes = "≺";
+var PrecedesEqual = "⪯";
+var PrecedesSlantEqual = "≼";
+var PrecedesTilde = "≾";
+var preceq = "⪯";
+var precnapprox = "⪹";
+var precneqq = "⪵";
+var precnsim = "⋨";
+var pre = "⪯";
+var prE = "⪳";
+var precsim = "≾";
+var prime = "′";
+var Prime = "″";
+var primes = "ℙ";
+var prnap = "⪹";
+var prnE = "⪵";
+var prnsim = "⋨";
+var prod = "∏";
+var Product = "∏";
+var profalar = "⌮";
+var profline = "⌒";
+var profsurf = "⌓";
+var prop = "∝";
+var Proportional = "∝";
+var Proportion = "∷";
+var propto = "∝";
+var prsim = "≾";
+var prurel = "⊰";
+var Pscr = "𝒫";
+var pscr = "𝓅";
+var Psi = "Ψ";
+var psi = "ψ";
+var puncsp = " ";
+var Qfr = "𝔔";
+var qfr = "𝔮";
+var qint = "⨌";
+var qopf = "𝕢";
+var Qopf = "ℚ";
+var qprime = "⁗";
+var Qscr = "𝒬";
+var qscr = "𝓆";
+var quaternions = "ℍ";
+var quatint = "⨖";
+var quest = "?";
+var questeq = "≟";
+var quot$1 = "\"";
+var QUOT = "\"";
+var rAarr = "⇛";
+var race = "∽̱";
+var Racute = "Ŕ";
+var racute = "ŕ";
+var radic = "√";
+var raemptyv = "⦳";
+var rang = "⟩";
+var Rang = "⟫";
+var rangd = "⦒";
+var range = "⦥";
+var rangle = "⟩";
+var raquo = "»";
+var rarrap = "⥵";
+var rarrb = "⇥";
+var rarrbfs = "⤠";
+var rarrc = "⤳";
+var rarr = "→";
+var Rarr = "↠";
+var rArr = "⇒";
+var rarrfs = "⤞";
+var rarrhk = "↪";
+var rarrlp = "↬";
+var rarrpl = "⥅";
+var rarrsim = "⥴";
+var Rarrtl = "⤖";
+var rarrtl = "↣";
+var rarrw = "↝";
+var ratail = "⤚";
+var rAtail = "⤜";
+var ratio = "∶";
+var rationals = "ℚ";
+var rbarr = "⤍";
+var rBarr = "⤏";
+var RBarr = "⤐";
+var rbbrk = "❳";
+var rbrace = "}";
+var rbrack = "]";
+var rbrke = "⦌";
+var rbrksld = "⦎";
+var rbrkslu = "⦐";
+var Rcaron = "Ř";
+var rcaron = "ř";
+var Rcedil = "Ŗ";
+var rcedil = "ŗ";
+var rceil = "⌉";
+var rcub = "}";
+var Rcy = "Р";
+var rcy = "р";
+var rdca = "⤷";
+var rdldhar = "⥩";
+var rdquo = "”";
+var rdquor = "”";
+var rdsh = "↳";
+var real = "ℜ";
+var realine = "ℛ";
+var realpart = "ℜ";
+var reals = "ℝ";
+var Re$1 = "ℜ";
+var rect = "▭";
+var reg = "®";
+var REG = "®";
+var ReverseElement = "∋";
+var ReverseEquilibrium = "⇋";
+var ReverseUpEquilibrium = "⥯";
+var rfisht = "⥽";
+var rfloor = "⌋";
+var rfr = "𝔯";
+var Rfr = "ℜ";
+var rHar = "⥤";
+var rhard = "⇁";
+var rharu = "⇀";
+var rharul = "⥬";
+var Rho = "Ρ";
+var rho = "ρ";
+var rhov = "ϱ";
+var RightAngleBracket = "⟩";
+var RightArrowBar = "⇥";
+var rightarrow = "→";
+var RightArrow = "→";
+var Rightarrow = "⇒";
+var RightArrowLeftArrow = "⇄";
+var rightarrowtail = "↣";
+var RightCeiling = "⌉";
+var RightDoubleBracket = "⟧";
+var RightDownTeeVector = "⥝";
+var RightDownVectorBar = "⥕";
+var RightDownVector = "⇂";
+var RightFloor = "⌋";
+var rightharpoondown = "⇁";
+var rightharpoonup = "⇀";
+var rightleftarrows = "⇄";
+var rightleftharpoons = "⇌";
+var rightrightarrows = "⇉";
+var rightsquigarrow = "↝";
+var RightTeeArrow = "↦";
+var RightTee = "⊢";
+var RightTeeVector = "⥛";
+var rightthreetimes = "⋌";
+var RightTriangleBar = "⧐";
+var RightTriangle = "⊳";
+var RightTriangleEqual = "⊵";
+var RightUpDownVector = "⥏";
+var RightUpTeeVector = "⥜";
+var RightUpVectorBar = "⥔";
+var RightUpVector = "↾";
+var RightVectorBar = "⥓";
+var RightVector = "⇀";
+var ring = "˚";
+var risingdotseq = "≓";
+var rlarr = "⇄";
+var rlhar = "⇌";
+var rlm = "‏";
+var rmoustache = "⎱";
+var rmoust = "⎱";
+var rnmid = "⫮";
+var roang = "⟭";
+var roarr = "⇾";
+var robrk = "⟧";
+var ropar = "⦆";
+var ropf = "𝕣";
+var Ropf = "ℝ";
+var roplus = "⨮";
+var rotimes = "⨵";
+var RoundImplies = "⥰";
+var rpar = ")";
+var rpargt = "⦔";
+var rppolint = "⨒";
+var rrarr = "⇉";
+var Rrightarrow = "⇛";
+var rsaquo = "›";
+var rscr = "𝓇";
+var Rscr = "ℛ";
+var rsh = "↱";
+var Rsh = "↱";
+var rsqb = "]";
+var rsquo = "’";
+var rsquor = "’";
+var rthree = "⋌";
+var rtimes = "⋊";
+var rtri = "▹";
+var rtrie = "⊵";
+var rtrif = "▸";
+var rtriltri = "⧎";
+var RuleDelayed = "⧴";
+var ruluhar = "⥨";
+var rx = "℞";
+var Sacute = "Ś";
+var sacute = "ś";
+var sbquo = "‚";
+var scap = "⪸";
+var Scaron = "Š";
+var scaron = "š";
+var Sc = "⪼";
+var sc$1 = "≻";
+var sccue = "≽";
+var sce = "⪰";
+var scE = "⪴";
+var Scedil = "Ş";
+var scedil = "ş";
+var Scirc = "Ŝ";
+var scirc = "ŝ";
+var scnap = "⪺";
+var scnE = "⪶";
+var scnsim = "⋩";
+var scpolint = "⨓";
+var scsim = "≿";
+var Scy = "С";
+var scy = "с";
+var sdotb = "⊡";
+var sdot = "⋅";
+var sdote = "⩦";
+var searhk = "⤥";
+var searr = "↘";
+var seArr = "⇘";
+var searrow = "↘";
+var sect = "§";
+var semi = ";";
+var seswar = "⤩";
+var setminus = "∖";
+var setmn = "∖";
+var sext = "✶";
+var Sfr = "𝔖";
+var sfr = "𝔰";
+var sfrown = "⌢";
+var sharp = "♯";
+var SHCHcy = "Щ";
+var shchcy = "щ";
+var SHcy = "Ш";
+var shcy = "ш";
+var ShortDownArrow = "↓";
+var ShortLeftArrow = "←";
+var shortmid = "∣";
+var shortparallel = "∥";
+var ShortRightArrow = "→";
+var ShortUpArrow = "↑";
+var shy = "­";
+var Sigma = "Σ";
+var sigma = "σ";
+var sigmaf = "ς";
+var sigmav = "ς";
+var sim = "∼";
+var simdot = "⩪";
+var sime = "≃";
+var simeq = "≃";
+var simg = "⪞";
+var simgE = "⪠";
+var siml = "⪝";
+var simlE = "⪟";
+var simne = "≆";
+var simplus = "⨤";
+var simrarr = "⥲";
+var slarr = "←";
+var SmallCircle = "∘";
+var smallsetminus = "∖";
+var smashp = "⨳";
+var smeparsl = "⧤";
+var smid = "∣";
+var smile = "⌣";
+var smt = "⪪";
+var smte = "⪬";
+var smtes = "⪬︀";
+var SOFTcy = "Ь";
+var softcy = "ь";
+var solbar = "⌿";
+var solb = "⧄";
+var sol = "/";
+var Sopf = "𝕊";
+var sopf = "𝕤";
+var spades = "♠";
+var spadesuit = "♠";
+var spar = "∥";
+var sqcap = "⊓";
+var sqcaps = "⊓︀";
+var sqcup = "⊔";
+var sqcups = "⊔︀";
+var Sqrt = "√";
+var sqsub = "⊏";
+var sqsube = "⊑";
+var sqsubset = "⊏";
+var sqsubseteq = "⊑";
+var sqsup = "⊐";
+var sqsupe = "⊒";
+var sqsupset = "⊐";
+var sqsupseteq = "⊒";
+var square = "□";
+var Square = "□";
+var SquareIntersection = "⊓";
+var SquareSubset = "⊏";
+var SquareSubsetEqual = "⊑";
+var SquareSuperset = "⊐";
+var SquareSupersetEqual = "⊒";
+var SquareUnion = "⊔";
+var squarf = "▪";
+var squ = "□";
+var squf = "▪";
+var srarr = "→";
+var Sscr = "𝒮";
+var sscr = "𝓈";
+var ssetmn = "∖";
+var ssmile = "⌣";
+var sstarf = "⋆";
+var Star = "⋆";
+var star = "☆";
+var starf = "★";
+var straightepsilon = "ϵ";
+var straightphi = "ϕ";
+var strns = "¯";
+var sub = "⊂";
+var Sub = "⋐";
+var subdot = "⪽";
+var subE = "⫅";
+var sube = "⊆";
+var subedot = "⫃";
+var submult = "⫁";
+var subnE = "⫋";
+var subne = "⊊";
+var subplus = "⪿";
+var subrarr = "⥹";
+var subset = "⊂";
+var Subset = "⋐";
+var subseteq = "⊆";
+var subseteqq = "⫅";
+var SubsetEqual = "⊆";
+var subsetneq = "⊊";
+var subsetneqq = "⫋";
+var subsim = "⫇";
+var subsub = "⫕";
+var subsup = "⫓";
+var succapprox = "⪸";
+var succ = "≻";
+var succcurlyeq = "≽";
+var Succeeds = "≻";
+var SucceedsEqual = "⪰";
+var SucceedsSlantEqual = "≽";
+var SucceedsTilde = "≿";
+var succeq = "⪰";
+var succnapprox = "⪺";
+var succneqq = "⪶";
+var succnsim = "⋩";
+var succsim = "≿";
+var SuchThat = "∋";
+var sum = "∑";
+var Sum = "∑";
+var sung = "♪";
+var sup1 = "¹";
+var sup2 = "²";
+var sup3 = "³";
+var sup = "⊃";
+var Sup = "⋑";
+var supdot = "⪾";
+var supdsub = "⫘";
+var supE = "⫆";
+var supe = "⊇";
+var supedot = "⫄";
+var Superset = "⊃";
+var SupersetEqual = "⊇";
+var suphsol = "⟉";
+var suphsub = "⫗";
+var suplarr = "⥻";
+var supmult = "⫂";
+var supnE = "⫌";
+var supne = "⊋";
+var supplus = "⫀";
+var supset = "⊃";
+var Supset = "⋑";
+var supseteq = "⊇";
+var supseteqq = "⫆";
+var supsetneq = "⊋";
+var supsetneqq = "⫌";
+var supsim = "⫈";
+var supsub = "⫔";
+var supsup = "⫖";
+var swarhk = "⤦";
+var swarr = "↙";
+var swArr = "⇙";
+var swarrow = "↙";
+var swnwar = "⤪";
+var szlig = "ß";
+var Tab = "\t";
+var target = "⌖";
+var Tau = "Τ";
+var tau = "τ";
+var tbrk = "⎴";
+var Tcaron = "Ť";
+var tcaron = "ť";
+var Tcedil = "Ţ";
+var tcedil = "ţ";
+var Tcy = "Т";
+var tcy = "т";
+var tdot = "⃛";
+var telrec = "⌕";
+var Tfr = "𝔗";
+var tfr = "𝔱";
+var there4 = "∴";
+var therefore = "∴";
+var Therefore = "∴";
+var Theta = "Θ";
+var theta = "θ";
+var thetasym = "ϑ";
+var thetav = "ϑ";
+var thickapprox = "≈";
+var thicksim = "∼";
+var ThickSpace = "  ";
+var ThinSpace = " ";
+var thinsp = " ";
+var thkap = "≈";
+var thksim = "∼";
+var THORN = "Þ";
+var thorn = "þ";
+var tilde = "˜";
+var Tilde = "∼";
+var TildeEqual = "≃";
+var TildeFullEqual = "≅";
+var TildeTilde = "≈";
+var timesbar = "⨱";
+var timesb = "⊠";
+var times = "×";
+var timesd = "⨰";
+var tint = "∭";
+var toea = "⤨";
+var topbot = "⌶";
+var topcir = "⫱";
+var top = "⊤";
+var Topf = "𝕋";
+var topf = "𝕥";
+var topfork = "⫚";
+var tosa = "⤩";
+var tprime = "‴";
+var trade = "™";
+var TRADE = "™";
+var triangle = "▵";
+var triangledown = "▿";
+var triangleleft = "◃";
+var trianglelefteq = "⊴";
+var triangleq = "≜";
+var triangleright = "▹";
+var trianglerighteq = "⊵";
+var tridot = "◬";
+var trie = "≜";
+var triminus = "⨺";
+var TripleDot = "⃛";
+var triplus = "⨹";
+var trisb = "⧍";
+var tritime = "⨻";
+var trpezium = "⏢";
+var Tscr = "𝒯";
+var tscr = "𝓉";
+var TScy = "Ц";
+var tscy = "ц";
+var TSHcy = "Ћ";
+var tshcy = "ћ";
+var Tstrok = "Ŧ";
+var tstrok = "ŧ";
+var twixt = "≬";
+var twoheadleftarrow = "↞";
+var twoheadrightarrow = "↠";
+var Uacute = "Ú";
+var uacute = "ú";
+var uarr = "↑";
+var Uarr = "↟";
+var uArr = "⇑";
+var Uarrocir = "⥉";
+var Ubrcy = "Ў";
+var ubrcy = "ў";
+var Ubreve = "Ŭ";
+var ubreve = "ŭ";
+var Ucirc = "Û";
+var ucirc = "û";
+var Ucy = "У";
+var ucy = "у";
+var udarr = "⇅";
+var Udblac = "Ű";
+var udblac = "ű";
+var udhar = "⥮";
+var ufisht = "⥾";
+var Ufr = "𝔘";
+var ufr = "𝔲";
+var Ugrave = "Ù";
+var ugrave = "ù";
+var uHar = "⥣";
+var uharl = "↿";
+var uharr = "↾";
+var uhblk = "▀";
+var ulcorn = "⌜";
+var ulcorner = "⌜";
+var ulcrop = "⌏";
+var ultri = "◸";
+var Umacr = "Ū";
+var umacr = "ū";
+var uml = "¨";
+var UnderBar = "_";
+var UnderBrace = "⏟";
+var UnderBracket = "⎵";
+var UnderParenthesis = "⏝";
+var Union = "⋃";
+var UnionPlus = "⊎";
+var Uogon = "Ų";
+var uogon = "ų";
+var Uopf = "𝕌";
+var uopf = "𝕦";
+var UpArrowBar = "⤒";
+var uparrow = "↑";
+var UpArrow = "↑";
+var Uparrow = "⇑";
+var UpArrowDownArrow = "⇅";
+var updownarrow = "↕";
+var UpDownArrow = "↕";
+var Updownarrow = "⇕";
+var UpEquilibrium = "⥮";
+var upharpoonleft = "↿";
+var upharpoonright = "↾";
+var uplus = "⊎";
+var UpperLeftArrow = "↖";
+var UpperRightArrow = "↗";
+var upsi = "υ";
+var Upsi = "ϒ";
+var upsih = "ϒ";
+var Upsilon = "Υ";
+var upsilon = "υ";
+var UpTeeArrow = "↥";
+var UpTee = "⊥";
+var upuparrows = "⇈";
+var urcorn = "⌝";
+var urcorner = "⌝";
+var urcrop = "⌎";
+var Uring = "Ů";
+var uring = "ů";
+var urtri = "◹";
+var Uscr = "𝒰";
+var uscr = "𝓊";
+var utdot = "⋰";
+var Utilde = "Ũ";
+var utilde = "ũ";
+var utri = "▵";
+var utrif = "▴";
+var uuarr = "⇈";
+var Uuml = "Ü";
+var uuml = "ü";
+var uwangle = "⦧";
+var vangrt = "⦜";
+var varepsilon = "ϵ";
+var varkappa = "ϰ";
+var varnothing = "∅";
+var varphi = "ϕ";
+var varpi = "ϖ";
+var varpropto = "∝";
+var varr = "↕";
+var vArr = "⇕";
+var varrho = "ϱ";
+var varsigma = "ς";
+var varsubsetneq = "⊊︀";
+var varsubsetneqq = "⫋︀";
+var varsupsetneq = "⊋︀";
+var varsupsetneqq = "⫌︀";
+var vartheta = "ϑ";
+var vartriangleleft = "⊲";
+var vartriangleright = "⊳";
+var vBar = "⫨";
+var Vbar = "⫫";
+var vBarv = "⫩";
+var Vcy = "В";
+var vcy = "в";
+var vdash = "⊢";
+var vDash = "⊨";
+var Vdash = "⊩";
+var VDash = "⊫";
+var Vdashl = "⫦";
+var veebar = "⊻";
+var vee = "∨";
+var Vee = "⋁";
+var veeeq = "≚";
+var vellip = "⋮";
+var verbar = "|";
+var Verbar = "‖";
+var vert = "|";
+var Vert = "‖";
+var VerticalBar = "∣";
+var VerticalLine = "|";
+var VerticalSeparator = "❘";
+var VerticalTilde = "≀";
+var VeryThinSpace = " ";
+var Vfr = "𝔙";
+var vfr = "𝔳";
+var vltri = "⊲";
+var vnsub = "⊂⃒";
+var vnsup = "⊃⃒";
+var Vopf = "𝕍";
+var vopf = "𝕧";
+var vprop = "∝";
+var vrtri = "⊳";
+var Vscr = "𝒱";
+var vscr = "𝓋";
+var vsubnE = "⫋︀";
+var vsubne = "⊊︀";
+var vsupnE = "⫌︀";
+var vsupne = "⊋︀";
+var Vvdash = "⊪";
+var vzigzag = "⦚";
+var Wcirc = "Ŵ";
+var wcirc = "ŵ";
+var wedbar = "⩟";
+var wedge = "∧";
+var Wedge = "⋀";
+var wedgeq = "≙";
+var weierp = "℘";
+var Wfr = "𝔚";
+var wfr = "𝔴";
+var Wopf = "𝕎";
+var wopf = "𝕨";
+var wp = "℘";
+var wr = "≀";
+var wreath = "≀";
+var Wscr = "𝒲";
+var wscr = "𝓌";
+var xcap = "⋂";
+var xcirc = "◯";
+var xcup = "⋃";
+var xdtri = "▽";
+var Xfr = "𝔛";
+var xfr = "𝔵";
+var xharr = "⟷";
+var xhArr = "⟺";
+var Xi = "Ξ";
+var xi = "ξ";
+var xlarr = "⟵";
+var xlArr = "⟸";
+var xmap = "⟼";
+var xnis = "⋻";
+var xodot = "⨀";
+var Xopf = "𝕏";
+var xopf = "𝕩";
+var xoplus = "⨁";
+var xotime = "⨂";
+var xrarr = "⟶";
+var xrArr = "⟹";
+var Xscr = "𝒳";
+var xscr = "𝓍";
+var xsqcup = "⨆";
+var xuplus = "⨄";
+var xutri = "△";
+var xvee = "⋁";
+var xwedge = "⋀";
+var Yacute = "Ý";
+var yacute = "ý";
+var YAcy = "Я";
+var yacy = "я";
+var Ycirc = "Ŷ";
+var ycirc = "ŷ";
+var Ycy = "Ы";
+var ycy = "ы";
+var yen = "¥";
+var Yfr = "𝔜";
+var yfr = "𝔶";
+var YIcy = "Ї";
+var yicy = "ї";
+var Yopf = "𝕐";
+var yopf = "𝕪";
+var Yscr = "𝒴";
+var yscr = "𝓎";
+var YUcy = "Ю";
+var yucy = "ю";
+var yuml = "ÿ";
+var Yuml = "Ÿ";
+var Zacute = "Ź";
+var zacute = "ź";
+var Zcaron = "Ž";
+var zcaron = "ž";
+var Zcy = "З";
+var zcy = "з";
+var Zdot = "Ż";
+var zdot = "ż";
+var zeetrf = "ℨ";
+var ZeroWidthSpace = "​";
+var Zeta = "Ζ";
+var zeta = "ζ";
+var zfr = "𝔷";
+var Zfr = "ℨ";
+var ZHcy = "Ж";
+var zhcy = "ж";
+var zigrarr = "⇝";
+var zopf = "𝕫";
+var Zopf = "ℤ";
+var Zscr = "𝒵";
+var zscr = "𝓏";
+var zwj = "‍";
+var zwnj = "‌";
+var entities = {
+	Aacute: Aacute,
+	aacute: aacute,
+	Abreve: Abreve,
+	abreve: abreve,
+	ac: ac$1,
+	acd: acd,
+	acE: acE,
+	Acirc: Acirc,
+	acirc: acirc,
+	acute: acute,
+	Acy: Acy,
+	acy: acy,
+	AElig: AElig,
+	aelig: aelig,
+	af: af$1,
+	Afr: Afr,
+	afr: afr,
+	Agrave: Agrave,
+	agrave: agrave,
+	alefsym: alefsym,
+	aleph: aleph,
+	Alpha: Alpha,
+	alpha: alpha,
+	Amacr: Amacr,
+	amacr: amacr,
+	amalg: amalg,
+	amp: amp,
+	AMP: AMP,
+	andand: andand,
+	And: And,
+	and: and,
+	andd: andd,
+	andslope: andslope,
+	andv: andv,
+	ang: ang,
+	ange: ange,
+	angle: angle,
+	angmsdaa: angmsdaa,
+	angmsdab: angmsdab,
+	angmsdac: angmsdac,
+	angmsdad: angmsdad,
+	angmsdae: angmsdae,
+	angmsdaf: angmsdaf,
+	angmsdag: angmsdag,
+	angmsdah: angmsdah,
+	angmsd: angmsd,
+	angrt: angrt,
+	angrtvb: angrtvb,
+	angrtvbd: angrtvbd,
+	angsph: angsph,
+	angst: angst,
+	angzarr: angzarr,
+	Aogon: Aogon,
+	aogon: aogon,
+	Aopf: Aopf,
+	aopf: aopf,
+	apacir: apacir,
+	ap: ap,
+	apE: apE,
+	ape: ape,
+	apid: apid,
+	apos: apos,
+	ApplyFunction: ApplyFunction,
+	approx: approx,
+	approxeq: approxeq,
+	Aring: Aring,
+	aring: aring,
+	Ascr: Ascr,
+	ascr: ascr,
+	Assign: Assign,
+	ast: ast,
+	asymp: asymp,
+	asympeq: asympeq,
+	Atilde: Atilde,
+	atilde: atilde,
+	Auml: Auml,
+	auml: auml,
+	awconint: awconint,
+	awint: awint,
+	backcong: backcong,
+	backepsilon: backepsilon,
+	backprime: backprime,
+	backsim: backsim,
+	backsimeq: backsimeq,
+	Backslash: Backslash,
+	Barv: Barv,
+	barvee: barvee,
+	barwed: barwed,
+	Barwed: Barwed,
+	barwedge: barwedge,
+	bbrk: bbrk,
+	bbrktbrk: bbrktbrk,
+	bcong: bcong,
+	Bcy: Bcy,
+	bcy: bcy,
+	bdquo: bdquo,
+	becaus: becaus,
+	because: because,
+	Because: Because,
+	bemptyv: bemptyv,
+	bepsi: bepsi,
+	bernou: bernou,
+	Bernoullis: Bernoullis,
+	Beta: Beta,
+	beta: beta,
+	beth: beth,
+	between: between,
+	Bfr: Bfr,
+	bfr: bfr,
+	bigcap: bigcap,
+	bigcirc: bigcirc,
+	bigcup: bigcup,
+	bigodot: bigodot,
+	bigoplus: bigoplus,
+	bigotimes: bigotimes,
+	bigsqcup: bigsqcup,
+	bigstar: bigstar,
+	bigtriangledown: bigtriangledown,
+	bigtriangleup: bigtriangleup,
+	biguplus: biguplus,
+	bigvee: bigvee,
+	bigwedge: bigwedge,
+	bkarow: bkarow,
+	blacklozenge: blacklozenge,
+	blacksquare: blacksquare,
+	blacktriangle: blacktriangle,
+	blacktriangledown: blacktriangledown,
+	blacktriangleleft: blacktriangleleft,
+	blacktriangleright: blacktriangleright,
+	blank: blank,
+	blk12: blk12,
+	blk14: blk14,
+	blk34: blk34,
+	block: block,
+	bne: bne,
+	bnequiv: bnequiv,
+	bNot: bNot,
+	bnot: bnot,
+	Bopf: Bopf,
+	bopf: bopf,
+	bot: bot,
+	bottom: bottom,
+	bowtie: bowtie,
+	boxbox: boxbox,
+	boxdl: boxdl,
+	boxdL: boxdL,
+	boxDl: boxDl,
+	boxDL: boxDL,
+	boxdr: boxdr,
+	boxdR: boxdR,
+	boxDr: boxDr,
+	boxDR: boxDR,
+	boxh: boxh,
+	boxH: boxH,
+	boxhd: boxhd,
+	boxHd: boxHd,
+	boxhD: boxhD,
+	boxHD: boxHD,
+	boxhu: boxhu,
+	boxHu: boxHu,
+	boxhU: boxhU,
+	boxHU: boxHU,
+	boxminus: boxminus,
+	boxplus: boxplus,
+	boxtimes: boxtimes,
+	boxul: boxul,
+	boxuL: boxuL,
+	boxUl: boxUl,
+	boxUL: boxUL,
+	boxur: boxur,
+	boxuR: boxuR,
+	boxUr: boxUr,
+	boxUR: boxUR,
+	boxv: boxv,
+	boxV: boxV,
+	boxvh: boxvh,
+	boxvH: boxvH,
+	boxVh: boxVh,
+	boxVH: boxVH,
+	boxvl: boxvl,
+	boxvL: boxvL,
+	boxVl: boxVl,
+	boxVL: boxVL,
+	boxvr: boxvr,
+	boxvR: boxvR,
+	boxVr: boxVr,
+	boxVR: boxVR,
+	bprime: bprime,
+	breve: breve,
+	Breve: Breve,
+	brvbar: brvbar,
+	bscr: bscr,
+	Bscr: Bscr,
+	bsemi: bsemi,
+	bsim: bsim,
+	bsime: bsime,
+	bsolb: bsolb,
+	bsol: bsol,
+	bsolhsub: bsolhsub,
+	bull: bull,
+	bullet: bullet,
+	bump: bump,
+	bumpE: bumpE,
+	bumpe: bumpe,
+	Bumpeq: Bumpeq,
+	bumpeq: bumpeq,
+	Cacute: Cacute,
+	cacute: cacute,
+	capand: capand,
+	capbrcup: capbrcup,
+	capcap: capcap,
+	cap: cap,
+	Cap: Cap,
+	capcup: capcup,
+	capdot: capdot,
+	CapitalDifferentialD: CapitalDifferentialD,
+	caps: caps,
+	caret: caret,
+	caron: caron,
+	Cayleys: Cayleys,
+	ccaps: ccaps,
+	Ccaron: Ccaron,
+	ccaron: ccaron,
+	Ccedil: Ccedil,
+	ccedil: ccedil,
+	Ccirc: Ccirc,
+	ccirc: ccirc,
+	Cconint: Cconint,
+	ccups: ccups,
+	ccupssm: ccupssm,
+	Cdot: Cdot,
+	cdot: cdot,
+	cedil: cedil,
+	Cedilla: Cedilla,
+	cemptyv: cemptyv,
+	cent: cent,
+	centerdot: centerdot,
+	CenterDot: CenterDot,
+	cfr: cfr,
+	Cfr: Cfr,
+	CHcy: CHcy,
+	chcy: chcy,
+	check: check$1,
+	checkmark: checkmark,
+	Chi: Chi,
+	chi: chi,
+	circ: circ,
+	circeq: circeq,
+	circlearrowleft: circlearrowleft,
+	circlearrowright: circlearrowright,
+	circledast: circledast,
+	circledcirc: circledcirc,
+	circleddash: circleddash,
+	CircleDot: CircleDot,
+	circledR: circledR,
+	circledS: circledS,
+	CircleMinus: CircleMinus,
+	CirclePlus: CirclePlus,
+	CircleTimes: CircleTimes,
+	cir: cir,
+	cirE: cirE,
+	cire: cire,
+	cirfnint: cirfnint,
+	cirmid: cirmid,
+	cirscir: cirscir,
+	ClockwiseContourIntegral: ClockwiseContourIntegral,
+	CloseCurlyDoubleQuote: CloseCurlyDoubleQuote,
+	CloseCurlyQuote: CloseCurlyQuote,
+	clubs: clubs,
+	clubsuit: clubsuit,
+	colon: colon,
+	Colon: Colon,
+	Colone: Colone,
+	colone: colone,
+	coloneq: coloneq,
+	comma: comma,
+	commat: commat,
+	comp: comp,
+	compfn: compfn,
+	complement: complement,
+	complexes: complexes,
+	cong: cong,
+	congdot: congdot,
+	Congruent: Congruent,
+	conint: conint,
+	Conint: Conint,
+	ContourIntegral: ContourIntegral,
+	copf: copf,
+	Copf: Copf,
+	coprod: coprod,
+	Coproduct: Coproduct,
+	copy: copy,
+	COPY: COPY,
+	copysr: copysr,
+	CounterClockwiseContourIntegral: CounterClockwiseContourIntegral,
+	crarr: crarr,
+	cross: cross,
+	Cross: Cross,
+	Cscr: Cscr,
+	cscr: cscr,
+	csub: csub,
+	csube: csube,
+	csup: csup,
+	csupe: csupe,
+	ctdot: ctdot,
+	cudarrl: cudarrl,
+	cudarrr: cudarrr,
+	cuepr: cuepr,
+	cuesc: cuesc,
+	cularr: cularr,
+	cularrp: cularrp,
+	cupbrcap: cupbrcap,
+	cupcap: cupcap,
+	CupCap: CupCap,
+	cup: cup,
+	Cup: Cup,
+	cupcup: cupcup,
+	cupdot: cupdot,
+	cupor: cupor,
+	cups: cups,
+	curarr: curarr,
+	curarrm: curarrm,
+	curlyeqprec: curlyeqprec,
+	curlyeqsucc: curlyeqsucc,
+	curlyvee: curlyvee,
+	curlywedge: curlywedge,
+	curren: curren,
+	curvearrowleft: curvearrowleft,
+	curvearrowright: curvearrowright,
+	cuvee: cuvee,
+	cuwed: cuwed,
+	cwconint: cwconint,
+	cwint: cwint,
+	cylcty: cylcty,
+	dagger: dagger,
+	Dagger: Dagger,
+	daleth: daleth,
+	darr: darr,
+	Darr: Darr,
+	dArr: dArr,
+	dash: dash,
+	Dashv: Dashv,
+	dashv: dashv,
+	dbkarow: dbkarow,
+	dblac: dblac,
+	Dcaron: Dcaron,
+	dcaron: dcaron,
+	Dcy: Dcy,
+	dcy: dcy,
+	ddagger: ddagger,
+	ddarr: ddarr,
+	DD: DD,
+	dd: dd$1,
+	DDotrahd: DDotrahd,
+	ddotseq: ddotseq,
+	deg: deg,
+	Del: Del,
+	Delta: Delta,
+	delta: delta,
+	demptyv: demptyv,
+	dfisht: dfisht,
+	Dfr: Dfr,
+	dfr: dfr,
+	dHar: dHar,
+	dharl: dharl,
+	dharr: dharr,
+	DiacriticalAcute: DiacriticalAcute,
+	DiacriticalDot: DiacriticalDot,
+	DiacriticalDoubleAcute: DiacriticalDoubleAcute,
+	DiacriticalGrave: DiacriticalGrave,
+	DiacriticalTilde: DiacriticalTilde,
+	diam: diam,
+	diamond: diamond,
+	Diamond: Diamond,
+	diamondsuit: diamondsuit,
+	diams: diams,
+	die: die,
+	DifferentialD: DifferentialD,
+	digamma: digamma,
+	disin: disin,
+	div: div$1,
+	divide: divide$1,
+	divideontimes: divideontimes,
+	divonx: divonx,
+	DJcy: DJcy,
+	djcy: djcy,
+	dlcorn: dlcorn,
+	dlcrop: dlcrop,
+	dollar: dollar,
+	Dopf: Dopf,
+	dopf: dopf,
+	Dot: Dot,
+	dot: dot,
+	DotDot: DotDot,
+	doteq: doteq,
+	doteqdot: doteqdot,
+	DotEqual: DotEqual,
+	dotminus: dotminus,
+	dotplus: dotplus,
+	dotsquare: dotsquare,
+	doublebarwedge: doublebarwedge,
+	DoubleContourIntegral: DoubleContourIntegral,
+	DoubleDot: DoubleDot,
+	DoubleDownArrow: DoubleDownArrow,
+	DoubleLeftArrow: DoubleLeftArrow,
+	DoubleLeftRightArrow: DoubleLeftRightArrow,
+	DoubleLeftTee: DoubleLeftTee,
+	DoubleLongLeftArrow: DoubleLongLeftArrow,
+	DoubleLongLeftRightArrow: DoubleLongLeftRightArrow,
+	DoubleLongRightArrow: DoubleLongRightArrow,
+	DoubleRightArrow: DoubleRightArrow,
+	DoubleRightTee: DoubleRightTee,
+	DoubleUpArrow: DoubleUpArrow,
+	DoubleUpDownArrow: DoubleUpDownArrow,
+	DoubleVerticalBar: DoubleVerticalBar,
+	DownArrowBar: DownArrowBar,
+	downarrow: downarrow,
+	DownArrow: DownArrow,
+	Downarrow: Downarrow,
+	DownArrowUpArrow: DownArrowUpArrow,
+	DownBreve: DownBreve,
+	downdownarrows: downdownarrows,
+	downharpoonleft: downharpoonleft,
+	downharpoonright: downharpoonright,
+	DownLeftRightVector: DownLeftRightVector,
+	DownLeftTeeVector: DownLeftTeeVector,
+	DownLeftVectorBar: DownLeftVectorBar,
+	DownLeftVector: DownLeftVector,
+	DownRightTeeVector: DownRightTeeVector,
+	DownRightVectorBar: DownRightVectorBar,
+	DownRightVector: DownRightVector,
+	DownTeeArrow: DownTeeArrow,
+	DownTee: DownTee,
+	drbkarow: drbkarow,
+	drcorn: drcorn,
+	drcrop: drcrop,
+	Dscr: Dscr,
+	dscr: dscr,
+	DScy: DScy,
+	dscy: dscy,
+	dsol: dsol,
+	Dstrok: Dstrok,
+	dstrok: dstrok,
+	dtdot: dtdot,
+	dtri: dtri,
+	dtrif: dtrif,
+	duarr: duarr,
+	duhar: duhar,
+	dwangle: dwangle,
+	DZcy: DZcy,
+	dzcy: dzcy,
+	dzigrarr: dzigrarr,
+	Eacute: Eacute,
+	eacute: eacute,
+	easter: easter,
+	Ecaron: Ecaron,
+	ecaron: ecaron,
+	Ecirc: Ecirc,
+	ecirc: ecirc,
+	ecir: ecir,
+	ecolon: ecolon,
+	Ecy: Ecy,
+	ecy: ecy,
+	eDDot: eDDot,
+	Edot: Edot,
+	edot: edot,
+	eDot: eDot,
+	ee: ee$1,
+	efDot: efDot,
+	Efr: Efr,
+	efr: efr,
+	eg: eg$1,
+	Egrave: Egrave,
+	egrave: egrave,
+	egs: egs,
+	egsdot: egsdot,
+	el: el,
+	Element: Element,
+	elinters: elinters,
+	ell: ell,
+	els: els,
+	elsdot: elsdot,
+	Emacr: Emacr,
+	emacr: emacr,
+	empty: empty$1,
+	emptyset: emptyset,
+	EmptySmallSquare: EmptySmallSquare,
+	emptyv: emptyv,
+	EmptyVerySmallSquare: EmptyVerySmallSquare,
+	emsp13: emsp13,
+	emsp14: emsp14,
+	emsp: emsp,
+	ENG: ENG,
+	eng: eng,
+	ensp: ensp,
+	Eogon: Eogon,
+	eogon: eogon,
+	Eopf: Eopf,
+	eopf: eopf,
+	epar: epar,
+	eparsl: eparsl,
+	eplus: eplus,
+	epsi: epsi,
+	Epsilon: Epsilon,
+	epsilon: epsilon,
+	epsiv: epsiv,
+	eqcirc: eqcirc,
+	eqcolon: eqcolon,
+	eqsim: eqsim,
+	eqslantgtr: eqslantgtr,
+	eqslantless: eqslantless,
+	Equal: Equal,
+	equals: equals,
+	EqualTilde: EqualTilde,
+	equest: equest,
+	Equilibrium: Equilibrium,
+	equiv: equiv,
+	equivDD: equivDD,
+	eqvparsl: eqvparsl,
+	erarr: erarr,
+	erDot: erDot,
+	escr: escr,
+	Escr: Escr,
+	esdot: esdot,
+	Esim: Esim,
+	esim: esim,
+	Eta: Eta,
+	eta: eta,
+	ETH: ETH,
+	eth: eth,
+	Euml: Euml,
+	euml: euml,
+	euro: euro,
+	excl: excl,
+	exist: exist,
+	Exists: Exists,
+	expectation: expectation,
+	exponentiale: exponentiale,
+	ExponentialE: ExponentialE,
+	fallingdotseq: fallingdotseq,
+	Fcy: Fcy,
+	fcy: fcy,
+	female: female,
+	ffilig: ffilig,
+	fflig: fflig,
+	ffllig: ffllig,
+	Ffr: Ffr,
+	ffr: ffr,
+	filig: filig,
+	FilledSmallSquare: FilledSmallSquare,
+	FilledVerySmallSquare: FilledVerySmallSquare,
+	fjlig: fjlig,
+	flat: flat,
+	fllig: fllig,
+	fltns: fltns,
+	fnof: fnof,
+	Fopf: Fopf,
+	fopf: fopf,
+	forall: forall,
+	ForAll: ForAll,
+	fork: fork,
+	forkv: forkv,
+	Fouriertrf: Fouriertrf,
+	fpartint: fpartint,
+	frac12: frac12,
+	frac13: frac13,
+	frac14: frac14,
+	frac15: frac15,
+	frac16: frac16,
+	frac18: frac18,
+	frac23: frac23,
+	frac25: frac25,
+	frac34: frac34,
+	frac35: frac35,
+	frac38: frac38,
+	frac45: frac45,
+	frac56: frac56,
+	frac58: frac58,
+	frac78: frac78,
+	frasl: frasl,
+	frown: frown,
+	fscr: fscr,
+	Fscr: Fscr,
+	gacute: gacute,
+	Gamma: Gamma,
+	gamma: gamma,
+	Gammad: Gammad,
+	gammad: gammad,
+	gap: gap,
+	Gbreve: Gbreve,
+	gbreve: gbreve,
+	Gcedil: Gcedil,
+	Gcirc: Gcirc,
+	gcirc: gcirc,
+	Gcy: Gcy,
+	gcy: gcy,
+	Gdot: Gdot,
+	gdot: gdot,
+	ge: ge$1,
+	gE: gE,
+	gEl: gEl,
+	gel: gel,
+	geq: geq,
+	geqq: geqq,
+	geqslant: geqslant,
+	gescc: gescc,
+	ges: ges,
+	gesdot: gesdot,
+	gesdoto: gesdoto,
+	gesdotol: gesdotol,
+	gesl: gesl,
+	gesles: gesles,
+	Gfr: Gfr,
+	gfr: gfr,
+	gg: gg$1,
+	Gg: Gg,
+	ggg: ggg,
+	gimel: gimel,
+	GJcy: GJcy,
+	gjcy: gjcy,
+	gla: gla,
+	gl: gl,
+	glE: glE,
+	glj: glj,
+	gnap: gnap,
+	gnapprox: gnapprox,
+	gne: gne,
+	gnE: gnE,
+	gneq: gneq,
+	gneqq: gneqq,
+	gnsim: gnsim,
+	Gopf: Gopf,
+	gopf: gopf,
+	grave: grave,
+	GreaterEqual: GreaterEqual,
+	GreaterEqualLess: GreaterEqualLess,
+	GreaterFullEqual: GreaterFullEqual,
+	GreaterGreater: GreaterGreater,
+	GreaterLess: GreaterLess,
+	GreaterSlantEqual: GreaterSlantEqual,
+	GreaterTilde: GreaterTilde,
+	Gscr: Gscr,
+	gscr: gscr,
+	gsim: gsim,
+	gsime: gsime,
+	gsiml: gsiml,
+	gtcc: gtcc,
+	gtcir: gtcir,
+	gt: gt,
+	GT: GT,
+	Gt: Gt,
+	gtdot: gtdot,
+	gtlPar: gtlPar,
+	gtquest: gtquest,
+	gtrapprox: gtrapprox,
+	gtrarr: gtrarr,
+	gtrdot: gtrdot,
+	gtreqless: gtreqless,
+	gtreqqless: gtreqqless,
+	gtrless: gtrless,
+	gtrsim: gtrsim,
+	gvertneqq: gvertneqq,
+	gvnE: gvnE,
+	Hacek: Hacek,
+	hairsp: hairsp,
+	half: half,
+	hamilt: hamilt,
+	HARDcy: HARDcy,
+	hardcy: hardcy,
+	harrcir: harrcir,
+	harr: harr,
+	hArr: hArr,
+	harrw: harrw,
+	Hat: Hat,
+	hbar: hbar,
+	Hcirc: Hcirc,
+	hcirc: hcirc,
+	hearts: hearts,
+	heartsuit: heartsuit,
+	hellip: hellip,
+	hercon: hercon,
+	hfr: hfr,
+	Hfr: Hfr,
+	HilbertSpace: HilbertSpace,
+	hksearow: hksearow,
+	hkswarow: hkswarow,
+	hoarr: hoarr,
+	homtht: homtht,
+	hookleftarrow: hookleftarrow,
+	hookrightarrow: hookrightarrow,
+	hopf: hopf,
+	Hopf: Hopf,
+	horbar: horbar,
+	HorizontalLine: HorizontalLine,
+	hscr: hscr,
+	Hscr: Hscr,
+	hslash: hslash,
+	Hstrok: Hstrok,
+	hstrok: hstrok,
+	HumpDownHump: HumpDownHump,
+	HumpEqual: HumpEqual,
+	hybull: hybull,
+	hyphen: hyphen,
+	Iacute: Iacute,
+	iacute: iacute,
+	ic: ic$1,
+	Icirc: Icirc,
+	icirc: icirc,
+	Icy: Icy,
+	icy: icy,
+	Idot: Idot,
+	IEcy: IEcy,
+	iecy: iecy,
+	iexcl: iexcl,
+	iff: iff,
+	ifr: ifr,
+	Ifr: Ifr,
+	Igrave: Igrave,
+	igrave: igrave,
+	ii: ii,
+	iiiint: iiiint,
+	iiint: iiint,
+	iinfin: iinfin,
+	iiota: iiota,
+	IJlig: IJlig,
+	ijlig: ijlig,
+	Imacr: Imacr,
+	imacr: imacr,
+	image: image,
+	ImaginaryI: ImaginaryI,
+	imagline: imagline,
+	imagpart: imagpart,
+	imath: imath,
+	Im: Im,
+	imof: imof,
+	imped: imped,
+	Implies: Implies,
+	incare: incare,
+	infin: infin,
+	infintie: infintie,
+	inodot: inodot,
+	intcal: intcal,
+	int: int,
+	Int: Int,
+	integers: integers,
+	Integral: Integral,
+	intercal: intercal,
+	Intersection: Intersection,
+	intlarhk: intlarhk,
+	intprod: intprod,
+	InvisibleComma: InvisibleComma,
+	InvisibleTimes: InvisibleTimes,
+	IOcy: IOcy,
+	iocy: iocy,
+	Iogon: Iogon,
+	iogon: iogon,
+	Iopf: Iopf,
+	iopf: iopf,
+	Iota: Iota,
+	iota: iota,
+	iprod: iprod,
+	iquest: iquest,
+	iscr: iscr,
+	Iscr: Iscr,
+	isin: isin,
+	isindot: isindot,
+	isinE: isinE,
+	isins: isins,
+	isinsv: isinsv,
+	isinv: isinv,
+	it: it,
+	Itilde: Itilde,
+	itilde: itilde,
+	Iukcy: Iukcy,
+	iukcy: iukcy,
+	Iuml: Iuml,
+	iuml: iuml,
+	Jcirc: Jcirc,
+	jcirc: jcirc,
+	Jcy: Jcy,
+	jcy: jcy,
+	Jfr: Jfr,
+	jfr: jfr,
+	jmath: jmath,
+	Jopf: Jopf,
+	jopf: jopf,
+	Jscr: Jscr,
+	jscr: jscr,
+	Jsercy: Jsercy,
+	jsercy: jsercy,
+	Jukcy: Jukcy,
+	jukcy: jukcy,
+	Kappa: Kappa,
+	kappa: kappa,
+	kappav: kappav,
+	Kcedil: Kcedil,
+	kcedil: kcedil,
+	Kcy: Kcy,
+	kcy: kcy,
+	Kfr: Kfr,
+	kfr: kfr,
+	kgreen: kgreen,
+	KHcy: KHcy,
+	khcy: khcy,
+	KJcy: KJcy,
+	kjcy: kjcy,
+	Kopf: Kopf,
+	kopf: kopf,
+	Kscr: Kscr,
+	kscr: kscr,
+	lAarr: lAarr,
+	Lacute: Lacute,
+	lacute: lacute,
+	laemptyv: laemptyv,
+	lagran: lagran,
+	Lambda: Lambda,
+	lambda: lambda,
+	lang: lang,
+	Lang: Lang,
+	langd: langd,
+	langle: langle,
+	lap: lap,
+	Laplacetrf: Laplacetrf,
+	laquo: laquo,
+	larrb: larrb,
+	larrbfs: larrbfs,
+	larr: larr,
+	Larr: Larr,
+	lArr: lArr,
+	larrfs: larrfs,
+	larrhk: larrhk,
+	larrlp: larrlp,
+	larrpl: larrpl,
+	larrsim: larrsim,
+	larrtl: larrtl,
+	latail: latail,
+	lAtail: lAtail,
+	lat: lat,
+	late: late,
+	lates: lates,
+	lbarr: lbarr,
+	lBarr: lBarr,
+	lbbrk: lbbrk,
+	lbrace: lbrace,
+	lbrack: lbrack,
+	lbrke: lbrke,
+	lbrksld: lbrksld,
+	lbrkslu: lbrkslu,
+	Lcaron: Lcaron,
+	lcaron: lcaron,
+	Lcedil: Lcedil,
+	lcedil: lcedil,
+	lceil: lceil,
+	lcub: lcub,
+	Lcy: Lcy,
+	lcy: lcy,
+	ldca: ldca,
+	ldquo: ldquo,
+	ldquor: ldquor,
+	ldrdhar: ldrdhar,
+	ldrushar: ldrushar,
+	ldsh: ldsh,
+	le: le$1,
+	lE: lE,
+	LeftAngleBracket: LeftAngleBracket,
+	LeftArrowBar: LeftArrowBar,
+	leftarrow: leftarrow,
+	LeftArrow: LeftArrow,
+	Leftarrow: Leftarrow,
+	LeftArrowRightArrow: LeftArrowRightArrow,
+	leftarrowtail: leftarrowtail,
+	LeftCeiling: LeftCeiling,
+	LeftDoubleBracket: LeftDoubleBracket,
+	LeftDownTeeVector: LeftDownTeeVector,
+	LeftDownVectorBar: LeftDownVectorBar,
+	LeftDownVector: LeftDownVector,
+	LeftFloor: LeftFloor,
+	leftharpoondown: leftharpoondown,
+	leftharpoonup: leftharpoonup,
+	leftleftarrows: leftleftarrows,
+	leftrightarrow: leftrightarrow,
+	LeftRightArrow: LeftRightArrow,
+	Leftrightarrow: Leftrightarrow,
+	leftrightarrows: leftrightarrows,
+	leftrightharpoons: leftrightharpoons,
+	leftrightsquigarrow: leftrightsquigarrow,
+	LeftRightVector: LeftRightVector,
+	LeftTeeArrow: LeftTeeArrow,
+	LeftTee: LeftTee,
+	LeftTeeVector: LeftTeeVector,
+	leftthreetimes: leftthreetimes,
+	LeftTriangleBar: LeftTriangleBar,
+	LeftTriangle: LeftTriangle,
+	LeftTriangleEqual: LeftTriangleEqual,
+	LeftUpDownVector: LeftUpDownVector,
+	LeftUpTeeVector: LeftUpTeeVector,
+	LeftUpVectorBar: LeftUpVectorBar,
+	LeftUpVector: LeftUpVector,
+	LeftVectorBar: LeftVectorBar,
+	LeftVector: LeftVector,
+	lEg: lEg,
+	leg: leg,
+	leq: leq,
+	leqq: leqq,
+	leqslant: leqslant,
+	lescc: lescc,
+	les: les,
+	lesdot: lesdot,
+	lesdoto: lesdoto,
+	lesdotor: lesdotor,
+	lesg: lesg,
+	lesges: lesges,
+	lessapprox: lessapprox,
+	lessdot: lessdot,
+	lesseqgtr: lesseqgtr,
+	lesseqqgtr: lesseqqgtr,
+	LessEqualGreater: LessEqualGreater,
+	LessFullEqual: LessFullEqual,
+	LessGreater: LessGreater,
+	lessgtr: lessgtr,
+	LessLess: LessLess,
+	lesssim: lesssim,
+	LessSlantEqual: LessSlantEqual,
+	LessTilde: LessTilde,
+	lfisht: lfisht,
+	lfloor: lfloor,
+	Lfr: Lfr,
+	lfr: lfr,
+	lg: lg$1,
+	lgE: lgE,
+	lHar: lHar,
+	lhard: lhard,
+	lharu: lharu,
+	lharul: lharul,
+	lhblk: lhblk,
+	LJcy: LJcy,
+	ljcy: ljcy,
+	llarr: llarr,
+	ll: ll,
+	Ll: Ll,
+	llcorner: llcorner,
+	Lleftarrow: Lleftarrow,
+	llhard: llhard,
+	lltri: lltri,
+	Lmidot: Lmidot,
+	lmidot: lmidot,
+	lmoustache: lmoustache,
+	lmoust: lmoust,
+	lnap: lnap,
+	lnapprox: lnapprox,
+	lne: lne,
+	lnE: lnE,
+	lneq: lneq,
+	lneqq: lneqq,
+	lnsim: lnsim,
+	loang: loang,
+	loarr: loarr,
+	lobrk: lobrk,
+	longleftarrow: longleftarrow,
+	LongLeftArrow: LongLeftArrow,
+	Longleftarrow: Longleftarrow,
+	longleftrightarrow: longleftrightarrow,
+	LongLeftRightArrow: LongLeftRightArrow,
+	Longleftrightarrow: Longleftrightarrow,
+	longmapsto: longmapsto,
+	longrightarrow: longrightarrow,
+	LongRightArrow: LongRightArrow,
+	Longrightarrow: Longrightarrow,
+	looparrowleft: looparrowleft,
+	looparrowright: looparrowright,
+	lopar: lopar,
+	Lopf: Lopf,
+	lopf: lopf,
+	loplus: loplus,
+	lotimes: lotimes,
+	lowast: lowast,
+	lowbar: lowbar,
+	LowerLeftArrow: LowerLeftArrow,
+	LowerRightArrow: LowerRightArrow,
+	loz: loz,
+	lozenge: lozenge,
+	lozf: lozf,
+	lpar: lpar,
+	lparlt: lparlt,
+	lrarr: lrarr,
+	lrcorner: lrcorner,
+	lrhar: lrhar,
+	lrhard: lrhard,
+	lrm: lrm,
+	lrtri: lrtri,
+	lsaquo: lsaquo,
+	lscr: lscr,
+	Lscr: Lscr,
+	lsh: lsh,
+	Lsh: Lsh,
+	lsim: lsim,
+	lsime: lsime,
+	lsimg: lsimg,
+	lsqb: lsqb,
+	lsquo: lsquo,
+	lsquor: lsquor,
+	Lstrok: Lstrok,
+	lstrok: lstrok,
+	ltcc: ltcc,
+	ltcir: ltcir,
+	lt: lt,
+	LT: LT,
+	Lt: Lt,
+	ltdot: ltdot,
+	lthree: lthree,
+	ltimes: ltimes,
+	ltlarr: ltlarr,
+	ltquest: ltquest,
+	ltri: ltri,
+	ltrie: ltrie,
+	ltrif: ltrif,
+	ltrPar: ltrPar,
+	lurdshar: lurdshar,
+	luruhar: luruhar,
+	lvertneqq: lvertneqq,
+	lvnE: lvnE,
+	macr: macr,
+	male: male,
+	malt: malt,
+	maltese: maltese,
+	map: map$1,
+	mapsto: mapsto,
+	mapstodown: mapstodown,
+	mapstoleft: mapstoleft,
+	mapstoup: mapstoup,
+	marker: marker,
+	mcomma: mcomma,
+	Mcy: Mcy,
+	mcy: mcy,
+	mdash: mdash,
+	mDDot: mDDot,
+	measuredangle: measuredangle,
+	MediumSpace: MediumSpace,
+	Mellintrf: Mellintrf,
+	Mfr: Mfr,
+	mfr: mfr,
+	mho: mho,
+	micro: micro,
+	midast: midast,
+	midcir: midcir,
+	mid: mid,
+	middot: middot,
+	minusb: minusb,
+	minus: minus,
+	minusd: minusd,
+	minusdu: minusdu,
+	MinusPlus: MinusPlus,
+	mlcp: mlcp,
+	mldr: mldr,
+	mnplus: mnplus,
+	models: models,
+	Mopf: Mopf,
+	mopf: mopf,
+	mp: mp,
+	mscr: mscr,
+	Mscr: Mscr,
+	mstpos: mstpos,
+	Mu: Mu,
+	mu: mu,
+	multimap: multimap,
+	mumap: mumap,
+	nabla: nabla,
+	Nacute: Nacute,
+	nacute: nacute,
+	nang: nang,
+	nap: nap,
+	napE: napE,
+	napid: napid,
+	napos: napos,
+	napprox: napprox,
+	natural: natural,
+	naturals: naturals,
+	natur: natur,
+	nbsp: nbsp,
+	nbump: nbump,
+	nbumpe: nbumpe,
+	ncap: ncap,
+	Ncaron: Ncaron,
+	ncaron: ncaron,
+	Ncedil: Ncedil,
+	ncedil: ncedil,
+	ncong: ncong,
+	ncongdot: ncongdot,
+	ncup: ncup,
+	Ncy: Ncy,
+	ncy: ncy,
+	ndash: ndash,
+	nearhk: nearhk,
+	nearr: nearr,
+	neArr: neArr,
+	nearrow: nearrow,
+	ne: ne$1,
+	nedot: nedot,
+	NegativeMediumSpace: NegativeMediumSpace,
+	NegativeThickSpace: NegativeThickSpace,
+	NegativeThinSpace: NegativeThinSpace,
+	NegativeVeryThinSpace: NegativeVeryThinSpace,
+	nequiv: nequiv,
+	nesear: nesear,
+	nesim: nesim,
+	NestedGreaterGreater: NestedGreaterGreater,
+	NestedLessLess: NestedLessLess,
+	NewLine: NewLine,
+	nexist: nexist,
+	nexists: nexists,
+	Nfr: Nfr,
+	nfr: nfr,
+	ngE: ngE,
+	nge: nge,
+	ngeq: ngeq,
+	ngeqq: ngeqq,
+	ngeqslant: ngeqslant,
+	nges: nges,
+	nGg: nGg,
+	ngsim: ngsim,
+	nGt: nGt,
+	ngt: ngt,
+	ngtr: ngtr,
+	nGtv: nGtv,
+	nharr: nharr,
+	nhArr: nhArr,
+	nhpar: nhpar,
+	ni: ni,
+	nis: nis,
+	nisd: nisd,
+	niv: niv,
+	NJcy: NJcy,
+	njcy: njcy,
+	nlarr: nlarr,
+	nlArr: nlArr,
+	nldr: nldr,
+	nlE: nlE,
+	nle: nle,
+	nleftarrow: nleftarrow,
+	nLeftarrow: nLeftarrow,
+	nleftrightarrow: nleftrightarrow,
+	nLeftrightarrow: nLeftrightarrow,
+	nleq: nleq,
+	nleqq: nleqq,
+	nleqslant: nleqslant,
+	nles: nles,
+	nless: nless,
+	nLl: nLl,
+	nlsim: nlsim,
+	nLt: nLt,
+	nlt: nlt,
+	nltri: nltri,
+	nltrie: nltrie,
+	nLtv: nLtv,
+	nmid: nmid,
+	NoBreak: NoBreak,
+	NonBreakingSpace: NonBreakingSpace,
+	nopf: nopf,
+	Nopf: Nopf,
+	Not: Not,
+	not: not,
+	NotCongruent: NotCongruent,
+	NotCupCap: NotCupCap,
+	NotDoubleVerticalBar: NotDoubleVerticalBar,
+	NotElement: NotElement,
+	NotEqual: NotEqual,
+	NotEqualTilde: NotEqualTilde,
+	NotExists: NotExists,
+	NotGreater: NotGreater,
+	NotGreaterEqual: NotGreaterEqual,
+	NotGreaterFullEqual: NotGreaterFullEqual,
+	NotGreaterGreater: NotGreaterGreater,
+	NotGreaterLess: NotGreaterLess,
+	NotGreaterSlantEqual: NotGreaterSlantEqual,
+	NotGreaterTilde: NotGreaterTilde,
+	NotHumpDownHump: NotHumpDownHump,
+	NotHumpEqual: NotHumpEqual,
+	notin: notin,
+	notindot: notindot,
+	notinE: notinE,
+	notinva: notinva,
+	notinvb: notinvb,
+	notinvc: notinvc,
+	NotLeftTriangleBar: NotLeftTriangleBar,
+	NotLeftTriangle: NotLeftTriangle,
+	NotLeftTriangleEqual: NotLeftTriangleEqual,
+	NotLess: NotLess,
+	NotLessEqual: NotLessEqual,
+	NotLessGreater: NotLessGreater,
+	NotLessLess: NotLessLess,
+	NotLessSlantEqual: NotLessSlantEqual,
+	NotLessTilde: NotLessTilde,
+	NotNestedGreaterGreater: NotNestedGreaterGreater,
+	NotNestedLessLess: NotNestedLessLess,
+	notni: notni,
+	notniva: notniva,
+	notnivb: notnivb,
+	notnivc: notnivc,
+	NotPrecedes: NotPrecedes,
+	NotPrecedesEqual: NotPrecedesEqual,
+	NotPrecedesSlantEqual: NotPrecedesSlantEqual,
+	NotReverseElement: NotReverseElement,
+	NotRightTriangleBar: NotRightTriangleBar,
+	NotRightTriangle: NotRightTriangle,
+	NotRightTriangleEqual: NotRightTriangleEqual,
+	NotSquareSubset: NotSquareSubset,
+	NotSquareSubsetEqual: NotSquareSubsetEqual,
+	NotSquareSuperset: NotSquareSuperset,
+	NotSquareSupersetEqual: NotSquareSupersetEqual,
+	NotSubset: NotSubset,
+	NotSubsetEqual: NotSubsetEqual,
+	NotSucceeds: NotSucceeds,
+	NotSucceedsEqual: NotSucceedsEqual,
+	NotSucceedsSlantEqual: NotSucceedsSlantEqual,
+	NotSucceedsTilde: NotSucceedsTilde,
+	NotSuperset: NotSuperset,
+	NotSupersetEqual: NotSupersetEqual,
+	NotTilde: NotTilde,
+	NotTildeEqual: NotTildeEqual,
+	NotTildeFullEqual: NotTildeFullEqual,
+	NotTildeTilde: NotTildeTilde,
+	NotVerticalBar: NotVerticalBar,
+	nparallel: nparallel,
+	npar: npar,
+	nparsl: nparsl,
+	npart: npart,
+	npolint: npolint,
+	npr: npr,
+	nprcue: nprcue,
+	nprec: nprec,
+	npreceq: npreceq,
+	npre: npre,
+	nrarrc: nrarrc,
+	nrarr: nrarr,
+	nrArr: nrArr,
+	nrarrw: nrarrw,
+	nrightarrow: nrightarrow,
+	nRightarrow: nRightarrow,
+	nrtri: nrtri,
+	nrtrie: nrtrie,
+	nsc: nsc,
+	nsccue: nsccue,
+	nsce: nsce,
+	Nscr: Nscr,
+	nscr: nscr,
+	nshortmid: nshortmid,
+	nshortparallel: nshortparallel,
+	nsim: nsim,
+	nsime: nsime,
+	nsimeq: nsimeq,
+	nsmid: nsmid,
+	nspar: nspar,
+	nsqsube: nsqsube,
+	nsqsupe: nsqsupe,
+	nsub: nsub,
+	nsubE: nsubE,
+	nsube: nsube,
+	nsubset: nsubset,
+	nsubseteq: nsubseteq,
+	nsubseteqq: nsubseteqq,
+	nsucc: nsucc,
+	nsucceq: nsucceq,
+	nsup: nsup,
+	nsupE: nsupE,
+	nsupe: nsupe,
+	nsupset: nsupset,
+	nsupseteq: nsupseteq,
+	nsupseteqq: nsupseteqq,
+	ntgl: ntgl,
+	Ntilde: Ntilde,
+	ntilde: ntilde,
+	ntlg: ntlg,
+	ntriangleleft: ntriangleleft,
+	ntrianglelefteq: ntrianglelefteq,
+	ntriangleright: ntriangleright,
+	ntrianglerighteq: ntrianglerighteq,
+	Nu: Nu,
+	nu: nu,
+	num: num,
+	numero: numero,
+	numsp: numsp,
+	nvap: nvap,
+	nvdash: nvdash,
+	nvDash: nvDash,
+	nVdash: nVdash,
+	nVDash: nVDash,
+	nvge: nvge,
+	nvgt: nvgt,
+	nvHarr: nvHarr,
+	nvinfin: nvinfin,
+	nvlArr: nvlArr,
+	nvle: nvle,
+	nvlt: nvlt,
+	nvltrie: nvltrie,
+	nvrArr: nvrArr,
+	nvrtrie: nvrtrie,
+	nvsim: nvsim,
+	nwarhk: nwarhk,
+	nwarr: nwarr,
+	nwArr: nwArr,
+	nwarrow: nwarrow,
+	nwnear: nwnear,
+	Oacute: Oacute,
+	oacute: oacute,
+	oast: oast,
+	Ocirc: Ocirc,
+	ocirc: ocirc,
+	ocir: ocir,
+	Ocy: Ocy,
+	ocy: ocy,
+	odash: odash,
+	Odblac: Odblac,
+	odblac: odblac,
+	odiv: odiv,
+	odot: odot,
+	odsold: odsold,
+	OElig: OElig,
+	oelig: oelig,
+	ofcir: ofcir,
+	Ofr: Ofr,
+	ofr: ofr,
+	ogon: ogon,
+	Ograve: Ograve,
+	ograve: ograve,
+	ogt: ogt,
+	ohbar: ohbar,
+	ohm: ohm,
+	oint: oint,
+	olarr: olarr,
+	olcir: olcir,
+	olcross: olcross,
+	oline: oline,
+	olt: olt,
+	Omacr: Omacr,
+	omacr: omacr,
+	Omega: Omega,
+	omega: omega,
+	Omicron: Omicron,
+	omicron: omicron,
+	omid: omid,
+	ominus: ominus,
+	Oopf: Oopf,
+	oopf: oopf,
+	opar: opar,
+	OpenCurlyDoubleQuote: OpenCurlyDoubleQuote,
+	OpenCurlyQuote: OpenCurlyQuote,
+	operp: operp,
+	oplus: oplus,
+	orarr: orarr,
+	Or: Or,
+	or: or,
+	ord: ord,
+	order: order,
+	orderof: orderof,
+	ordf: ordf,
+	ordm: ordm,
+	origof: origof,
+	oror: oror,
+	orslope: orslope,
+	orv: orv,
+	oS: oS,
+	Oscr: Oscr,
+	oscr: oscr,
+	Oslash: Oslash,
+	oslash: oslash,
+	osol: osol,
+	Otilde: Otilde,
+	otilde: otilde,
+	otimesas: otimesas,
+	Otimes: Otimes,
+	otimes: otimes,
+	Ouml: Ouml,
+	ouml: ouml,
+	ovbar: ovbar,
+	OverBar: OverBar,
+	OverBrace: OverBrace,
+	OverBracket: OverBracket,
+	OverParenthesis: OverParenthesis,
+	para: para,
+	parallel: parallel,
+	par: par,
+	parsim: parsim,
+	parsl: parsl,
+	part: part,
+	PartialD: PartialD,
+	Pcy: Pcy,
+	pcy: pcy,
+	percnt: percnt,
+	period: period,
+	permil: permil,
+	perp: perp,
+	pertenk: pertenk,
+	Pfr: Pfr,
+	pfr: pfr,
+	Phi: Phi,
+	phi: phi,
+	phiv: phiv,
+	phmmat: phmmat,
+	phone: phone,
+	Pi: Pi,
+	pi: pi,
+	pitchfork: pitchfork,
+	piv: piv,
+	planck: planck,
+	planckh: planckh,
+	plankv: plankv,
+	plusacir: plusacir,
+	plusb: plusb,
+	pluscir: pluscir,
+	plus: plus,
+	plusdo: plusdo,
+	plusdu: plusdu,
+	pluse: pluse,
+	PlusMinus: PlusMinus,
+	plusmn: plusmn,
+	plussim: plussim,
+	plustwo: plustwo,
+	pm: pm,
+	Poincareplane: Poincareplane,
+	pointint: pointint,
+	popf: popf,
+	Popf: Popf,
+	pound: pound,
+	prap: prap,
+	Pr: Pr,
+	pr: pr,
+	prcue: prcue,
+	precapprox: precapprox,
+	prec: prec,
+	preccurlyeq: preccurlyeq,
+	Precedes: Precedes,
+	PrecedesEqual: PrecedesEqual,
+	PrecedesSlantEqual: PrecedesSlantEqual,
+	PrecedesTilde: PrecedesTilde,
+	preceq: preceq,
+	precnapprox: precnapprox,
+	precneqq: precneqq,
+	precnsim: precnsim,
+	pre: pre,
+	prE: prE,
+	precsim: precsim,
+	prime: prime,
+	Prime: Prime,
+	primes: primes,
+	prnap: prnap,
+	prnE: prnE,
+	prnsim: prnsim,
+	prod: prod,
+	Product: Product,
+	profalar: profalar,
+	profline: profline,
+	profsurf: profsurf,
+	prop: prop,
+	Proportional: Proportional,
+	Proportion: Proportion,
+	propto: propto,
+	prsim: prsim,
+	prurel: prurel,
+	Pscr: Pscr,
+	pscr: pscr,
+	Psi: Psi,
+	psi: psi,
+	puncsp: puncsp,
+	Qfr: Qfr,
+	qfr: qfr,
+	qint: qint,
+	qopf: qopf,
+	Qopf: Qopf,
+	qprime: qprime,
+	Qscr: Qscr,
+	qscr: qscr,
+	quaternions: quaternions,
+	quatint: quatint,
+	quest: quest,
+	questeq: questeq,
+	quot: quot$1,
+	QUOT: QUOT,
+	rAarr: rAarr,
+	race: race,
+	Racute: Racute,
+	racute: racute,
+	radic: radic,
+	raemptyv: raemptyv,
+	rang: rang,
+	Rang: Rang,
+	rangd: rangd,
+	range: range,
+	rangle: rangle,
+	raquo: raquo,
+	rarrap: rarrap,
+	rarrb: rarrb,
+	rarrbfs: rarrbfs,
+	rarrc: rarrc,
+	rarr: rarr,
+	Rarr: Rarr,
+	rArr: rArr,
+	rarrfs: rarrfs,
+	rarrhk: rarrhk,
+	rarrlp: rarrlp,
+	rarrpl: rarrpl,
+	rarrsim: rarrsim,
+	Rarrtl: Rarrtl,
+	rarrtl: rarrtl,
+	rarrw: rarrw,
+	ratail: ratail,
+	rAtail: rAtail,
+	ratio: ratio,
+	rationals: rationals,
+	rbarr: rbarr,
+	rBarr: rBarr,
+	RBarr: RBarr,
+	rbbrk: rbbrk,
+	rbrace: rbrace,
+	rbrack: rbrack,
+	rbrke: rbrke,
+	rbrksld: rbrksld,
+	rbrkslu: rbrkslu,
+	Rcaron: Rcaron,
+	rcaron: rcaron,
+	Rcedil: Rcedil,
+	rcedil: rcedil,
+	rceil: rceil,
+	rcub: rcub,
+	Rcy: Rcy,
+	rcy: rcy,
+	rdca: rdca,
+	rdldhar: rdldhar,
+	rdquo: rdquo,
+	rdquor: rdquor,
+	rdsh: rdsh,
+	real: real,
+	realine: realine,
+	realpart: realpart,
+	reals: reals,
+	Re: Re$1,
+	rect: rect,
+	reg: reg,
+	REG: REG,
+	ReverseElement: ReverseElement,
+	ReverseEquilibrium: ReverseEquilibrium,
+	ReverseUpEquilibrium: ReverseUpEquilibrium,
+	rfisht: rfisht,
+	rfloor: rfloor,
+	rfr: rfr,
+	Rfr: Rfr,
+	rHar: rHar,
+	rhard: rhard,
+	rharu: rharu,
+	rharul: rharul,
+	Rho: Rho,
+	rho: rho,
+	rhov: rhov,
+	RightAngleBracket: RightAngleBracket,
+	RightArrowBar: RightArrowBar,
+	rightarrow: rightarrow,
+	RightArrow: RightArrow,
+	Rightarrow: Rightarrow,
+	RightArrowLeftArrow: RightArrowLeftArrow,
+	rightarrowtail: rightarrowtail,
+	RightCeiling: RightCeiling,
+	RightDoubleBracket: RightDoubleBracket,
+	RightDownTeeVector: RightDownTeeVector,
+	RightDownVectorBar: RightDownVectorBar,
+	RightDownVector: RightDownVector,
+	RightFloor: RightFloor,
+	rightharpoondown: rightharpoondown,
+	rightharpoonup: rightharpoonup,
+	rightleftarrows: rightleftarrows,
+	rightleftharpoons: rightleftharpoons,
+	rightrightarrows: rightrightarrows,
+	rightsquigarrow: rightsquigarrow,
+	RightTeeArrow: RightTeeArrow,
+	RightTee: RightTee,
+	RightTeeVector: RightTeeVector,
+	rightthreetimes: rightthreetimes,
+	RightTriangleBar: RightTriangleBar,
+	RightTriangle: RightTriangle,
+	RightTriangleEqual: RightTriangleEqual,
+	RightUpDownVector: RightUpDownVector,
+	RightUpTeeVector: RightUpTeeVector,
+	RightUpVectorBar: RightUpVectorBar,
+	RightUpVector: RightUpVector,
+	RightVectorBar: RightVectorBar,
+	RightVector: RightVector,
+	ring: ring,
+	risingdotseq: risingdotseq,
+	rlarr: rlarr,
+	rlhar: rlhar,
+	rlm: rlm,
+	rmoustache: rmoustache,
+	rmoust: rmoust,
+	rnmid: rnmid,
+	roang: roang,
+	roarr: roarr,
+	robrk: robrk,
+	ropar: ropar,
+	ropf: ropf,
+	Ropf: Ropf,
+	roplus: roplus,
+	rotimes: rotimes,
+	RoundImplies: RoundImplies,
+	rpar: rpar,
+	rpargt: rpargt,
+	rppolint: rppolint,
+	rrarr: rrarr,
+	Rrightarrow: Rrightarrow,
+	rsaquo: rsaquo,
+	rscr: rscr,
+	Rscr: Rscr,
+	rsh: rsh,
+	Rsh: Rsh,
+	rsqb: rsqb,
+	rsquo: rsquo,
+	rsquor: rsquor,
+	rthree: rthree,
+	rtimes: rtimes,
+	rtri: rtri,
+	rtrie: rtrie,
+	rtrif: rtrif,
+	rtriltri: rtriltri,
+	RuleDelayed: RuleDelayed,
+	ruluhar: ruluhar,
+	rx: rx,
+	Sacute: Sacute,
+	sacute: sacute,
+	sbquo: sbquo,
+	scap: scap,
+	Scaron: Scaron,
+	scaron: scaron,
+	Sc: Sc,
+	sc: sc$1,
+	sccue: sccue,
+	sce: sce,
+	scE: scE,
+	Scedil: Scedil,
+	scedil: scedil,
+	Scirc: Scirc,
+	scirc: scirc,
+	scnap: scnap,
+	scnE: scnE,
+	scnsim: scnsim,
+	scpolint: scpolint,
+	scsim: scsim,
+	Scy: Scy,
+	scy: scy,
+	sdotb: sdotb,
+	sdot: sdot,
+	sdote: sdote,
+	searhk: searhk,
+	searr: searr,
+	seArr: seArr,
+	searrow: searrow,
+	sect: sect,
+	semi: semi,
+	seswar: seswar,
+	setminus: setminus,
+	setmn: setmn,
+	sext: sext,
+	Sfr: Sfr,
+	sfr: sfr,
+	sfrown: sfrown,
+	sharp: sharp,
+	SHCHcy: SHCHcy,
+	shchcy: shchcy,
+	SHcy: SHcy,
+	shcy: shcy,
+	ShortDownArrow: ShortDownArrow,
+	ShortLeftArrow: ShortLeftArrow,
+	shortmid: shortmid,
+	shortparallel: shortparallel,
+	ShortRightArrow: ShortRightArrow,
+	ShortUpArrow: ShortUpArrow,
+	shy: shy,
+	Sigma: Sigma,
+	sigma: sigma,
+	sigmaf: sigmaf,
+	sigmav: sigmav,
+	sim: sim,
+	simdot: simdot,
+	sime: sime,
+	simeq: simeq,
+	simg: simg,
+	simgE: simgE,
+	siml: siml,
+	simlE: simlE,
+	simne: simne,
+	simplus: simplus,
+	simrarr: simrarr,
+	slarr: slarr,
+	SmallCircle: SmallCircle,
+	smallsetminus: smallsetminus,
+	smashp: smashp,
+	smeparsl: smeparsl,
+	smid: smid,
+	smile: smile,
+	smt: smt,
+	smte: smte,
+	smtes: smtes,
+	SOFTcy: SOFTcy,
+	softcy: softcy,
+	solbar: solbar,
+	solb: solb,
+	sol: sol,
+	Sopf: Sopf,
+	sopf: sopf,
+	spades: spades,
+	spadesuit: spadesuit,
+	spar: spar,
+	sqcap: sqcap,
+	sqcaps: sqcaps,
+	sqcup: sqcup,
+	sqcups: sqcups,
+	Sqrt: Sqrt,
+	sqsub: sqsub,
+	sqsube: sqsube,
+	sqsubset: sqsubset,
+	sqsubseteq: sqsubseteq,
+	sqsup: sqsup,
+	sqsupe: sqsupe,
+	sqsupset: sqsupset,
+	sqsupseteq: sqsupseteq,
+	square: square,
+	Square: Square,
+	SquareIntersection: SquareIntersection,
+	SquareSubset: SquareSubset,
+	SquareSubsetEqual: SquareSubsetEqual,
+	SquareSuperset: SquareSuperset,
+	SquareSupersetEqual: SquareSupersetEqual,
+	SquareUnion: SquareUnion,
+	squarf: squarf,
+	squ: squ,
+	squf: squf,
+	srarr: srarr,
+	Sscr: Sscr,
+	sscr: sscr,
+	ssetmn: ssetmn,
+	ssmile: ssmile,
+	sstarf: sstarf,
+	Star: Star,
+	star: star,
+	starf: starf,
+	straightepsilon: straightepsilon,
+	straightphi: straightphi,
+	strns: strns,
+	sub: sub,
+	Sub: Sub,
+	subdot: subdot,
+	subE: subE,
+	sube: sube,
+	subedot: subedot,
+	submult: submult,
+	subnE: subnE,
+	subne: subne,
+	subplus: subplus,
+	subrarr: subrarr,
+	subset: subset,
+	Subset: Subset,
+	subseteq: subseteq,
+	subseteqq: subseteqq,
+	SubsetEqual: SubsetEqual,
+	subsetneq: subsetneq,
+	subsetneqq: subsetneqq,
+	subsim: subsim,
+	subsub: subsub,
+	subsup: subsup,
+	succapprox: succapprox,
+	succ: succ,
+	succcurlyeq: succcurlyeq,
+	Succeeds: Succeeds,
+	SucceedsEqual: SucceedsEqual,
+	SucceedsSlantEqual: SucceedsSlantEqual,
+	SucceedsTilde: SucceedsTilde,
+	succeq: succeq,
+	succnapprox: succnapprox,
+	succneqq: succneqq,
+	succnsim: succnsim,
+	succsim: succsim,
+	SuchThat: SuchThat,
+	sum: sum,
+	Sum: Sum,
+	sung: sung,
+	sup1: sup1,
+	sup2: sup2,
+	sup3: sup3,
+	sup: sup,
+	Sup: Sup,
+	supdot: supdot,
+	supdsub: supdsub,
+	supE: supE,
+	supe: supe,
+	supedot: supedot,
+	Superset: Superset,
+	SupersetEqual: SupersetEqual,
+	suphsol: suphsol,
+	suphsub: suphsub,
+	suplarr: suplarr,
+	supmult: supmult,
+	supnE: supnE,
+	supne: supne,
+	supplus: supplus,
+	supset: supset,
+	Supset: Supset,
+	supseteq: supseteq,
+	supseteqq: supseteqq,
+	supsetneq: supsetneq,
+	supsetneqq: supsetneqq,
+	supsim: supsim,
+	supsub: supsub,
+	supsup: supsup,
+	swarhk: swarhk,
+	swarr: swarr,
+	swArr: swArr,
+	swarrow: swarrow,
+	swnwar: swnwar,
+	szlig: szlig,
+	Tab: Tab,
+	target: target,
+	Tau: Tau,
+	tau: tau,
+	tbrk: tbrk,
+	Tcaron: Tcaron,
+	tcaron: tcaron,
+	Tcedil: Tcedil,
+	tcedil: tcedil,
+	Tcy: Tcy,
+	tcy: tcy,
+	tdot: tdot,
+	telrec: telrec,
+	Tfr: Tfr,
+	tfr: tfr,
+	there4: there4,
+	therefore: therefore,
+	Therefore: Therefore,
+	Theta: Theta,
+	theta: theta,
+	thetasym: thetasym,
+	thetav: thetav,
+	thickapprox: thickapprox,
+	thicksim: thicksim,
+	ThickSpace: ThickSpace,
+	ThinSpace: ThinSpace,
+	thinsp: thinsp,
+	thkap: thkap,
+	thksim: thksim,
+	THORN: THORN,
+	thorn: thorn,
+	tilde: tilde,
+	Tilde: Tilde,
+	TildeEqual: TildeEqual,
+	TildeFullEqual: TildeFullEqual,
+	TildeTilde: TildeTilde,
+	timesbar: timesbar,
+	timesb: timesb,
+	times: times,
+	timesd: timesd,
+	tint: tint,
+	toea: toea,
+	topbot: topbot,
+	topcir: topcir,
+	top: top,
+	Topf: Topf,
+	topf: topf,
+	topfork: topfork,
+	tosa: tosa,
+	tprime: tprime,
+	trade: trade,
+	TRADE: TRADE,
+	triangle: triangle,
+	triangledown: triangledown,
+	triangleleft: triangleleft,
+	trianglelefteq: trianglelefteq,
+	triangleq: triangleq,
+	triangleright: triangleright,
+	trianglerighteq: trianglerighteq,
+	tridot: tridot,
+	trie: trie,
+	triminus: triminus,
+	TripleDot: TripleDot,
+	triplus: triplus,
+	trisb: trisb,
+	tritime: tritime,
+	trpezium: trpezium,
+	Tscr: Tscr,
+	tscr: tscr,
+	TScy: TScy,
+	tscy: tscy,
+	TSHcy: TSHcy,
+	tshcy: tshcy,
+	Tstrok: Tstrok,
+	tstrok: tstrok,
+	twixt: twixt,
+	twoheadleftarrow: twoheadleftarrow,
+	twoheadrightarrow: twoheadrightarrow,
+	Uacute: Uacute,
+	uacute: uacute,
+	uarr: uarr,
+	Uarr: Uarr,
+	uArr: uArr,
+	Uarrocir: Uarrocir,
+	Ubrcy: Ubrcy,
+	ubrcy: ubrcy,
+	Ubreve: Ubreve,
+	ubreve: ubreve,
+	Ucirc: Ucirc,
+	ucirc: ucirc,
+	Ucy: Ucy,
+	ucy: ucy,
+	udarr: udarr,
+	Udblac: Udblac,
+	udblac: udblac,
+	udhar: udhar,
+	ufisht: ufisht,
+	Ufr: Ufr,
+	ufr: ufr,
+	Ugrave: Ugrave,
+	ugrave: ugrave,
+	uHar: uHar,
+	uharl: uharl,
+	uharr: uharr,
+	uhblk: uhblk,
+	ulcorn: ulcorn,
+	ulcorner: ulcorner,
+	ulcrop: ulcrop,
+	ultri: ultri,
+	Umacr: Umacr,
+	umacr: umacr,
+	uml: uml,
+	UnderBar: UnderBar,
+	UnderBrace: UnderBrace,
+	UnderBracket: UnderBracket,
+	UnderParenthesis: UnderParenthesis,
+	Union: Union,
+	UnionPlus: UnionPlus,
+	Uogon: Uogon,
+	uogon: uogon,
+	Uopf: Uopf,
+	uopf: uopf,
+	UpArrowBar: UpArrowBar,
+	uparrow: uparrow,
+	UpArrow: UpArrow,
+	Uparrow: Uparrow,
+	UpArrowDownArrow: UpArrowDownArrow,
+	updownarrow: updownarrow,
+	UpDownArrow: UpDownArrow,
+	Updownarrow: Updownarrow,
+	UpEquilibrium: UpEquilibrium,
+	upharpoonleft: upharpoonleft,
+	upharpoonright: upharpoonright,
+	uplus: uplus,
+	UpperLeftArrow: UpperLeftArrow,
+	UpperRightArrow: UpperRightArrow,
+	upsi: upsi,
+	Upsi: Upsi,
+	upsih: upsih,
+	Upsilon: Upsilon,
+	upsilon: upsilon,
+	UpTeeArrow: UpTeeArrow,
+	UpTee: UpTee,
+	upuparrows: upuparrows,
+	urcorn: urcorn,
+	urcorner: urcorner,
+	urcrop: urcrop,
+	Uring: Uring,
+	uring: uring,
+	urtri: urtri,
+	Uscr: Uscr,
+	uscr: uscr,
+	utdot: utdot,
+	Utilde: Utilde,
+	utilde: utilde,
+	utri: utri,
+	utrif: utrif,
+	uuarr: uuarr,
+	Uuml: Uuml,
+	uuml: uuml,
+	uwangle: uwangle,
+	vangrt: vangrt,
+	varepsilon: varepsilon,
+	varkappa: varkappa,
+	varnothing: varnothing,
+	varphi: varphi,
+	varpi: varpi,
+	varpropto: varpropto,
+	varr: varr,
+	vArr: vArr,
+	varrho: varrho,
+	varsigma: varsigma,
+	varsubsetneq: varsubsetneq,
+	varsubsetneqq: varsubsetneqq,
+	varsupsetneq: varsupsetneq,
+	varsupsetneqq: varsupsetneqq,
+	vartheta: vartheta,
+	vartriangleleft: vartriangleleft,
+	vartriangleright: vartriangleright,
+	vBar: vBar,
+	Vbar: Vbar,
+	vBarv: vBarv,
+	Vcy: Vcy,
+	vcy: vcy,
+	vdash: vdash,
+	vDash: vDash,
+	Vdash: Vdash,
+	VDash: VDash,
+	Vdashl: Vdashl,
+	veebar: veebar,
+	vee: vee,
+	Vee: Vee,
+	veeeq: veeeq,
+	vellip: vellip,
+	verbar: verbar,
+	Verbar: Verbar,
+	vert: vert,
+	Vert: Vert,
+	VerticalBar: VerticalBar,
+	VerticalLine: VerticalLine,
+	VerticalSeparator: VerticalSeparator,
+	VerticalTilde: VerticalTilde,
+	VeryThinSpace: VeryThinSpace,
+	Vfr: Vfr,
+	vfr: vfr,
+	vltri: vltri,
+	vnsub: vnsub,
+	vnsup: vnsup,
+	Vopf: Vopf,
+	vopf: vopf,
+	vprop: vprop,
+	vrtri: vrtri,
+	Vscr: Vscr,
+	vscr: vscr,
+	vsubnE: vsubnE,
+	vsubne: vsubne,
+	vsupnE: vsupnE,
+	vsupne: vsupne,
+	Vvdash: Vvdash,
+	vzigzag: vzigzag,
+	Wcirc: Wcirc,
+	wcirc: wcirc,
+	wedbar: wedbar,
+	wedge: wedge,
+	Wedge: Wedge,
+	wedgeq: wedgeq,
+	weierp: weierp,
+	Wfr: Wfr,
+	wfr: wfr,
+	Wopf: Wopf,
+	wopf: wopf,
+	wp: wp,
+	wr: wr,
+	wreath: wreath,
+	Wscr: Wscr,
+	wscr: wscr,
+	xcap: xcap,
+	xcirc: xcirc,
+	xcup: xcup,
+	xdtri: xdtri,
+	Xfr: Xfr,
+	xfr: xfr,
+	xharr: xharr,
+	xhArr: xhArr,
+	Xi: Xi,
+	xi: xi,
+	xlarr: xlarr,
+	xlArr: xlArr,
+	xmap: xmap,
+	xnis: xnis,
+	xodot: xodot,
+	Xopf: Xopf,
+	xopf: xopf,
+	xoplus: xoplus,
+	xotime: xotime,
+	xrarr: xrarr,
+	xrArr: xrArr,
+	Xscr: Xscr,
+	xscr: xscr,
+	xsqcup: xsqcup,
+	xuplus: xuplus,
+	xutri: xutri,
+	xvee: xvee,
+	xwedge: xwedge,
+	Yacute: Yacute,
+	yacute: yacute,
+	YAcy: YAcy,
+	yacy: yacy,
+	Ycirc: Ycirc,
+	ycirc: ycirc,
+	Ycy: Ycy,
+	ycy: ycy,
+	yen: yen,
+	Yfr: Yfr,
+	yfr: yfr,
+	YIcy: YIcy,
+	yicy: yicy,
+	Yopf: Yopf,
+	yopf: yopf,
+	Yscr: Yscr,
+	yscr: yscr,
+	YUcy: YUcy,
+	yucy: yucy,
+	yuml: yuml,
+	Yuml: Yuml,
+	Zacute: Zacute,
+	zacute: zacute,
+	Zcaron: Zcaron,
+	zcaron: zcaron,
+	Zcy: Zcy,
+	zcy: zcy,
+	Zdot: Zdot,
+	zdot: zdot,
+	zeetrf: zeetrf,
+	ZeroWidthSpace: ZeroWidthSpace,
+	Zeta: Zeta,
+	zeta: zeta,
+	zfr: zfr,
+	Zfr: Zfr,
+	ZHcy: ZHcy,
+	zhcy: zhcy,
+	zigrarr: zigrarr,
+	zopf: zopf,
+	Zopf: Zopf,
+	Zscr: Zscr,
+	zscr: zscr,
+	zwj: zwj,
+	zwnj: zwnj,
+	"in": "∈",
+	"Map": "⤅"
+};
+
+var entities$1 = Object.freeze({
+	Aacute: Aacute,
+	aacute: aacute,
+	Abreve: Abreve,
+	abreve: abreve,
+	ac: ac$1,
+	acd: acd,
+	acE: acE,
+	Acirc: Acirc,
+	acirc: acirc,
+	acute: acute,
+	Acy: Acy,
+	acy: acy,
+	AElig: AElig,
+	aelig: aelig,
+	af: af$1,
+	Afr: Afr,
+	afr: afr,
+	Agrave: Agrave,
+	agrave: agrave,
+	alefsym: alefsym,
+	aleph: aleph,
+	Alpha: Alpha,
+	alpha: alpha,
+	Amacr: Amacr,
+	amacr: amacr,
+	amalg: amalg,
+	amp: amp,
+	AMP: AMP,
+	andand: andand,
+	And: And,
+	and: and,
+	andd: andd,
+	andslope: andslope,
+	andv: andv,
+	ang: ang,
+	ange: ange,
+	angle: angle,
+	angmsdaa: angmsdaa,
+	angmsdab: angmsdab,
+	angmsdac: angmsdac,
+	angmsdad: angmsdad,
+	angmsdae: angmsdae,
+	angmsdaf: angmsdaf,
+	angmsdag: angmsdag,
+	angmsdah: angmsdah,
+	angmsd: angmsd,
+	angrt: angrt,
+	angrtvb: angrtvb,
+	angrtvbd: angrtvbd,
+	angsph: angsph,
+	angst: angst,
+	angzarr: angzarr,
+	Aogon: Aogon,
+	aogon: aogon,
+	Aopf: Aopf,
+	aopf: aopf,
+	apacir: apacir,
+	ap: ap,
+	apE: apE,
+	ape: ape,
+	apid: apid,
+	apos: apos,
+	ApplyFunction: ApplyFunction,
+	approx: approx,
+	approxeq: approxeq,
+	Aring: Aring,
+	aring: aring,
+	Ascr: Ascr,
+	ascr: ascr,
+	Assign: Assign,
+	ast: ast,
+	asymp: asymp,
+	asympeq: asympeq,
+	Atilde: Atilde,
+	atilde: atilde,
+	Auml: Auml,
+	auml: auml,
+	awconint: awconint,
+	awint: awint,
+	backcong: backcong,
+	backepsilon: backepsilon,
+	backprime: backprime,
+	backsim: backsim,
+	backsimeq: backsimeq,
+	Backslash: Backslash,
+	Barv: Barv,
+	barvee: barvee,
+	barwed: barwed,
+	Barwed: Barwed,
+	barwedge: barwedge,
+	bbrk: bbrk,
+	bbrktbrk: bbrktbrk,
+	bcong: bcong,
+	Bcy: Bcy,
+	bcy: bcy,
+	bdquo: bdquo,
+	becaus: becaus,
+	because: because,
+	Because: Because,
+	bemptyv: bemptyv,
+	bepsi: bepsi,
+	bernou: bernou,
+	Bernoullis: Bernoullis,
+	Beta: Beta,
+	beta: beta,
+	beth: beth,
+	between: between,
+	Bfr: Bfr,
+	bfr: bfr,
+	bigcap: bigcap,
+	bigcirc: bigcirc,
+	bigcup: bigcup,
+	bigodot: bigodot,
+	bigoplus: bigoplus,
+	bigotimes: bigotimes,
+	bigsqcup: bigsqcup,
+	bigstar: bigstar,
+	bigtriangledown: bigtriangledown,
+	bigtriangleup: bigtriangleup,
+	biguplus: biguplus,
+	bigvee: bigvee,
+	bigwedge: bigwedge,
+	bkarow: bkarow,
+	blacklozenge: blacklozenge,
+	blacksquare: blacksquare,
+	blacktriangle: blacktriangle,
+	blacktriangledown: blacktriangledown,
+	blacktriangleleft: blacktriangleleft,
+	blacktriangleright: blacktriangleright,
+	blank: blank,
+	blk12: blk12,
+	blk14: blk14,
+	blk34: blk34,
+	block: block,
+	bne: bne,
+	bnequiv: bnequiv,
+	bNot: bNot,
+	bnot: bnot,
+	Bopf: Bopf,
+	bopf: bopf,
+	bot: bot,
+	bottom: bottom,
+	bowtie: bowtie,
+	boxbox: boxbox,
+	boxdl: boxdl,
+	boxdL: boxdL,
+	boxDl: boxDl,
+	boxDL: boxDL,
+	boxdr: boxdr,
+	boxdR: boxdR,
+	boxDr: boxDr,
+	boxDR: boxDR,
+	boxh: boxh,
+	boxH: boxH,
+	boxhd: boxhd,
+	boxHd: boxHd,
+	boxhD: boxhD,
+	boxHD: boxHD,
+	boxhu: boxhu,
+	boxHu: boxHu,
+	boxhU: boxhU,
+	boxHU: boxHU,
+	boxminus: boxminus,
+	boxplus: boxplus,
+	boxtimes: boxtimes,
+	boxul: boxul,
+	boxuL: boxuL,
+	boxUl: boxUl,
+	boxUL: boxUL,
+	boxur: boxur,
+	boxuR: boxuR,
+	boxUr: boxUr,
+	boxUR: boxUR,
+	boxv: boxv,
+	boxV: boxV,
+	boxvh: boxvh,
+	boxvH: boxvH,
+	boxVh: boxVh,
+	boxVH: boxVH,
+	boxvl: boxvl,
+	boxvL: boxvL,
+	boxVl: boxVl,
+	boxVL: boxVL,
+	boxvr: boxvr,
+	boxvR: boxvR,
+	boxVr: boxVr,
+	boxVR: boxVR,
+	bprime: bprime,
+	breve: breve,
+	Breve: Breve,
+	brvbar: brvbar,
+	bscr: bscr,
+	Bscr: Bscr,
+	bsemi: bsemi,
+	bsim: bsim,
+	bsime: bsime,
+	bsolb: bsolb,
+	bsol: bsol,
+	bsolhsub: bsolhsub,
+	bull: bull,
+	bullet: bullet,
+	bump: bump,
+	bumpE: bumpE,
+	bumpe: bumpe,
+	Bumpeq: Bumpeq,
+	bumpeq: bumpeq,
+	Cacute: Cacute,
+	cacute: cacute,
+	capand: capand,
+	capbrcup: capbrcup,
+	capcap: capcap,
+	cap: cap,
+	Cap: Cap,
+	capcup: capcup,
+	capdot: capdot,
+	CapitalDifferentialD: CapitalDifferentialD,
+	caps: caps,
+	caret: caret,
+	caron: caron,
+	Cayleys: Cayleys,
+	ccaps: ccaps,
+	Ccaron: Ccaron,
+	ccaron: ccaron,
+	Ccedil: Ccedil,
+	ccedil: ccedil,
+	Ccirc: Ccirc,
+	ccirc: ccirc,
+	Cconint: Cconint,
+	ccups: ccups,
+	ccupssm: ccupssm,
+	Cdot: Cdot,
+	cdot: cdot,
+	cedil: cedil,
+	Cedilla: Cedilla,
+	cemptyv: cemptyv,
+	cent: cent,
+	centerdot: centerdot,
+	CenterDot: CenterDot,
+	cfr: cfr,
+	Cfr: Cfr,
+	CHcy: CHcy,
+	chcy: chcy,
+	check: check$1,
+	checkmark: checkmark,
+	Chi: Chi,
+	chi: chi,
+	circ: circ,
+	circeq: circeq,
+	circlearrowleft: circlearrowleft,
+	circlearrowright: circlearrowright,
+	circledast: circledast,
+	circledcirc: circledcirc,
+	circleddash: circleddash,
+	CircleDot: CircleDot,
+	circledR: circledR,
+	circledS: circledS,
+	CircleMinus: CircleMinus,
+	CirclePlus: CirclePlus,
+	CircleTimes: CircleTimes,
+	cir: cir,
+	cirE: cirE,
+	cire: cire,
+	cirfnint: cirfnint,
+	cirmid: cirmid,
+	cirscir: cirscir,
+	ClockwiseContourIntegral: ClockwiseContourIntegral,
+	CloseCurlyDoubleQuote: CloseCurlyDoubleQuote,
+	CloseCurlyQuote: CloseCurlyQuote,
+	clubs: clubs,
+	clubsuit: clubsuit,
+	colon: colon,
+	Colon: Colon,
+	Colone: Colone,
+	colone: colone,
+	coloneq: coloneq,
+	comma: comma,
+	commat: commat,
+	comp: comp,
+	compfn: compfn,
+	complement: complement,
+	complexes: complexes,
+	cong: cong,
+	congdot: congdot,
+	Congruent: Congruent,
+	conint: conint,
+	Conint: Conint,
+	ContourIntegral: ContourIntegral,
+	copf: copf,
+	Copf: Copf,
+	coprod: coprod,
+	Coproduct: Coproduct,
+	copy: copy,
+	COPY: COPY,
+	copysr: copysr,
+	CounterClockwiseContourIntegral: CounterClockwiseContourIntegral,
+	crarr: crarr,
+	cross: cross,
+	Cross: Cross,
+	Cscr: Cscr,
+	cscr: cscr,
+	csub: csub,
+	csube: csube,
+	csup: csup,
+	csupe: csupe,
+	ctdot: ctdot,
+	cudarrl: cudarrl,
+	cudarrr: cudarrr,
+	cuepr: cuepr,
+	cuesc: cuesc,
+	cularr: cularr,
+	cularrp: cularrp,
+	cupbrcap: cupbrcap,
+	cupcap: cupcap,
+	CupCap: CupCap,
+	cup: cup,
+	Cup: Cup,
+	cupcup: cupcup,
+	cupdot: cupdot,
+	cupor: cupor,
+	cups: cups,
+	curarr: curarr,
+	curarrm: curarrm,
+	curlyeqprec: curlyeqprec,
+	curlyeqsucc: curlyeqsucc,
+	curlyvee: curlyvee,
+	curlywedge: curlywedge,
+	curren: curren,
+	curvearrowleft: curvearrowleft,
+	curvearrowright: curvearrowright,
+	cuvee: cuvee,
+	cuwed: cuwed,
+	cwconint: cwconint,
+	cwint: cwint,
+	cylcty: cylcty,
+	dagger: dagger,
+	Dagger: Dagger,
+	daleth: daleth,
+	darr: darr,
+	Darr: Darr,
+	dArr: dArr,
+	dash: dash,
+	Dashv: Dashv,
+	dashv: dashv,
+	dbkarow: dbkarow,
+	dblac: dblac,
+	Dcaron: Dcaron,
+	dcaron: dcaron,
+	Dcy: Dcy,
+	dcy: dcy,
+	ddagger: ddagger,
+	ddarr: ddarr,
+	DD: DD,
+	dd: dd$1,
+	DDotrahd: DDotrahd,
+	ddotseq: ddotseq,
+	deg: deg,
+	Del: Del,
+	Delta: Delta,
+	delta: delta,
+	demptyv: demptyv,
+	dfisht: dfisht,
+	Dfr: Dfr,
+	dfr: dfr,
+	dHar: dHar,
+	dharl: dharl,
+	dharr: dharr,
+	DiacriticalAcute: DiacriticalAcute,
+	DiacriticalDot: DiacriticalDot,
+	DiacriticalDoubleAcute: DiacriticalDoubleAcute,
+	DiacriticalGrave: DiacriticalGrave,
+	DiacriticalTilde: DiacriticalTilde,
+	diam: diam,
+	diamond: diamond,
+	Diamond: Diamond,
+	diamondsuit: diamondsuit,
+	diams: diams,
+	die: die,
+	DifferentialD: DifferentialD,
+	digamma: digamma,
+	disin: disin,
+	div: div$1,
+	divide: divide$1,
+	divideontimes: divideontimes,
+	divonx: divonx,
+	DJcy: DJcy,
+	djcy: djcy,
+	dlcorn: dlcorn,
+	dlcrop: dlcrop,
+	dollar: dollar,
+	Dopf: Dopf,
+	dopf: dopf,
+	Dot: Dot,
+	dot: dot,
+	DotDot: DotDot,
+	doteq: doteq,
+	doteqdot: doteqdot,
+	DotEqual: DotEqual,
+	dotminus: dotminus,
+	dotplus: dotplus,
+	dotsquare: dotsquare,
+	doublebarwedge: doublebarwedge,
+	DoubleContourIntegral: DoubleContourIntegral,
+	DoubleDot: DoubleDot,
+	DoubleDownArrow: DoubleDownArrow,
+	DoubleLeftArrow: DoubleLeftArrow,
+	DoubleLeftRightArrow: DoubleLeftRightArrow,
+	DoubleLeftTee: DoubleLeftTee,
+	DoubleLongLeftArrow: DoubleLongLeftArrow,
+	DoubleLongLeftRightArrow: DoubleLongLeftRightArrow,
+	DoubleLongRightArrow: DoubleLongRightArrow,
+	DoubleRightArrow: DoubleRightArrow,
+	DoubleRightTee: DoubleRightTee,
+	DoubleUpArrow: DoubleUpArrow,
+	DoubleUpDownArrow: DoubleUpDownArrow,
+	DoubleVerticalBar: DoubleVerticalBar,
+	DownArrowBar: DownArrowBar,
+	downarrow: downarrow,
+	DownArrow: DownArrow,
+	Downarrow: Downarrow,
+	DownArrowUpArrow: DownArrowUpArrow,
+	DownBreve: DownBreve,
+	downdownarrows: downdownarrows,
+	downharpoonleft: downharpoonleft,
+	downharpoonright: downharpoonright,
+	DownLeftRightVector: DownLeftRightVector,
+	DownLeftTeeVector: DownLeftTeeVector,
+	DownLeftVectorBar: DownLeftVectorBar,
+	DownLeftVector: DownLeftVector,
+	DownRightTeeVector: DownRightTeeVector,
+	DownRightVectorBar: DownRightVectorBar,
+	DownRightVector: DownRightVector,
+	DownTeeArrow: DownTeeArrow,
+	DownTee: DownTee,
+	drbkarow: drbkarow,
+	drcorn: drcorn,
+	drcrop: drcrop,
+	Dscr: Dscr,
+	dscr: dscr,
+	DScy: DScy,
+	dscy: dscy,
+	dsol: dsol,
+	Dstrok: Dstrok,
+	dstrok: dstrok,
+	dtdot: dtdot,
+	dtri: dtri,
+	dtrif: dtrif,
+	duarr: duarr,
+	duhar: duhar,
+	dwangle: dwangle,
+	DZcy: DZcy,
+	dzcy: dzcy,
+	dzigrarr: dzigrarr,
+	Eacute: Eacute,
+	eacute: eacute,
+	easter: easter,
+	Ecaron: Ecaron,
+	ecaron: ecaron,
+	Ecirc: Ecirc,
+	ecirc: ecirc,
+	ecir: ecir,
+	ecolon: ecolon,
+	Ecy: Ecy,
+	ecy: ecy,
+	eDDot: eDDot,
+	Edot: Edot,
+	edot: edot,
+	eDot: eDot,
+	ee: ee$1,
+	efDot: efDot,
+	Efr: Efr,
+	efr: efr,
+	eg: eg$1,
+	Egrave: Egrave,
+	egrave: egrave,
+	egs: egs,
+	egsdot: egsdot,
+	el: el,
+	Element: Element,
+	elinters: elinters,
+	ell: ell,
+	els: els,
+	elsdot: elsdot,
+	Emacr: Emacr,
+	emacr: emacr,
+	empty: empty$1,
+	emptyset: emptyset,
+	EmptySmallSquare: EmptySmallSquare,
+	emptyv: emptyv,
+	EmptyVerySmallSquare: EmptyVerySmallSquare,
+	emsp13: emsp13,
+	emsp14: emsp14,
+	emsp: emsp,
+	ENG: ENG,
+	eng: eng,
+	ensp: ensp,
+	Eogon: Eogon,
+	eogon: eogon,
+	Eopf: Eopf,
+	eopf: eopf,
+	epar: epar,
+	eparsl: eparsl,
+	eplus: eplus,
+	epsi: epsi,
+	Epsilon: Epsilon,
+	epsilon: epsilon,
+	epsiv: epsiv,
+	eqcirc: eqcirc,
+	eqcolon: eqcolon,
+	eqsim: eqsim,
+	eqslantgtr: eqslantgtr,
+	eqslantless: eqslantless,
+	Equal: Equal,
+	equals: equals,
+	EqualTilde: EqualTilde,
+	equest: equest,
+	Equilibrium: Equilibrium,
+	equiv: equiv,
+	equivDD: equivDD,
+	eqvparsl: eqvparsl,
+	erarr: erarr,
+	erDot: erDot,
+	escr: escr,
+	Escr: Escr,
+	esdot: esdot,
+	Esim: Esim,
+	esim: esim,
+	Eta: Eta,
+	eta: eta,
+	ETH: ETH,
+	eth: eth,
+	Euml: Euml,
+	euml: euml,
+	euro: euro,
+	excl: excl,
+	exist: exist,
+	Exists: Exists,
+	expectation: expectation,
+	exponentiale: exponentiale,
+	ExponentialE: ExponentialE,
+	fallingdotseq: fallingdotseq,
+	Fcy: Fcy,
+	fcy: fcy,
+	female: female,
+	ffilig: ffilig,
+	fflig: fflig,
+	ffllig: ffllig,
+	Ffr: Ffr,
+	ffr: ffr,
+	filig: filig,
+	FilledSmallSquare: FilledSmallSquare,
+	FilledVerySmallSquare: FilledVerySmallSquare,
+	fjlig: fjlig,
+	flat: flat,
+	fllig: fllig,
+	fltns: fltns,
+	fnof: fnof,
+	Fopf: Fopf,
+	fopf: fopf,
+	forall: forall,
+	ForAll: ForAll,
+	fork: fork,
+	forkv: forkv,
+	Fouriertrf: Fouriertrf,
+	fpartint: fpartint,
+	frac12: frac12,
+	frac13: frac13,
+	frac14: frac14,
+	frac15: frac15,
+	frac16: frac16,
+	frac18: frac18,
+	frac23: frac23,
+	frac25: frac25,
+	frac34: frac34,
+	frac35: frac35,
+	frac38: frac38,
+	frac45: frac45,
+	frac56: frac56,
+	frac58: frac58,
+	frac78: frac78,
+	frasl: frasl,
+	frown: frown,
+	fscr: fscr,
+	Fscr: Fscr,
+	gacute: gacute,
+	Gamma: Gamma,
+	gamma: gamma,
+	Gammad: Gammad,
+	gammad: gammad,
+	gap: gap,
+	Gbreve: Gbreve,
+	gbreve: gbreve,
+	Gcedil: Gcedil,
+	Gcirc: Gcirc,
+	gcirc: gcirc,
+	Gcy: Gcy,
+	gcy: gcy,
+	Gdot: Gdot,
+	gdot: gdot,
+	ge: ge$1,
+	gE: gE,
+	gEl: gEl,
+	gel: gel,
+	geq: geq,
+	geqq: geqq,
+	geqslant: geqslant,
+	gescc: gescc,
+	ges: ges,
+	gesdot: gesdot,
+	gesdoto: gesdoto,
+	gesdotol: gesdotol,
+	gesl: gesl,
+	gesles: gesles,
+	Gfr: Gfr,
+	gfr: gfr,
+	gg: gg$1,
+	Gg: Gg,
+	ggg: ggg,
+	gimel: gimel,
+	GJcy: GJcy,
+	gjcy: gjcy,
+	gla: gla,
+	gl: gl,
+	glE: glE,
+	glj: glj,
+	gnap: gnap,
+	gnapprox: gnapprox,
+	gne: gne,
+	gnE: gnE,
+	gneq: gneq,
+	gneqq: gneqq,
+	gnsim: gnsim,
+	Gopf: Gopf,
+	gopf: gopf,
+	grave: grave,
+	GreaterEqual: GreaterEqual,
+	GreaterEqualLess: GreaterEqualLess,
+	GreaterFullEqual: GreaterFullEqual,
+	GreaterGreater: GreaterGreater,
+	GreaterLess: GreaterLess,
+	GreaterSlantEqual: GreaterSlantEqual,
+	GreaterTilde: GreaterTilde,
+	Gscr: Gscr,
+	gscr: gscr,
+	gsim: gsim,
+	gsime: gsime,
+	gsiml: gsiml,
+	gtcc: gtcc,
+	gtcir: gtcir,
+	gt: gt,
+	GT: GT,
+	Gt: Gt,
+	gtdot: gtdot,
+	gtlPar: gtlPar,
+	gtquest: gtquest,
+	gtrapprox: gtrapprox,
+	gtrarr: gtrarr,
+	gtrdot: gtrdot,
+	gtreqless: gtreqless,
+	gtreqqless: gtreqqless,
+	gtrless: gtrless,
+	gtrsim: gtrsim,
+	gvertneqq: gvertneqq,
+	gvnE: gvnE,
+	Hacek: Hacek,
+	hairsp: hairsp,
+	half: half,
+	hamilt: hamilt,
+	HARDcy: HARDcy,
+	hardcy: hardcy,
+	harrcir: harrcir,
+	harr: harr,
+	hArr: hArr,
+	harrw: harrw,
+	Hat: Hat,
+	hbar: hbar,
+	Hcirc: Hcirc,
+	hcirc: hcirc,
+	hearts: hearts,
+	heartsuit: heartsuit,
+	hellip: hellip,
+	hercon: hercon,
+	hfr: hfr,
+	Hfr: Hfr,
+	HilbertSpace: HilbertSpace,
+	hksearow: hksearow,
+	hkswarow: hkswarow,
+	hoarr: hoarr,
+	homtht: homtht,
+	hookleftarrow: hookleftarrow,
+	hookrightarrow: hookrightarrow,
+	hopf: hopf,
+	Hopf: Hopf,
+	horbar: horbar,
+	HorizontalLine: HorizontalLine,
+	hscr: hscr,
+	Hscr: Hscr,
+	hslash: hslash,
+	Hstrok: Hstrok,
+	hstrok: hstrok,
+	HumpDownHump: HumpDownHump,
+	HumpEqual: HumpEqual,
+	hybull: hybull,
+	hyphen: hyphen,
+	Iacute: Iacute,
+	iacute: iacute,
+	ic: ic$1,
+	Icirc: Icirc,
+	icirc: icirc,
+	Icy: Icy,
+	icy: icy,
+	Idot: Idot,
+	IEcy: IEcy,
+	iecy: iecy,
+	iexcl: iexcl,
+	iff: iff,
+	ifr: ifr,
+	Ifr: Ifr,
+	Igrave: Igrave,
+	igrave: igrave,
+	ii: ii,
+	iiiint: iiiint,
+	iiint: iiint,
+	iinfin: iinfin,
+	iiota: iiota,
+	IJlig: IJlig,
+	ijlig: ijlig,
+	Imacr: Imacr,
+	imacr: imacr,
+	image: image,
+	ImaginaryI: ImaginaryI,
+	imagline: imagline,
+	imagpart: imagpart,
+	imath: imath,
+	Im: Im,
+	imof: imof,
+	imped: imped,
+	Implies: Implies,
+	incare: incare,
+	infin: infin,
+	infintie: infintie,
+	inodot: inodot,
+	intcal: intcal,
+	int: int,
+	Int: Int,
+	integers: integers,
+	Integral: Integral,
+	intercal: intercal,
+	Intersection: Intersection,
+	intlarhk: intlarhk,
+	intprod: intprod,
+	InvisibleComma: InvisibleComma,
+	InvisibleTimes: InvisibleTimes,
+	IOcy: IOcy,
+	iocy: iocy,
+	Iogon: Iogon,
+	iogon: iogon,
+	Iopf: Iopf,
+	iopf: iopf,
+	Iota: Iota,
+	iota: iota,
+	iprod: iprod,
+	iquest: iquest,
+	iscr: iscr,
+	Iscr: Iscr,
+	isin: isin,
+	isindot: isindot,
+	isinE: isinE,
+	isins: isins,
+	isinsv: isinsv,
+	isinv: isinv,
+	it: it,
+	Itilde: Itilde,
+	itilde: itilde,
+	Iukcy: Iukcy,
+	iukcy: iukcy,
+	Iuml: Iuml,
+	iuml: iuml,
+	Jcirc: Jcirc,
+	jcirc: jcirc,
+	Jcy: Jcy,
+	jcy: jcy,
+	Jfr: Jfr,
+	jfr: jfr,
+	jmath: jmath,
+	Jopf: Jopf,
+	jopf: jopf,
+	Jscr: Jscr,
+	jscr: jscr,
+	Jsercy: Jsercy,
+	jsercy: jsercy,
+	Jukcy: Jukcy,
+	jukcy: jukcy,
+	Kappa: Kappa,
+	kappa: kappa,
+	kappav: kappav,
+	Kcedil: Kcedil,
+	kcedil: kcedil,
+	Kcy: Kcy,
+	kcy: kcy,
+	Kfr: Kfr,
+	kfr: kfr,
+	kgreen: kgreen,
+	KHcy: KHcy,
+	khcy: khcy,
+	KJcy: KJcy,
+	kjcy: kjcy,
+	Kopf: Kopf,
+	kopf: kopf,
+	Kscr: Kscr,
+	kscr: kscr,
+	lAarr: lAarr,
+	Lacute: Lacute,
+	lacute: lacute,
+	laemptyv: laemptyv,
+	lagran: lagran,
+	Lambda: Lambda,
+	lambda: lambda,
+	lang: lang,
+	Lang: Lang,
+	langd: langd,
+	langle: langle,
+	lap: lap,
+	Laplacetrf: Laplacetrf,
+	laquo: laquo,
+	larrb: larrb,
+	larrbfs: larrbfs,
+	larr: larr,
+	Larr: Larr,
+	lArr: lArr,
+	larrfs: larrfs,
+	larrhk: larrhk,
+	larrlp: larrlp,
+	larrpl: larrpl,
+	larrsim: larrsim,
+	larrtl: larrtl,
+	latail: latail,
+	lAtail: lAtail,
+	lat: lat,
+	late: late,
+	lates: lates,
+	lbarr: lbarr,
+	lBarr: lBarr,
+	lbbrk: lbbrk,
+	lbrace: lbrace,
+	lbrack: lbrack,
+	lbrke: lbrke,
+	lbrksld: lbrksld,
+	lbrkslu: lbrkslu,
+	Lcaron: Lcaron,
+	lcaron: lcaron,
+	Lcedil: Lcedil,
+	lcedil: lcedil,
+	lceil: lceil,
+	lcub: lcub,
+	Lcy: Lcy,
+	lcy: lcy,
+	ldca: ldca,
+	ldquo: ldquo,
+	ldquor: ldquor,
+	ldrdhar: ldrdhar,
+	ldrushar: ldrushar,
+	ldsh: ldsh,
+	le: le$1,
+	lE: lE,
+	LeftAngleBracket: LeftAngleBracket,
+	LeftArrowBar: LeftArrowBar,
+	leftarrow: leftarrow,
+	LeftArrow: LeftArrow,
+	Leftarrow: Leftarrow,
+	LeftArrowRightArrow: LeftArrowRightArrow,
+	leftarrowtail: leftarrowtail,
+	LeftCeiling: LeftCeiling,
+	LeftDoubleBracket: LeftDoubleBracket,
+	LeftDownTeeVector: LeftDownTeeVector,
+	LeftDownVectorBar: LeftDownVectorBar,
+	LeftDownVector: LeftDownVector,
+	LeftFloor: LeftFloor,
+	leftharpoondown: leftharpoondown,
+	leftharpoonup: leftharpoonup,
+	leftleftarrows: leftleftarrows,
+	leftrightarrow: leftrightarrow,
+	LeftRightArrow: LeftRightArrow,
+	Leftrightarrow: Leftrightarrow,
+	leftrightarrows: leftrightarrows,
+	leftrightharpoons: leftrightharpoons,
+	leftrightsquigarrow: leftrightsquigarrow,
+	LeftRightVector: LeftRightVector,
+	LeftTeeArrow: LeftTeeArrow,
+	LeftTee: LeftTee,
+	LeftTeeVector: LeftTeeVector,
+	leftthreetimes: leftthreetimes,
+	LeftTriangleBar: LeftTriangleBar,
+	LeftTriangle: LeftTriangle,
+	LeftTriangleEqual: LeftTriangleEqual,
+	LeftUpDownVector: LeftUpDownVector,
+	LeftUpTeeVector: LeftUpTeeVector,
+	LeftUpVectorBar: LeftUpVectorBar,
+	LeftUpVector: LeftUpVector,
+	LeftVectorBar: LeftVectorBar,
+	LeftVector: LeftVector,
+	lEg: lEg,
+	leg: leg,
+	leq: leq,
+	leqq: leqq,
+	leqslant: leqslant,
+	lescc: lescc,
+	les: les,
+	lesdot: lesdot,
+	lesdoto: lesdoto,
+	lesdotor: lesdotor,
+	lesg: lesg,
+	lesges: lesges,
+	lessapprox: lessapprox,
+	lessdot: lessdot,
+	lesseqgtr: lesseqgtr,
+	lesseqqgtr: lesseqqgtr,
+	LessEqualGreater: LessEqualGreater,
+	LessFullEqual: LessFullEqual,
+	LessGreater: LessGreater,
+	lessgtr: lessgtr,
+	LessLess: LessLess,
+	lesssim: lesssim,
+	LessSlantEqual: LessSlantEqual,
+	LessTilde: LessTilde,
+	lfisht: lfisht,
+	lfloor: lfloor,
+	Lfr: Lfr,
+	lfr: lfr,
+	lg: lg$1,
+	lgE: lgE,
+	lHar: lHar,
+	lhard: lhard,
+	lharu: lharu,
+	lharul: lharul,
+	lhblk: lhblk,
+	LJcy: LJcy,
+	ljcy: ljcy,
+	llarr: llarr,
+	ll: ll,
+	Ll: Ll,
+	llcorner: llcorner,
+	Lleftarrow: Lleftarrow,
+	llhard: llhard,
+	lltri: lltri,
+	Lmidot: Lmidot,
+	lmidot: lmidot,
+	lmoustache: lmoustache,
+	lmoust: lmoust,
+	lnap: lnap,
+	lnapprox: lnapprox,
+	lne: lne,
+	lnE: lnE,
+	lneq: lneq,
+	lneqq: lneqq,
+	lnsim: lnsim,
+	loang: loang,
+	loarr: loarr,
+	lobrk: lobrk,
+	longleftarrow: longleftarrow,
+	LongLeftArrow: LongLeftArrow,
+	Longleftarrow: Longleftarrow,
+	longleftrightarrow: longleftrightarrow,
+	LongLeftRightArrow: LongLeftRightArrow,
+	Longleftrightarrow: Longleftrightarrow,
+	longmapsto: longmapsto,
+	longrightarrow: longrightarrow,
+	LongRightArrow: LongRightArrow,
+	Longrightarrow: Longrightarrow,
+	looparrowleft: looparrowleft,
+	looparrowright: looparrowright,
+	lopar: lopar,
+	Lopf: Lopf,
+	lopf: lopf,
+	loplus: loplus,
+	lotimes: lotimes,
+	lowast: lowast,
+	lowbar: lowbar,
+	LowerLeftArrow: LowerLeftArrow,
+	LowerRightArrow: LowerRightArrow,
+	loz: loz,
+	lozenge: lozenge,
+	lozf: lozf,
+	lpar: lpar,
+	lparlt: lparlt,
+	lrarr: lrarr,
+	lrcorner: lrcorner,
+	lrhar: lrhar,
+	lrhard: lrhard,
+	lrm: lrm,
+	lrtri: lrtri,
+	lsaquo: lsaquo,
+	lscr: lscr,
+	Lscr: Lscr,
+	lsh: lsh,
+	Lsh: Lsh,
+	lsim: lsim,
+	lsime: lsime,
+	lsimg: lsimg,
+	lsqb: lsqb,
+	lsquo: lsquo,
+	lsquor: lsquor,
+	Lstrok: Lstrok,
+	lstrok: lstrok,
+	ltcc: ltcc,
+	ltcir: ltcir,
+	lt: lt,
+	LT: LT,
+	Lt: Lt,
+	ltdot: ltdot,
+	lthree: lthree,
+	ltimes: ltimes,
+	ltlarr: ltlarr,
+	ltquest: ltquest,
+	ltri: ltri,
+	ltrie: ltrie,
+	ltrif: ltrif,
+	ltrPar: ltrPar,
+	lurdshar: lurdshar,
+	luruhar: luruhar,
+	lvertneqq: lvertneqq,
+	lvnE: lvnE,
+	macr: macr,
+	male: male,
+	malt: malt,
+	maltese: maltese,
+	map: map$1,
+	mapsto: mapsto,
+	mapstodown: mapstodown,
+	mapstoleft: mapstoleft,
+	mapstoup: mapstoup,
+	marker: marker,
+	mcomma: mcomma,
+	Mcy: Mcy,
+	mcy: mcy,
+	mdash: mdash,
+	mDDot: mDDot,
+	measuredangle: measuredangle,
+	MediumSpace: MediumSpace,
+	Mellintrf: Mellintrf,
+	Mfr: Mfr,
+	mfr: mfr,
+	mho: mho,
+	micro: micro,
+	midast: midast,
+	midcir: midcir,
+	mid: mid,
+	middot: middot,
+	minusb: minusb,
+	minus: minus,
+	minusd: minusd,
+	minusdu: minusdu,
+	MinusPlus: MinusPlus,
+	mlcp: mlcp,
+	mldr: mldr,
+	mnplus: mnplus,
+	models: models,
+	Mopf: Mopf,
+	mopf: mopf,
+	mp: mp,
+	mscr: mscr,
+	Mscr: Mscr,
+	mstpos: mstpos,
+	Mu: Mu,
+	mu: mu,
+	multimap: multimap,
+	mumap: mumap,
+	nabla: nabla,
+	Nacute: Nacute,
+	nacute: nacute,
+	nang: nang,
+	nap: nap,
+	napE: napE,
+	napid: napid,
+	napos: napos,
+	napprox: napprox,
+	natural: natural,
+	naturals: naturals,
+	natur: natur,
+	nbsp: nbsp,
+	nbump: nbump,
+	nbumpe: nbumpe,
+	ncap: ncap,
+	Ncaron: Ncaron,
+	ncaron: ncaron,
+	Ncedil: Ncedil,
+	ncedil: ncedil,
+	ncong: ncong,
+	ncongdot: ncongdot,
+	ncup: ncup,
+	Ncy: Ncy,
+	ncy: ncy,
+	ndash: ndash,
+	nearhk: nearhk,
+	nearr: nearr,
+	neArr: neArr,
+	nearrow: nearrow,
+	ne: ne$1,
+	nedot: nedot,
+	NegativeMediumSpace: NegativeMediumSpace,
+	NegativeThickSpace: NegativeThickSpace,
+	NegativeThinSpace: NegativeThinSpace,
+	NegativeVeryThinSpace: NegativeVeryThinSpace,
+	nequiv: nequiv,
+	nesear: nesear,
+	nesim: nesim,
+	NestedGreaterGreater: NestedGreaterGreater,
+	NestedLessLess: NestedLessLess,
+	NewLine: NewLine,
+	nexist: nexist,
+	nexists: nexists,
+	Nfr: Nfr,
+	nfr: nfr,
+	ngE: ngE,
+	nge: nge,
+	ngeq: ngeq,
+	ngeqq: ngeqq,
+	ngeqslant: ngeqslant,
+	nges: nges,
+	nGg: nGg,
+	ngsim: ngsim,
+	nGt: nGt,
+	ngt: ngt,
+	ngtr: ngtr,
+	nGtv: nGtv,
+	nharr: nharr,
+	nhArr: nhArr,
+	nhpar: nhpar,
+	ni: ni,
+	nis: nis,
+	nisd: nisd,
+	niv: niv,
+	NJcy: NJcy,
+	njcy: njcy,
+	nlarr: nlarr,
+	nlArr: nlArr,
+	nldr: nldr,
+	nlE: nlE,
+	nle: nle,
+	nleftarrow: nleftarrow,
+	nLeftarrow: nLeftarrow,
+	nleftrightarrow: nleftrightarrow,
+	nLeftrightarrow: nLeftrightarrow,
+	nleq: nleq,
+	nleqq: nleqq,
+	nleqslant: nleqslant,
+	nles: nles,
+	nless: nless,
+	nLl: nLl,
+	nlsim: nlsim,
+	nLt: nLt,
+	nlt: nlt,
+	nltri: nltri,
+	nltrie: nltrie,
+	nLtv: nLtv,
+	nmid: nmid,
+	NoBreak: NoBreak,
+	NonBreakingSpace: NonBreakingSpace,
+	nopf: nopf,
+	Nopf: Nopf,
+	Not: Not,
+	not: not,
+	NotCongruent: NotCongruent,
+	NotCupCap: NotCupCap,
+	NotDoubleVerticalBar: NotDoubleVerticalBar,
+	NotElement: NotElement,
+	NotEqual: NotEqual,
+	NotEqualTilde: NotEqualTilde,
+	NotExists: NotExists,
+	NotGreater: NotGreater,
+	NotGreaterEqual: NotGreaterEqual,
+	NotGreaterFullEqual: NotGreaterFullEqual,
+	NotGreaterGreater: NotGreaterGreater,
+	NotGreaterLess: NotGreaterLess,
+	NotGreaterSlantEqual: NotGreaterSlantEqual,
+	NotGreaterTilde: NotGreaterTilde,
+	NotHumpDownHump: NotHumpDownHump,
+	NotHumpEqual: NotHumpEqual,
+	notin: notin,
+	notindot: notindot,
+	notinE: notinE,
+	notinva: notinva,
+	notinvb: notinvb,
+	notinvc: notinvc,
+	NotLeftTriangleBar: NotLeftTriangleBar,
+	NotLeftTriangle: NotLeftTriangle,
+	NotLeftTriangleEqual: NotLeftTriangleEqual,
+	NotLess: NotLess,
+	NotLessEqual: NotLessEqual,
+	NotLessGreater: NotLessGreater,
+	NotLessLess: NotLessLess,
+	NotLessSlantEqual: NotLessSlantEqual,
+	NotLessTilde: NotLessTilde,
+	NotNestedGreaterGreater: NotNestedGreaterGreater,
+	NotNestedLessLess: NotNestedLessLess,
+	notni: notni,
+	notniva: notniva,
+	notnivb: notnivb,
+	notnivc: notnivc,
+	NotPrecedes: NotPrecedes,
+	NotPrecedesEqual: NotPrecedesEqual,
+	NotPrecedesSlantEqual: NotPrecedesSlantEqual,
+	NotReverseElement: NotReverseElement,
+	NotRightTriangleBar: NotRightTriangleBar,
+	NotRightTriangle: NotRightTriangle,
+	NotRightTriangleEqual: NotRightTriangleEqual,
+	NotSquareSubset: NotSquareSubset,
+	NotSquareSubsetEqual: NotSquareSubsetEqual,
+	NotSquareSuperset: NotSquareSuperset,
+	NotSquareSupersetEqual: NotSquareSupersetEqual,
+	NotSubset: NotSubset,
+	NotSubsetEqual: NotSubsetEqual,
+	NotSucceeds: NotSucceeds,
+	NotSucceedsEqual: NotSucceedsEqual,
+	NotSucceedsSlantEqual: NotSucceedsSlantEqual,
+	NotSucceedsTilde: NotSucceedsTilde,
+	NotSuperset: NotSuperset,
+	NotSupersetEqual: NotSupersetEqual,
+	NotTilde: NotTilde,
+	NotTildeEqual: NotTildeEqual,
+	NotTildeFullEqual: NotTildeFullEqual,
+	NotTildeTilde: NotTildeTilde,
+	NotVerticalBar: NotVerticalBar,
+	nparallel: nparallel,
+	npar: npar,
+	nparsl: nparsl,
+	npart: npart,
+	npolint: npolint,
+	npr: npr,
+	nprcue: nprcue,
+	nprec: nprec,
+	npreceq: npreceq,
+	npre: npre,
+	nrarrc: nrarrc,
+	nrarr: nrarr,
+	nrArr: nrArr,
+	nrarrw: nrarrw,
+	nrightarrow: nrightarrow,
+	nRightarrow: nRightarrow,
+	nrtri: nrtri,
+	nrtrie: nrtrie,
+	nsc: nsc,
+	nsccue: nsccue,
+	nsce: nsce,
+	Nscr: Nscr,
+	nscr: nscr,
+	nshortmid: nshortmid,
+	nshortparallel: nshortparallel,
+	nsim: nsim,
+	nsime: nsime,
+	nsimeq: nsimeq,
+	nsmid: nsmid,
+	nspar: nspar,
+	nsqsube: nsqsube,
+	nsqsupe: nsqsupe,
+	nsub: nsub,
+	nsubE: nsubE,
+	nsube: nsube,
+	nsubset: nsubset,
+	nsubseteq: nsubseteq,
+	nsubseteqq: nsubseteqq,
+	nsucc: nsucc,
+	nsucceq: nsucceq,
+	nsup: nsup,
+	nsupE: nsupE,
+	nsupe: nsupe,
+	nsupset: nsupset,
+	nsupseteq: nsupseteq,
+	nsupseteqq: nsupseteqq,
+	ntgl: ntgl,
+	Ntilde: Ntilde,
+	ntilde: ntilde,
+	ntlg: ntlg,
+	ntriangleleft: ntriangleleft,
+	ntrianglelefteq: ntrianglelefteq,
+	ntriangleright: ntriangleright,
+	ntrianglerighteq: ntrianglerighteq,
+	Nu: Nu,
+	nu: nu,
+	num: num,
+	numero: numero,
+	numsp: numsp,
+	nvap: nvap,
+	nvdash: nvdash,
+	nvDash: nvDash,
+	nVdash: nVdash,
+	nVDash: nVDash,
+	nvge: nvge,
+	nvgt: nvgt,
+	nvHarr: nvHarr,
+	nvinfin: nvinfin,
+	nvlArr: nvlArr,
+	nvle: nvle,
+	nvlt: nvlt,
+	nvltrie: nvltrie,
+	nvrArr: nvrArr,
+	nvrtrie: nvrtrie,
+	nvsim: nvsim,
+	nwarhk: nwarhk,
+	nwarr: nwarr,
+	nwArr: nwArr,
+	nwarrow: nwarrow,
+	nwnear: nwnear,
+	Oacute: Oacute,
+	oacute: oacute,
+	oast: oast,
+	Ocirc: Ocirc,
+	ocirc: ocirc,
+	ocir: ocir,
+	Ocy: Ocy,
+	ocy: ocy,
+	odash: odash,
+	Odblac: Odblac,
+	odblac: odblac,
+	odiv: odiv,
+	odot: odot,
+	odsold: odsold,
+	OElig: OElig,
+	oelig: oelig,
+	ofcir: ofcir,
+	Ofr: Ofr,
+	ofr: ofr,
+	ogon: ogon,
+	Ograve: Ograve,
+	ograve: ograve,
+	ogt: ogt,
+	ohbar: ohbar,
+	ohm: ohm,
+	oint: oint,
+	olarr: olarr,
+	olcir: olcir,
+	olcross: olcross,
+	oline: oline,
+	olt: olt,
+	Omacr: Omacr,
+	omacr: omacr,
+	Omega: Omega,
+	omega: omega,
+	Omicron: Omicron,
+	omicron: omicron,
+	omid: omid,
+	ominus: ominus,
+	Oopf: Oopf,
+	oopf: oopf,
+	opar: opar,
+	OpenCurlyDoubleQuote: OpenCurlyDoubleQuote,
+	OpenCurlyQuote: OpenCurlyQuote,
+	operp: operp,
+	oplus: oplus,
+	orarr: orarr,
+	Or: Or,
+	or: or,
+	ord: ord,
+	order: order,
+	orderof: orderof,
+	ordf: ordf,
+	ordm: ordm,
+	origof: origof,
+	oror: oror,
+	orslope: orslope,
+	orv: orv,
+	oS: oS,
+	Oscr: Oscr,
+	oscr: oscr,
+	Oslash: Oslash,
+	oslash: oslash,
+	osol: osol,
+	Otilde: Otilde,
+	otilde: otilde,
+	otimesas: otimesas,
+	Otimes: Otimes,
+	otimes: otimes,
+	Ouml: Ouml,
+	ouml: ouml,
+	ovbar: ovbar,
+	OverBar: OverBar,
+	OverBrace: OverBrace,
+	OverBracket: OverBracket,
+	OverParenthesis: OverParenthesis,
+	para: para,
+	parallel: parallel,
+	par: par,
+	parsim: parsim,
+	parsl: parsl,
+	part: part,
+	PartialD: PartialD,
+	Pcy: Pcy,
+	pcy: pcy,
+	percnt: percnt,
+	period: period,
+	permil: permil,
+	perp: perp,
+	pertenk: pertenk,
+	Pfr: Pfr,
+	pfr: pfr,
+	Phi: Phi,
+	phi: phi,
+	phiv: phiv,
+	phmmat: phmmat,
+	phone: phone,
+	Pi: Pi,
+	pi: pi,
+	pitchfork: pitchfork,
+	piv: piv,
+	planck: planck,
+	planckh: planckh,
+	plankv: plankv,
+	plusacir: plusacir,
+	plusb: plusb,
+	pluscir: pluscir,
+	plus: plus,
+	plusdo: plusdo,
+	plusdu: plusdu,
+	pluse: pluse,
+	PlusMinus: PlusMinus,
+	plusmn: plusmn,
+	plussim: plussim,
+	plustwo: plustwo,
+	pm: pm,
+	Poincareplane: Poincareplane,
+	pointint: pointint,
+	popf: popf,
+	Popf: Popf,
+	pound: pound,
+	prap: prap,
+	Pr: Pr,
+	pr: pr,
+	prcue: prcue,
+	precapprox: precapprox,
+	prec: prec,
+	preccurlyeq: preccurlyeq,
+	Precedes: Precedes,
+	PrecedesEqual: PrecedesEqual,
+	PrecedesSlantEqual: PrecedesSlantEqual,
+	PrecedesTilde: PrecedesTilde,
+	preceq: preceq,
+	precnapprox: precnapprox,
+	precneqq: precneqq,
+	precnsim: precnsim,
+	pre: pre,
+	prE: prE,
+	precsim: precsim,
+	prime: prime,
+	Prime: Prime,
+	primes: primes,
+	prnap: prnap,
+	prnE: prnE,
+	prnsim: prnsim,
+	prod: prod,
+	Product: Product,
+	profalar: profalar,
+	profline: profline,
+	profsurf: profsurf,
+	prop: prop,
+	Proportional: Proportional,
+	Proportion: Proportion,
+	propto: propto,
+	prsim: prsim,
+	prurel: prurel,
+	Pscr: Pscr,
+	pscr: pscr,
+	Psi: Psi,
+	psi: psi,
+	puncsp: puncsp,
+	Qfr: Qfr,
+	qfr: qfr,
+	qint: qint,
+	qopf: qopf,
+	Qopf: Qopf,
+	qprime: qprime,
+	Qscr: Qscr,
+	qscr: qscr,
+	quaternions: quaternions,
+	quatint: quatint,
+	quest: quest,
+	questeq: questeq,
+	quot: quot$1,
+	QUOT: QUOT,
+	rAarr: rAarr,
+	race: race,
+	Racute: Racute,
+	racute: racute,
+	radic: radic,
+	raemptyv: raemptyv,
+	rang: rang,
+	Rang: Rang,
+	rangd: rangd,
+	range: range,
+	rangle: rangle,
+	raquo: raquo,
+	rarrap: rarrap,
+	rarrb: rarrb,
+	rarrbfs: rarrbfs,
+	rarrc: rarrc,
+	rarr: rarr,
+	Rarr: Rarr,
+	rArr: rArr,
+	rarrfs: rarrfs,
+	rarrhk: rarrhk,
+	rarrlp: rarrlp,
+	rarrpl: rarrpl,
+	rarrsim: rarrsim,
+	Rarrtl: Rarrtl,
+	rarrtl: rarrtl,
+	rarrw: rarrw,
+	ratail: ratail,
+	rAtail: rAtail,
+	ratio: ratio,
+	rationals: rationals,
+	rbarr: rbarr,
+	rBarr: rBarr,
+	RBarr: RBarr,
+	rbbrk: rbbrk,
+	rbrace: rbrace,
+	rbrack: rbrack,
+	rbrke: rbrke,
+	rbrksld: rbrksld,
+	rbrkslu: rbrkslu,
+	Rcaron: Rcaron,
+	rcaron: rcaron,
+	Rcedil: Rcedil,
+	rcedil: rcedil,
+	rceil: rceil,
+	rcub: rcub,
+	Rcy: Rcy,
+	rcy: rcy,
+	rdca: rdca,
+	rdldhar: rdldhar,
+	rdquo: rdquo,
+	rdquor: rdquor,
+	rdsh: rdsh,
+	real: real,
+	realine: realine,
+	realpart: realpart,
+	reals: reals,
+	Re: Re$1,
+	rect: rect,
+	reg: reg,
+	REG: REG,
+	ReverseElement: ReverseElement,
+	ReverseEquilibrium: ReverseEquilibrium,
+	ReverseUpEquilibrium: ReverseUpEquilibrium,
+	rfisht: rfisht,
+	rfloor: rfloor,
+	rfr: rfr,
+	Rfr: Rfr,
+	rHar: rHar,
+	rhard: rhard,
+	rharu: rharu,
+	rharul: rharul,
+	Rho: Rho,
+	rho: rho,
+	rhov: rhov,
+	RightAngleBracket: RightAngleBracket,
+	RightArrowBar: RightArrowBar,
+	rightarrow: rightarrow,
+	RightArrow: RightArrow,
+	Rightarrow: Rightarrow,
+	RightArrowLeftArrow: RightArrowLeftArrow,
+	rightarrowtail: rightarrowtail,
+	RightCeiling: RightCeiling,
+	RightDoubleBracket: RightDoubleBracket,
+	RightDownTeeVector: RightDownTeeVector,
+	RightDownVectorBar: RightDownVectorBar,
+	RightDownVector: RightDownVector,
+	RightFloor: RightFloor,
+	rightharpoondown: rightharpoondown,
+	rightharpoonup: rightharpoonup,
+	rightleftarrows: rightleftarrows,
+	rightleftharpoons: rightleftharpoons,
+	rightrightarrows: rightrightarrows,
+	rightsquigarrow: rightsquigarrow,
+	RightTeeArrow: RightTeeArrow,
+	RightTee: RightTee,
+	RightTeeVector: RightTeeVector,
+	rightthreetimes: rightthreetimes,
+	RightTriangleBar: RightTriangleBar,
+	RightTriangle: RightTriangle,
+	RightTriangleEqual: RightTriangleEqual,
+	RightUpDownVector: RightUpDownVector,
+	RightUpTeeVector: RightUpTeeVector,
+	RightUpVectorBar: RightUpVectorBar,
+	RightUpVector: RightUpVector,
+	RightVectorBar: RightVectorBar,
+	RightVector: RightVector,
+	ring: ring,
+	risingdotseq: risingdotseq,
+	rlarr: rlarr,
+	rlhar: rlhar,
+	rlm: rlm,
+	rmoustache: rmoustache,
+	rmoust: rmoust,
+	rnmid: rnmid,
+	roang: roang,
+	roarr: roarr,
+	robrk: robrk,
+	ropar: ropar,
+	ropf: ropf,
+	Ropf: Ropf,
+	roplus: roplus,
+	rotimes: rotimes,
+	RoundImplies: RoundImplies,
+	rpar: rpar,
+	rpargt: rpargt,
+	rppolint: rppolint,
+	rrarr: rrarr,
+	Rrightarrow: Rrightarrow,
+	rsaquo: rsaquo,
+	rscr: rscr,
+	Rscr: Rscr,
+	rsh: rsh,
+	Rsh: Rsh,
+	rsqb: rsqb,
+	rsquo: rsquo,
+	rsquor: rsquor,
+	rthree: rthree,
+	rtimes: rtimes,
+	rtri: rtri,
+	rtrie: rtrie,
+	rtrif: rtrif,
+	rtriltri: rtriltri,
+	RuleDelayed: RuleDelayed,
+	ruluhar: ruluhar,
+	rx: rx,
+	Sacute: Sacute,
+	sacute: sacute,
+	sbquo: sbquo,
+	scap: scap,
+	Scaron: Scaron,
+	scaron: scaron,
+	Sc: Sc,
+	sc: sc$1,
+	sccue: sccue,
+	sce: sce,
+	scE: scE,
+	Scedil: Scedil,
+	scedil: scedil,
+	Scirc: Scirc,
+	scirc: scirc,
+	scnap: scnap,
+	scnE: scnE,
+	scnsim: scnsim,
+	scpolint: scpolint,
+	scsim: scsim,
+	Scy: Scy,
+	scy: scy,
+	sdotb: sdotb,
+	sdot: sdot,
+	sdote: sdote,
+	searhk: searhk,
+	searr: searr,
+	seArr: seArr,
+	searrow: searrow,
+	sect: sect,
+	semi: semi,
+	seswar: seswar,
+	setminus: setminus,
+	setmn: setmn,
+	sext: sext,
+	Sfr: Sfr,
+	sfr: sfr,
+	sfrown: sfrown,
+	sharp: sharp,
+	SHCHcy: SHCHcy,
+	shchcy: shchcy,
+	SHcy: SHcy,
+	shcy: shcy,
+	ShortDownArrow: ShortDownArrow,
+	ShortLeftArrow: ShortLeftArrow,
+	shortmid: shortmid,
+	shortparallel: shortparallel,
+	ShortRightArrow: ShortRightArrow,
+	ShortUpArrow: ShortUpArrow,
+	shy: shy,
+	Sigma: Sigma,
+	sigma: sigma,
+	sigmaf: sigmaf,
+	sigmav: sigmav,
+	sim: sim,
+	simdot: simdot,
+	sime: sime,
+	simeq: simeq,
+	simg: simg,
+	simgE: simgE,
+	siml: siml,
+	simlE: simlE,
+	simne: simne,
+	simplus: simplus,
+	simrarr: simrarr,
+	slarr: slarr,
+	SmallCircle: SmallCircle,
+	smallsetminus: smallsetminus,
+	smashp: smashp,
+	smeparsl: smeparsl,
+	smid: smid,
+	smile: smile,
+	smt: smt,
+	smte: smte,
+	smtes: smtes,
+	SOFTcy: SOFTcy,
+	softcy: softcy,
+	solbar: solbar,
+	solb: solb,
+	sol: sol,
+	Sopf: Sopf,
+	sopf: sopf,
+	spades: spades,
+	spadesuit: spadesuit,
+	spar: spar,
+	sqcap: sqcap,
+	sqcaps: sqcaps,
+	sqcup: sqcup,
+	sqcups: sqcups,
+	Sqrt: Sqrt,
+	sqsub: sqsub,
+	sqsube: sqsube,
+	sqsubset: sqsubset,
+	sqsubseteq: sqsubseteq,
+	sqsup: sqsup,
+	sqsupe: sqsupe,
+	sqsupset: sqsupset,
+	sqsupseteq: sqsupseteq,
+	square: square,
+	Square: Square,
+	SquareIntersection: SquareIntersection,
+	SquareSubset: SquareSubset,
+	SquareSubsetEqual: SquareSubsetEqual,
+	SquareSuperset: SquareSuperset,
+	SquareSupersetEqual: SquareSupersetEqual,
+	SquareUnion: SquareUnion,
+	squarf: squarf,
+	squ: squ,
+	squf: squf,
+	srarr: srarr,
+	Sscr: Sscr,
+	sscr: sscr,
+	ssetmn: ssetmn,
+	ssmile: ssmile,
+	sstarf: sstarf,
+	Star: Star,
+	star: star,
+	starf: starf,
+	straightepsilon: straightepsilon,
+	straightphi: straightphi,
+	strns: strns,
+	sub: sub,
+	Sub: Sub,
+	subdot: subdot,
+	subE: subE,
+	sube: sube,
+	subedot: subedot,
+	submult: submult,
+	subnE: subnE,
+	subne: subne,
+	subplus: subplus,
+	subrarr: subrarr,
+	subset: subset,
+	Subset: Subset,
+	subseteq: subseteq,
+	subseteqq: subseteqq,
+	SubsetEqual: SubsetEqual,
+	subsetneq: subsetneq,
+	subsetneqq: subsetneqq,
+	subsim: subsim,
+	subsub: subsub,
+	subsup: subsup,
+	succapprox: succapprox,
+	succ: succ,
+	succcurlyeq: succcurlyeq,
+	Succeeds: Succeeds,
+	SucceedsEqual: SucceedsEqual,
+	SucceedsSlantEqual: SucceedsSlantEqual,
+	SucceedsTilde: SucceedsTilde,
+	succeq: succeq,
+	succnapprox: succnapprox,
+	succneqq: succneqq,
+	succnsim: succnsim,
+	succsim: succsim,
+	SuchThat: SuchThat,
+	sum: sum,
+	Sum: Sum,
+	sung: sung,
+	sup1: sup1,
+	sup2: sup2,
+	sup3: sup3,
+	sup: sup,
+	Sup: Sup,
+	supdot: supdot,
+	supdsub: supdsub,
+	supE: supE,
+	supe: supe,
+	supedot: supedot,
+	Superset: Superset,
+	SupersetEqual: SupersetEqual,
+	suphsol: suphsol,
+	suphsub: suphsub,
+	suplarr: suplarr,
+	supmult: supmult,
+	supnE: supnE,
+	supne: supne,
+	supplus: supplus,
+	supset: supset,
+	Supset: Supset,
+	supseteq: supseteq,
+	supseteqq: supseteqq,
+	supsetneq: supsetneq,
+	supsetneqq: supsetneqq,
+	supsim: supsim,
+	supsub: supsub,
+	supsup: supsup,
+	swarhk: swarhk,
+	swarr: swarr,
+	swArr: swArr,
+	swarrow: swarrow,
+	swnwar: swnwar,
+	szlig: szlig,
+	Tab: Tab,
+	target: target,
+	Tau: Tau,
+	tau: tau,
+	tbrk: tbrk,
+	Tcaron: Tcaron,
+	tcaron: tcaron,
+	Tcedil: Tcedil,
+	tcedil: tcedil,
+	Tcy: Tcy,
+	tcy: tcy,
+	tdot: tdot,
+	telrec: telrec,
+	Tfr: Tfr,
+	tfr: tfr,
+	there4: there4,
+	therefore: therefore,
+	Therefore: Therefore,
+	Theta: Theta,
+	theta: theta,
+	thetasym: thetasym,
+	thetav: thetav,
+	thickapprox: thickapprox,
+	thicksim: thicksim,
+	ThickSpace: ThickSpace,
+	ThinSpace: ThinSpace,
+	thinsp: thinsp,
+	thkap: thkap,
+	thksim: thksim,
+	THORN: THORN,
+	thorn: thorn,
+	tilde: tilde,
+	Tilde: Tilde,
+	TildeEqual: TildeEqual,
+	TildeFullEqual: TildeFullEqual,
+	TildeTilde: TildeTilde,
+	timesbar: timesbar,
+	timesb: timesb,
+	times: times,
+	timesd: timesd,
+	tint: tint,
+	toea: toea,
+	topbot: topbot,
+	topcir: topcir,
+	top: top,
+	Topf: Topf,
+	topf: topf,
+	topfork: topfork,
+	tosa: tosa,
+	tprime: tprime,
+	trade: trade,
+	TRADE: TRADE,
+	triangle: triangle,
+	triangledown: triangledown,
+	triangleleft: triangleleft,
+	trianglelefteq: trianglelefteq,
+	triangleq: triangleq,
+	triangleright: triangleright,
+	trianglerighteq: trianglerighteq,
+	tridot: tridot,
+	trie: trie,
+	triminus: triminus,
+	TripleDot: TripleDot,
+	triplus: triplus,
+	trisb: trisb,
+	tritime: tritime,
+	trpezium: trpezium,
+	Tscr: Tscr,
+	tscr: tscr,
+	TScy: TScy,
+	tscy: tscy,
+	TSHcy: TSHcy,
+	tshcy: tshcy,
+	Tstrok: Tstrok,
+	tstrok: tstrok,
+	twixt: twixt,
+	twoheadleftarrow: twoheadleftarrow,
+	twoheadrightarrow: twoheadrightarrow,
+	Uacute: Uacute,
+	uacute: uacute,
+	uarr: uarr,
+	Uarr: Uarr,
+	uArr: uArr,
+	Uarrocir: Uarrocir,
+	Ubrcy: Ubrcy,
+	ubrcy: ubrcy,
+	Ubreve: Ubreve,
+	ubreve: ubreve,
+	Ucirc: Ucirc,
+	ucirc: ucirc,
+	Ucy: Ucy,
+	ucy: ucy,
+	udarr: udarr,
+	Udblac: Udblac,
+	udblac: udblac,
+	udhar: udhar,
+	ufisht: ufisht,
+	Ufr: Ufr,
+	ufr: ufr,
+	Ugrave: Ugrave,
+	ugrave: ugrave,
+	uHar: uHar,
+	uharl: uharl,
+	uharr: uharr,
+	uhblk: uhblk,
+	ulcorn: ulcorn,
+	ulcorner: ulcorner,
+	ulcrop: ulcrop,
+	ultri: ultri,
+	Umacr: Umacr,
+	umacr: umacr,
+	uml: uml,
+	UnderBar: UnderBar,
+	UnderBrace: UnderBrace,
+	UnderBracket: UnderBracket,
+	UnderParenthesis: UnderParenthesis,
+	Union: Union,
+	UnionPlus: UnionPlus,
+	Uogon: Uogon,
+	uogon: uogon,
+	Uopf: Uopf,
+	uopf: uopf,
+	UpArrowBar: UpArrowBar,
+	uparrow: uparrow,
+	UpArrow: UpArrow,
+	Uparrow: Uparrow,
+	UpArrowDownArrow: UpArrowDownArrow,
+	updownarrow: updownarrow,
+	UpDownArrow: UpDownArrow,
+	Updownarrow: Updownarrow,
+	UpEquilibrium: UpEquilibrium,
+	upharpoonleft: upharpoonleft,
+	upharpoonright: upharpoonright,
+	uplus: uplus,
+	UpperLeftArrow: UpperLeftArrow,
+	UpperRightArrow: UpperRightArrow,
+	upsi: upsi,
+	Upsi: Upsi,
+	upsih: upsih,
+	Upsilon: Upsilon,
+	upsilon: upsilon,
+	UpTeeArrow: UpTeeArrow,
+	UpTee: UpTee,
+	upuparrows: upuparrows,
+	urcorn: urcorn,
+	urcorner: urcorner,
+	urcrop: urcrop,
+	Uring: Uring,
+	uring: uring,
+	urtri: urtri,
+	Uscr: Uscr,
+	uscr: uscr,
+	utdot: utdot,
+	Utilde: Utilde,
+	utilde: utilde,
+	utri: utri,
+	utrif: utrif,
+	uuarr: uuarr,
+	Uuml: Uuml,
+	uuml: uuml,
+	uwangle: uwangle,
+	vangrt: vangrt,
+	varepsilon: varepsilon,
+	varkappa: varkappa,
+	varnothing: varnothing,
+	varphi: varphi,
+	varpi: varpi,
+	varpropto: varpropto,
+	varr: varr,
+	vArr: vArr,
+	varrho: varrho,
+	varsigma: varsigma,
+	varsubsetneq: varsubsetneq,
+	varsubsetneqq: varsubsetneqq,
+	varsupsetneq: varsupsetneq,
+	varsupsetneqq: varsupsetneqq,
+	vartheta: vartheta,
+	vartriangleleft: vartriangleleft,
+	vartriangleright: vartriangleright,
+	vBar: vBar,
+	Vbar: Vbar,
+	vBarv: vBarv,
+	Vcy: Vcy,
+	vcy: vcy,
+	vdash: vdash,
+	vDash: vDash,
+	Vdash: Vdash,
+	VDash: VDash,
+	Vdashl: Vdashl,
+	veebar: veebar,
+	vee: vee,
+	Vee: Vee,
+	veeeq: veeeq,
+	vellip: vellip,
+	verbar: verbar,
+	Verbar: Verbar,
+	vert: vert,
+	Vert: Vert,
+	VerticalBar: VerticalBar,
+	VerticalLine: VerticalLine,
+	VerticalSeparator: VerticalSeparator,
+	VerticalTilde: VerticalTilde,
+	VeryThinSpace: VeryThinSpace,
+	Vfr: Vfr,
+	vfr: vfr,
+	vltri: vltri,
+	vnsub: vnsub,
+	vnsup: vnsup,
+	Vopf: Vopf,
+	vopf: vopf,
+	vprop: vprop,
+	vrtri: vrtri,
+	Vscr: Vscr,
+	vscr: vscr,
+	vsubnE: vsubnE,
+	vsubne: vsubne,
+	vsupnE: vsupnE,
+	vsupne: vsupne,
+	Vvdash: Vvdash,
+	vzigzag: vzigzag,
+	Wcirc: Wcirc,
+	wcirc: wcirc,
+	wedbar: wedbar,
+	wedge: wedge,
+	Wedge: Wedge,
+	wedgeq: wedgeq,
+	weierp: weierp,
+	Wfr: Wfr,
+	wfr: wfr,
+	Wopf: Wopf,
+	wopf: wopf,
+	wp: wp,
+	wr: wr,
+	wreath: wreath,
+	Wscr: Wscr,
+	wscr: wscr,
+	xcap: xcap,
+	xcirc: xcirc,
+	xcup: xcup,
+	xdtri: xdtri,
+	Xfr: Xfr,
+	xfr: xfr,
+	xharr: xharr,
+	xhArr: xhArr,
+	Xi: Xi,
+	xi: xi,
+	xlarr: xlarr,
+	xlArr: xlArr,
+	xmap: xmap,
+	xnis: xnis,
+	xodot: xodot,
+	Xopf: Xopf,
+	xopf: xopf,
+	xoplus: xoplus,
+	xotime: xotime,
+	xrarr: xrarr,
+	xrArr: xrArr,
+	Xscr: Xscr,
+	xscr: xscr,
+	xsqcup: xsqcup,
+	xuplus: xuplus,
+	xutri: xutri,
+	xvee: xvee,
+	xwedge: xwedge,
+	Yacute: Yacute,
+	yacute: yacute,
+	YAcy: YAcy,
+	yacy: yacy,
+	Ycirc: Ycirc,
+	ycirc: ycirc,
+	Ycy: Ycy,
+	ycy: ycy,
+	yen: yen,
+	Yfr: Yfr,
+	yfr: yfr,
+	YIcy: YIcy,
+	yicy: yicy,
+	Yopf: Yopf,
+	yopf: yopf,
+	Yscr: Yscr,
+	yscr: yscr,
+	YUcy: YUcy,
+	yucy: yucy,
+	yuml: yuml,
+	Yuml: Yuml,
+	Zacute: Zacute,
+	zacute: zacute,
+	Zcaron: Zcaron,
+	zcaron: zcaron,
+	Zcy: Zcy,
+	zcy: zcy,
+	Zdot: Zdot,
+	zdot: zdot,
+	zeetrf: zeetrf,
+	ZeroWidthSpace: ZeroWidthSpace,
+	Zeta: Zeta,
+	zeta: zeta,
+	zfr: zfr,
+	Zfr: Zfr,
+	ZHcy: ZHcy,
+	zhcy: zhcy,
+	zigrarr: zigrarr,
+	zopf: zopf,
+	Zopf: Zopf,
+	Zscr: Zscr,
+	zscr: zscr,
+	zwj: zwj,
+	zwnj: zwnj,
+	default: entities
+});
+
+var Aacute$1 = "Á";
+var aacute$1 = "á";
+var Acirc$1 = "Â";
+var acirc$1 = "â";
+var acute$1 = "´";
+var AElig$1 = "Æ";
+var aelig$1 = "æ";
+var Agrave$1 = "À";
+var agrave$1 = "à";
+var amp$1 = "&";
+var AMP$1 = "&";
+var Aring$1 = "Å";
+var aring$1 = "å";
+var Atilde$1 = "Ã";
+var atilde$1 = "ã";
+var Auml$1 = "Ä";
+var auml$1 = "ä";
+var brvbar$1 = "¦";
+var Ccedil$1 = "Ç";
+var ccedil$1 = "ç";
+var cedil$1 = "¸";
+var cent$1 = "¢";
+var copy$1 = "©";
+var COPY$1 = "©";
+var curren$1 = "¤";
+var deg$1 = "°";
+var divide$2 = "÷";
+var Eacute$1 = "É";
+var eacute$1 = "é";
+var Ecirc$1 = "Ê";
+var ecirc$1 = "ê";
+var Egrave$1 = "È";
+var egrave$1 = "è";
+var ETH$1 = "Ð";
+var eth$1 = "ð";
+var Euml$1 = "Ë";
+var euml$1 = "ë";
+var frac12$1 = "½";
+var frac14$1 = "¼";
+var frac34$1 = "¾";
+var gt$1 = ">";
+var GT$1 = ">";
+var Iacute$1 = "Í";
+var iacute$1 = "í";
+var Icirc$1 = "Î";
+var icirc$1 = "î";
+var iexcl$1 = "¡";
+var Igrave$1 = "Ì";
+var igrave$1 = "ì";
+var iquest$1 = "¿";
+var Iuml$1 = "Ï";
+var iuml$1 = "ï";
+var laquo$1 = "«";
+var lt$1 = "<";
+var LT$1 = "<";
+var macr$1 = "¯";
+var micro$1 = "µ";
+var middot$1 = "·";
+var nbsp$1 = " ";
+var not$1 = "¬";
+var Ntilde$1 = "Ñ";
+var ntilde$1 = "ñ";
+var Oacute$1 = "Ó";
+var oacute$1 = "ó";
+var Ocirc$1 = "Ô";
+var ocirc$1 = "ô";
+var Ograve$1 = "Ò";
+var ograve$1 = "ò";
+var ordf$1 = "ª";
+var ordm$1 = "º";
+var Oslash$1 = "Ø";
+var oslash$1 = "ø";
+var Otilde$1 = "Õ";
+var otilde$1 = "õ";
+var Ouml$1 = "Ö";
+var ouml$1 = "ö";
+var para$1 = "¶";
+var plusmn$1 = "±";
+var pound$1 = "£";
+var quot$2 = "\"";
+var QUOT$1 = "\"";
+var raquo$1 = "»";
+var reg$1 = "®";
+var REG$1 = "®";
+var sect$1 = "§";
+var shy$1 = "­";
+var sup1$1 = "¹";
+var sup2$1 = "²";
+var sup3$1 = "³";
+var szlig$1 = "ß";
+var THORN$1 = "Þ";
+var thorn$1 = "þ";
+var times$1 = "×";
+var Uacute$1 = "Ú";
+var uacute$1 = "ú";
+var Ucirc$1 = "Û";
+var ucirc$1 = "û";
+var Ugrave$1 = "Ù";
+var ugrave$1 = "ù";
+var uml$1 = "¨";
+var Uuml$1 = "Ü";
+var uuml$1 = "ü";
+var Yacute$1 = "Ý";
+var yacute$1 = "ý";
+var yen$1 = "¥";
+var yuml$1 = "ÿ";
+var legacy = {
+	Aacute: Aacute$1,
+	aacute: aacute$1,
+	Acirc: Acirc$1,
+	acirc: acirc$1,
+	acute: acute$1,
+	AElig: AElig$1,
+	aelig: aelig$1,
+	Agrave: Agrave$1,
+	agrave: agrave$1,
+	amp: amp$1,
+	AMP: AMP$1,
+	Aring: Aring$1,
+	aring: aring$1,
+	Atilde: Atilde$1,
+	atilde: atilde$1,
+	Auml: Auml$1,
+	auml: auml$1,
+	brvbar: brvbar$1,
+	Ccedil: Ccedil$1,
+	ccedil: ccedil$1,
+	cedil: cedil$1,
+	cent: cent$1,
+	copy: copy$1,
+	COPY: COPY$1,
+	curren: curren$1,
+	deg: deg$1,
+	divide: divide$2,
+	Eacute: Eacute$1,
+	eacute: eacute$1,
+	Ecirc: Ecirc$1,
+	ecirc: ecirc$1,
+	Egrave: Egrave$1,
+	egrave: egrave$1,
+	ETH: ETH$1,
+	eth: eth$1,
+	Euml: Euml$1,
+	euml: euml$1,
+	frac12: frac12$1,
+	frac14: frac14$1,
+	frac34: frac34$1,
+	gt: gt$1,
+	GT: GT$1,
+	Iacute: Iacute$1,
+	iacute: iacute$1,
+	Icirc: Icirc$1,
+	icirc: icirc$1,
+	iexcl: iexcl$1,
+	Igrave: Igrave$1,
+	igrave: igrave$1,
+	iquest: iquest$1,
+	Iuml: Iuml$1,
+	iuml: iuml$1,
+	laquo: laquo$1,
+	lt: lt$1,
+	LT: LT$1,
+	macr: macr$1,
+	micro: micro$1,
+	middot: middot$1,
+	nbsp: nbsp$1,
+	not: not$1,
+	Ntilde: Ntilde$1,
+	ntilde: ntilde$1,
+	Oacute: Oacute$1,
+	oacute: oacute$1,
+	Ocirc: Ocirc$1,
+	ocirc: ocirc$1,
+	Ograve: Ograve$1,
+	ograve: ograve$1,
+	ordf: ordf$1,
+	ordm: ordm$1,
+	Oslash: Oslash$1,
+	oslash: oslash$1,
+	Otilde: Otilde$1,
+	otilde: otilde$1,
+	Ouml: Ouml$1,
+	ouml: ouml$1,
+	para: para$1,
+	plusmn: plusmn$1,
+	pound: pound$1,
+	quot: quot$2,
+	QUOT: QUOT$1,
+	raquo: raquo$1,
+	reg: reg$1,
+	REG: REG$1,
+	sect: sect$1,
+	shy: shy$1,
+	sup1: sup1$1,
+	sup2: sup2$1,
+	sup3: sup3$1,
+	szlig: szlig$1,
+	THORN: THORN$1,
+	thorn: thorn$1,
+	times: times$1,
+	Uacute: Uacute$1,
+	uacute: uacute$1,
+	Ucirc: Ucirc$1,
+	ucirc: ucirc$1,
+	Ugrave: Ugrave$1,
+	ugrave: ugrave$1,
+	uml: uml$1,
+	Uuml: Uuml$1,
+	uuml: uuml$1,
+	Yacute: Yacute$1,
+	yacute: yacute$1,
+	yen: yen$1,
+	yuml: yuml$1
+};
+
+var legacy$1 = Object.freeze({
+	Aacute: Aacute$1,
+	aacute: aacute$1,
+	Acirc: Acirc$1,
+	acirc: acirc$1,
+	acute: acute$1,
+	AElig: AElig$1,
+	aelig: aelig$1,
+	Agrave: Agrave$1,
+	agrave: agrave$1,
+	amp: amp$1,
+	AMP: AMP$1,
+	Aring: Aring$1,
+	aring: aring$1,
+	Atilde: Atilde$1,
+	atilde: atilde$1,
+	Auml: Auml$1,
+	auml: auml$1,
+	brvbar: brvbar$1,
+	Ccedil: Ccedil$1,
+	ccedil: ccedil$1,
+	cedil: cedil$1,
+	cent: cent$1,
+	copy: copy$1,
+	COPY: COPY$1,
+	curren: curren$1,
+	deg: deg$1,
+	divide: divide$2,
+	Eacute: Eacute$1,
+	eacute: eacute$1,
+	Ecirc: Ecirc$1,
+	ecirc: ecirc$1,
+	Egrave: Egrave$1,
+	egrave: egrave$1,
+	ETH: ETH$1,
+	eth: eth$1,
+	Euml: Euml$1,
+	euml: euml$1,
+	frac12: frac12$1,
+	frac14: frac14$1,
+	frac34: frac34$1,
+	gt: gt$1,
+	GT: GT$1,
+	Iacute: Iacute$1,
+	iacute: iacute$1,
+	Icirc: Icirc$1,
+	icirc: icirc$1,
+	iexcl: iexcl$1,
+	Igrave: Igrave$1,
+	igrave: igrave$1,
+	iquest: iquest$1,
+	Iuml: Iuml$1,
+	iuml: iuml$1,
+	laquo: laquo$1,
+	lt: lt$1,
+	LT: LT$1,
+	macr: macr$1,
+	micro: micro$1,
+	middot: middot$1,
+	nbsp: nbsp$1,
+	not: not$1,
+	Ntilde: Ntilde$1,
+	ntilde: ntilde$1,
+	Oacute: Oacute$1,
+	oacute: oacute$1,
+	Ocirc: Ocirc$1,
+	ocirc: ocirc$1,
+	Ograve: Ograve$1,
+	ograve: ograve$1,
+	ordf: ordf$1,
+	ordm: ordm$1,
+	Oslash: Oslash$1,
+	oslash: oslash$1,
+	Otilde: Otilde$1,
+	otilde: otilde$1,
+	Ouml: Ouml$1,
+	ouml: ouml$1,
+	para: para$1,
+	plusmn: plusmn$1,
+	pound: pound$1,
+	quot: quot$2,
+	QUOT: QUOT$1,
+	raquo: raquo$1,
+	reg: reg$1,
+	REG: REG$1,
+	sect: sect$1,
+	shy: shy$1,
+	sup1: sup1$1,
+	sup2: sup2$1,
+	sup3: sup3$1,
+	szlig: szlig$1,
+	THORN: THORN$1,
+	thorn: thorn$1,
+	times: times$1,
+	Uacute: Uacute$1,
+	uacute: uacute$1,
+	Ucirc: Ucirc$1,
+	ucirc: ucirc$1,
+	Ugrave: Ugrave$1,
+	ugrave: ugrave$1,
+	uml: uml$1,
+	Uuml: Uuml$1,
+	uuml: uuml$1,
+	Yacute: Yacute$1,
+	yacute: yacute$1,
+	yen: yen$1,
+	yuml: yuml$1,
+	default: legacy
+});
+
+var amp$2 = "&";
+var apos$1 = "'";
+var gt$2 = ">";
+var lt$2 = "<";
+var quot$3 = "\"";
+var xml = {
+	amp: amp$2,
+	apos: apos$1,
+	gt: gt$2,
+	lt: lt$2,
+	quot: quot$3
+};
+
+var xml$1 = Object.freeze({
+	amp: amp$2,
+	apos: apos$1,
+	gt: gt$2,
+	lt: lt$2,
+	quot: quot$3,
+	default: xml
+});
+
+var entityMap = ( entities$1 && entities ) || entities$1;
+
+var legacyMap = ( legacy$1 && legacy ) || legacy$1;
+
+var xmlMap = ( xml$1 && xml ) || xml$1;
+
+var Tokenizer_1 = Tokenizer$1;
+
+var i$4 = 0;
+var TEXT                      = i$4++;
+var BEFORE_TAG_NAME           = i$4++;
+var IN_TAG_NAME               = i$4++;
+var IN_SELF_CLOSING_TAG       = i$4++;
+var BEFORE_CLOSING_TAG_NAME   = i$4++;
+var IN_CLOSING_TAG_NAME       = i$4++;
+var AFTER_CLOSING_TAG_NAME    = i$4++;
+var BEFORE_ATTRIBUTE_NAME     = i$4++;
+var IN_ATTRIBUTE_NAME         = i$4++;
+var AFTER_ATTRIBUTE_NAME      = i$4++;
+var BEFORE_ATTRIBUTE_VALUE    = i$4++;
+var IN_ATTRIBUTE_VALUE_DQ     = i$4++;
+var IN_ATTRIBUTE_VALUE_SQ     = i$4++;
+var IN_ATTRIBUTE_VALUE_NQ     = i$4++;
+var BEFORE_DECLARATION        = i$4++;
+var IN_DECLARATION            = i$4++;
+var IN_PROCESSING_INSTRUCTION = i$4++;
+var BEFORE_COMMENT            = i$4++;
+var IN_COMMENT                = i$4++;
+var AFTER_COMMENT_1           = i$4++;
+var AFTER_COMMENT_2           = i$4++;
+var BEFORE_CDATA_1            = i$4++;
+var BEFORE_CDATA_2            = i$4++;
+var BEFORE_CDATA_3            = i$4++;
+var BEFORE_CDATA_4            = i$4++;
+var BEFORE_CDATA_5            = i$4++;
+var BEFORE_CDATA_6            = i$4++;
+var IN_CDATA                  = i$4++;
+var AFTER_CDATA_1             = i$4++;
+var AFTER_CDATA_2             = i$4++;
+var BEFORE_SPECIAL            = i$4++;
+var BEFORE_SPECIAL_END        = i$4++;
+var BEFORE_SCRIPT_1           = i$4++;
+var BEFORE_SCRIPT_2           = i$4++;
+var BEFORE_SCRIPT_3           = i$4++;
+var BEFORE_SCRIPT_4           = i$4++;
+var BEFORE_SCRIPT_5           = i$4++;
+var AFTER_SCRIPT_1            = i$4++;
+var AFTER_SCRIPT_2            = i$4++;
+var AFTER_SCRIPT_3            = i$4++;
+var AFTER_SCRIPT_4            = i$4++;
+var AFTER_SCRIPT_5            = i$4++;
+var BEFORE_STYLE_1            = i$4++;
+var BEFORE_STYLE_2            = i$4++;
+var BEFORE_STYLE_3            = i$4++;
+var BEFORE_STYLE_4            = i$4++;
+var AFTER_STYLE_1             = i$4++;
+var AFTER_STYLE_2             = i$4++;
+var AFTER_STYLE_3             = i$4++;
+var AFTER_STYLE_4             = i$4++;
+var BEFORE_ENTITY             = i$4++;
+var BEFORE_NUMERIC_ENTITY     = i$4++;
+var IN_NAMED_ENTITY           = i$4++;
+var IN_NUMERIC_ENTITY         = i$4++;
+var IN_HEX_ENTITY             = i$4++;
+var j$2 = 0;
+var SPECIAL_NONE              = j$2++;
+var SPECIAL_SCRIPT            = j$2++;
+var SPECIAL_STYLE             = j$2++;
+
+function whitespace(c){
+	return c === " " || c === "\n" || c === "\t" || c === "\f" || c === "\r";
+}
+
+function characterState(char, SUCCESS){
+	return function(c){
+		if(c === char) this._state = SUCCESS;
+	};
+}
+
+function ifElseState(upper, SUCCESS, FAILURE){
+	var lower = upper.toLowerCase();
+
+	if(upper === lower){
+		return function(c){
+			if(c === lower){
+				this._state = SUCCESS;
+			} else {
+				this._state = FAILURE;
+				this._index--;
+			}
+		};
+	} else {
+		return function(c){
+			if(c === lower || c === upper){
+				this._state = SUCCESS;
+			} else {
+				this._state = FAILURE;
+				this._index--;
+			}
+		};
+	}
+}
+
+function consumeSpecialNameChar(upper, NEXT_STATE){
+	var lower = upper.toLowerCase();
+
+	return function(c){
+		if(c === lower || c === upper){
+			this._state = NEXT_STATE;
+		} else {
+			this._state = IN_TAG_NAME;
+			this._index--; //consume the token again
+		}
+	};
+}
+
+function Tokenizer$1(options, cbs){
+	this._state = TEXT;
+	this._buffer = "";
+	this._sectionStart = 0;
+	this._index = 0;
+	this._bufferOffset = 0; //chars removed from _buffer
+	this._baseState = TEXT;
+	this._special = SPECIAL_NONE;
+	this._cbs = cbs;
+	this._running = true;
+	this._ended = false;
+	this._xmlMode = !!(options && options.xmlMode);
+	this._decodeEntities = !!(options && options.decodeEntities);
+}
+
+Tokenizer$1.prototype._stateText = function(c){
+	if(c === "<"){
+		if(this._index > this._sectionStart){
+			this._cbs.ontext(this._getSection());
+		}
+		this._state = BEFORE_TAG_NAME;
+		this._sectionStart = this._index;
+	} else if(this._decodeEntities && this._special === SPECIAL_NONE && c === "&"){
+		if(this._index > this._sectionStart){
+			this._cbs.ontext(this._getSection());
+		}
+		this._baseState = TEXT;
+		this._state = BEFORE_ENTITY;
+		this._sectionStart = this._index;
+	}
+};
+
+Tokenizer$1.prototype._stateBeforeTagName = function(c){
+	if(c === "/"){
+		this._state = BEFORE_CLOSING_TAG_NAME;
+	} else if(c === "<"){
+		this._cbs.ontext(this._getSection());
+		this._sectionStart = this._index;
+	} else if(c === ">" || this._special !== SPECIAL_NONE || whitespace(c)) {
+		this._state = TEXT;
+	} else if(c === "!"){
+		this._state = BEFORE_DECLARATION;
+		this._sectionStart = this._index + 1;
+	} else if(c === "?"){
+		this._state = IN_PROCESSING_INSTRUCTION;
+		this._sectionStart = this._index + 1;
+	} else {
+		this._state = (!this._xmlMode && (c === "s" || c === "S")) ?
+						BEFORE_SPECIAL : IN_TAG_NAME;
+		this._sectionStart = this._index;
+	}
+};
+
+Tokenizer$1.prototype._stateInTagName = function(c){
+	if(c === "/" || c === ">" || whitespace(c)){
+		this._emitToken("onopentagname");
+		this._state = BEFORE_ATTRIBUTE_NAME;
+		this._index--;
+	}
+};
+
+Tokenizer$1.prototype._stateBeforeCloseingTagName = function(c){
+	if(whitespace(c));
+	else if(c === ">"){
+		this._state = TEXT;
+	} else if(this._special !== SPECIAL_NONE){
+		if(c === "s" || c === "S"){
+			this._state = BEFORE_SPECIAL_END;
+		} else {
+			this._state = TEXT;
+			this._index--;
+		}
+	} else {
+		this._state = IN_CLOSING_TAG_NAME;
+		this._sectionStart = this._index;
+	}
+};
+
+Tokenizer$1.prototype._stateInCloseingTagName = function(c){
+	if(c === ">" || whitespace(c)){
+		this._emitToken("onclosetag");
+		this._state = AFTER_CLOSING_TAG_NAME;
+		this._index--;
+	}
+};
+
+Tokenizer$1.prototype._stateAfterCloseingTagName = function(c){
+	//skip everything until ">"
+	if(c === ">"){
+		this._state = TEXT;
+		this._sectionStart = this._index + 1;
+	}
+};
+
+Tokenizer$1.prototype._stateBeforeAttributeName = function(c){
+	if(c === ">"){
+		this._cbs.onopentagend();
+		this._state = TEXT;
+		this._sectionStart = this._index + 1;
+	} else if(c === "/"){
+		this._state = IN_SELF_CLOSING_TAG;
+	} else if(!whitespace(c)){
+		this._state = IN_ATTRIBUTE_NAME;
+		this._sectionStart = this._index;
+	}
+};
+
+Tokenizer$1.prototype._stateInSelfClosingTag = function(c){
+	if(c === ">"){
+		this._cbs.onselfclosingtag();
+		this._state = TEXT;
+		this._sectionStart = this._index + 1;
+	} else if(!whitespace(c)){
+		this._state = BEFORE_ATTRIBUTE_NAME;
+		this._index--;
+	}
+};
+
+Tokenizer$1.prototype._stateInAttributeName = function(c){
+	if(c === "=" || c === "/" || c === ">" || whitespace(c)){
+		this._cbs.onattribname(this._getSection());
+		this._sectionStart = -1;
+		this._state = AFTER_ATTRIBUTE_NAME;
+		this._index--;
+	}
+};
+
+Tokenizer$1.prototype._stateAfterAttributeName = function(c){
+	if(c === "="){
+		this._state = BEFORE_ATTRIBUTE_VALUE;
+	} else if(c === "/" || c === ">"){
+		this._cbs.onattribend();
+		this._state = BEFORE_ATTRIBUTE_NAME;
+		this._index--;
+	} else if(!whitespace(c)){
+		this._cbs.onattribend();
+		this._state = IN_ATTRIBUTE_NAME;
+		this._sectionStart = this._index;
+	}
+};
+
+Tokenizer$1.prototype._stateBeforeAttributeValue = function(c){
+	if(c === "\""){
+		this._state = IN_ATTRIBUTE_VALUE_DQ;
+		this._sectionStart = this._index + 1;
+	} else if(c === "'"){
+		this._state = IN_ATTRIBUTE_VALUE_SQ;
+		this._sectionStart = this._index + 1;
+	} else if(!whitespace(c)){
+		this._state = IN_ATTRIBUTE_VALUE_NQ;
+		this._sectionStart = this._index;
+		this._index--; //reconsume token
+	}
+};
+
+Tokenizer$1.prototype._stateInAttributeValueDoubleQuotes = function(c){
+	if(c === "\""){
+		this._emitToken("onattribdata");
+		this._cbs.onattribend();
+		this._state = BEFORE_ATTRIBUTE_NAME;
+	} else if(this._decodeEntities && c === "&"){
+		this._emitToken("onattribdata");
+		this._baseState = this._state;
+		this._state = BEFORE_ENTITY;
+		this._sectionStart = this._index;
+	}
+};
+
+Tokenizer$1.prototype._stateInAttributeValueSingleQuotes = function(c){
+	if(c === "'"){
+		this._emitToken("onattribdata");
+		this._cbs.onattribend();
+		this._state = BEFORE_ATTRIBUTE_NAME;
+	} else if(this._decodeEntities && c === "&"){
+		this._emitToken("onattribdata");
+		this._baseState = this._state;
+		this._state = BEFORE_ENTITY;
+		this._sectionStart = this._index;
+	}
+};
+
+Tokenizer$1.prototype._stateInAttributeValueNoQuotes = function(c){
+	if(whitespace(c) || c === ">"){
+		this._emitToken("onattribdata");
+		this._cbs.onattribend();
+		this._state = BEFORE_ATTRIBUTE_NAME;
+		this._index--;
+	} else if(this._decodeEntities && c === "&"){
+		this._emitToken("onattribdata");
+		this._baseState = this._state;
+		this._state = BEFORE_ENTITY;
+		this._sectionStart = this._index;
+	}
+};
+
+Tokenizer$1.prototype._stateBeforeDeclaration = function(c){
+	this._state = c === "[" ? BEFORE_CDATA_1 :
+					c === "-" ? BEFORE_COMMENT :
+						IN_DECLARATION;
+};
+
+Tokenizer$1.prototype._stateInDeclaration = function(c){
+	if(c === ">"){
+		this._cbs.ondeclaration(this._getSection());
+		this._state = TEXT;
+		this._sectionStart = this._index + 1;
+	}
+};
+
+Tokenizer$1.prototype._stateInProcessingInstruction = function(c){
+	if(c === ">"){
+		this._cbs.onprocessinginstruction(this._getSection());
+		this._state = TEXT;
+		this._sectionStart = this._index + 1;
+	}
+};
+
+Tokenizer$1.prototype._stateBeforeComment = function(c){
+	if(c === "-"){
+		this._state = IN_COMMENT;
+		this._sectionStart = this._index + 1;
+	} else {
+		this._state = IN_DECLARATION;
+	}
+};
+
+Tokenizer$1.prototype._stateInComment = function(c){
+	if(c === "-") this._state = AFTER_COMMENT_1;
+};
+
+Tokenizer$1.prototype._stateAfterComment1 = function(c){
+	if(c === "-"){
+		this._state = AFTER_COMMENT_2;
+	} else {
+		this._state = IN_COMMENT;
+	}
+};
+
+Tokenizer$1.prototype._stateAfterComment2 = function(c){
+	if(c === ">"){
+		//remove 2 trailing chars
+		this._cbs.oncomment(this._buffer.substring(this._sectionStart, this._index - 2));
+		this._state = TEXT;
+		this._sectionStart = this._index + 1;
+	} else if(c !== "-"){
+		this._state = IN_COMMENT;
+	}
+	// else: stay in AFTER_COMMENT_2 (`--->`)
+};
+
+Tokenizer$1.prototype._stateBeforeCdata1 = ifElseState("C", BEFORE_CDATA_2, IN_DECLARATION);
+Tokenizer$1.prototype._stateBeforeCdata2 = ifElseState("D", BEFORE_CDATA_3, IN_DECLARATION);
+Tokenizer$1.prototype._stateBeforeCdata3 = ifElseState("A", BEFORE_CDATA_4, IN_DECLARATION);
+Tokenizer$1.prototype._stateBeforeCdata4 = ifElseState("T", BEFORE_CDATA_5, IN_DECLARATION);
+Tokenizer$1.prototype._stateBeforeCdata5 = ifElseState("A", BEFORE_CDATA_6, IN_DECLARATION);
+
+Tokenizer$1.prototype._stateBeforeCdata6 = function(c){
+	if(c === "["){
+		this._state = IN_CDATA;
+		this._sectionStart = this._index + 1;
+	} else {
+		this._state = IN_DECLARATION;
+		this._index--;
+	}
+};
+
+Tokenizer$1.prototype._stateInCdata = function(c){
+	if(c === "]") this._state = AFTER_CDATA_1;
+};
+
+Tokenizer$1.prototype._stateAfterCdata1 = characterState("]", AFTER_CDATA_2);
+
+Tokenizer$1.prototype._stateAfterCdata2 = function(c){
+	if(c === ">"){
+		//remove 2 trailing chars
+		this._cbs.oncdata(this._buffer.substring(this._sectionStart, this._index - 2));
+		this._state = TEXT;
+		this._sectionStart = this._index + 1;
+	} else if(c !== "]") {
+		this._state = IN_CDATA;
+	}
+	//else: stay in AFTER_CDATA_2 (`]]]>`)
+};
+
+Tokenizer$1.prototype._stateBeforeSpecial = function(c){
+	if(c === "c" || c === "C"){
+		this._state = BEFORE_SCRIPT_1;
+	} else if(c === "t" || c === "T"){
+		this._state = BEFORE_STYLE_1;
+	} else {
+		this._state = IN_TAG_NAME;
+		this._index--; //consume the token again
+	}
+};
+
+Tokenizer$1.prototype._stateBeforeSpecialEnd = function(c){
+	if(this._special === SPECIAL_SCRIPT && (c === "c" || c === "C")){
+		this._state = AFTER_SCRIPT_1;
+	} else if(this._special === SPECIAL_STYLE && (c === "t" || c === "T")){
+		this._state = AFTER_STYLE_1;
+	}
+	else this._state = TEXT;
+};
+
+Tokenizer$1.prototype._stateBeforeScript1 = consumeSpecialNameChar("R", BEFORE_SCRIPT_2);
+Tokenizer$1.prototype._stateBeforeScript2 = consumeSpecialNameChar("I", BEFORE_SCRIPT_3);
+Tokenizer$1.prototype._stateBeforeScript3 = consumeSpecialNameChar("P", BEFORE_SCRIPT_4);
+Tokenizer$1.prototype._stateBeforeScript4 = consumeSpecialNameChar("T", BEFORE_SCRIPT_5);
+
+Tokenizer$1.prototype._stateBeforeScript5 = function(c){
+	if(c === "/" || c === ">" || whitespace(c)){
+		this._special = SPECIAL_SCRIPT;
+	}
+	this._state = IN_TAG_NAME;
+	this._index--; //consume the token again
+};
+
+Tokenizer$1.prototype._stateAfterScript1 = ifElseState("R", AFTER_SCRIPT_2, TEXT);
+Tokenizer$1.prototype._stateAfterScript2 = ifElseState("I", AFTER_SCRIPT_3, TEXT);
+Tokenizer$1.prototype._stateAfterScript3 = ifElseState("P", AFTER_SCRIPT_4, TEXT);
+Tokenizer$1.prototype._stateAfterScript4 = ifElseState("T", AFTER_SCRIPT_5, TEXT);
+
+Tokenizer$1.prototype._stateAfterScript5 = function(c){
+	if(c === ">" || whitespace(c)){
+		this._special = SPECIAL_NONE;
+		this._state = IN_CLOSING_TAG_NAME;
+		this._sectionStart = this._index - 6;
+		this._index--; //reconsume the token
+	}
+	else this._state = TEXT;
+};
+
+Tokenizer$1.prototype._stateBeforeStyle1 = consumeSpecialNameChar("Y", BEFORE_STYLE_2);
+Tokenizer$1.prototype._stateBeforeStyle2 = consumeSpecialNameChar("L", BEFORE_STYLE_3);
+Tokenizer$1.prototype._stateBeforeStyle3 = consumeSpecialNameChar("E", BEFORE_STYLE_4);
+
+Tokenizer$1.prototype._stateBeforeStyle4 = function(c){
+	if(c === "/" || c === ">" || whitespace(c)){
+		this._special = SPECIAL_STYLE;
+	}
+	this._state = IN_TAG_NAME;
+	this._index--; //consume the token again
+};
+
+Tokenizer$1.prototype._stateAfterStyle1 = ifElseState("Y", AFTER_STYLE_2, TEXT);
+Tokenizer$1.prototype._stateAfterStyle2 = ifElseState("L", AFTER_STYLE_3, TEXT);
+Tokenizer$1.prototype._stateAfterStyle3 = ifElseState("E", AFTER_STYLE_4, TEXT);
+
+Tokenizer$1.prototype._stateAfterStyle4 = function(c){
+	if(c === ">" || whitespace(c)){
+		this._special = SPECIAL_NONE;
+		this._state = IN_CLOSING_TAG_NAME;
+		this._sectionStart = this._index - 5;
+		this._index--; //reconsume the token
+	}
+	else this._state = TEXT;
+};
+
+Tokenizer$1.prototype._stateBeforeEntity = ifElseState("#", BEFORE_NUMERIC_ENTITY, IN_NAMED_ENTITY);
+Tokenizer$1.prototype._stateBeforeNumericEntity = ifElseState("X", IN_HEX_ENTITY, IN_NUMERIC_ENTITY);
+
+//for entities terminated with a semicolon
+Tokenizer$1.prototype._parseNamedEntityStrict = function(){
+	//offset = 1
+	if(this._sectionStart + 1 < this._index){
+		var entity = this._buffer.substring(this._sectionStart + 1, this._index),
+		    map = this._xmlMode ? xmlMap : entityMap;
+
+		if(map.hasOwnProperty(entity)){
+			this._emitPartial(map[entity]);
+			this._sectionStart = this._index + 1;
+		}
+	}
+};
+
+
+//parses legacy entities (without trailing semicolon)
+Tokenizer$1.prototype._parseLegacyEntity = function(){
+	var start = this._sectionStart + 1,
+	    limit = this._index - start;
+
+	if(limit > 6) limit = 6; //the max length of legacy entities is 6
+
+	while(limit >= 2){ //the min length of legacy entities is 2
+		var entity = this._buffer.substr(start, limit);
+
+		if(legacyMap.hasOwnProperty(entity)){
+			this._emitPartial(legacyMap[entity]);
+			this._sectionStart += limit + 1;
+			return;
+		} else {
+			limit--;
+		}
+	}
+};
+
+Tokenizer$1.prototype._stateInNamedEntity = function(c){
+	if(c === ";"){
+		this._parseNamedEntityStrict();
+		if(this._sectionStart + 1 < this._index && !this._xmlMode){
+			this._parseLegacyEntity();
+		}
+		this._state = this._baseState;
+	} else if((c < "a" || c > "z") && (c < "A" || c > "Z") && (c < "0" || c > "9")){
+		if(this._xmlMode);
+		else if(this._sectionStart + 1 === this._index);
+		else if(this._baseState !== TEXT){
+			if(c !== "="){
+				this._parseNamedEntityStrict();
+			}
+		} else {
+			this._parseLegacyEntity();
+		}
+
+		this._state = this._baseState;
+		this._index--;
+	}
+};
+
+Tokenizer$1.prototype._decodeNumericEntity = function(offset, base){
+	var sectionStart = this._sectionStart + offset;
+
+	if(sectionStart !== this._index){
+		//parse entity
+		var entity = this._buffer.substring(sectionStart, this._index);
+		var parsed = parseInt(entity, base);
+
+		this._emitPartial(decode_codepoint(parsed));
+		this._sectionStart = this._index;
+	} else {
+		this._sectionStart--;
+	}
+
+	this._state = this._baseState;
+};
+
+Tokenizer$1.prototype._stateInNumericEntity = function(c){
+	if(c === ";"){
+		this._decodeNumericEntity(2, 10);
+		this._sectionStart++;
+	} else if(c < "0" || c > "9"){
+		if(!this._xmlMode){
+			this._decodeNumericEntity(2, 10);
+		} else {
+			this._state = this._baseState;
+		}
+		this._index--;
+	}
+};
+
+Tokenizer$1.prototype._stateInHexEntity = function(c){
+	if(c === ";"){
+		this._decodeNumericEntity(3, 16);
+		this._sectionStart++;
+	} else if((c < "a" || c > "f") && (c < "A" || c > "F") && (c < "0" || c > "9")){
+		if(!this._xmlMode){
+			this._decodeNumericEntity(3, 16);
+		} else {
+			this._state = this._baseState;
+		}
+		this._index--;
+	}
+};
+
+Tokenizer$1.prototype._cleanup = function (){
+	if(this._sectionStart < 0){
+		this._buffer = "";
+		this._bufferOffset += this._index;
+		this._index = 0;
+	} else if(this._running){
+		if(this._state === TEXT){
+			if(this._sectionStart !== this._index){
+				this._cbs.ontext(this._buffer.substr(this._sectionStart));
+			}
+			this._buffer = "";
+			this._bufferOffset += this._index;
+			this._index = 0;
+		} else if(this._sectionStart === this._index){
+			//the section just started
+			this._buffer = "";
+			this._bufferOffset += this._index;
+			this._index = 0;
+		} else {
+			//remove everything unnecessary
+			this._buffer = this._buffer.substr(this._sectionStart);
+			this._index -= this._sectionStart;
+			this._bufferOffset += this._sectionStart;
+		}
+
+		this._sectionStart = 0;
+	}
+};
+
+//TODO make events conditional
+Tokenizer$1.prototype.write = function(chunk){
+	if(this._ended) this._cbs.onerror(Error(".write() after done!"));
+
+	this._buffer += chunk;
+	this._parse();
+};
+
+Tokenizer$1.prototype._parse = function(){
+	while(this._index < this._buffer.length && this._running){
+		var c = this._buffer.charAt(this._index);
+		if(this._state === TEXT) {
+			this._stateText(c);
+		} else if(this._state === BEFORE_TAG_NAME){
+			this._stateBeforeTagName(c);
+		} else if(this._state === IN_TAG_NAME) {
+			this._stateInTagName(c);
+		} else if(this._state === BEFORE_CLOSING_TAG_NAME){
+			this._stateBeforeCloseingTagName(c);
+		} else if(this._state === IN_CLOSING_TAG_NAME){
+			this._stateInCloseingTagName(c);
+		} else if(this._state === AFTER_CLOSING_TAG_NAME){
+			this._stateAfterCloseingTagName(c);
+		} else if(this._state === IN_SELF_CLOSING_TAG){
+			this._stateInSelfClosingTag(c);
+		}
+
+		/*
+		*	attributes
+		*/
+		else if(this._state === BEFORE_ATTRIBUTE_NAME){
+			this._stateBeforeAttributeName(c);
+		} else if(this._state === IN_ATTRIBUTE_NAME){
+			this._stateInAttributeName(c);
+		} else if(this._state === AFTER_ATTRIBUTE_NAME){
+			this._stateAfterAttributeName(c);
+		} else if(this._state === BEFORE_ATTRIBUTE_VALUE){
+			this._stateBeforeAttributeValue(c);
+		} else if(this._state === IN_ATTRIBUTE_VALUE_DQ){
+			this._stateInAttributeValueDoubleQuotes(c);
+		} else if(this._state === IN_ATTRIBUTE_VALUE_SQ){
+			this._stateInAttributeValueSingleQuotes(c);
+		} else if(this._state === IN_ATTRIBUTE_VALUE_NQ){
+			this._stateInAttributeValueNoQuotes(c);
+		}
+
+		/*
+		*	declarations
+		*/
+		else if(this._state === BEFORE_DECLARATION){
+			this._stateBeforeDeclaration(c);
+		} else if(this._state === IN_DECLARATION){
+			this._stateInDeclaration(c);
+		}
+
+		/*
+		*	processing instructions
+		*/
+		else if(this._state === IN_PROCESSING_INSTRUCTION){
+			this._stateInProcessingInstruction(c);
+		}
+
+		/*
+		*	comments
+		*/
+		else if(this._state === BEFORE_COMMENT){
+			this._stateBeforeComment(c);
+		} else if(this._state === IN_COMMENT){
+			this._stateInComment(c);
+		} else if(this._state === AFTER_COMMENT_1){
+			this._stateAfterComment1(c);
+		} else if(this._state === AFTER_COMMENT_2){
+			this._stateAfterComment2(c);
+		}
+
+		/*
+		*	cdata
+		*/
+		else if(this._state === BEFORE_CDATA_1){
+			this._stateBeforeCdata1(c);
+		} else if(this._state === BEFORE_CDATA_2){
+			this._stateBeforeCdata2(c);
+		} else if(this._state === BEFORE_CDATA_3){
+			this._stateBeforeCdata3(c);
+		} else if(this._state === BEFORE_CDATA_4){
+			this._stateBeforeCdata4(c);
+		} else if(this._state === BEFORE_CDATA_5){
+			this._stateBeforeCdata5(c);
+		} else if(this._state === BEFORE_CDATA_6){
+			this._stateBeforeCdata6(c);
+		} else if(this._state === IN_CDATA){
+			this._stateInCdata(c);
+		} else if(this._state === AFTER_CDATA_1){
+			this._stateAfterCdata1(c);
+		} else if(this._state === AFTER_CDATA_2){
+			this._stateAfterCdata2(c);
+		}
+
+		/*
+		* special tags
+		*/
+		else if(this._state === BEFORE_SPECIAL){
+			this._stateBeforeSpecial(c);
+		} else if(this._state === BEFORE_SPECIAL_END){
+			this._stateBeforeSpecialEnd(c);
+		}
+
+		/*
+		* script
+		*/
+		else if(this._state === BEFORE_SCRIPT_1){
+			this._stateBeforeScript1(c);
+		} else if(this._state === BEFORE_SCRIPT_2){
+			this._stateBeforeScript2(c);
+		} else if(this._state === BEFORE_SCRIPT_3){
+			this._stateBeforeScript3(c);
+		} else if(this._state === BEFORE_SCRIPT_4){
+			this._stateBeforeScript4(c);
+		} else if(this._state === BEFORE_SCRIPT_5){
+			this._stateBeforeScript5(c);
+		}
+
+		else if(this._state === AFTER_SCRIPT_1){
+			this._stateAfterScript1(c);
+		} else if(this._state === AFTER_SCRIPT_2){
+			this._stateAfterScript2(c);
+		} else if(this._state === AFTER_SCRIPT_3){
+			this._stateAfterScript3(c);
+		} else if(this._state === AFTER_SCRIPT_4){
+			this._stateAfterScript4(c);
+		} else if(this._state === AFTER_SCRIPT_5){
+			this._stateAfterScript5(c);
+		}
+
+		/*
+		* style
+		*/
+		else if(this._state === BEFORE_STYLE_1){
+			this._stateBeforeStyle1(c);
+		} else if(this._state === BEFORE_STYLE_2){
+			this._stateBeforeStyle2(c);
+		} else if(this._state === BEFORE_STYLE_3){
+			this._stateBeforeStyle3(c);
+		} else if(this._state === BEFORE_STYLE_4){
+			this._stateBeforeStyle4(c);
+		}
+
+		else if(this._state === AFTER_STYLE_1){
+			this._stateAfterStyle1(c);
+		} else if(this._state === AFTER_STYLE_2){
+			this._stateAfterStyle2(c);
+		} else if(this._state === AFTER_STYLE_3){
+			this._stateAfterStyle3(c);
+		} else if(this._state === AFTER_STYLE_4){
+			this._stateAfterStyle4(c);
+		}
+
+		/*
+		* entities
+		*/
+		else if(this._state === BEFORE_ENTITY){
+			this._stateBeforeEntity(c);
+		} else if(this._state === BEFORE_NUMERIC_ENTITY){
+			this._stateBeforeNumericEntity(c);
+		} else if(this._state === IN_NAMED_ENTITY){
+			this._stateInNamedEntity(c);
+		} else if(this._state === IN_NUMERIC_ENTITY){
+			this._stateInNumericEntity(c);
+		} else if(this._state === IN_HEX_ENTITY){
+			this._stateInHexEntity(c);
+		}
+
+		else {
+			this._cbs.onerror(Error("unknown _state"), this._state);
+		}
+
+		this._index++;
+	}
+
+	this._cleanup();
+};
+
+Tokenizer$1.prototype.pause = function(){
+	this._running = false;
+};
+Tokenizer$1.prototype.resume = function(){
+	this._running = true;
+
+	if(this._index < this._buffer.length){
+		this._parse();
+	}
+	if(this._ended){
+		this._finish();
+	}
+};
+
+Tokenizer$1.prototype.end = function(chunk){
+	if(this._ended) this._cbs.onerror(Error(".end() after done!"));
+	if(chunk) this.write(chunk);
+
+	this._ended = true;
+
+	if(this._running) this._finish();
+};
+
+Tokenizer$1.prototype._finish = function(){
+	//if there is remaining data, emit it in a reasonable way
+	if(this._sectionStart < this._index){
+		this._handleTrailingData();
+	}
+
+	this._cbs.onend();
+};
+
+Tokenizer$1.prototype._handleTrailingData = function(){
+	var data = this._buffer.substr(this._sectionStart);
+
+	if(this._state === IN_CDATA || this._state === AFTER_CDATA_1 || this._state === AFTER_CDATA_2){
+		this._cbs.oncdata(data);
+	} else if(this._state === IN_COMMENT || this._state === AFTER_COMMENT_1 || this._state === AFTER_COMMENT_2){
+		this._cbs.oncomment(data);
+	} else if(this._state === IN_NAMED_ENTITY && !this._xmlMode){
+		this._parseLegacyEntity();
+		if(this._sectionStart < this._index){
+			this._state = this._baseState;
+			this._handleTrailingData();
+		}
+	} else if(this._state === IN_NUMERIC_ENTITY && !this._xmlMode){
+		this._decodeNumericEntity(2, 10);
+		if(this._sectionStart < this._index){
+			this._state = this._baseState;
+			this._handleTrailingData();
+		}
+	} else if(this._state === IN_HEX_ENTITY && !this._xmlMode){
+		this._decodeNumericEntity(3, 16);
+		if(this._sectionStart < this._index){
+			this._state = this._baseState;
+			this._handleTrailingData();
+		}
+	} else if(
+		this._state !== IN_TAG_NAME &&
+		this._state !== BEFORE_ATTRIBUTE_NAME &&
+		this._state !== BEFORE_ATTRIBUTE_VALUE &&
+		this._state !== AFTER_ATTRIBUTE_NAME &&
+		this._state !== IN_ATTRIBUTE_NAME &&
+		this._state !== IN_ATTRIBUTE_VALUE_SQ &&
+		this._state !== IN_ATTRIBUTE_VALUE_DQ &&
+		this._state !== IN_ATTRIBUTE_VALUE_NQ &&
+		this._state !== IN_CLOSING_TAG_NAME
+	){
+		this._cbs.ontext(data);
+	}
+	//else, ignore remaining data
+	//TODO add a way to remove current tag
+};
+
+Tokenizer$1.prototype.reset = function(){
+	Tokenizer$1.call(this, {xmlMode: this._xmlMode, decodeEntities: this._decodeEntities}, this._cbs);
+};
+
+Tokenizer$1.prototype.getAbsoluteIndex = function(){
+	return this._bufferOffset + this._index;
+};
+
+Tokenizer$1.prototype._getSection = function(){
+	return this._buffer.substring(this._sectionStart, this._index);
+};
+
+Tokenizer$1.prototype._emitToken = function(name){
+	this._cbs[name](this._getSection());
+	this._sectionStart = -1;
+};
+
+Tokenizer$1.prototype._emitPartial = function(value){
+	if(this._baseState !== TEXT){
+		this._cbs.onattribdata(value); //TODO implement the new event
+	} else {
+		this._cbs.ontext(value);
+	}
+};
+
+var inherits_browser = createCommonjsModule(function (module) {
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor;
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor;
+    var TempCtor = function () {};
+    TempCtor.prototype = superCtor.prototype;
+    ctor.prototype = new TempCtor();
+    ctor.prototype.constructor = ctor;
+  };
+}
+});
+
+var inherits = createCommonjsModule(function (module) {
+try {
+  var util$$1 = util;
+  if (typeof util$$1.inherits !== 'function') throw '';
+  module.exports = util$$1.inherits;
+} catch (e) {
+  module.exports = inherits_browser;
+}
+});
+
+var Tokenizer = Tokenizer_1;
+
+/*
+	Options:
+
+	xmlMode: Disables the special behavior for script/style tags (false by default)
+	lowerCaseAttributeNames: call .toLowerCase for each attribute name (true if xmlMode is `false`)
+	lowerCaseTags: call .toLowerCase for each tag name (true if xmlMode is `false`)
+*/
+
+/*
+	Callbacks:
+
+	oncdataend,
+	oncdatastart,
+	onclosetag,
+	oncomment,
+	oncommentend,
+	onerror,
+	onopentag,
+	onprocessinginstruction,
+	onreset,
+	ontext
+*/
+
+var formTags = {
+	input: true,
+	option: true,
+	optgroup: true,
+	select: true,
+	button: true,
+	datalist: true,
+	textarea: true
+};
+
+var openImpliesClose = {
+	tr      : { tr:true, th:true, td:true },
+	th      : { th:true },
+	td      : { thead:true, th:true, td:true },
+	body    : { head:true, link:true, script:true },
+	li      : { li:true },
+	p       : { p:true },
+	h1      : { p:true },
+	h2      : { p:true },
+	h3      : { p:true },
+	h4      : { p:true },
+	h5      : { p:true },
+	h6      : { p:true },
+	select  : formTags,
+	input   : formTags,
+	output  : formTags,
+	button  : formTags,
+	datalist: formTags,
+	textarea: formTags,
+	option  : { option:true },
+	optgroup: { optgroup:true }
+};
+
+var voidElements = {
+	__proto__: null,
+	area: true,
+	base: true,
+	basefont: true,
+	br: true,
+	col: true,
+	command: true,
+	embed: true,
+	frame: true,
+	hr: true,
+	img: true,
+	input: true,
+	isindex: true,
+	keygen: true,
+	link: true,
+	meta: true,
+	param: true,
+	source: true,
+	track: true,
+	wbr: true,
+
+	//common self closing svg elements
+	path: true,
+	circle: true,
+	ellipse: true,
+	line: true,
+	rect: true,
+	use: true,
+	stop: true,
+	polyline: true,
+	polygon: true
+};
+
+var re_nameEnd = /\s|\//;
+
+function Parser(cbs, options){
+	this._options = options || {};
+	this._cbs = cbs || {};
+
+	this._tagname = "";
+	this._attribname = "";
+	this._attribvalue = "";
+	this._attribs = null;
+	this._stack = [];
+
+	this.startIndex = 0;
+	this.endIndex = null;
+
+	this._lowerCaseTagNames = "lowerCaseTags" in this._options ?
+									!!this._options.lowerCaseTags :
+									!this._options.xmlMode;
+	this._lowerCaseAttributeNames = "lowerCaseAttributeNames" in this._options ?
+									!!this._options.lowerCaseAttributeNames :
+									!this._options.xmlMode;
+
+	if(this._options.Tokenizer) {
+		Tokenizer = this._options.Tokenizer;
+	}
+	this._tokenizer = new Tokenizer(this._options, this);
+
+	if(this._cbs.onparserinit) this._cbs.onparserinit(this);
+}
+
+inherits(Parser, events);
+
+Parser.prototype._updatePosition = function(initialOffset){
+	if(this.endIndex === null){
+		if(this._tokenizer._sectionStart <= initialOffset){
+			this.startIndex = 0;
+		} else {
+			this.startIndex = this._tokenizer._sectionStart - initialOffset;
+		}
+	}
+	else this.startIndex = this.endIndex + 1;
+	this.endIndex = this._tokenizer.getAbsoluteIndex();
+};
+
+//Tokenizer event handlers
+Parser.prototype.ontext = function(data){
+	this._updatePosition(1);
+	this.endIndex--;
+
+	if(this._cbs.ontext) this._cbs.ontext(data);
+};
+
+Parser.prototype.onopentagname = function(name){
+	if(this._lowerCaseTagNames){
+		name = name.toLowerCase();
+	}
+
+	this._tagname = name;
+
+	if(!this._options.xmlMode && name in openImpliesClose) {
+		for(
+			var el;
+			(el = this._stack[this._stack.length - 1]) in openImpliesClose[name];
+			this.onclosetag(el)
+		);
+	}
+
+	if(this._options.xmlMode || !(name in voidElements)){
+		this._stack.push(name);
+	}
+
+	if(this._cbs.onopentagname) this._cbs.onopentagname(name);
+	if(this._cbs.onopentag) this._attribs = {};
+};
+
+Parser.prototype.onopentagend = function(){
+	this._updatePosition(1);
+
+	if(this._attribs){
+		if(this._cbs.onopentag) this._cbs.onopentag(this._tagname, this._attribs);
+		this._attribs = null;
+	}
+
+	if(!this._options.xmlMode && this._cbs.onclosetag && this._tagname in voidElements){
+		this._cbs.onclosetag(this._tagname);
+	}
+
+	this._tagname = "";
+};
+
+Parser.prototype.onclosetag = function(name){
+	this._updatePosition(1);
+
+	if(this._lowerCaseTagNames){
+		name = name.toLowerCase();
+	}
+
+	if(this._stack.length && (!(name in voidElements) || this._options.xmlMode)){
+		var pos = this._stack.lastIndexOf(name);
+		if(pos !== -1){
+			if(this._cbs.onclosetag){
+				pos = this._stack.length - pos;
+				while(pos--) this._cbs.onclosetag(this._stack.pop());
+			}
+			else this._stack.length = pos;
+		} else if(name === "p" && !this._options.xmlMode){
+			this.onopentagname(name);
+			this._closeCurrentTag();
+		}
+	} else if(!this._options.xmlMode && (name === "br" || name === "p")){
+		this.onopentagname(name);
+		this._closeCurrentTag();
+	}
+};
+
+Parser.prototype.onselfclosingtag = function(){
+	if(this._options.xmlMode || this._options.recognizeSelfClosing){
+		this._closeCurrentTag();
+	} else {
+		this.onopentagend();
+	}
+};
+
+Parser.prototype._closeCurrentTag = function(){
+	var name = this._tagname;
+
+	this.onopentagend();
+
+	//self-closing tags will be on the top of the stack
+	//(cheaper check than in onclosetag)
+	if(this._stack[this._stack.length - 1] === name){
+		if(this._cbs.onclosetag){
+			this._cbs.onclosetag(name);
+		}
+		this._stack.pop();
+	}
+};
+
+Parser.prototype.onattribname = function(name){
+	if(this._lowerCaseAttributeNames){
+		name = name.toLowerCase();
+	}
+	this._attribname = name;
+};
+
+Parser.prototype.onattribdata = function(value){
+	this._attribvalue += value;
+};
+
+Parser.prototype.onattribend = function(){
+	if(this._cbs.onattribute) this._cbs.onattribute(this._attribname, this._attribvalue);
+	if(
+		this._attribs &&
+		!Object.prototype.hasOwnProperty.call(this._attribs, this._attribname)
+	){
+		this._attribs[this._attribname] = this._attribvalue;
+	}
+	this._attribname = "";
+	this._attribvalue = "";
+};
+
+Parser.prototype._getInstructionName = function(value){
+	var idx = value.search(re_nameEnd),
+	    name = idx < 0 ? value : value.substr(0, idx);
+
+	if(this._lowerCaseTagNames){
+		name = name.toLowerCase();
+	}
+
+	return name;
+};
+
+Parser.prototype.ondeclaration = function(value){
+	if(this._cbs.onprocessinginstruction){
+		var name = this._getInstructionName(value);
+		this._cbs.onprocessinginstruction("!" + name, "!" + value);
+	}
+};
+
+Parser.prototype.onprocessinginstruction = function(value){
+	if(this._cbs.onprocessinginstruction){
+		var name = this._getInstructionName(value);
+		this._cbs.onprocessinginstruction("?" + name, "?" + value);
+	}
+};
+
+Parser.prototype.oncomment = function(value){
+	this._updatePosition(4);
+
+	if(this._cbs.oncomment) this._cbs.oncomment(value);
+	if(this._cbs.oncommentend) this._cbs.oncommentend();
+};
+
+Parser.prototype.oncdata = function(value){
+	this._updatePosition(1);
+
+	if(this._options.xmlMode || this._options.recognizeCDATA){
+		if(this._cbs.oncdatastart) this._cbs.oncdatastart();
+		if(this._cbs.ontext) this._cbs.ontext(value);
+		if(this._cbs.oncdataend) this._cbs.oncdataend();
+	} else {
+		this.oncomment("[CDATA[" + value + "]]");
+	}
+};
+
+Parser.prototype.onerror = function(err){
+	if(this._cbs.onerror) this._cbs.onerror(err);
+};
+
+Parser.prototype.onend = function(){
+	if(this._cbs.onclosetag){
+		for(
+			var i = this._stack.length;
+			i > 0;
+			this._cbs.onclosetag(this._stack[--i])
+		);
+	}
+	if(this._cbs.onend) this._cbs.onend();
+};
+
+
+//Resets the parser to a blank state, ready to parse a new HTML document
+Parser.prototype.reset = function(){
+	if(this._cbs.onreset) this._cbs.onreset();
+	this._tokenizer.reset();
+
+	this._tagname = "";
+	this._attribname = "";
+	this._attribs = null;
+	this._stack = [];
+
+	if(this._cbs.onparserinit) this._cbs.onparserinit(this);
+};
+
+//Parses a complete HTML document and pushes it to the handler
+Parser.prototype.parseComplete = function(data){
+	this.reset();
+	this.end(data);
+};
+
+Parser.prototype.write = function(chunk){
+	this._tokenizer.write(chunk);
+};
+
+Parser.prototype.end = function(chunk){
+	this._tokenizer.end(chunk);
+};
+
+Parser.prototype.pause = function(){
+	this._tokenizer.pause();
+};
+
+Parser.prototype.resume = function(){
+	this._tokenizer.resume();
+};
+
+//alias for backwards compat
+Parser.prototype.parseChunk = Parser.prototype.write;
+Parser.prototype.done = Parser.prototype.end;
+
+var Parser_1 = Parser;
+
+//Types of elements found in the DOM
+var domelementtype = {
+	Text: "text", //Text
+	Directive: "directive", //<? ... ?>
+	Comment: "comment", //<!-- ... -->
+	Script: "script", //<script> tags
+	Style: "style", //<style> tags
+	Tag: "tag", //Any tag
+	CDATA: "cdata", //<![CDATA[ ... ]]>
+	Doctype: "doctype",
+
+	isTag: function(elem){
+		return elem.type === "tag" || elem.type === "script" || elem.type === "style";
+	}
+};
+
+var node = createCommonjsModule(function (module) {
+// This object will be used as the prototype for Nodes when creating a
+// DOM-Level-1-compliant structure.
+var NodePrototype = module.exports = {
+	get firstChild() {
+		var children = this.children;
+		return children && children[0] || null;
+	},
+	get lastChild() {
+		var children = this.children;
+		return children && children[children.length - 1] || null;
+	},
+	get nodeType() {
+		return nodeTypes[this.type] || nodeTypes.element;
+	}
+};
+
+var domLvl1 = {
+	tagName: "name",
+	childNodes: "children",
+	parentNode: "parent",
+	previousSibling: "prev",
+	nextSibling: "next",
+	nodeValue: "data"
+};
+
+var nodeTypes = {
+	element: 1,
+	text: 3,
+	cdata: 4,
+	comment: 8
+};
+
+Object.keys(domLvl1).forEach(function(key) {
+	var shorthand = domLvl1[key];
+	Object.defineProperty(NodePrototype, key, {
+		get: function() {
+			return this[shorthand] || null;
+		},
+		set: function(val) {
+			this[shorthand] = val;
+			return val;
+		}
+	});
+});
+});
+
+var element = createCommonjsModule(function (module) {
+// DOM-Level-1-compliant structure
+
+var ElementPrototype = module.exports = Object.create(node);
+
+var domLvl1 = {
+	tagName: "name"
+};
+
+Object.keys(domLvl1).forEach(function(key) {
+	var shorthand = domLvl1[key];
+	Object.defineProperty(ElementPrototype, key, {
+		get: function() {
+			return this[shorthand] || null;
+		},
+		set: function(val) {
+			this[shorthand] = val;
+			return val;
+		}
+	});
+});
+});
+
+var re_whitespace = /\s+/g;
+
+
+
+function DomHandler(callback, options, elementCB){
+	if(typeof callback === "object"){
+		elementCB = options;
+		options = callback;
+		callback = null;
+	} else if(typeof options === "function"){
+		elementCB = options;
+		options = defaultOpts;
+	}
+	this._callback = callback;
+	this._options = options || defaultOpts;
+	this._elementCB = elementCB;
+	this.dom = [];
+	this._done = false;
+	this._tagStack = [];
+	this._parser = this._parser || null;
+}
+
+//default options
+var defaultOpts = {
+	normalizeWhitespace: false, //Replace all whitespace with single spaces
+	withStartIndices: false, //Add startIndex properties to nodes
+	withEndIndices: false, //Add endIndex properties to nodes
+};
+
+DomHandler.prototype.onparserinit = function(parser){
+	this._parser = parser;
+};
+
+//Resets the handler back to starting state
+DomHandler.prototype.onreset = function(){
+	DomHandler.call(this, this._callback, this._options, this._elementCB);
+};
+
+//Signals the handler that parsing is done
+DomHandler.prototype.onend = function(){
+	if(this._done) return;
+	this._done = true;
+	this._parser = null;
+	this._handleCallback(null);
+};
+
+DomHandler.prototype._handleCallback =
+DomHandler.prototype.onerror = function(error){
+	if(typeof this._callback === "function"){
+		this._callback(error, this.dom);
+	} else {
+		if(error) throw error;
+	}
+};
+
+DomHandler.prototype.onclosetag = function(){
+	//if(this._tagStack.pop().name !== name) this._handleCallback(Error("Tagname didn't match!"));
+	
+	var elem = this._tagStack.pop();
+
+	if(this._options.withEndIndices){
+		elem.endIndex = this._parser.endIndex;
+	}
+
+	if(this._elementCB) this._elementCB(elem);
+};
+
+DomHandler.prototype._createDomElement = function(properties){
+	if (!this._options.withDomLvl1) return properties;
+
+	var element$$1;
+	if (properties.type === "tag") {
+		element$$1 = Object.create(element);
+	} else {
+		element$$1 = Object.create(node);
+	}
+
+	for (var key in properties) {
+		if (properties.hasOwnProperty(key)) {
+			element$$1[key] = properties[key];
+		}
+	}
+
+	return element$$1;
+};
+
+DomHandler.prototype._addDomElement = function(element$$1){
+	var parent = this._tagStack[this._tagStack.length - 1];
+	var siblings = parent ? parent.children : this.dom;
+	var previousSibling = siblings[siblings.length - 1];
+
+	element$$1.next = null;
+
+	if(this._options.withStartIndices){
+		element$$1.startIndex = this._parser.startIndex;
+	}
+	if(this._options.withEndIndices){
+		element$$1.endIndex = this._parser.endIndex;
+	}
+
+	if(previousSibling){
+		element$$1.prev = previousSibling;
+		previousSibling.next = element$$1;
+	} else {
+		element$$1.prev = null;
+	}
+
+	siblings.push(element$$1);
+	element$$1.parent = parent || null;
+};
+
+DomHandler.prototype.onopentag = function(name, attribs){
+	var properties = {
+		type: name === "script" ? domelementtype.Script : name === "style" ? domelementtype.Style : domelementtype.Tag,
+		name: name,
+		attribs: attribs,
+		children: []
+	};
+
+	var element$$1 = this._createDomElement(properties);
+
+	this._addDomElement(element$$1);
+
+	this._tagStack.push(element$$1);
+};
+
+DomHandler.prototype.ontext = function(data){
+	//the ignoreWhitespace is officially dropped, but for now,
+	//it's an alias for normalizeWhitespace
+	var normalize = this._options.normalizeWhitespace || this._options.ignoreWhitespace;
+
+	var lastTag;
+
+	if(!this._tagStack.length && this.dom.length && (lastTag = this.dom[this.dom.length-1]).type === domelementtype.Text){
+		if(normalize){
+			lastTag.data = (lastTag.data + data).replace(re_whitespace, " ");
+		} else {
+			lastTag.data += data;
+		}
+	} else {
+		if(
+			this._tagStack.length &&
+			(lastTag = this._tagStack[this._tagStack.length - 1]) &&
+			(lastTag = lastTag.children[lastTag.children.length - 1]) &&
+			lastTag.type === domelementtype.Text
+		){
+			if(normalize){
+				lastTag.data = (lastTag.data + data).replace(re_whitespace, " ");
+			} else {
+				lastTag.data += data;
+			}
+		} else {
+			if(normalize){
+				data = data.replace(re_whitespace, " ");
+			}
+
+			var element$$1 = this._createDomElement({
+				data: data,
+				type: domelementtype.Text
+			});
+
+			this._addDomElement(element$$1);
+		}
+	}
+};
+
+DomHandler.prototype.oncomment = function(data){
+	var lastTag = this._tagStack[this._tagStack.length - 1];
+
+	if(lastTag && lastTag.type === domelementtype.Comment){
+		lastTag.data += data;
+		return;
+	}
+
+	var properties = {
+		data: data,
+		type: domelementtype.Comment
+	};
+
+	var element$$1 = this._createDomElement(properties);
+
+	this._addDomElement(element$$1);
+	this._tagStack.push(element$$1);
+};
+
+DomHandler.prototype.oncdatastart = function(){
+	var properties = {
+		children: [{
+			data: "",
+			type: domelementtype.Text
+		}],
+		type: domelementtype.CDATA
+	};
+
+	var element$$1 = this._createDomElement(properties);
+
+	this._addDomElement(element$$1);
+	this._tagStack.push(element$$1);
+};
+
+DomHandler.prototype.oncommentend = DomHandler.prototype.oncdataend = function(){
+	this._tagStack.pop();
+};
+
+DomHandler.prototype.onprocessinginstruction = function(name, data){
+	var element$$1 = this._createDomElement({
+		name: name,
+		data: data,
+		type: domelementtype.Directive
+	});
+
+	this._addDomElement(element$$1);
+};
+
+var domhandler = DomHandler;
+
+'use strict';
+function shouldProcessEveryNode(node) {
+  return true;
+}
+
+var shouldProcessNodeDefinitions = {
+  shouldProcessEveryNode: shouldProcessEveryNode,
+};
+
+/**
+ * Ensure some object is a coerced to a string
+ **/
+var makeString = function makeString(object) {
+  if (object == null) return '';
+  return '' + object;
+};
+
+var escapeRegExp = function escapeRegExp(str) {
+  return makeString(str).replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
+};
+
+var defaultToWhiteSpace = function defaultToWhiteSpace(characters) {
+  if (characters == null)
+    return '\\s';
+  else if (characters.source)
+    return characters.source;
+  else
+    return '[' + escapeRegExp(characters) + ']';
+};
+
+var nativeTrim = String.prototype.trim;
+
+var trim$1 = function trim(str, characters) {
+  str = makeString(str);
+  if (!characters && nativeTrim) return nativeTrim.call(str);
+  characters = defaultToWhiteSpace(characters);
+  return str.replace(new RegExp('^' + characters + '+|' + characters + '+$', 'g'), '');
+};
+
+var decapitalize = function decapitalize(str) {
+  str = makeString(str);
+  return str.charAt(0).toLowerCase() + str.slice(1);
+};
+
+var camelize$4 = function camelize(str, decapitalize$$1) {
+  str = trim$1(str).replace(/[-_\s]+(.)?/g, function(match, c) {
+    return c ? c.toUpperCase() : "";
+  });
+
+  if (decapitalize$$1 === true) {
+    return decapitalize(str);
+  } else {
+    return str;
+  }
+};
+
+var forEach = function forEach(arr, fn) {
+  for (var i = 0; i < arr.length; i++) {
+    fn(i, arr[i]);
+  }
+};
+
+var map$2 = function map(arr, fn) {
+  var newArr = [];
+
+  forEach(arr, function(key, item) {
+    newArr.push(fn(key, item));
+  });
+
+  return newArr;
+};
+
+var merge = function merge(args, curryArgs) {
+  var mergedArgs = [];
+
+  mergedArgs = map$2(curryArgs, function(key, item) {
+    if (typeof item === 'undefined') {
+      return args.shift();
+    } else {
+      return item;
+    }
+  });
+
+  return mergedArgs.concat(args);
+};
+
+var countDefinedItems = function(args) {
+  var count = 0;
+
+  forEach(args, function(key, item) {
+    if (typeof item !== 'undefined') {
+      count = count + 1;
+    }
+  });
+
+  return count;
+};
+
+var slice$1 = Array.prototype.slice;
+var __;
+
+
+function curry(fn, length, curryArgs) {
+  return function() {
+    var args = slice$1.call(arguments),
+      concatArgs = curryArgs.concat(args),
+      mergedArgs = [];
+
+    if (length <= countDefinedItems(concatArgs)) {
+      mergedArgs = merge(args, curryArgs);
+      return fn.apply(null, mergedArgs);
+    } else {
+      if (length >= concatArgs.length) {
+        return curry(fn, length, concatArgs);
+      } else {
+        return curry(fn, length, merge(args, curryArgs));
+      }
+    }
+  };
+}
+
+var chickencurry = function(fn) {
+  var args = slice$1.call(arguments, 1);
+
+  return curry(fn, fn.length, args);
+};
+
+var n = function(fn, length) {
+  var args = slice$1.call(arguments, 2);
+
+  return curry(fn, length, args);
+};
+
+var ___1 = __;
+
+chickencurry.n = n;
+chickencurry.__ = ___1;
+
+var camelize$2 = chickencurry(function camelize(str) {
+  return camelize$4(str, true);
+});
+
+/**
+ * Converts an object into an array of key, value arrays. Only the object's
+ * own properties are used.
+ * Note that the order of the output array is not guaranteed to be consistent
+ * across different JS platforms.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.4.0
+ * @category Object
+ * @sig {String: *} -> [[String,*]]
+ * @param {Object} obj The object to extract from
+ * @return {Array} An array of key, value arrays from the object's own properties.
+ * @see R.fromPairs
+ * @example
+ *
+ *      R.toPairs({a: 1, b: 2, c: 3}); //=> [['a', 1], ['b', 2], ['c', 3]]
+ */
+
+
+var toPairs = /*#__PURE__*/_curry1_1(function toPairs(obj) {
+  var pairs = [];
+  for (var prop in obj) {
+    if (_has_1(prop, obj)) {
+      pairs[pairs.length] = [prop, obj[prop]];
+    }
+  }
+  return pairs;
+});
+var toPairs_1 = toPairs;
+
+/**
+ * Optimized internal three-arity curry function.
+ *
+ * @private
+ * @category Function
+ * @param {Function} fn The function to curry.
+ * @return {Function} The curried function.
+ */
+
+
+function _curry3(fn) {
+  return function f3(a, b, c) {
+    switch (arguments.length) {
+      case 0:
+        return f3;
+      case 1:
+        return _isPlaceholder_1(a) ? f3 : _curry2_1(function (_b, _c) {
+          return fn(a, _b, _c);
+        });
+      case 2:
+        return _isPlaceholder_1(a) && _isPlaceholder_1(b) ? f3 : _isPlaceholder_1(a) ? _curry2_1(function (_a, _c) {
+          return fn(_a, b, _c);
+        }) : _isPlaceholder_1(b) ? _curry2_1(function (_b, _c) {
+          return fn(a, _b, _c);
+        }) : _curry1_1(function (_c) {
+          return fn(a, b, _c);
+        });
+      default:
+        return _isPlaceholder_1(a) && _isPlaceholder_1(b) && _isPlaceholder_1(c) ? f3 : _isPlaceholder_1(a) && _isPlaceholder_1(b) ? _curry2_1(function (_a, _b) {
+          return fn(_a, _b, c);
+        }) : _isPlaceholder_1(a) && _isPlaceholder_1(c) ? _curry2_1(function (_a, _c) {
+          return fn(_a, b, _c);
+        }) : _isPlaceholder_1(b) && _isPlaceholder_1(c) ? _curry2_1(function (_b, _c) {
+          return fn(a, _b, _c);
+        }) : _isPlaceholder_1(a) ? _curry1_1(function (_a) {
+          return fn(_a, b, c);
+        }) : _isPlaceholder_1(b) ? _curry1_1(function (_b) {
+          return fn(a, _b, c);
+        }) : _isPlaceholder_1(c) ? _curry1_1(function (_c) {
+          return fn(a, b, _c);
+        }) : fn(a, b, c);
+    }
+  };
+}
+var _curry3_1 = _curry3;
+
+/**
+ * Returns a single item by iterating through the list, successively calling
+ * the iterator function and passing it an accumulator value and the current
+ * value from the array, and then passing the result to the next call.
+ *
+ * The iterator function receives two values: *(acc, value)*. It may use
+ * [`R.reduced`](#reduced) to shortcut the iteration.
+ *
+ * The arguments' order of [`reduceRight`](#reduceRight)'s iterator function
+ * is *(value, acc)*.
+ *
+ * Note: `R.reduce` does not skip deleted or unassigned indices (sparse
+ * arrays), unlike the native `Array.prototype.reduce` method. For more details
+ * on this behavior, see:
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce#Description
+ *
+ * Dispatches to the `reduce` method of the third argument, if present. When
+ * doing so, it is up to the user to handle the [`R.reduced`](#reduced)
+ * shortcuting, as this is not implemented by `reduce`.
+ *
+ * @func
+ * @memberOf R
+ * @since v0.1.0
+ * @category List
+ * @sig ((a, b) -> a) -> a -> [b] -> a
+ * @param {Function} fn The iterator function. Receives two values, the accumulator and the
+ *        current element from the array.
+ * @param {*} acc The accumulator value.
+ * @param {Array} list The list to iterate over.
+ * @return {*} The final, accumulated value.
+ * @see R.reduced, R.addIndex, R.reduceRight
+ * @example
+ *
+ *      R.reduce(R.subtract, 0, [1, 2, 3, 4]) // => ((((0 - 1) - 2) - 3) - 4) = -10
+ *      //          -               -10
+ *      //         / \              / \
+ *      //        -   4           -6   4
+ *      //       / \              / \
+ *      //      -   3   ==>     -3   3
+ *      //     / \              / \
+ *      //    -   2           -1   2
+ *      //   / \              / \
+ *      //  0   1            0   1
+ *
+ * @symb R.reduce(f, a, [b, c, d]) = f(f(f(a, b), c), d)
+ */
+
+
+var reduce = /*#__PURE__*/_curry3_1(_reduce_1);
+var reduce_1 = reduce;
+
+// These are all sourced from https://facebook.github.io/react/docs/tags-and-attributes.html -
+// all attributes regardless of whether they have a different case to their HTML equivalents are
+// listed to reduce the chance of human error and make it easier to just copy-paste the new list if
+// it changes.
+'use strict';
+var HTML_ATTRIBUTES = [
+  'accept', 'acceptCharset', 'accessKey', 'action', 'allowFullScreen', 'allowTransparency',
+  'alt', 'async', 'autoComplete', 'autoFocus', 'autoPlay', 'capture', 'cellPadding',
+  'cellSpacing', 'challenge', 'charSet', 'checked', 'cite', 'classID', 'className',
+  'colSpan', 'cols', 'content', 'contentEditable', 'contextMenu', 'controls', 'coords',
+  'crossOrigin', 'data', 'dateTime', 'default', 'defer', 'dir', 'disabled', 'download',
+  'draggable', 'encType', 'form', 'formAction', 'formEncType', 'formMethod', 'formNoValidate',
+  'formTarget', 'frameBorder', 'headers', 'height', 'hidden', 'high', 'href', 'hrefLang',
+  'htmlFor', 'httpEquiv', 'icon', 'id', 'inputMode', 'integrity', 'is', 'keyParams', 'keyType',
+  'kind', 'label', 'lang', 'list', 'loop', 'low', 'manifest', 'marginHeight', 'marginWidth',
+  'max', 'maxLength', 'media', 'mediaGroup', 'method', 'min', 'minLength', 'multiple', 'muted',
+  'name', 'noValidate', 'nonce', 'open', 'optimum', 'pattern', 'placeholder', 'poster',
+  'preload', 'profile', 'radioGroup', 'readOnly', 'rel', 'required', 'reversed', 'role',
+  'rowSpan', 'rows', 'sandbox', 'scope', 'scoped', 'scrolling', 'seamless', 'selected',
+  'shape', 'size', 'sizes', 'span', 'spellCheck', 'src', 'srcDoc', 'srcLang', 'srcSet', 'start',
+  'step', 'style', 'summary', 'tabIndex', 'target', 'title', 'type', 'useMap', 'value', 'width',
+  'wmode', 'wrap',
+];
+
+var NON_STANDARD_ATTRIBUTES = [
+  'autoCapitalize', 'autoCorrect', 'color', 'itemProp', 'itemScope', 'itemType', 'itemRef',
+  'itemID', 'security', 'unselectable', 'results', 'autoSave',
+];
+
+var SVG_ATTRIBUTES = [
+  'accentHeight', 'accumulate', 'additive', 'alignmentBaseline', 'allowReorder', 'alphabetic',
+  'amplitude', 'arabicForm', 'ascent', 'attributeName', 'attributeType', 'autoReverse', 'azimuth',
+  'baseFrequency', 'baseProfile', 'baselineShift', 'bbox', 'begin', 'bias', 'by', 'calcMode',
+  'capHeight', 'clip', 'clipPath', 'clipPathUnits', 'clipRule', 'colorInterpolation',
+  'colorInterpolationFilters', 'colorProfile', 'colorRendering', 'contentScriptType',
+  'contentStyleType', 'cursor', 'cx', 'cy', 'd', 'decelerate', 'descent', 'diffuseConstant',
+  'direction', 'display', 'divisor', 'dominantBaseline', 'dur', 'dx', 'dy', 'edgeMode',
+  'elevation', 'enableBackground', 'end', 'exponent', 'externalResourcesRequired', 'fill',
+  'fillOpacity', 'fillRule', 'filter', 'filterRes', 'filterUnits', 'floodColor', 'floodOpacity',
+  'focusable', 'fontFamily', 'fontSize', 'fontSizeAdjust', 'fontStretch', 'fontStyle',
+  'fontVariant', 'fontWeight', 'format', 'from', 'fx', 'fy', 'g1', 'g2', 'glyphName',
+  'glyphOrientationHorizontal', 'glyphOrientationVertical', 'glyphRef',
+  'gradientTransform', 'gradientUnits', 'hanging', 'horizAdvX', 'horizOriginX', 'ideographic',
+  'imageRendering', 'in', 'in2', 'intercept', 'k', 'k1', 'k2', 'k3', 'k4', 'kernelMatrix',
+  'kernelUnitLength', 'kerning', 'keyPoints', 'keySplines', 'keyTimes', 'lengthAdjust',
+  'letterSpacing', 'lightingColor', 'limitingConeAngle', 'local', 'markerEnd', 'markerHeight',
+  'markerMid', 'markerStart', 'markerUnits', 'markerWidth', 'mask', 'maskContentUnits',
+  'maskUnits', 'mathematical', 'mode', 'numOctaves', 'offset', 'opacity', 'operator', 'order',
+  'orient', 'orientation', 'origin', 'overflow', 'overlinePosition', 'overlineThickness',
+  'paintOrder', 'panose1', 'pathLength', 'patternContentUnits', 'patternTransform',
+  'patternUnits', 'pointerEvents', 'points', 'pointsAtX', 'pointsAtY', 'pointsAtZ',
+  'preserveAlpha', 'preserveAspectRatio', 'primitiveUnits', 'r', 'radius', 'refX', 'refY',
+  'renderingIntent', 'repeatCount', 'repeatDur', 'requiredExtensions', 'requiredFeatures',
+  'restart', 'result', 'rotate', 'rx', 'ry', 'scale', 'seed', 'shapeRendering', 'slope',
+  'spacing', 'specularConstant', 'specularExponent', 'speed', 'spreadMethod', 'startOffset',
+  'stdDeviation', 'stemh', 'stemv', 'stitchTiles', 'stopColor', 'stopOpacity',
+  'strikethroughPosition', 'strikethroughThickness', 'string', 'stroke', 'strokeDasharray',
+  'strokeDashoffset', 'strokeLinecap', 'strokeLinejoin', 'strokeMiterlimit', 'strokeOpacity',
+  'strokeWidth', 'surfaceScale', 'systemLanguage', 'tableValues', 'targetX', 'targetY',
+  'textAnchor', 'textDecoration', 'textLength', 'textRendering', 'to', 'transform', 'u1',
+  'u2', 'underlinePosition', 'underlineThickness', 'unicode', 'unicodeBidi', 'unicodeRange',
+  'unitsPerEm', 'vAlphabetic', 'vHanging', 'vIdeographic', 'vMathematical', 'values',
+  'vectorEffect', 'version', 'vertAdvY', 'vertOriginX', 'vertOriginY', 'viewBox',
+  'viewTarget', 'visibility', 'widths', 'wordSpacing', 'writingMode', 'x', 'x1', 'x2',
+  'xChannelSelector', 'xHeight', 'xlinkActuate', 'xlinkArcrole', 'xlinkHref', 'xlinkRole',
+  'xlinkShow', 'xlinkTitle', 'xlinkType', 'xmlns', 'xmlnsXlink', 'xmlBase', 'xmlLang',
+  'xmlSpace', 'y', 'y1', 'y2', 'yChannelSelector', 'z', 'zoomAndPan',
+];
+
+var camelCaseMap = HTML_ATTRIBUTES
+  .concat(NON_STANDARD_ATTRIBUTES)
+  .concat(SVG_ATTRIBUTES)
+  .reduce(function (soFar, attr) {
+    var lower = attr.toLowerCase();
+    if (lower !== attr) {
+      soFar[lower] = attr;
+    }
+    return soFar;
+  }, {});
+
+var camelCaseAttributeNames = camelCaseMap;
+
+'use strict';
+
+
+
+
+
+
+function createStyleJsonFromString(styleString) {
+  styleString = styleString || '';
+  var styles = styleString.split(/;(?!base64)/);
+  var singleStyle, key, value, jsonStyles = {};
+  for (var i = 0; i < styles.length; ++i) {
+    singleStyle = styles[i].split(':');
+    if (singleStyle.length > 2) {
+      singleStyle[1] = singleStyle.slice(1).join(':');
+    }
+
+    key = singleStyle[0];
+    value = singleStyle[1];
+    if (typeof value === 'string'){
+      value = value.trim();
+    }
+
+    if (key != null && value != null && key.length > 0 && value.length > 0) {
+      jsonStyles[camelize$2(key)] = value;
+    }
+  }
+  return jsonStyles;
+}
+
+function createElement(node, index, data, children) {
+  var elementProps = {
+    key: index,
+  };
+  if (node.attribs) {
+    elementProps = reduce_1(function(result, keyAndValue) {
+      var key = keyAndValue[0];
+      var value = keyAndValue[1];
+      key = camelCaseAttributeNames[key.replace(/[-:]/, '')] || key;
+      if (key === 'style') {
+        value = createStyleJsonFromString(value);
+      } else if (key === 'class') {
+        key = 'className';
+      } else if (key === 'for') {
+        key = 'htmlFor';
+      }
+      if (typeof value === 'string') {
+        value = value;
+      }
+      result[key] = value || key;
+      return result;
+    }, elementProps, toPairs_1(node.attribs));
+  }
+
+  children = children || [];
+  var allChildren = data != null ? [data,].concat(children) : children;
+  return react.createElement.apply(
+    null, [node.name, elementProps,].concat(allChildren)
+  );
+}
+
+var utils = {
+  createElement: createElement,
+};
+
+'use strict';
+
+
+// eslint-disable-next-line max-len
+// https://github.com/facebook/react/blob/15.0-stable/src/renderers/dom/shared/ReactDOMComponent.js#L457
+var voidElementTags = [
+  'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen', 'link', 'meta', 'param',
+  'source', 'track', 'wbr', 'menuitem', 'textarea',
+];
+
+function ProcessNodeDefinitions() {
+  function processDefaultNode(node, children, index) {
+    if (node.type === 'text') {
+      return node.data;
+    } else if (node.type === 'comment') {
+      // FIXME: The following doesn't work as the generated HTML results in
+      // "&lt;!--  This is a comment  --&gt;"
+      // return '<!-- ' + node.data + ' -->';
+      return false;
+    }
+
+    if (voidElementTags.indexOf(node.name) > -1) {
+      return utils.createElement(node, index);
+    } else {
+      return utils.createElement(node, index, node.data, children);
+    }
+  }
+
+  return {
+    processDefaultNode: processDefaultNode,
+  };
+}
+
+var processNodeDefinitions = ProcessNodeDefinitions;
+
+'use strict';
+
+
+
+function ProcessingInstructions() {
+  var processNodeDefinitions$$1 = new processNodeDefinitions();
+
+  return {
+    defaultProcessingInstructions: [{
+      shouldProcessNode: shouldProcessNodeDefinitions.shouldProcessEveryNode,
+      processNode: processNodeDefinitions$$1.processDefaultNode,
+    },],
+  };
+}
+
+var processingInstructions = ProcessingInstructions;
+
+'use strict';
+function alwaysValid() {
+  return true;
+}
+
+var isValidNodeDefinitions = {
+  alwaysValid: alwaysValid,
+};
+
+'use strict';
+
+
+
+
+
+
+
+
+
+
+function Html2ReactParser(options) {
+  function parseHtmlToTree(html) {
+    options = options || {};
+    options.decodeEntities = true;
+    var handler = new domhandler();
+    var parser = new Parser_1(handler, options);
+    parser.parseComplete(html);
+    return handler.dom.filter(function (element) {
+      return element.type !== 'directive';
+    });
+  }
+
+  function traverseDom(node, isValidNode, processingInstructions$$1, index) {
+    if (isValidNode(node)) {
+      var processingInstruction = find_1(function (processingInstruction) {
+        return processingInstruction.shouldProcessNode(node);
+      }, processingInstructions$$1);
+      if (processingInstruction != null) {
+        var children = reject_1(function (x) {return x == null || x === false;},
+          addIndex_1(map_1)(function (child, i) {
+            return traverseDom(child, isValidNode, processingInstructions$$1, i);
+          }, node.children || []));
+
+        if (processingInstruction.replaceChildren) {
+          return utils.createElement(node, index, node.data, [
+            processingInstruction.processNode(node, children, index),
+          ]);
+        }
+
+        return processingInstruction.processNode(node, children, index);
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  function parseWithInstructions(html, isValidNode, processingInstructions$$1) {
+    var domTree = parseHtmlToTree(html);
+
+    var list = domTree.map(function (domTreeItem, index) {
+      return traverseDom(domTreeItem, isValidNode, processingInstructions$$1, index);
+    });
+    return list.length <= 1 ? list[0] : list;
+  }
+
+  function parse(html) {
+    var processingInstructions$$1 = new processingInstructions();
+    return parseWithInstructions(html,
+      isValidNodeDefinitions.alwaysValid,
+      processingInstructions$$1.defaultProcessingInstructions);
+  }
+
+  return {
+    parse: parse,
+    parseWithInstructions: parseWithInstructions,
+  };
+}
+
+var parser = Html2ReactParser;
+
+'use strict';
+
+
+
+
+
+
+var htmlToReact = {
+  Parser: parser,
+  ProcessingInstructions: processingInstructions,
+  IsValidNodeDefinitions: isValidNodeDefinitions,
+  ProcessNodeDefinitions: processNodeDefinitions,
+};
+
 var RootComponent =
 /*#__PURE__*/
 function (_Component) {
@@ -51326,13 +60054,13 @@ function () {
           api: _this.api,
           store: _this.warehouse.store,
           storeData: _this.warehouse.storeData.bind(_this.warehouse),
-          queryParams: util.getQueryParams()
+          queryParams: util$1.getQueryParams()
         });
         reactDom.render(component, elem);
 
         if (ComponentMap[componentName].head) {
           var headerComponent = react.createElement(ComponentMap[componentName].head, {
-            queryParams: util.getQueryParams()
+            queryParams: util$1.getQueryParams()
           });
           reactDom.render(headerComponent, headerElem);
         }
@@ -51359,9 +60087,11 @@ function () {
         // ReactDOM.render(React.createElement(elem), document.querySelectorAll(this.domRoot)[0]);
 
 
-        reactDom.render(react.createElement(RootComponent, {
-          content: resText
-        }), document.querySelectorAll("#dyna")[0]); // document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
+        var htmlInput = '<div><h1>Title</h1><p>A paragraph</p></div>';
+        var parser = new htmlToReact.Parser();
+        var reactElement = parser.parse(htmlInput);
+        debugger;
+        reactDom.render(reactElement, document.querySelectorAll("#dyna")[0]); // document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
 
         _this2.instantiateReactComponents();
       });
