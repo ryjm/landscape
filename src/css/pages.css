@@ -200,3 +200,10 @@ div.mod
   font-weight: inherit;
 }
 
+.post #edit
+{
+  display: none;
+}
+
+
+

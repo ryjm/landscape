@@ -23,13 +23,26 @@ export class TopicCreatePage extends Component {
   }
 
   createTopic() {
-    this.props.api.sendCollAction({
-      submit: {
-        col: this.props.queryParams.coll,
-        tit: this.titleExtract(this.state.topicContent),
-        wat: this.state.topicContent
+    if (this.props.queryParams.top) {
+      const dat = {
+        submit: {
+          col: this.props.queryParams.coll,
+          tit: this.titleExtract(this.state.topicContent),
+          wat: this.state.topicContent
+        }
       }
-    },{
+    } else {
+      const dat = {
+        resubmit: {
+          col: this.props.queryParams.coll,
+          top: this.props.queryParams.top,
+          tit: this.titleExtract(this.state.topicContent),
+          wat: this.state.topicContent
+        }
+      }
+    };
+
+    this.props.api.sendCollAction(dat, {
       target: `/~~/collections/${this.props.queryParams.coll}`
     });
   }
