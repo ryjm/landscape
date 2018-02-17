@@ -44,8 +44,34 @@
   border-color: red !important;
 }
 
-.create-stream-page.container {
-  /* max-width: 600px; */
+.create-stream-page .input-group i {
+  padding-top: 2rem;
+}
+
+.create-stream-page textarea {
+  border: 6px solid black;
+}
+
+.create-stream-page input[type="text"] {
+  border: 6px solid black;
+  font-size: 9rem;
+  line-height: 18rem;
+  padding: 0 4rem;
+}
+
+.create-stream-page label {
+  font-size: 6rem;
+  line-height: 9rem;
+  font-weight: 500;
+}
+
+.create-stream-page .input-group-radio label {
+  padding-top: 0;
+  height: 18rem;
+  width: 38rem;
+  font-size: 9rem;
+  line-height: 18rem;
+  text-align: center;
 }
 
 /**

@@ -15,6 +15,7 @@ export class StreamCreatePage extends Component {
         aud: [],
         audRaw: []
       },
+      oldStream: {},
       descriptions: {
         type: {
           "feed": "A feed is a time-ordered (newest-first) list of microblogging messages.",
@@ -29,14 +30,35 @@ export class StreamCreatePage extends Component {
           mailbox: "A mailbox is owner-readable and publicly writable, with a blacklist for blocking."
         }
       },
-      deleteStream: ""
+      deleteStream: "",
+      editLoaded: false
     };
 
-    this.createStream = this.createStream.bind(this);
+    this.submitStream = this.submitStream.bind(this);
     this.valueChange = this.valueChange.bind(this);
 
     this.deleteStream = this.deleteStream.bind(this);
     this.deleteChange = this.deleteChange.bind(this);
+  }
+
+  loadEdit() {
+    let editStation = this.props.queryParams.station;
+    if (editStation && this.props.store.configs[editStation] && !this.state.editLoaded) {
+      let station = this.props.store.configs[editStation];
+      let stream = {
+        nom: editStation.split("/").slice(1).join("/"), // TODO: This will need editing if there are multiple /'s in a station name`
+        des: station.cap,
+        sec: station.con.sec,
+        aud: station.con.sis,
+        dis: "no",
+        audRaw: station.con.sis.join(", ")
+      };
+      this.setState({
+        stream: stream,
+        oldStream: Object.assign({}, stream), // For some reason we need to make a shallow copy here... wtf?!?
+        editLoaded: true
+      });
+    }
   }
 
   deleteChange(event) {
@@ -49,20 +71,41 @@ export class StreamCreatePage extends Component {
   deleteStream() {
     console.log("deleting")
 
-    this.props.api.hall({
-      delete: {
-        nom: this.state.deleteStream,
-        why: "cuz"
-      }
-    });
-
     // this.props.api.hall({
-    //   source: {
-    //     nom: `inbox`,
-    //     sub: false,
-    //     srs: [this.state.deleteStream]
+    //   delete: {
+    //     nom: this.state.deleteStream,
+    //     why: "cuz"
     //   }
     // });
+
+    this.props.api.hall({
+      source: {
+        nom: `inbox`,
+        sub: false,
+        srs: [this.state.deleteStream]
+      }
+    });
+  }
+
+  submitStream() {
+    if (this.state.editLoaded) {
+      this.editStream();
+    } else {
+      this.createStream();
+    }
+  }
+
+  editStream() {
+    if (!this.state.oldStream) return;
+
+    if (this.state.stream.des !== this.state.oldStream.des) {
+      this.props.api.hall({
+        depict: {
+          nom: this.state.oldStream.nom,
+          des: this.state.stream.des
+        }
+      })
+    }
   }
 
   createStream() {
@@ -121,10 +164,8 @@ export class StreamCreatePage extends Component {
 
     if (des === "dm") {
       stream.sec = "village";
-      stream.nom = aud.join(".");
+      stream.nom = `${aud.join(".")}2`;
     }
-
-    console.log('stream = ', stream);
 
     this.setState({
       stream: Object.assign(this.state.stream, stream)
@@ -132,6 +173,11 @@ export class StreamCreatePage extends Component {
   }
 
   render() {
+    this.loadEdit();
+
+    console.log('stream = ', this.state.stream);
+    console.log('oldStream = ', this.state.oldStream);
+
     let typeDesc = this.state.descriptions.type[this.state.stream.des];
     let secDesc = this.state.descriptions.security[this.state.stream.sec];
 
@@ -144,9 +190,9 @@ export class StreamCreatePage extends Component {
 
     return (
       <div className="row">
-        <div className="col-sm-8">
-          <div className="create-stream-page container">
-            <div className="input-group mb-4">
+        <div className="col-sm-12">
+          <div className="create-stream-page">
+            <div className="input-group mb-9">
               <label htmlFor="nom">Name</label>
               <input
                 type="text"
@@ -157,10 +203,10 @@ export class StreamCreatePage extends Component {
                 value={this.state.stream.nom}/>
             </div>
 
-            <div className="input-group mb-4">
+            <div className="input-group mb-9">
               <label htmlFor="stream-type">Type</label>
               <div className="row">
-                <div className="col-sm-5">
+                <div className="col-sm-6">
                   <div className="select-dropdown" disabled={this.state.loading}>
                     <select
                       name="des"
@@ -176,16 +222,16 @@ export class StreamCreatePage extends Component {
                     <span className="select-icon">↓</span>
                   </div>
                 </div>
-                <div className="col-sm-offset-1 col-sm-6">
-                  <i className="text-sm">{typeDesc}</i>
+                <div className="col-sm-offset-1 col-sm-5">
+                  <i>{typeDesc}</i>
                 </div>
               </div>
             </div>
 
-            <div className="input-group mb-4">
+            <div className="input-group mb-9">
               <label htmlFor="stream-security">Security model</label>
               <div className="row">
-                <div className="col-sm-5">
+                <div className="col-sm-6">
                   <div className="select-dropdown" disabled={secDisabled}>
                     <select
                       name="sec"
@@ -201,24 +247,28 @@ export class StreamCreatePage extends Component {
                     <span className="select-icon">↓</span>
                   </div>
                 </div>
-                <div className="col-sm-offset-1 col-sm-6">
-                  <i className="text-sm">{secDesc}</i>
+                <div className="col-sm-offset-1 col-sm-5">
+                  <i>{secDesc}</i>
                 </div>
               </div>
             </div>
 
-            <div className="input-group mb-4">
-              <label htmlFor="stream-ships">{audienceLabel}</label>
-              <textarea
-                name="audRaw"
-                placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
-                disabled={this.state.loading}
-                value={this.state.stream.audRaw}
-                onChange={this.valueChange}
-                />
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="input-group mb-9">
+                  <label htmlFor="stream-ships">{audienceLabel}</label>
+                  <textarea
+                    name="audRaw"
+                    placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
+                    disabled={this.state.loading}
+                    value={this.state.stream.audRaw}
+                    onChange={this.valueChange}
+                    />
+                </div>
+              </div>
             </div>
 
-            <div className="input-group input-group-radio mb-4">
+            <div className="input-group input-group-radio mb-9">
               <h5>Discoverable?</h5>
 
               <label htmlFor="stream-discoverable-yes"
@@ -248,7 +298,7 @@ export class StreamCreatePage extends Component {
               </label>
             </div>
 
-            <button type="submit" className="btn btn-primary" onClick={this.createStream}>Create →</button>
+            <button type="submit" className="btn btn-primary mt-12" onClick={this.submitStream}>{this.state.editLoaded ? "Submit" : "Create"} →</button>
           </div>
         </div>
         <div className="sidebar fawef">

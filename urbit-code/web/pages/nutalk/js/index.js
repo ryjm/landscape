@@ -33421,6 +33421,7 @@ function (_Component) {
         aud: [],
         audRaw: []
       },
+      oldStream: {},
       descriptions: {
         type: {
           "feed": "A feed is a time-ordered (newest-first) list of microblogging messages.",
@@ -33435,9 +33436,10 @@ function (_Component) {
           mailbox: "A mailbox is owner-readable and publicly writable, with a blacklist for blocking."
         }
       },
-      deleteStream: ""
+      deleteStream: "",
+      editLoaded: false
     };
-    _this.createStream = _this.createStream.bind(_this);
+    _this.submitStream = _this.submitStream.bind(_this);
     _this.valueChange = _this.valueChange.bind(_this);
     _this.deleteStream = _this.deleteStream.bind(_this);
     _this.deleteChange = _this.deleteChange.bind(_this);
@@ -33445,6 +33447,30 @@ function (_Component) {
   }
 
   _createClass(StreamCreatePage, [{
+    key: "loadEdit",
+    value: function loadEdit() {
+      var editStation = this.props.queryParams.station;
+
+      if (editStation && this.props.store.configs[editStation] && !this.state.editLoaded) {
+        var station = this.props.store.configs[editStation];
+        var stream = {
+          nom: editStation.split("/").slice(1).join("/"),
+          // TODO: This will need editing if there are multiple /'s in a station name`
+          des: station.cap,
+          sec: station.con.sec,
+          aud: station.con.sis,
+          dis: "no",
+          audRaw: station.con.sis.join(", ")
+        };
+        this.setState({
+          stream: stream,
+          oldStream: Object.assign({}, stream),
+          // For some reason we need to make a shallow copy here... wtf?!?
+          editLoaded: true
+        });
+      }
+    }
+  }, {
     key: "deleteChange",
     value: function deleteChange(event) {
       console.log(event.target.value);
@@ -33455,19 +33481,43 @@ function (_Component) {
   }, {
     key: "deleteStream",
     value: function deleteStream() {
-      console.log("deleting");
-      this.props.api.hall({
-        delete: {
-          nom: this.state.deleteStream,
-          why: "cuz"
-        }
-      }); // this.props.api.hall({
-      //   source: {
-      //     nom: `inbox`,
-      //     sub: false,
-      //     srs: [this.state.deleteStream]
+      console.log("deleting"); // this.props.api.hall({
+      //   delete: {
+      //     nom: this.state.deleteStream,
+      //     why: "cuz"
       //   }
       // });
+
+      this.props.api.hall({
+        source: {
+          nom: "inbox",
+          sub: false,
+          srs: [this.state.deleteStream]
+        }
+      });
+    }
+  }, {
+    key: "submitStream",
+    value: function submitStream() {
+      if (this.state.editLoaded) {
+        this.editStream();
+      } else {
+        this.createStream();
+      }
+    }
+  }, {
+    key: "editStream",
+    value: function editStream() {
+      if (!this.state.oldStream) return;
+
+      if (this.state.stream.des !== this.state.oldStream.des) {
+        this.props.api.hall({
+          depict: {
+            nom: this.state.oldStream.nom,
+            des: this.state.stream.des
+          }
+        });
+      }
     }
   }, {
     key: "createStream",
@@ -33522,10 +33572,9 @@ function (_Component) {
 
       if (des === "dm") {
         stream.sec = "village";
-        stream.nom = aud.join(".");
+        stream.nom = "".concat(aud.join("."), "2");
       }
 
-      console.log('stream = ', stream);
       this.setState({
         stream: Object.assign(this.state.stream, stream)
       });
@@ -33533,6 +33582,9 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      this.loadEdit();
+      console.log('stream = ', this.state.stream);
+      console.log('oldStream = ', this.state.oldStream);
       var typeDesc = this.state.descriptions.type[this.state.stream.des];
       var secDesc = this.state.descriptions.security[this.state.stream.sec];
       var nomDisabled = this.state.loading || this.state.stream.des === "dm";
@@ -33541,11 +33593,11 @@ function (_Component) {
       return react.createElement("div", {
         className: "row"
       }, react.createElement("div", {
-        className: "col-sm-8"
+        className: "col-sm-12"
       }, react.createElement("div", {
-        className: "create-stream-page container"
+        className: "create-stream-page"
       }, react.createElement("div", {
-        className: "input-group mb-4"
+        className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "nom"
       }, "Name"), react.createElement("input", {
@@ -33556,13 +33608,13 @@ function (_Component) {
         onChange: this.valueChange,
         value: this.state.stream.nom
       })), react.createElement("div", {
-        className: "input-group mb-4"
+        className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "stream-type"
       }, "Type"), react.createElement("div", {
         className: "row"
       }, react.createElement("div", {
-        className: "col-sm-5"
+        className: "col-sm-6"
       }, react.createElement("div", {
         className: "select-dropdown",
         disabled: this.state.loading
@@ -33582,17 +33634,15 @@ function (_Component) {
       }, "DM")), react.createElement("span", {
         className: "select-icon"
       }, "\u2193"))), react.createElement("div", {
-        className: "col-sm-offset-1 col-sm-6"
-      }, react.createElement("i", {
-        className: "text-sm"
-      }, typeDesc)))), react.createElement("div", {
-        className: "input-group mb-4"
+        className: "col-sm-offset-1 col-sm-5"
+      }, react.createElement("i", null, typeDesc)))), react.createElement("div", {
+        className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "stream-security"
       }, "Security model"), react.createElement("div", {
         className: "row"
       }, react.createElement("div", {
-        className: "col-sm-5"
+        className: "col-sm-6"
       }, react.createElement("div", {
         className: "select-dropdown",
         disabled: secDisabled
@@ -33612,11 +33662,13 @@ function (_Component) {
       }, "Mailbox")), react.createElement("span", {
         className: "select-icon"
       }, "\u2193"))), react.createElement("div", {
-        className: "col-sm-offset-1 col-sm-6"
-      }, react.createElement("i", {
-        className: "text-sm"
-      }, secDesc)))), react.createElement("div", {
-        className: "input-group mb-4"
+        className: "col-sm-offset-1 col-sm-5"
+      }, react.createElement("i", null, secDesc)))), react.createElement("div", {
+        className: "row"
+      }, react.createElement("div", {
+        className: "col-sm-6"
+      }, react.createElement("div", {
+        className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "stream-ships"
       }, audienceLabel), react.createElement("textarea", {
@@ -33625,8 +33677,8 @@ function (_Component) {
         disabled: this.state.loading,
         value: this.state.stream.audRaw,
         onChange: this.valueChange
-      })), react.createElement("div", {
-        className: "input-group input-group-radio mb-4"
+      })))), react.createElement("div", {
+        className: "input-group input-group-radio mb-9"
       }, react.createElement("h5", null, "Discoverable?"), react.createElement("label", {
         htmlFor: "stream-discoverable-yes",
         disabled: this.state.loading,
@@ -33653,9 +33705,9 @@ function (_Component) {
         onChange: this.valueChange
       }))), react.createElement("button", {
         type: "submit",
-        className: "btn btn-primary",
-        onClick: this.createStream
-      }, "Create \u2192"))), react.createElement("div", {
+        className: "btn btn-primary mt-12",
+        onClick: this.submitStream
+      }, this.state.editLoaded ? "Submit" : "Create", " \u2192"))), react.createElement("div", {
         className: "sidebar fawef"
       }, react.createElement("input", {
         type: "text",
