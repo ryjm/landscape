@@ -15,7 +15,7 @@
             ''
 ^-  manx
 ;div
-  ;div.topic-info.container.mb-4
+  ;div.topic-info.mb-4
     ;div.row.coll-title
       {(trip desc:(need config))} /
     ==
