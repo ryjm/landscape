@@ -215,17 +215,6 @@ export class ChatPage extends Component {
             </form>
           </div>
         </div>
-        <ul className="nav-main">
-          <li>
-            <a href="javascript:void(0)">12 members</a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">3 pending invites </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">invite +</a>
-          </li>
-        </ul>
         <div className="chat-members">
           {chatMembers}
         </div>

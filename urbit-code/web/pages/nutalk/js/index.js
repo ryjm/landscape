@@ -33228,15 +33228,7 @@ function (_Component) {
         placeholder: "Say something",
         value: this.state.message,
         onChange: this.messageChange
-      })))), react.createElement("ul", {
-        className: "nav-main"
-      }, react.createElement("li", null, react.createElement("a", {
-        href: "javascript:void(0)"
-      }, "12 members")), react.createElement("li", null, react.createElement("a", {
-        href: "javascript:void(0)"
-      }, "3 pending invites ")), react.createElement("li", null, react.createElement("a", {
-        href: "javascript:void(0)"
-      }, "invite +"))), react.createElement("div", {
+      })))), react.createElement("div", {
         className: "chat-members"
       }, chatMembers));
     }
@@ -33378,7 +33370,7 @@ function (_Component2) {
       var cos = this.props.store.configs[this.props.queryParams.station];
       var subpage = null;
 
-      if (cos && cos.cap === "chat") {
+      if (cos && (cos.cap === "chat" || cos.cap === "dm")) {
         subpage = [react.createElement(ChatPage, this.props)];
       } else if (cos && cos.cap === "feed") {
         subpage = [react.createElement(FeedPage, this.props)];
@@ -33428,25 +33420,64 @@ function (_Component) {
         dis: "no",
         aud: [],
         audRaw: []
-      }
+      },
+      deleteStream: ""
     };
     _this.createStream = _this.createStream.bind(_this);
     _this.valueChange = _this.valueChange.bind(_this);
+    _this.deleteStream = _this.deleteStream.bind(_this);
+    _this.deleteChange = _this.deleteChange.bind(_this);
     return _this;
   }
 
   _createClass(StreamCreatePage, [{
+    key: "deleteChange",
+    value: function deleteChange(event) {
+      console.log(event.target.value);
+      this.setState({
+        deleteStream: event.target.value
+      });
+    }
+  }, {
+    key: "deleteStream",
+    value: function deleteStream() {
+      console.log("deleting");
+      this.props.api.hall({
+        delete: {
+          nom: this.state.deleteStream,
+          why: "cuz"
+        }
+      }); // this.props.api.hall({
+      //   source: {
+      //     nom: `inbox`,
+      //     sub: false,
+      //     srs: [this.state.deleteStream]
+      //   }
+      // });
+    }
+  }, {
     key: "createStream",
     value: function createStream() {
       var usership = this.props.store.usership;
+      var nom;
+      var sec; // if direct message, circle name becomes "." delimited list of audience members
+
+      if (this.state.stream.des === "dm") {
+        nom = this.state.stream.aud.join(".");
+        sec = "village";
+      } else {
+        nom = this.state.stream.nom;
+        sec = this.state.stream.sec;
+      }
+
       this.props.api.hall({
         create: {
-          nom: this.state.stream.nom,
+          nom: nom,
           des: this.state.stream.des,
-          sec: this.state.stream.sec
+          sec: sec
         }
       }, {
-        target: "/~~/pages/nutalk/stream?station=~".concat(usership, "/").concat(this.state.stream.nom)
+        target: "/~~/pages/nutalk/stream?station=~".concat(usership, "/").concat(nom)
       });
       this.setState({
         loading: true
@@ -33456,7 +33487,7 @@ function (_Component) {
         this.props.storeData({
           pendingInvites: [{
             aud: this.state.stream.aud,
-            nom: this.state.stream.nom
+            nom: nom
           }]
         });
       }
@@ -33519,7 +33550,9 @@ function (_Component) {
         value: "chat"
       }, "Chat"), react.createElement("option", {
         value: "list"
-      }, "List")), react.createElement("span", {
+      }, "List"), react.createElement("option", {
+        value: "dm"
+      }, "Direct Message")), react.createElement("span", {
         className: "select-icon"
       }, "\u2193"))), react.createElement("div", {
         className: "col-sm-offset-1 col-sm-5"
@@ -33593,7 +33626,15 @@ function (_Component) {
         type: "submit",
         className: "btn btn-primary",
         onClick: this.createStream
-      }, "Create \u2192"))));
+      }, "Create \u2192"))), react.createElement("div", {
+        className: "mt-20"
+      }, react.createElement("input", {
+        type: "text",
+        onChange: this.deleteChange
+      }), react.createElement("button", {
+        type: "button",
+        onClick: this.deleteStream
+      }, "Delete")));
     }
   }]);
   return StreamCreatePage;
@@ -33947,46 +33988,45 @@ function () {
       var pathTokens = bs.from.path.split("/");
 
       if (pathTokens[1] === "circle" && pathTokens[2] === "inbox" && pathTokens[3] === "config") {
-        var circle = bs.data.json.circle;
+        var circle = bs.data.json.circle; // set w/o side effects
 
         if (circle.config && circle.config.dif && circle.config.dif.full) {
           console.log('circle circle.config.dif.full', circle.config.cir);
           configs[circle.config.cir] = circle.config.dif.full;
-        }
+        } // add to config blacklist or whitelist
+
 
         if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
           console.log('circle circle.config.dif.full', circle.config.cir);
           configs[circle.config.cir] = configs[circle.config.cir] || {};
           configs[circle.config.cir].sis = circle.config.dif.permit.sis;
-        }
+        } // Add inbox config
+
 
         if (circle.cos && circle.cos.loc) {
-          // Add inbox config
-          console.log('circle config.cos.loc', circle.cos.loc);
           var inbox = "~".concat(this.authTokens.ship, "/inbox");
           configs[inbox] = circle.cos.loc;
-        }
+        } // Add remote configs
+
 
         if (circle.cos && circle.cos.rem) {
-          // Add remote configs
           // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
-          console.log('circle config.cos.rem', circle.cos.rem);
           Object.keys(circle.cos.rem).forEach(function (remConfig) {
             configs[remConfig] = circle.cos.rem[remConfig];
           });
-        }
+        } // Add remote presences
+
 
         if (circle.pes && circle.pes.rem) {
-          // Add remote configs
-          // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
-          console.log('circle config.pes.rem', circle.pes.rem);
           Object.keys(circle.pes.rem).forEach(function (pes) {
             configs[pes].pes = circle.pes.rem[pes];
           });
-        }
+        } // For all the new configs, if there are pending invites for them, send the invites
+
 
         Object.keys(configs).forEach(function (cos) {
           _this4.warehouse.store.pendingInvites.forEach(function (inv) {
+            // TOOD:  Maybe we should also check the invitees are in config.sis list, if whitelist
             if (cos.indexOf(inv.nom) !== -1) {
               _this4.hall({
                 permit: {
@@ -33997,6 +34037,8 @@ function () {
               });
             }
           });
+
+          _this4.warehouse.store.pendingInvites = [];
         });
       }
 
@@ -34014,7 +34056,7 @@ function () {
           this.hall({
             source: {
               nom: "inbox",
-              sub: true,
+              sub: ownedStations.add,
               srs: ["~".concat(this.authTokens.ship, "/").concat(ownedStations.cir)]
             }
           });
@@ -34022,37 +34064,32 @@ function () {
       }
 
       return [];
-    }
-  }, {
-    key: "processSideEffects",
-    value: function processSideEffects() {// this.subscribeToOwnedStations();
-    }
-  }, {
-    key: "subscribeToOwnedStations",
-    value: function subscribeToOwnedStations() {
-      var _this5 = this;
+    } // processSideEffects() {
+    // this.subscribeToOwnedStations();
+    // }
+    // subscribeToOwnedStations() {
+    //   let {ownedStations, configs} = this.warehouse.store;
+    //   let pendingStations = [];
+    //
+    //   console.log('ownedStations = ', ownedStations);
+    //
+    //   ownedStations.forEach(station => {
+    //     if (!configs[station]) {
+    //       pendingStations.push(`${this.authTokens.ship}/${station}`);
+    //     }
+    //   });
+    //
+    //   if (pendingStations.length > 0) {
+    //     this.hall({
+    //       source: {
+    //         nom: `~${this.authTokens.ship}/inbox`,
+    //         sub: true,
+    //         srs: [pendingStations]
+    //       }
+    //     });
+    //   }
+    // }
 
-      var _warehouse$store = this.warehouse.store,
-          ownedStations = _warehouse$store.ownedStations,
-          configs = _warehouse$store.configs;
-      var pendingStations = [];
-      console.log('ownedStations = ', ownedStations);
-      ownedStations.forEach(function (station) {
-        if (!configs[station]) {
-          pendingStations.push("".concat(_this5.authTokens.ship, "/").concat(station));
-        }
-      });
-
-      if (pendingStations.length > 0) {
-        this.hall({
-          source: {
-            nom: "~".concat(this.authTokens.ship, "/inbox"),
-            sub: true,
-            srs: [pendingStations]
-          }
-        });
-      }
-    }
   }]);
   return UrbitApi;
 }();
@@ -51257,25 +51294,6 @@ function () {
   return UrbitWarehouse;
 }();
 
-var RootComponent =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(RootComponent, _Component);
-
-  function RootComponent() {
-    _classCallCheck(this, RootComponent);
-    return _possibleConstructorReturn(this, (RootComponent.__proto__ || Object.getPrototypeOf(RootComponent)).apply(this, arguments));
-  }
-
-  _createClass(RootComponent, [{
-    key: "render",
-    value: function render() {
-      return react.createElement("div", null, this.props.children);
-    }
-  }]);
-  return RootComponent;
-}(react_1);
-
 var UrbitRouter =
 /*#__PURE__*/
 function () {
@@ -51285,13 +51303,10 @@ function () {
     // this.pageRoot = "/~~/pages/nutalk/";
     this.pageRoot = "";
     this.domRoot = "#root";
-    this.pendingTransitions = [];
-    this.root = new RootComponent(); // TODO: This... might be a circular dependency? Seems to work though.
+    this.pendingTransitions = []; // TODO: This... might be a circular dependency? Seems to work though.
 
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
-    this.api = new UrbitApi(this.warehouse); // let kids = React.createElement(ExampleComponent);
-    // ReactDOM.render(React.createElement(RootComponent, {}, kids), document.querySelectorAll("#root")[0]);
-
+    this.api = new UrbitApi(this.warehouse);
     this.instantiateReactComponents();
     this.registerAnchorListeners();
     this.registerHistoryListeners();
@@ -51302,6 +51317,7 @@ function () {
     value: function instantiateReactComponents() {
       var _this = this;
 
+      // if userhip is null, auth tokens haven't been loaded yet, so api isn't unavablable. so we wait.
       if (this.warehouse.store.usership === "") {
         return;
       }
@@ -51341,7 +51357,6 @@ function () {
     value: function transitionTo(targetUrl, noHistory) {
       var _this2 = this;
 
-      // return;
       // trim queryparams
       var q = targetUrl.indexOf('?');
       var baseUrl = q !== -1 ? targetUrl.substr(0, q) : targetUrl;
@@ -51356,7 +51371,7 @@ function () {
           window.history.pushState({}, null, targetUrl);
         }
 
-        document.querySelectorAll(_this2.domRoot)[0].innerHTML = resText; // React.renderDOM(ChildComponent, $(this.domRoot)[0]);
+        document.querySelectorAll(_this2.domRoot)[0].innerHTML = resText;
 
         _this2.instantiateReactComponents();
       });
@@ -51401,6 +51416,6 @@ function () {
 }();
 
 console.log('app running');
-window.router = new UrbitRouter();
+var router = new UrbitRouter();
 
 })));

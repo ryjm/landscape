@@ -14,24 +14,66 @@ export class StreamCreatePage extends Component {
         dis: "no",
         aud: [],
         audRaw: []
-      }
+      },
+      deleteStream: ""
     };
 
     this.createStream = this.createStream.bind(this);
     this.valueChange = this.valueChange.bind(this);
+
+    this.deleteStream = this.deleteStream.bind(this);
+    this.deleteChange = this.deleteChange.bind(this);
+  }
+
+  deleteChange(event) {
+    console.log(event.target.value)
+    this.setState({
+      deleteStream: event.target.value
+    });
+  }
+
+  deleteStream() {
+    console.log("deleting")
+
+    this.props.api.hall({
+      delete: {
+        nom: this.state.deleteStream,
+        why: "cuz"
+      }
+    });
+
+    // this.props.api.hall({
+    //   source: {
+    //     nom: `inbox`,
+    //     sub: false,
+    //     srs: [this.state.deleteStream]
+    //   }
+    // });
   }
 
   createStream() {
     let usership = this.props.store.usership;
 
+    let nom;
+    let sec;
+
+    // if direct message, circle name becomes "." delimited list of audience members
+    if (this.state.stream.des === "dm") {
+      nom = this.state.stream.aud.join(".");
+      sec = "village";
+    } else {
+      nom = this.state.stream.nom;
+      sec = this.state.stream.sec;
+    }
+
     this.props.api.hall({
       create: {
-        nom: this.state.stream.nom,
+        nom: nom,
         des: this.state.stream.des,
-        sec: this.state.stream.sec
+        sec: sec
       }
     }, {
-      target: `/~~/pages/nutalk/stream?station=~${usership}/${this.state.stream.nom}`
+      target: `/~~/pages/nutalk/stream?station=~${usership}/${nom}`
     });
 
     this.setState({
@@ -42,7 +84,7 @@ export class StreamCreatePage extends Component {
       this.props.storeData({
         pendingInvites: [{
           aud: this.state.stream.aud,
-          nom: this.state.stream.nom
+          nom: nom
         }]
       });
     }
@@ -97,6 +139,7 @@ export class StreamCreatePage extends Component {
                       <option value="feed">Feed</option>
                       <option value="chat">Chat</option>
                       <option value="list">List</option>
+                      <option value="dm">Direct Message</option>
                     </select>
                     <span className="select-icon">↓</span>
                   </div>
@@ -171,6 +214,10 @@ export class StreamCreatePage extends Component {
 
             <button type="submit" className="btn btn-primary" onClick={this.createStream}>Create →</button>
           </div>
+        </div>
+        <div className="mt-20">
+          <input type="text" onChange={this.deleteChange} />
+          <button type="button" onClick={this.deleteStream}>Delete</button>
         </div>
       </div>
     )

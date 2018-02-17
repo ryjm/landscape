@@ -210,11 +210,13 @@ export class UrbitApi {
 
       let circle = bs.data.json.circle;
 
+      // set w/o side effects
       if (circle.config && circle.config.dif && circle.config.dif.full) {
         console.log('circle circle.config.dif.full', circle.config.cir);
         configs[circle.config.cir] = circle.config.dif.full;
       }
 
+      // add to config blacklist or whitelist
       if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
         console.log('circle circle.config.dif.full', circle.config.cir);
 
@@ -222,33 +224,31 @@ export class UrbitApi {
         configs[circle.config.cir].sis = circle.config.dif.permit.sis;
       }
 
+      // Add inbox config
       if (circle.cos && circle.cos.loc) {
-        // Add inbox config
-        console.log('circle config.cos.loc', circle.cos.loc);
         let inbox = `~${this.authTokens.ship}/inbox`;
         configs[inbox] = circle.cos.loc;
       }
 
+      // Add remote configs
       if (circle.cos && circle.cos.rem) {
-        // Add remote configs
         // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
-        console.log('circle config.cos.rem', circle.cos.rem);
         Object.keys(circle.cos.rem).forEach((remConfig) => {
           configs[remConfig] = circle.cos.rem[remConfig];
         });
       }
 
+      // Add remote presences
       if (circle.pes && circle.pes.rem) {
-        // Add remote configs
-        // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
-        console.log('circle config.pes.rem', circle.pes.rem);
         Object.keys(circle.pes.rem).forEach((pes) => {
           configs[pes].pes = circle.pes.rem[pes];
         });
       }
 
+      // For all the new configs, if there are pending invites for them, send the invites
       Object.keys(configs).forEach(cos => {
         this.warehouse.store.pendingInvites.forEach(inv => {
+          // TOOD:  Maybe we should also check the invitees are in config.sis list, if whitelist
           if (cos.indexOf(inv.nom) !== -1) {
             this.hall({
               permit: {
@@ -259,11 +259,14 @@ export class UrbitApi {
             });
           }
         });
+
+        this.warehouse.store.pendingInvites = [];
       })
     }
 
     return configs;
   }
+
 
   parseOwnedStations(bs) {
     let pathTokens = bs.from.path.split("/");
@@ -277,7 +280,7 @@ export class UrbitApi {
         this.hall({
           source: {
             nom: `inbox`,
-            sub: true,
+            sub: ownedStations.add,
             srs: [`~${this.authTokens.ship}/${ownedStations.cir}`]
           }
         });
@@ -287,30 +290,30 @@ export class UrbitApi {
     return [];
   }
 
-  processSideEffects() {
+  // processSideEffects() {
     // this.subscribeToOwnedStations();
-  }
+  // }
 
-  subscribeToOwnedStations() {
-    let {ownedStations, configs} = this.warehouse.store;
-    let pendingStations = [];
-
-    console.log('ownedStations = ', ownedStations);
-
-    ownedStations.forEach(station => {
-      if (!configs[station]) {
-        pendingStations.push(`${this.authTokens.ship}/${station}`);
-      }
-    });
-
-    if (pendingStations.length > 0) {
-      this.hall({
-        source: {
-          nom: `~${this.authTokens.ship}/inbox`,
-          sub: true,
-          srs: [pendingStations]
-        }
-      });
-    }
-  }
+  // subscribeToOwnedStations() {
+  //   let {ownedStations, configs} = this.warehouse.store;
+  //   let pendingStations = [];
+  //
+  //   console.log('ownedStations = ', ownedStations);
+  //
+  //   ownedStations.forEach(station => {
+  //     if (!configs[station]) {
+  //       pendingStations.push(`${this.authTokens.ship}/${station}`);
+  //     }
+  //   });
+  //
+  //   if (pendingStations.length > 0) {
+  //     this.hall({
+  //       source: {
+  //         nom: `~${this.authTokens.ship}/inbox`,
+  //         sub: true,
+  //         srs: [pendingStations]
+  //       }
+  //     });
+  //   }
+  // }
 }
