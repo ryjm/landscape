@@ -8,7 +8,7 @@ export class TopicCreatePage extends Component {
     this.createTopic = this.createTopic.bind(this);
     this.valueChange = this.valueChange.bind(this);
     this.state = {
-      topicContent: ''
+      topicContent: this.props.topText ? this.props.topText : ''
     };
   }
 
@@ -23,8 +23,10 @@ export class TopicCreatePage extends Component {
   }
 
   createTopic() {
-    if (this.props.queryParams.top) {
-      const dat = {
+    let dat = {}
+    console.log(this.props);
+    if (top in this.props) {
+      dat = {
         submit: {
           col: this.props.queryParams.coll,
           tit: this.titleExtract(this.state.topicContent),
@@ -32,10 +34,10 @@ export class TopicCreatePage extends Component {
         }
       }
     } else {
-      const dat = {
+      dat = {
         resubmit: {
-          col: this.props.queryParams.coll,
-          top: this.props.queryParams.top,
+          col: this.props.coll,
+          top: this.props.top,
           tit: this.titleExtract(this.state.topicContent),
           wat: this.state.topicContent
         }
@@ -43,7 +45,7 @@ export class TopicCreatePage extends Component {
     };
 
     this.props.api.sendCollAction(dat, {
-      target: `/~~/collections/${this.props.queryParams.coll}`
+      target: top in this.props ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/collections/${this.props.queryParams.coll}`
     });
   }
 
@@ -59,7 +61,7 @@ export class TopicCreatePage extends Component {
 
   render() {
     return (
-      <div className="create-collection-page container">
+      <div className="create-collection-page">
         <div className="input-group">
           <button 
             onClick={this.createTopic}
