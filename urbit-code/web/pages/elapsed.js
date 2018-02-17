@@ -1,4 +1,4 @@
-secToString = function(secs) {
+var secToString = function(secs) {
     if (secs <= 0) {
       return 'Completed';
     }
@@ -43,19 +43,15 @@ secToString = function(secs) {
       }
     }
     var fm = function(tup) {
-      console.log('call fm');
       var str = tup[0];
       var sec = tup[1];
       if (sec < min) {
         return [str, sec];
       } else {
-        console.log('sec / min', sec / min);
         return [str + ' ' + Math.floor(sec / min) + 'm', sec % min];
       }
     }
     var fs = function(tup) {
-      console.log('call fs');
-      console.log(tup);
       var str = tup[0];
       var sec = tup[1];
       return str + ' ' + sec + 's';
@@ -65,7 +61,6 @@ secToString = function(secs) {
 
 window.onload = function() {
   var das = document.querySelectorAll('[data-urb-elapsed]');
-  console.log(das);
   for (var i=0; i < das.length; i ++) { 
     var urbD = das[i].dataset.urbElapsed;  // UTC
     var serverTime = new Date(urbD);
