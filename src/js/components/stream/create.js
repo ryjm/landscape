@@ -15,6 +15,20 @@ export class StreamCreatePage extends Component {
         aud: [],
         audRaw: []
       },
+      descriptions: {
+        type: {
+          "feed": "A feed is a time-ordered (newest-first) list of microblogging messages.",
+          "chat": "A chat is a time-ordered (newest-last) traditional, multi-user chatroom.",
+          "list": "A list is a compiled aggregation of other circles.",
+          "dm": "A DM is a direct message group between one or more recipients."
+        },
+        security: {
+          channel: "A channel is publicly readable and writable, with a blacklist for blocking.",
+          village: "A village is privately readable and writable, with a whitelist for inviting.",
+          journal: "A journal is publicly readable and privately writable, with a whitelist for authors.",
+          mailbox: "A mailbox is owner-readable and publicly writable, with a blacklist for blocking."
+        }
+      },
       deleteStream: ""
     };
 
@@ -102,7 +116,15 @@ export class StreamCreatePage extends Component {
       stream.aud = value.split([", "])
     }
 
-    console.log("stream? = ",this.state.stream, stream);
+    let des = stream.des || this.state.stream.des;
+    let aud = stream.aud || this.state.stream.aud;
+
+    if (des === "dm") {
+      stream.sec = "village";
+      stream.nom = aud.join(".");
+    }
+
+    console.log('stream = ', stream);
 
     this.setState({
       stream: Object.assign(this.state.stream, stream)
@@ -110,25 +132,35 @@ export class StreamCreatePage extends Component {
   }
 
   render() {
+    let typeDesc = this.state.descriptions.type[this.state.stream.des];
+    let secDesc = this.state.descriptions.security[this.state.stream.sec];
+
+    let nomDisabled = this.state.loading || this.state.stream.des === "dm";
+    let secDisabled = this.state.loading || this.state.stream.des === "dm";
+
+    let audienceLabel = (this.state.stream.sec === "village" ||
+                         this.state.stream.sec === "journal") ?
+                         "Whitelist" : "Blacklist";
+
     return (
       <div className="row">
-        <div className="col-sm-6">
+        <div className="col-sm-8">
           <div className="create-stream-page container">
-            <div className="input-group">
+            <div className="input-group mb-4">
               <label htmlFor="nom">Name</label>
               <input
                 type="text"
                 name="nom"
                 placeholder="Secret club"
-                disabled={this.state.loading}
+                disabled={nomDisabled}
                 onChange={this.valueChange}
                 value={this.state.stream.nom}/>
             </div>
 
-            <div className="input-group">
+            <div className="input-group mb-4">
               <label htmlFor="stream-type">Type</label>
               <div className="row">
-                <div className="col-sm-6">
+                <div className="col-sm-5">
                   <div className="select-dropdown" disabled={this.state.loading}>
                     <select
                       name="des"
@@ -139,25 +171,25 @@ export class StreamCreatePage extends Component {
                       <option value="feed">Feed</option>
                       <option value="chat">Chat</option>
                       <option value="list">List</option>
-                      <option value="dm">Direct Message</option>
+                      <option value="dm">DM</option>
                     </select>
                     <span className="select-icon">↓</span>
                   </div>
                 </div>
-                <div className="col-sm-offset-1 col-sm-5">
-                  <i className="text-sm">A Feed is a time-ordered (newest-first) list of microblogging messages with character limits.</i>
+                <div className="col-sm-offset-1 col-sm-6">
+                  <i className="text-sm">{typeDesc}</i>
                 </div>
               </div>
             </div>
 
-            <div className="input-group">
+            <div className="input-group mb-4">
               <label htmlFor="stream-security">Security model</label>
               <div className="row">
-                <div className="col-sm-6">
-                  <div className="select-dropdown" disabled={this.state.loading}>
+                <div className="col-sm-5">
+                  <div className="select-dropdown" disabled={secDisabled}>
                     <select
                       name="sec"
-                      disabled={this.state.loading}
+                      disabled={secDisabled}
                       value={this.state.stream.sec}
                       onChange={this.valueChange}>
 
@@ -169,14 +201,14 @@ export class StreamCreatePage extends Component {
                     <span className="select-icon">↓</span>
                   </div>
                 </div>
-                <div className="col-sm-offset-1 col-sm-5">
-                  <i className="text-sm">A Village is privately readable and writable, with a whitelist for inviting.</i>
+                <div className="col-sm-offset-1 col-sm-6">
+                  <i className="text-sm">{secDesc}</i>
                 </div>
               </div>
             </div>
 
-            <div className="input-group">
-              <label htmlFor="stream-ships">Whitelist</label>
+            <div className="input-group mb-4">
+              <label htmlFor="stream-ships">{audienceLabel}</label>
               <textarea
                 name="audRaw"
                 placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
@@ -186,10 +218,12 @@ export class StreamCreatePage extends Component {
                 />
             </div>
 
-            <div className="input-group">
+            <div className="input-group input-group-radio mb-4">
               <h5>Discoverable?</h5>
 
-              <label htmlFor="stream-discoverable-yes" disabled={this.state.loading}>Yes
+              <label htmlFor="stream-discoverable-yes"
+                     disabled={this.state.loading}
+                     className={this.state.stream.dis === "yes" ? "radio-active" : ""}> Yes
                 <input
                   type="radio"
                   name="dis"
@@ -200,7 +234,9 @@ export class StreamCreatePage extends Component {
                   onChange={this.valueChange}/>
               </label>
 
-              <label htmlFor="stream-discoverable-no" disabled={this.state.loading}>No
+              <label htmlFor="stream-discoverable-no"
+                     disabled={this.state.loading}
+                     className={this.state.stream.dis === "no" ? "radio-active" : ""}> No
                 <input
                   type="radio"
                   name="dis"
@@ -215,7 +251,7 @@ export class StreamCreatePage extends Component {
             <button type="submit" className="btn btn-primary" onClick={this.createStream}>Create →</button>
           </div>
         </div>
-        <div className="mt-20">
+        <div className="sidebar fawef">
           <input type="text" onChange={this.deleteChange} />
           <button type="button" onClick={this.deleteStream}>Delete</button>
         </div>

@@ -1,3 +1,9 @@
+.sidebar {
+  position: absolute;
+  right: 24rem;
+  top: 48rem;
+}
+
 .menu-main {
   display: flex;
   /* position: absolute; */

@@ -215,7 +215,7 @@ export class ChatPage extends Component {
             </form>
           </div>
         </div>
-        <div className="chat-members">
+        <div className="sidebar">
           {chatMembers}
         </div>
       </div>

@@ -33229,7 +33229,7 @@ function (_Component) {
         value: this.state.message,
         onChange: this.messageChange
       })))), react.createElement("div", {
-        className: "chat-members"
+        className: "sidebar"
       }, chatMembers));
     }
   }]);
@@ -33421,6 +33421,20 @@ function (_Component) {
         aud: [],
         audRaw: []
       },
+      descriptions: {
+        type: {
+          "feed": "A feed is a time-ordered (newest-first) list of microblogging messages.",
+          "chat": "A chat is a time-ordered (newest-last) traditional, multi-user chatroom.",
+          "list": "A list is a compiled aggregation of other circles.",
+          "dm": "A DM is a direct message group between one or more recipients."
+        },
+        security: {
+          channel: "A channel is publicly readable and writable, with a blacklist for blocking.",
+          village: "A village is privately readable and writable, with a whitelist for inviting.",
+          journal: "A journal is publicly readable and privately writable, with a whitelist for authors.",
+          mailbox: "A mailbox is owner-readable and publicly writable, with a blacklist for blocking."
+        }
+      },
       deleteStream: ""
     };
     _this.createStream = _this.createStream.bind(_this);
@@ -33503,7 +33517,15 @@ function (_Component) {
         stream.aud = value.split([", "]);
       }
 
-      console.log("stream? = ", this.state.stream, stream);
+      var des = stream.des || this.state.stream.des;
+      var aud = stream.aud || this.state.stream.aud;
+
+      if (des === "dm") {
+        stream.sec = "village";
+        stream.nom = aud.join(".");
+      }
+
+      console.log('stream = ', stream);
       this.setState({
         stream: Object.assign(this.state.stream, stream)
       });
@@ -33511,31 +33533,36 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var typeDesc = this.state.descriptions.type[this.state.stream.des];
+      var secDesc = this.state.descriptions.security[this.state.stream.sec];
+      var nomDisabled = this.state.loading || this.state.stream.des === "dm";
+      var secDisabled = this.state.loading || this.state.stream.des === "dm";
+      var audienceLabel = this.state.stream.sec === "village" || this.state.stream.sec === "journal" ? "Whitelist" : "Blacklist";
       return react.createElement("div", {
         className: "row"
       }, react.createElement("div", {
-        className: "col-sm-6"
+        className: "col-sm-8"
       }, react.createElement("div", {
         className: "create-stream-page container"
       }, react.createElement("div", {
-        className: "input-group"
+        className: "input-group mb-4"
       }, react.createElement("label", {
         htmlFor: "nom"
       }, "Name"), react.createElement("input", {
         type: "text",
         name: "nom",
         placeholder: "Secret club",
-        disabled: this.state.loading,
+        disabled: nomDisabled,
         onChange: this.valueChange,
         value: this.state.stream.nom
       })), react.createElement("div", {
-        className: "input-group"
+        className: "input-group mb-4"
       }, react.createElement("label", {
         htmlFor: "stream-type"
       }, "Type"), react.createElement("div", {
         className: "row"
       }, react.createElement("div", {
-        className: "col-sm-6"
+        className: "col-sm-5"
       }, react.createElement("div", {
         className: "select-dropdown",
         disabled: this.state.loading
@@ -33552,26 +33579,26 @@ function (_Component) {
         value: "list"
       }, "List"), react.createElement("option", {
         value: "dm"
-      }, "Direct Message")), react.createElement("span", {
+      }, "DM")), react.createElement("span", {
         className: "select-icon"
       }, "\u2193"))), react.createElement("div", {
-        className: "col-sm-offset-1 col-sm-5"
+        className: "col-sm-offset-1 col-sm-6"
       }, react.createElement("i", {
         className: "text-sm"
-      }, "A Feed is a time-ordered (newest-first) list of microblogging messages with character limits.")))), react.createElement("div", {
-        className: "input-group"
+      }, typeDesc)))), react.createElement("div", {
+        className: "input-group mb-4"
       }, react.createElement("label", {
         htmlFor: "stream-security"
       }, "Security model"), react.createElement("div", {
         className: "row"
       }, react.createElement("div", {
-        className: "col-sm-6"
+        className: "col-sm-5"
       }, react.createElement("div", {
         className: "select-dropdown",
-        disabled: this.state.loading
+        disabled: secDisabled
       }, react.createElement("select", {
         name: "sec",
-        disabled: this.state.loading,
+        disabled: secDisabled,
         value: this.state.stream.sec,
         onChange: this.valueChange
       }, react.createElement("option", {
@@ -33585,25 +33612,26 @@ function (_Component) {
       }, "Mailbox")), react.createElement("span", {
         className: "select-icon"
       }, "\u2193"))), react.createElement("div", {
-        className: "col-sm-offset-1 col-sm-5"
+        className: "col-sm-offset-1 col-sm-6"
       }, react.createElement("i", {
         className: "text-sm"
-      }, "A Village is privately readable and writable, with a whitelist for inviting.")))), react.createElement("div", {
-        className: "input-group"
+      }, secDesc)))), react.createElement("div", {
+        className: "input-group mb-4"
       }, react.createElement("label", {
         htmlFor: "stream-ships"
-      }, "Whitelist"), react.createElement("textarea", {
+      }, audienceLabel), react.createElement("textarea", {
         name: "audRaw",
         placeholder: "~ravmel-rodpyl, ~sorreg-namtyv",
         disabled: this.state.loading,
         value: this.state.stream.audRaw,
         onChange: this.valueChange
       })), react.createElement("div", {
-        className: "input-group"
+        className: "input-group input-group-radio mb-4"
       }, react.createElement("h5", null, "Discoverable?"), react.createElement("label", {
         htmlFor: "stream-discoverable-yes",
-        disabled: this.state.loading
-      }, "Yes", react.createElement("input", {
+        disabled: this.state.loading,
+        className: this.state.stream.dis === "yes" ? "radio-active" : ""
+      }, " Yes", react.createElement("input", {
         type: "radio",
         name: "dis",
         value: "yes",
@@ -33613,8 +33641,9 @@ function (_Component) {
         onChange: this.valueChange
       })), react.createElement("label", {
         htmlFor: "stream-discoverable-no",
-        disabled: this.state.loading
-      }, "No", react.createElement("input", {
+        disabled: this.state.loading,
+        className: this.state.stream.dis === "no" ? "radio-active" : ""
+      }, " No", react.createElement("input", {
         type: "radio",
         name: "dis",
         value: "no",
@@ -33627,7 +33656,7 @@ function (_Component) {
         className: "btn btn-primary",
         onClick: this.createStream
       }, "Create \u2192"))), react.createElement("div", {
-        className: "mt-20"
+        className: "sidebar fawef"
       }, react.createElement("input", {
         type: "text",
         onChange: this.deleteChange

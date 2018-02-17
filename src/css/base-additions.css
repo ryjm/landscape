@@ -12,10 +12,38 @@ input[disabled], label[disabled], select[disabled], textarea[disabled], .select-
   border-color: #aaa;
 }
 
+input[type="radio"] {
+  position: relative;
+  top: -9999px;
+}
+
 input.input-sm {
   font-size: 3rem;
   padding: 6px;
   border-width: 1px;
+}
+
+.input-group-radio {
+
+}
+
+.input-group-radio label {
+  display: inline-block;
+  height: 12rem;
+  width: 20rem;
+
+  background-color: #ECECEC;
+  text-align: center;
+  color: #B0B0B0;
+
+  font-size: 6rem;
+  line-height: 12rem;
+  font-weight: 700;
+}
+
+.input-group-radio label.radio-active {
+  color: white;
+  background-color: black;
 }
 
 /***
