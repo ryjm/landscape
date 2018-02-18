@@ -109,28 +109,14 @@ export class StreamCreatePage extends Component {
   }
 
   createStream() {
-    let usership = this.props.store.usership;
-
-    let nom;
-    let sec;
-
-    // if direct message, circle name becomes "." delimited list of audience members
-    if (this.state.stream.des === "dm") {
-      nom = this.state.stream.aud.join(".");
-      sec = "village";
-    } else {
-      nom = this.state.stream.nom;
-      sec = this.state.stream.sec;
-    }
-
     this.props.api.hall({
       create: {
-        nom: nom,
+        nom: this.state.stream.nom,
         des: this.state.stream.des,
-        sec: sec
+        sec: this.state.stream.sec
       }
     }, {
-      target: `/~~/pages/nutalk/stream?station=~${usership}/${nom}`
+      target: `/~~/pages/nutalk/stream?station=~${this.props.store.usership}/${this.state.stream.nom}`
     });
 
     this.setState({
@@ -141,7 +127,7 @@ export class StreamCreatePage extends Component {
       this.props.storeData({
         pendingInvites: [{
           aud: this.state.stream.aud,
-          nom: nom
+          nom: this.state.stream.nom
         }]
       });
     }
@@ -163,8 +149,9 @@ export class StreamCreatePage extends Component {
     let aud = stream.aud || this.state.stream.aud;
 
     if (des === "dm") {
+      console.log('usership = ', this.props.store.usership);
       stream.sec = "village";
-      stream.nom = `${aud.join(".")}2`;
+      stream.nom = `${aud.concat(this.props.store.usership).sort().join(".")}`;
     }
 
     this.setState({

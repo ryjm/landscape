@@ -31,7 +31,21 @@ export class InboxPage extends Component {
     let cir = evt.target.dataset.cir;
     let val = evt.target.attributes.value;
 
-    this.subCircle(cir, val);
+    // TODO:  Reallly hacky way of telling if circle is DM group or not
+    if (cir.indexOf('.') === -1) {
+      this.subCircle(cir, true);
+    } else {
+      let stationBase = cir.split("/").slice(1)[0];
+      this.props.api.hall({
+        create: {
+          nom: stationBase,
+          des: "dm",
+          sec: "village"
+        }
+      }, {
+        target: `/~~/pages/nutalk/stream?station=~${this.props.store.usership}/${stationBase}`
+      });
+    }
   }
 
   addFeed(evt) {
@@ -60,8 +74,9 @@ export class InboxPage extends Component {
 
     const stationElems = inboxKeys.map((stationName) => {
       let prevName = "";
+      let invitePresent = false;
 
-      const messageElems = inboxMessages[stationName].messages.map((msg) => {
+      let messageElems = inboxMessages[stationName].messages.map((msg) => {
         let appClass = msg.app ? " chat-msg-app" : "";
 
         let autLabel = "";
@@ -72,9 +87,9 @@ export class InboxPage extends Component {
           prevName = msg.aut;
         }
 
-        if (msg.sep.lin) {
-          message = msg.sep.lin.msg;
-        } else if (msg.sep.inv && !this.props.store.configs[msg.sep.inv.cir]) {
+        if (msg.sep.inv && !this.props.store.configs[msg.sep.inv.cir]) {
+          invitePresent = true;
+
           message = (
             <span className="ml-4">
               <span>Invite to <b>{msg.sep.inv.cir}</b>. Would you like to join?</span>
@@ -82,6 +97,10 @@ export class InboxPage extends Component {
               <span className="text-500 underline ml-2 mr-2" onClick={this.acceptInvite} value="no" data-cir={msg.sep.inv.cir}>No</span>
             </span>
           );
+        } else if (!this.props.store.configs[stationName]) {  // If message isn't sourced by inbox & is not an invite, render nothing
+          return null;
+        } else if (msg.sep.lin) {
+          message = msg.sep.lin.msg;
         }
 
         return (
@@ -96,14 +115,20 @@ export class InboxPage extends Component {
         );
       });
 
-      return (
-        <div className="mb-4" key={stationName}>
-          <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
-          <ul>
-            {messageElems}
-          </ul>
-        </div>
-      );
+      // Filter out messages set to "null" in last step, messages that aren't sourced from inbox
+      messageElems = messageElems.filter(elem => (elem !== null));
+      if (messageElems.length > 0) {
+        return (
+          <div className="mb-4" key={stationName}>
+            <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
+            <ul>
+              {messageElems}
+            </ul>
+          </div>
+        );
+      } else {
+        return null;
+      }
     });
 
     let olderStations = Object.keys(this.props.store.configs).map(cos => {

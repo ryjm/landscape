@@ -21,28 +21,34 @@ export class UrbitReducer {
   */
   messages(newMessages, storeMessages) {
     newMessages.forEach((newMsg) => {
-      let station = storeMessages[newMsg.aud];
+      console.log('newMsg.aud = ', newMsg.aud);
 
-      if (!station) {
-        storeMessages[newMsg.aud] = {
-          name: newMsg.aud,
-          messages: [newMsg]
-        };
-      } else if (station.messages.findIndex(o => o.uid === newMsg.uid) === -1) {
-        for (let i = 0; i < station.messages.length; i++) {
-          if (newMsg.wen < station.messages[i].wen) {
-            storeMessages[newMsg.aud].messages.splice(i, 0, newMsg);
-          } else if (i === (station.messages.length - 1)) {
-            storeMessages[newMsg.aud].messages.push(newMsg);
-            i = i + 1;
+      newMsg.aud.forEach(aud => {
+        let station = storeMessages[aud];
+
+        if (!station) {
+          storeMessages[aud] = {
+            name: aud,
+            messages: [newMsg]
+          };
+        } else if (station.messages.findIndex(o => o.uid === newMsg.uid) === -1) {
+          for (let i = 0; i < station.messages.length; i++) {
+            if (newMsg.wen < station.messages[i].wen) {
+              storeMessages[aud].messages.splice(i, 0, newMsg);
+            } else if (i === (station.messages.length - 1)) {
+              storeMessages[aud].messages.push(newMsg);
+              i = i + 1;
+            }
           }
-        }
 
-        // Pring messages by date, for debugging:
-        // for (let msg of station.messages) {
-        //   console.log(`msg ${msg.uid}: ${msg.wen}`);
-        // }
-      }
+          // Pring messages by date, for debugging:
+          // for (let msg of station.messages) {
+          //   console.log(`msg ${msg.uid}: ${msg.wen}`);
+          // }
+        }
+      })
+
+
     });
 
     return storeMessages;

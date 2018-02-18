@@ -26039,8 +26039,20 @@ function (_Component) {
     key: "acceptInvite",
     value: function acceptInvite(evt) {
       var cir = evt.target.dataset.cir;
-      var val = evt.target.attributes.value;
-      this.subCircle(cir, val);
+      if (cir.indexOf('.') === -1) {
+        this.subCircle(cir, true);
+      } else {
+        var stationBase = cir.split("/").slice(1)[0];
+        this.props.api.hall({
+          create: {
+            nom: stationBase,
+            des: "dm",
+            sec: "village"
+          }
+        }, {
+          target: "/~~/pages/nutalk/stream?station=~".concat(this.props.store.usership, "/").concat(stationBase)
+        });
+      }
     }
   }, {
     key: "addFeed",
@@ -26085,9 +26097,7 @@ function (_Component) {
             prevName = msg.aut;
           }
 
-          if (msg.sep.lin) {
-            message = msg.sep.lin.msg;
-          } else if (msg.sep.inv && !_this2.props.store.configs[msg.sep.inv.cir]) {
+          if (msg.sep.inv && !_this2.props.store.configs[msg.sep.inv.cir]) {
             message = react.createElement("span", {
               className: "ml-4"
             }, react.createElement("span", null, "Invite to ", react.createElement("b", null, msg.sep.inv.cir), ". Would you like to join?"), react.createElement("span", {
@@ -26101,6 +26111,11 @@ function (_Component) {
               value: "no",
               "data-cir": msg.sep.inv.cir
             }, "No"));
+          } else if (!_this2.props.store.configs[stationName]) {
+            // If message isn't sourced by inbox & is not an invite, render nothing
+            return null;
+          } else if (msg.sep.lin) {
+            message = msg.sep.lin.msg;
           }
 
           return react.createElement("li", {
@@ -26111,13 +26126,22 @@ function (_Component) {
           }, autLabel), react.createElement("div", {
             className: "col-sm-10"
           }, message));
+        }); // Filter out messages set to "null" in last step, messages that aren't sourced from inbox
+
+        messageElems = messageElems.filter(function (elem) {
+          return elem !== null;
         });
-        return react.createElement("div", {
-          className: "mb-4",
-          key: stationName
-        }, react.createElement("a", {
-          href: "/~~/pages/nutalk/stream?station=".concat(stationName)
-        }, react.createElement("b", null, react.createElement("u", null, stationName))), react.createElement("ul", null, messageElems));
+
+        if (messageElems.length > 0) {
+          return react.createElement("div", {
+            className: "mb-4",
+            key: stationName
+          }, react.createElement("a", {
+            href: "/~~/pages/nutalk/stream?station=".concat(stationName)
+          }, react.createElement("b", null, react.createElement("u", null, stationName))), react.createElement("ul", null, messageElems));
+        } else {
+          return null;
+        }
       });
       var olderStations = Object.keys(this.props.store.configs).map(function (cos) {
         if (inboxKeys.indexOf(cos) === -1) {
@@ -33067,9 +33091,26 @@ function (_Component) {
     value: function messageSubmit(event) {
       event.preventDefault();
       event.stopPropagation();
+      var aud;
+      var config = this.props.store.configs[this.props.queryParams.station];
+
+      if (config.cap === "dm") {
+        // TODO: Actually, ships should = config.con.sis instead of getting it from name
+        // but config.con.sis isn't filled because we don't formally invite host ships in case of mirroring
+        // need to add to config.con.sis without sending invites
+        var ships = this.props.queryParams.station.split("/").slice(1)[0].split(".");
+        aud = ships.sort().map(function (mem) {
+          // EG,  ~polzod/marzod.polzod.zod
+          console.log('mem = ', mem);
+          return "~".concat(mem, "/").concat(ships.join('.'));
+        });
+      } else {
+        aud = [this.props.queryParams.station];
+      }
+
       var message = {
         uid: util.uuid(),
-        aud: [this.props.queryParams.station],
+        aud: aud,
         aut: this.props.store.usership,
         wen: Date.now(),
         sep: {
@@ -33556,26 +33597,14 @@ function (_Component) {
   }, {
     key: "createStream",
     value: function createStream() {
-      var usership = this.props.store.usership;
-      var nom;
-      var sec; // if direct message, circle name becomes "." delimited list of audience members
-
-      if (this.state.stream.des === "dm") {
-        nom = this.state.stream.aud.join(".");
-        sec = "village";
-      } else {
-        nom = this.state.stream.nom;
-        sec = this.state.stream.sec;
-      }
-
       this.props.api.hall({
         create: {
-          nom: nom,
+          nom: this.state.stream.nom,
           des: this.state.stream.des,
-          sec: sec
+          sec: this.state.stream.sec
         }
       }, {
-        target: "/~~/pages/nutalk/stream?station=~".concat(usership, "/").concat(nom)
+        target: "/~~/pages/nutalk/stream?station=~".concat(this.props.store.usership, "/").concat(this.state.stream.nom)
       });
       this.setState({
         loading: true
@@ -33585,7 +33614,7 @@ function (_Component) {
         this.props.storeData({
           pendingInvites: [{
             aud: this.state.stream.aud,
-            nom: nom
+            nom: this.state.stream.nom
           }]
         });
       }
@@ -33605,8 +33634,9 @@ function (_Component) {
       var aud = stream.aud || this.state.stream.aud;
 
       if (des === "dm") {
+        console.log('usership = ', this.props.store.usership);
         stream.sec = "village";
-        stream.nom = "".concat(aud.join("."), "2");
+        stream.nom = "".concat(aud.concat(this.props.store.usership).sort().join("."));
       }
 
       this.setState({
@@ -34046,7 +34076,8 @@ function () {
       return {
         configs: this.parseInboxConfigs(bs),
         messages: this.parseInboxMessages(bs),
-        ownedStations: this.parseOwnedStations(bs)
+        ownedStations: this.parseOwnedStations(bs) // discard this result for now, just call it for side effects.
+
       };
     }
   }, {
@@ -34103,7 +34134,7 @@ function () {
       var pathTokens = bs.from.path.split("/");
 
       if (pathTokens[1] === "circle" && pathTokens[2] === "inbox" && pathTokens[3] === "config") {
-        var circle = bs.data.json.circle; // set w/o side effects
+        var circle = bs.data.json.circle; // add new created station to inbox's configs
 
         if (circle.config && circle.config.dif && circle.config.dif.full) {
           console.log('circle circle.config.dif.full', circle.config.cir);
@@ -34168,6 +34199,7 @@ function () {
         var ownedStations = bs.data.json.circles;
 
         if (ownedStations.cir && ownedStations.add) {
+          console.log('does this actually work?');
           this.hall({
             source: {
               nom: "inbox",
@@ -51326,29 +51358,32 @@ function () {
     key: "messages",
     value: function messages(newMessages, storeMessages) {
       newMessages.forEach(function (newMsg) {
-        var station = storeMessages[newMsg.aud];
+        console.log('newMsg.aud = ', newMsg.aud);
+        newMsg.aud.forEach(function (aud) {
+          var station = storeMessages[aud];
 
-        if (!station) {
-          storeMessages[newMsg.aud] = {
-            name: newMsg.aud,
-            messages: [newMsg]
-          };
-        } else if (station.messages.findIndex(function (o) {
-          return o.uid === newMsg.uid;
-        }) === -1) {
-          for (var i = 0; i < station.messages.length; i++) {
-            if (newMsg.wen < station.messages[i].wen) {
-              storeMessages[newMsg.aud].messages.splice(i, 0, newMsg);
-            } else if (i === station.messages.length - 1) {
-              storeMessages[newMsg.aud].messages.push(newMsg);
-              i = i + 1;
-            }
-          } // Pring messages by date, for debugging:
-          // for (let msg of station.messages) {
-          //   console.log(`msg ${msg.uid}: ${msg.wen}`);
-          // }
+          if (!station) {
+            storeMessages[aud] = {
+              name: aud,
+              messages: [newMsg]
+            };
+          } else if (station.messages.findIndex(function (o) {
+            return o.uid === newMsg.uid;
+          }) === -1) {
+            for (var i = 0; i < station.messages.length; i++) {
+              if (newMsg.wen < station.messages[i].wen) {
+                storeMessages[aud].messages.splice(i, 0, newMsg);
+              } else if (i === station.messages.length - 1) {
+                storeMessages[aud].messages.push(newMsg);
+                i = i + 1;
+              }
+            } // Pring messages by date, for debugging:
+            // for (let msg of station.messages) {
+            //   console.log(`msg ${msg.uid}: ${msg.wen}`);
+            // }
 
-        }
+          }
+        });
       });
       return storeMessages;
     }

@@ -152,7 +152,7 @@ export class UrbitApi {
     return {
       configs: this.parseInboxConfigs(bs),
       messages: this.parseInboxMessages(bs),
-      ownedStations: this.parseOwnedStations(bs)
+      ownedStations: this.parseOwnedStations(bs) // discard this result for now, just call it for side effects.
     }
   }
 
@@ -210,7 +210,7 @@ export class UrbitApi {
 
       let circle = bs.data.json.circle;
 
-      // set w/o side effects
+      // add new created station to inbox's configs
       if (circle.config && circle.config.dif && circle.config.dif.full) {
         console.log('circle circle.config.dif.full', circle.config.cir);
         configs[circle.config.cir] = circle.config.dif.full;
@@ -267,7 +267,6 @@ export class UrbitApi {
     return configs;
   }
 
-
   parseOwnedStations(bs) {
     let pathTokens = bs.from.path.split("/");
 
@@ -277,6 +276,7 @@ export class UrbitApi {
       let ownedStations = bs.data.json.circles;
 
       if (ownedStations.cir && ownedStations.add) {
+        console.log('does this actually work?');
         this.hall({
           source: {
             nom: `inbox`,
