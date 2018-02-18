@@ -1,3 +1,17 @@
+/***
+  Inbox
+***/
+
+.inbox-feed {
+  height: 10rem;
+  position: relative;
+  top: 1px;
+}
+
+/***
+  Edit
+***/
+
 .page-notes-edit textarea {
   border: none;
   height: 800px;

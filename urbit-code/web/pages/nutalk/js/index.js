@@ -26011,29 +26011,54 @@ function (_Component) {
     _classCallCheck(this, InboxPage);
     _this = _possibleConstructorReturn(this, (InboxPage.__proto__ || Object.getPrototypeOf(InboxPage)).call(this, props));
     _this.state = {
-      filter: ""
+      filter: "",
+      feed: ""
     };
     _this.filterChange = _this.filterChange.bind(_this);
-    _this.subCircle = _this.subCircle.bind(_this);
+    _this.feedChange = _this.feedChange.bind(_this);
+    _this.acceptInvite = _this.acceptInvite.bind(_this);
+    _this.addFeed = _this.addFeed.bind(_this);
     return _this;
   }
 
   _createClass(InboxPage, [{
     key: "filterChange",
     value: function filterChange(evt) {
-      console.log('evt = ', evt);
       this.setState({
         filter: evt.target.value
       });
     }
   }, {
-    key: "subCircle",
-    value: function subCircle(evt) {
+    key: "feedChange",
+    value: function feedChange(evt) {
+      this.setState({
+        feed: evt.target.value
+      });
+    }
+  }, {
+    key: "acceptInvite",
+    value: function acceptInvite(evt) {
       var cir = evt.target.dataset.cir;
+      var val = evt.target.attributes.value;
+      this.subCircle(cir, val);
+    }
+  }, {
+    key: "addFeed",
+    value: function addFeed(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      this.subCircle(this.state.feed, true);
+      this.setState({
+        feed: ""
+      });
+    }
+  }, {
+    key: "subCircle",
+    value: function subCircle(cir, sub) {
       this.props.api.hall({
         source: {
           nom: "inbox",
-          sub: true,
+          sub: sub,
           srs: [cir]
         }
       });
@@ -26067,12 +26092,12 @@ function (_Component) {
               className: "ml-4"
             }, react.createElement("span", null, "Invite to ", react.createElement("b", null, msg.sep.inv.cir), ". Would you like to join?"), react.createElement("span", {
               className: "text-500 underline ml-2 mr-2",
-              onClick: _this2.subCircle,
+              onClick: _this2.acceptInvite,
               value: "yes",
               "data-cir": msg.sep.inv.cir
             }, "Yes"), react.createElement("span", {
               className: "text-500 underline ml-2 mr-2",
-              onClick: _this2.subCircle,
+              onClick: _this2.acceptInvite,
               value: "no",
               "data-cir": msg.sep.inv.cir
             }, "No"));
@@ -26114,7 +26139,16 @@ function (_Component) {
       }, react.createElement("button", {
         className: "btn btn-tetiary",
         type: "button"
-      }, "Create Collection \u2192")), react.createElement("div", {
+      }, "Create Collection \u2192")), react.createElement("form", {
+        className: "inline-block",
+        onSubmit: this.addFeed
+      }, react.createElement("input", {
+        className: "w-51 inbox-feed",
+        type: "text",
+        value: this.state.feed,
+        onChange: this.feedChange,
+        placeholder: "Add feed: ~marzod/club"
+      })), react.createElement("div", {
         className: "row"
       }, react.createElement("input", {
         className: "mt-4 w-80 input-sm",
