@@ -26101,12 +26101,12 @@ function (_Component) {
             message = react.createElement("span", {
               className: "ml-4"
             }, react.createElement("span", null, "Invite to ", react.createElement("b", null, msg.sep.inv.cir), ". Would you like to join?"), react.createElement("span", {
-              className: "text-500 underline ml-2 mr-2",
+              className: "text-500 underline ml-2 mr-2 pointer",
               onClick: _this2.acceptInvite,
               value: "yes",
               "data-cir": msg.sep.inv.cir
             }, "Yes"), react.createElement("span", {
-              className: "text-500 underline ml-2 mr-2",
+              className: "text-500 underline ml-2 mr-2 pointer",
               onClick: _this2.acceptInvite,
               value: "no",
               "data-cir": msg.sep.inv.cir
@@ -33044,6 +33044,20 @@ function () {
 
       return str.slice(0, -1);
     }
+  }, {
+    key: "arrayEqual",
+    value: function arrayEqual(a, b) {
+      if (a === b) return true;
+      if (a == null || b == null) return false;
+      if (a.length != b.length) return false; // If you don't care about the order of the elements inside
+      // the array, you should sort both arrays here.
+
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+      }
+
+      return true;
+    }
   }]);
   return Utilities;
 }();
@@ -33494,7 +33508,7 @@ function (_Component) {
         sec: "village",
         dis: "no",
         aud: [],
-        audRaw: []
+        audNew: ""
       },
       oldStream: {},
       descriptions: {
@@ -33516,12 +33530,28 @@ function (_Component) {
     };
     _this.submitStream = _this.submitStream.bind(_this);
     _this.valueChange = _this.valueChange.bind(_this);
+    _this.addAud = _this.addAud.bind(_this);
+    _this.remAud = _this.remAud.bind(_this);
     _this.deleteStream = _this.deleteStream.bind(_this);
     _this.deleteChange = _this.deleteChange.bind(_this);
     return _this;
   }
 
   _createClass(StreamCreatePage, [{
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      if (!this.state.editLoaded) return;
+      var newAud = nextProps.store.configs["~".concat(this.props.store.usership, "/").concat(this.state.stream.nom)].con.sis;
+
+      if (!util.arrayEqual(this.state.stream.aud, newAud)) {
+        this.setState({
+          stream: Object.assign(this.state.stream, {
+            aud: newAud
+          })
+        });
+      }
+    }
+  }, {
     key: "loadEdit",
     value: function loadEdit() {
       var editStation = this.props.queryParams.station;
@@ -33534,8 +33564,7 @@ function (_Component) {
           des: station.cap,
           sec: station.con.sec,
           aud: station.con.sis,
-          dis: "no",
-          audRaw: station.con.sis.join(", ")
+          dis: "no"
         };
         this.setState({
           stream: stream,
@@ -33644,16 +33673,75 @@ function (_Component) {
       });
     }
   }, {
+    key: "addAud",
+    value: function addAud() {
+      if (this.state.editLoaded) {
+        var inv = this.state.stream.sec === "village" || this.state.stream.sec === "journal";
+        this.props.api.hall({
+          permit: {
+            nom: this.state.stream.nom,
+            inv: inv,
+            sis: [this.state.stream.audNew]
+          }
+        });
+        this.setState({
+          stream: Object.assign(this.state.stream, {
+            audNew: ""
+          })
+        });
+      } else {
+        this.setState({
+          stream: Object.assign(this.state.stream, {
+            aud: this.state.stream.aud.concat(this.state.stream.audNew),
+            audNew: ""
+          })
+        });
+      }
+    }
+  }, {
+    key: "remAud",
+    value: function remAud(evt) {
+      if (this.state.editLoaded) {
+        this.props.api.hall({
+          permit: {
+            nom: this.state.stream.nom,
+            inv: false,
+            sis: [evt.target.dataset.ship]
+          }
+        });
+      } else {
+        this.setState({
+          stream: Object.assign(this.state.stream, {
+            aud: this.state.stream.aud.filter(function (mem) {
+              return mem !== evt.target.dataset.ship;
+            })
+          })
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       this.loadEdit();
-      console.log('stream = ', this.state.stream);
-      console.log('oldStream = ', this.state.oldStream);
       var typeDesc = this.state.descriptions.type[this.state.stream.des];
       var secDesc = this.state.descriptions.security[this.state.stream.sec];
       var nomDisabled = this.state.loading || this.state.stream.des === "dm";
       var secDisabled = this.state.loading || this.state.stream.des === "dm";
       var audienceLabel = this.state.stream.sec === "village" || this.state.stream.sec === "journal" ? "Whitelist" : "Blacklist";
+      var audienceList = this.state.stream.aud.map(function (mem) {
+        if (mem === _this2.props.store.usership) return null;
+        return react.createElement("div", {
+          className: "row space-between"
+        }, react.createElement("div", {
+          className: "col-sm-8"
+        }, "~".concat(mem)), react.createElement("div", {
+          className: "col-sm-offset-3 col-sm-1 minus",
+          "data-ship": mem,
+          onClick: _this2.remAud
+        }, "-"));
+      });
       return react.createElement("div", {
         className: "row"
       }, react.createElement("div", {
@@ -33666,6 +33754,7 @@ function (_Component) {
         htmlFor: "nom"
       }, "Name"), react.createElement("input", {
         type: "text",
+        className: "input-text-lg",
         name: "nom",
         placeholder: "Secret club",
         disabled: nomDisabled,
@@ -33735,15 +33824,26 @@ function (_Component) {
         className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "stream-ships"
-      }, audienceLabel), react.createElement("textarea", {
-        name: "audRaw",
-        placeholder: "~ravmel-rodpyl, ~sorreg-namtyv",
+      }, audienceLabel), audienceList, react.createElement("div", {
+        className: "text-700 mt-8"
+      }, "Add New"), react.createElement("div", {
+        className: "row"
+      }, react.createElement("input", {
+        type: "text",
+        name: "audNew",
+        className: "col-sm-8",
+        placeholder: "ramvel-rodpyl",
         disabled: this.state.loading,
-        value: this.state.stream.audRaw,
+        value: this.state.stream.audNew,
         onChange: this.valueChange
-      })))), react.createElement("div", {
+      }), react.createElement("span", {
+        className: "col-sm-offset-3 col-sm-1 plus",
+        onClick: this.addAud
+      }, "+"))))), react.createElement("div", {
         className: "input-group input-group-radio mb-9"
-      }, react.createElement("h5", null, "Discoverable?"), react.createElement("label", {
+      }, react.createElement("div", {
+        className: "text-700 mt-4"
+      }, "Discoverable?"), react.createElement("label", {
         htmlFor: "stream-discoverable-yes",
         disabled: this.state.loading,
         className: this.state.stream.dis === "yes" ? "radio-active" : ""
@@ -34142,10 +34242,10 @@ function () {
         } // add to config blacklist or whitelist
 
 
-        if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
+        if (circle.config && circle.config.dif && circle.config.dif.permit) {
           console.log('circle circle.config.dif.full', circle.config.cir);
           configs[circle.config.cir] = configs[circle.config.cir] || {};
-          configs[circle.config.cir].sis = circle.config.dif.permit.sis;
+          configs[circle.config.cir].permit = circle.config.dif.permit;
         } // Add inbox config
 
 
@@ -51341,10 +51441,13 @@ function () {
         if (!storeConfigs[cos]) {
           storeConfigs[cos] = newConfigs[cos];
           return;
-        }
+        } // Add or remove new ships to b/w list
 
-        if (newConfigs[cos].sis) {
-          storeConfigs[cos].con.sis = storeConfigs[cos].con.sis ? storeConfigs[cos].con.sis.concat(newConfigs[cos].sis) : newConfigs[cos].sis;
+
+        if (newConfigs[cos].permit) {
+          storeConfigs[cos].con.sis = newConfigs[cos].permit.add ? storeConfigs[cos].con.sis.concat(newConfigs[cos].permit.sis) : storeConfigs[cos].con.sis.filter(function (mem) {
+            return !newConfigs[cos].permit.sis.includes(mem);
+          });
         }
       });
       return storeConfigs;

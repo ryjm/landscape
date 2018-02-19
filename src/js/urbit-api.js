@@ -217,11 +217,11 @@ export class UrbitApi {
       }
 
       // add to config blacklist or whitelist
-      if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
+      if (circle.config && circle.config.dif && circle.config.dif.permit) {
         console.log('circle circle.config.dif.full', circle.config.cir);
 
         configs[circle.config.cir] = configs[circle.config.cir] || {};
-        configs[circle.config.cir].sis = circle.config.dif.permit.sis;
+        configs[circle.config.cir].permit = circle.config.dif.permit;
       }
 
       // Add inbox config

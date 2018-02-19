@@ -58,6 +58,16 @@
   border-color: red !important;
 }
 
+.create-stream-page .plus, .create-stream-page .minus {
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.create-stream-page .plus {
+  line-height: 41px;
+}
+
 .create-stream-page .input-group i {
   padding-top: 2rem;
 }
@@ -67,6 +77,10 @@
 }
 
 .create-stream-page input[type="text"] {
+  border: 3px solid black;
+}
+
+.create-stream-page input[type="text"].input-text-lg {
   border: 6px solid black;
   font-size: 9rem;
   line-height: 18rem;

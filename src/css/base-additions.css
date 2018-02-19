@@ -162,3 +162,11 @@ input, textarea {
 .inline-block {
   display: inline-block;
 }
+
+.space-between {
+  justify-content: space-between;
+}
+
+.pointer {
+  cursor: pointer;
+}

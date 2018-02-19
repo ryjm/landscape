@@ -7,8 +7,11 @@ export class UrbitReducer {
         return;
       }
 
-      if (newConfigs[cos].sis) {
-        storeConfigs[cos].con.sis = storeConfigs[cos].con.sis ? storeConfigs[cos].con.sis.concat(newConfigs[cos].sis) : newConfigs[cos].sis;
+      // Add or remove new ships to b/w list
+      if (newConfigs[cos].permit) {
+        storeConfigs[cos].con.sis = (newConfigs[cos].permit.add) ?
+          storeConfigs[cos].con.sis.concat(newConfigs[cos].permit.sis) : 
+          storeConfigs[cos].con.sis.filter(mem => !newConfigs[cos].permit.sis.includes(mem));
       }
     })
 

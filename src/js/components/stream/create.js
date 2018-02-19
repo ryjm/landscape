@@ -13,7 +13,7 @@ export class StreamCreatePage extends Component {
         sec: "village",
         dis: "no",
         aud: [],
-        audRaw: []
+        audNew: ""
       },
       oldStream: {},
       descriptions: {
@@ -36,9 +36,23 @@ export class StreamCreatePage extends Component {
 
     this.submitStream = this.submitStream.bind(this);
     this.valueChange = this.valueChange.bind(this);
+    this.addAud = this.addAud.bind(this);
+    this.remAud = this.remAud.bind(this);
 
     this.deleteStream = this.deleteStream.bind(this);
     this.deleteChange = this.deleteChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.state.editLoaded) return;
+
+    let newAud = nextProps.store.configs[`~${this.props.store.usership}/${this.state.stream.nom}`].con.sis;
+
+    if (!util.arrayEqual(this.state.stream.aud, newAud)) {
+      this.setState({
+        stream: Object.assign(this.state.stream, {aud: newAud})
+      });
+    }
   }
 
   loadEdit() {
@@ -50,8 +64,7 @@ export class StreamCreatePage extends Component {
         des: station.cap,
         sec: station.con.sec,
         aud: station.con.sis,
-        dis: "no",
-        audRaw: station.con.sis.join(", ")
+        dis: "no"
       };
       this.setState({
         stream: stream,
@@ -159,11 +172,54 @@ export class StreamCreatePage extends Component {
     });
   }
 
+  addAud() {
+    let newStream = {};
+
+    if (this.state.editLoaded) {
+      let inv = (this.state.stream.sec === "village" ||
+                 this.state.stream.sec === "journal");
+
+      this.props.api.hall({
+        permit: {
+          nom: this.state.stream.nom,
+          inv: inv,
+          sis: [this.state.stream.audNew]
+        }
+      });
+
+      this.setState({
+        stream: Object.assign(this.state.stream, {audNew: ""})
+      });
+    } else {
+      this.setState({
+        stream: Object.assign(this.state.stream, {
+          aud: this.state.stream.aud.concat(this.state.stream.audNew),
+          audNew: ""
+        })
+      });
+    }
+  }
+
+  remAud(evt) {
+    if (this.state.editLoaded) {
+      this.props.api.hall({
+        permit: {
+          nom: this.state.stream.nom,
+          inv: false,
+          sis: [evt.target.dataset.ship]
+        }
+      })
+    } else {
+      this.setState({
+        stream: Object.assign(this.state.stream, {
+          aud: this.state.stream.aud.filter(mem => mem !== evt.target.dataset.ship),
+        })
+      });
+    }
+  }
+
   render() {
     this.loadEdit();
-
-    console.log('stream = ', this.state.stream);
-    console.log('oldStream = ', this.state.oldStream);
 
     let typeDesc = this.state.descriptions.type[this.state.stream.des];
     let secDesc = this.state.descriptions.security[this.state.stream.sec];
@@ -175,6 +231,17 @@ export class StreamCreatePage extends Component {
                          this.state.stream.sec === "journal") ?
                          "Whitelist" : "Blacklist";
 
+    let audienceList = this.state.stream.aud.map(mem => {
+      if (mem === this.props.store.usership) return null;
+
+      return (
+        <div className="row space-between">
+          <div className="col-sm-8">{`~${mem}`}</div>
+          <div className="col-sm-offset-3 col-sm-1 minus" data-ship={mem} onClick={this.remAud}>-</div>
+        </div>
+      )
+    });
+
     return (
       <div className="row">
         <div className="col-sm-12">
@@ -183,6 +250,7 @@ export class StreamCreatePage extends Component {
               <label htmlFor="nom">Name</label>
               <input
                 type="text"
+                className="input-text-lg"
                 name="nom"
                 placeholder="Secret club"
                 disabled={nomDisabled}
@@ -244,19 +312,27 @@ export class StreamCreatePage extends Component {
               <div className="col-sm-6">
                 <div className="input-group mb-9">
                   <label htmlFor="stream-ships">{audienceLabel}</label>
-                  <textarea
-                    name="audRaw"
-                    placeholder="~ravmel-rodpyl, ~sorreg-namtyv"
-                    disabled={this.state.loading}
-                    value={this.state.stream.audRaw}
-                    onChange={this.valueChange}
-                    />
+
+                  {audienceList}
+                  <div className="text-700 mt-8">Add New</div>
+                  <div className="row">
+                    <input
+                      type="text"
+                      name="audNew"
+                      className="col-sm-8"
+                      placeholder="ramvel-rodpyl"
+                      disabled={this.state.loading}
+                      value={this.state.stream.audNew}
+                      onChange={this.valueChange} />
+
+                    <span className="col-sm-offset-3 col-sm-1 plus" onClick={this.addAud}>+</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             <div className="input-group input-group-radio mb-9">
-              <h5>Discoverable?</h5>
+              <div className="text-700 mt-4">Discoverable?</div>
 
               <label htmlFor="stream-discoverable-yes"
                      disabled={this.state.loading}

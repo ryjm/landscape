@@ -93,8 +93,8 @@ export class InboxPage extends Component {
           message = (
             <span className="ml-4">
               <span>Invite to <b>{msg.sep.inv.cir}</b>. Would you like to join?</span>
-              <span className="text-500 underline ml-2 mr-2" onClick={this.acceptInvite} value="yes" data-cir={msg.sep.inv.cir}>Yes</span>
-              <span className="text-500 underline ml-2 mr-2" onClick={this.acceptInvite} value="no" data-cir={msg.sep.inv.cir}>No</span>
+              <span className="text-500 underline ml-2 mr-2 pointer" onClick={this.acceptInvite} value="yes" data-cir={msg.sep.inv.cir}>Yes</span>
+              <span className="text-500 underline ml-2 mr-2 pointer" onClick={this.acceptInvite} value="no" data-cir={msg.sep.inv.cir}>No</span>
             </span>
           );
         } else if (!this.props.store.configs[stationName]) {  // If message isn't sourced by inbox & is not an invite, render nothing
