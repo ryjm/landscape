@@ -5,28 +5,62 @@ export class InboxPage extends Component {
     super(props);
 
     this.state = {
-      filter: ""
+      filter: "",
+      feed: ""
     };
 
     this.filterChange = this.filterChange.bind(this);
-    this.subCircle = this.subCircle.bind(this);
+    this.feedChange = this.feedChange.bind(this);
+    this.acceptInvite = this.acceptInvite.bind(this);
+    this.addFeed = this.addFeed.bind(this);
   }
 
   filterChange(evt) {
-    console.log('evt = ', evt);
     this.setState({
       filter: evt.target.value
     });
   }
 
-  subCircle(evt) {
+  feedChange(evt) {
+    this.setState({
+      feed: evt.target.value
+    });
+  }
+
+  acceptInvite(evt) {
     let cir = evt.target.dataset.cir;
     let val = evt.target.attributes.value;
 
+    // TODO:  Reallly hacky way of telling if circle is DM group or not
+    if (cir.indexOf('.') === -1) {
+      this.subCircle(cir, true);
+    } else {
+      let stationBase = cir.split("/").slice(1)[0];
+      this.props.api.hall({
+        create: {
+          nom: stationBase,
+          des: "dm",
+          sec: "village"
+        }
+      }, {
+        target: `/~~/pages/nutalk/stream?station=~${this.props.store.usership}/${stationBase}`
+      });
+    }
+  }
+
+  addFeed(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    this.subCircle(this.state.feed, true);
+    this.setState({feed: ""});
+  }
+
+  subCircle(cir, sub) {
     this.props.api.hall({
       source: {
         nom: "inbox",
-        sub: true,
+        sub: sub,
         srs: [cir]
       }
     })
@@ -40,8 +74,9 @@ export class InboxPage extends Component {
 
     const stationElems = inboxKeys.map((stationName) => {
       let prevName = "";
+      let invitePresent = false;
 
-      const messageElems = inboxMessages[stationName].messages.map((msg) => {
+      let messageElems = inboxMessages[stationName].messages.map((msg) => {
         let appClass = msg.app ? " chat-msg-app" : "";
 
         let autLabel = "";
@@ -52,16 +87,20 @@ export class InboxPage extends Component {
           prevName = msg.aut;
         }
 
-        if (msg.sep.lin) {
-          message = msg.sep.lin.msg;
-        } else if (msg.sep.inv && !this.props.store.configs[msg.sep.inv.cir]) {
+        if (msg.sep.inv && !this.props.store.configs[msg.sep.inv.cir]) {
+          invitePresent = true;
+
           message = (
             <span className="ml-4">
               <span>Invite to <b>{msg.sep.inv.cir}</b>. Would you like to join?</span>
-              <span className="text-500 underline ml-2 mr-2" onClick={this.subCircle} value="yes" data-cir={msg.sep.inv.cir}>Yes</span>
-              <span className="text-500 underline ml-2 mr-2" onClick={this.subCircle} value="no" data-cir={msg.sep.inv.cir}>No</span>
+              <span className="text-500 underline ml-2 mr-2 pointer" onClick={this.acceptInvite} value="yes" data-cir={msg.sep.inv.cir}>Yes</span>
+              <span className="text-500 underline ml-2 mr-2 pointer" onClick={this.acceptInvite} value="no" data-cir={msg.sep.inv.cir}>No</span>
             </span>
           );
+        } else if (!this.props.store.configs[stationName]) {  // If message isn't sourced by inbox & is not an invite, render nothing
+          return null;
+        } else if (msg.sep.lin) {
+          message = msg.sep.lin.msg;
         }
 
         return (
@@ -76,14 +115,20 @@ export class InboxPage extends Component {
         );
       });
 
-      return (
-        <div className="mb-4" key={stationName}>
-          <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
-          <ul>
-            {messageElems}
-          </ul>
-        </div>
-      );
+      // Filter out messages set to "null" in last step, messages that aren't sourced from inbox
+      messageElems = messageElems.filter(elem => (elem !== null));
+      if (messageElems.length > 0) {
+        return (
+          <div className="mb-4" key={stationName}>
+            <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
+            <ul>
+              {messageElems}
+            </ul>
+          </div>
+        );
+      } else {
+        return null;
+      }
     });
 
     let olderStations = Object.keys(this.props.store.configs).map(cos => {
@@ -104,6 +149,9 @@ export class InboxPage extends Component {
         <a href="/~~/pages/nutalk/collection/create">
           <button className="btn btn-tetiary" type="button">Create Collection →</button>
         </a>
+        <form className="inline-block" onSubmit={this.addFeed}>
+          <input className="w-51 inbox-feed" type="text" value={this.state.feed} onChange={this.feedChange} placeholder="Add feed: ~marzod/club" />
+        </form>
         <div className="row">
           <input className="mt-4 w-80 input-sm" type="text" value={this.state.filter} onChange={this.filterChange} placeholder="Filter..." />
         </div>

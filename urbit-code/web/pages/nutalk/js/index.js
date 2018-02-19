@@ -26011,29 +26011,66 @@ function (_Component) {
     _classCallCheck(this, InboxPage);
     _this = _possibleConstructorReturn(this, (InboxPage.__proto__ || Object.getPrototypeOf(InboxPage)).call(this, props));
     _this.state = {
-      filter: ""
+      filter: "",
+      feed: ""
     };
     _this.filterChange = _this.filterChange.bind(_this);
-    _this.subCircle = _this.subCircle.bind(_this);
+    _this.feedChange = _this.feedChange.bind(_this);
+    _this.acceptInvite = _this.acceptInvite.bind(_this);
+    _this.addFeed = _this.addFeed.bind(_this);
     return _this;
   }
 
   _createClass(InboxPage, [{
     key: "filterChange",
     value: function filterChange(evt) {
-      console.log('evt = ', evt);
       this.setState({
         filter: evt.target.value
       });
     }
   }, {
-    key: "subCircle",
-    value: function subCircle(evt) {
+    key: "feedChange",
+    value: function feedChange(evt) {
+      this.setState({
+        feed: evt.target.value
+      });
+    }
+  }, {
+    key: "acceptInvite",
+    value: function acceptInvite(evt) {
       var cir = evt.target.dataset.cir;
+      if (cir.indexOf('.') === -1) {
+        this.subCircle(cir, true);
+      } else {
+        var stationBase = cir.split("/").slice(1)[0];
+        this.props.api.hall({
+          create: {
+            nom: stationBase,
+            des: "dm",
+            sec: "village"
+          }
+        }, {
+          target: "/~~/pages/nutalk/stream?station=~".concat(this.props.store.usership, "/").concat(stationBase)
+        });
+      }
+    }
+  }, {
+    key: "addFeed",
+    value: function addFeed(evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      this.subCircle(this.state.feed, true);
+      this.setState({
+        feed: ""
+      });
+    }
+  }, {
+    key: "subCircle",
+    value: function subCircle(cir, sub) {
       this.props.api.hall({
         source: {
           nom: "inbox",
-          sub: true,
+          sub: sub,
           srs: [cir]
         }
       });
@@ -26060,22 +26097,25 @@ function (_Component) {
             prevName = msg.aut;
           }
 
-          if (msg.sep.lin) {
-            message = msg.sep.lin.msg;
-          } else if (msg.sep.inv && !_this2.props.store.configs[msg.sep.inv.cir]) {
+          if (msg.sep.inv && !_this2.props.store.configs[msg.sep.inv.cir]) {
             message = react.createElement("span", {
               className: "ml-4"
             }, react.createElement("span", null, "Invite to ", react.createElement("b", null, msg.sep.inv.cir), ". Would you like to join?"), react.createElement("span", {
-              className: "text-500 underline ml-2 mr-2",
-              onClick: _this2.subCircle,
+              className: "text-500 underline ml-2 mr-2 pointer",
+              onClick: _this2.acceptInvite,
               value: "yes",
               "data-cir": msg.sep.inv.cir
             }, "Yes"), react.createElement("span", {
-              className: "text-500 underline ml-2 mr-2",
-              onClick: _this2.subCircle,
+              className: "text-500 underline ml-2 mr-2 pointer",
+              onClick: _this2.acceptInvite,
               value: "no",
               "data-cir": msg.sep.inv.cir
             }, "No"));
+          } else if (!_this2.props.store.configs[stationName]) {
+            // If message isn't sourced by inbox & is not an invite, render nothing
+            return null;
+          } else if (msg.sep.lin) {
+            message = msg.sep.lin.msg;
           }
 
           return react.createElement("li", {
@@ -26086,13 +26126,22 @@ function (_Component) {
           }, autLabel), react.createElement("div", {
             className: "col-sm-10"
           }, message));
+        }); // Filter out messages set to "null" in last step, messages that aren't sourced from inbox
+
+        messageElems = messageElems.filter(function (elem) {
+          return elem !== null;
         });
-        return react.createElement("div", {
-          className: "mb-4",
-          key: stationName
-        }, react.createElement("a", {
-          href: "/~~/pages/nutalk/stream?station=".concat(stationName)
-        }, react.createElement("b", null, react.createElement("u", null, stationName))), react.createElement("ul", null, messageElems));
+
+        if (messageElems.length > 0) {
+          return react.createElement("div", {
+            className: "mb-4",
+            key: stationName
+          }, react.createElement("a", {
+            href: "/~~/pages/nutalk/stream?station=".concat(stationName)
+          }, react.createElement("b", null, react.createElement("u", null, stationName))), react.createElement("ul", null, messageElems));
+        } else {
+          return null;
+        }
       });
       var olderStations = Object.keys(this.props.store.configs).map(function (cos) {
         if (inboxKeys.indexOf(cos) === -1) {
@@ -26114,7 +26163,16 @@ function (_Component) {
       }, react.createElement("button", {
         className: "btn btn-tetiary",
         type: "button"
-      }, "Create Collection \u2192")), react.createElement("div", {
+      }, "Create Collection \u2192")), react.createElement("form", {
+        className: "inline-block",
+        onSubmit: this.addFeed
+      }, react.createElement("input", {
+        className: "w-51 inbox-feed",
+        type: "text",
+        value: this.state.feed,
+        onChange: this.feedChange,
+        placeholder: "Add feed: ~marzod/club"
+      })), react.createElement("div", {
         className: "row"
       }, react.createElement("input", {
         className: "mt-4 w-80 input-sm",
@@ -32971,76 +33029,6 @@ function () {
         return {};
       }
     }
-  }]);
-  return Utilities;
-}();
-
-var util = new Utilities();
-
-var StreamPageHeader =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(StreamPageHeader, _Component);
-
-  function StreamPageHeader() {
-    _classCallCheck(this, StreamPageHeader);
-    return _possibleConstructorReturn(this, (StreamPageHeader.__proto__ || Object.getPrototypeOf(StreamPageHeader)).apply(this, arguments));
-  }
-
-  _createClass(StreamPageHeader, [{
-    key: "render",
-    value: function render() {
-      return react.createElement("div", {
-        className: "header-subpage"
-      }, react.createElement("h3", {
-        className: "header-sep"
-      }, "/"), react.createElement("h3", {
-        className: "inline text-mono"
-      }, this.props.queryParams.station), react.createElement("a", {
-        className: "header-settings text-sm",
-        href: "/~~/pages/nutalk/stream/edit?station=".concat(this.props.queryParams.station)
-      }, "Settings \u2192"));
-    }
-  }]);
-  return StreamPageHeader;
-}(react_1);
-var StreamPage =
-/*#__PURE__*/
-function (_Component2) {
-  _inherits(StreamPage, _Component2);
-
-  function StreamPage(props) {
-    var _this;
-
-    _classCallCheck(this, StreamPage);
-    _this = _possibleConstructorReturn(this, (StreamPage.__proto__ || Object.getPrototypeOf(StreamPage)).call(this, props));
-    _this.presence = false;
-    _this.state = {
-      message: "",
-      invitee: "",
-      messageSending: false
-    };
-    _this.messageChange = _this.messageChange.bind(_this);
-    _this.messageSubmit = _this.messageSubmit.bind(_this);
-    _this.inviteChange = _this.inviteChange.bind(_this);
-    _this.inviteSubmit = _this.inviteSubmit.bind(_this);
-    return _this;
-  }
-
-  _createClass(StreamPage, [{
-    key: "messageChange",
-    value: function messageChange(event) {
-      this.setState({
-        message: event.target.value
-      });
-    }
-  }, {
-    key: "inviteChange",
-    value: function inviteChange(event) {
-      this.setState({
-        invitee: event.target.value
-      });
-    }
   }, {
     key: "uuid",
     value: function uuid() {
@@ -33057,13 +33045,86 @@ function (_Component2) {
       return str.slice(0, -1);
     }
   }, {
+    key: "arrayEqual",
+    value: function arrayEqual(a, b) {
+      if (a === b) return true;
+      if (a == null || b == null) return false;
+      if (a.length != b.length) return false; // If you don't care about the order of the elements inside
+      // the array, you should sort both arrays here.
+
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+      }
+
+      return true;
+    }
+  }]);
+  return Utilities;
+}();
+
+var util = new Utilities();
+
+var ChatPage =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(ChatPage, _Component);
+
+  function ChatPage(props) {
+    var _this;
+
+    _classCallCheck(this, ChatPage);
+    _this = _possibleConstructorReturn(this, (ChatPage.__proto__ || Object.getPrototypeOf(ChatPage)).call(this, props));
+    _this.presence = false;
+    _this.state = {
+      message: "",
+      invitee: ""
+    };
+    _this.messageChange = _this.messageChange.bind(_this);
+    _this.messageSubmit = _this.messageSubmit.bind(_this);
+    _this.inviteChange = _this.inviteChange.bind(_this);
+    _this.inviteSubmit = _this.inviteSubmit.bind(_this);
+    return _this;
+  }
+
+  _createClass(ChatPage, [{
+    key: "messageChange",
+    value: function messageChange(event) {
+      this.setState({
+        message: event.target.value
+      });
+    }
+  }, {
+    key: "inviteChange",
+    value: function inviteChange(event) {
+      this.setState({
+        invitee: event.target.value
+      });
+    }
+  }, {
     key: "messageSubmit",
     value: function messageSubmit(event) {
       event.preventDefault();
       event.stopPropagation();
+      var aud;
+      var config = this.props.store.configs[this.props.queryParams.station];
+
+      if (config.cap === "dm") {
+        // TODO: Actually, ships should = config.con.sis instead of getting it from name
+        // but config.con.sis isn't filled because we don't formally invite host ships in case of mirroring
+        // need to add to config.con.sis without sending invites
+        var ships = this.props.queryParams.station.split("/").slice(1)[0].split(".");
+        aud = ships.sort().map(function (mem) {
+          // EG,  ~polzod/marzod.polzod.zod
+          console.log('mem = ', mem);
+          return "~".concat(mem, "/").concat(ships.join('.'));
+        });
+      } else {
+        aud = [this.props.queryParams.station];
+      }
+
       var message = {
-        uid: this.uuid(),
-        aud: [this.props.queryParams.station],
+        uid: util.uuid(),
+        aud: aud,
         aut: this.props.store.usership,
         wen: Date.now(),
         sep: {
@@ -33127,7 +33188,6 @@ function (_Component2) {
   }, {
     key: "assembleMembers",
     value: function assembleMembers(station) {
-      console.log('configs = ', this.props.store.configs[station]);
       var cos = this.props.store.configs[station] || {
         pes: {},
         con: {
@@ -33257,17 +33317,155 @@ function (_Component2) {
         placeholder: "Say something",
         value: this.state.message,
         onChange: this.messageChange
-      })))), react.createElement("ul", {
-        className: "nav-main"
-      }, react.createElement("li", null, react.createElement("a", {
-        href: "javascript:void(0)"
-      }, "12 members")), react.createElement("li", null, react.createElement("a", {
-        href: "javascript:void(0)"
-      }, "3 pending invites ")), react.createElement("li", null, react.createElement("a", {
-        href: "javascript:void(0)"
-      }, "invite +"))), react.createElement("div", {
-        className: "chat-members"
+      })))), react.createElement("div", {
+        className: "sidebar"
       }, chatMembers));
+    }
+  }]);
+  return ChatPage;
+}(react_1);
+
+var FeedPage =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(FeedPage, _Component);
+
+  function FeedPage(props) {
+    var _this;
+
+    _classCallCheck(this, FeedPage);
+    _this = _possibleConstructorReturn(this, (FeedPage.__proto__ || Object.getPrototypeOf(FeedPage)).call(this, props));
+    _this.state = {
+      message: ""
+    };
+    _this.messageSubmit = _this.messageSubmit.bind(_this);
+    _this.messageChange = _this.messageChange.bind(_this);
+    return _this;
+  }
+
+  _createClass(FeedPage, [{
+    key: "messageChange",
+    value: function messageChange(event) {
+      this.setState({
+        message: event.target.value
+      });
+    }
+  }, {
+    key: "messageSubmit",
+    value: function messageSubmit(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      var message = {
+        uid: util.uuid(),
+        aud: [this.props.queryParams.station],
+        aut: this.props.store.usership,
+        wen: Date.now(),
+        sep: {
+          lin: {
+            msg: this.state.message,
+            pat: false
+          }
+        }
+      };
+      this.props.api.hall({
+        convey: [message]
+      });
+      this.setState({
+        message: ""
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var messages = this.props.store.messages[this.props.queryParams.station];
+      var messageElems = null;
+
+      if (messages) {
+        messageElems = messages.messages.slice(0) // creates a shallow copy
+        .sort(function (a, b) {
+          return a.wen < b.wen;
+        }) // sort messages newest-first
+        .map(function (msg) {
+          var displayDate = moment(msg.wen).fromNow();
+          return react.createElement("div", {
+            key: msg.uid,
+            className: "mt-8"
+          }, react.createElement("div", {
+            className: "text-mono"
+          }, displayDate), react.createElement("div", {
+            className: "text-lg"
+          }, msg.sep.lin.msg));
+        });
+      }
+
+      return react.createElement("div", null, react.createElement("b", null, "~", this.props.store.usership), react.createElement("div", {
+        className: "chat-input mt-6"
+      }, react.createElement("div", {
+        className: "col-sm-8"
+      }, react.createElement("form", {
+        onSubmit: this.messageSubmit
+      }, react.createElement("input", {
+        className: "chat-input-field",
+        type: "text",
+        placeholder: "Say something",
+        value: this.state.message,
+        onChange: this.messageChange
+      })))), react.createElement("div", null, messageElems));
+    }
+  }]);
+  return FeedPage;
+}(react_1);
+
+var StreamPageHeader =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(StreamPageHeader, _Component);
+
+  function StreamPageHeader() {
+    _classCallCheck(this, StreamPageHeader);
+    return _possibleConstructorReturn(this, (StreamPageHeader.__proto__ || Object.getPrototypeOf(StreamPageHeader)).apply(this, arguments));
+  }
+
+  _createClass(StreamPageHeader, [{
+    key: "render",
+    value: function render() {
+      return react.createElement("div", {
+        className: "header-subpage"
+      }, react.createElement("h3", {
+        className: "header-sep"
+      }, "/"), react.createElement("h3", {
+        className: "inline text-mono"
+      }, this.props.queryParams.station), react.createElement("a", {
+        className: "header-settings text-sm",
+        href: "/~~/pages/nutalk/stream/edit?station=".concat(this.props.queryParams.station)
+      }, "Settings \u2192"));
+    }
+  }]);
+  return StreamPageHeader;
+}(react_1);
+var StreamPage =
+/*#__PURE__*/
+function (_Component2) {
+  _inherits(StreamPage, _Component2);
+
+  function StreamPage(props) {
+    _classCallCheck(this, StreamPage);
+    return _possibleConstructorReturn(this, (StreamPage.__proto__ || Object.getPrototypeOf(StreamPage)).call(this, props));
+  }
+
+  _createClass(StreamPage, [{
+    key: "render",
+    value: function render() {
+      var cos = this.props.store.configs[this.props.queryParams.station];
+      var subpage = null;
+
+      if (cos && (cos.cap === "chat" || cos.cap === "dm")) {
+        subpage = [react.createElement(ChatPage, this.props)];
+      } else if (cos && cos.cap === "feed") {
+        subpage = [react.createElement(FeedPage, this.props)];
+      }
+
+      return react.createElement("div", null, subpage);
     }
   }]);
   return StreamPage;
@@ -33310,18 +33508,124 @@ function (_Component) {
         sec: "village",
         dis: "no",
         aud: [],
-        audRaw: []
-      }
+        audNew: ""
+      },
+      oldStream: {},
+      descriptions: {
+        type: {
+          "feed": "A feed is a time-ordered (newest-first) list of microblogging messages.",
+          "chat": "A chat is a time-ordered (newest-last) traditional, multi-user chatroom.",
+          "list": "A list is a compiled aggregation of other circles.",
+          "dm": "A DM is a direct message group between one or more recipients."
+        },
+        security: {
+          channel: "A channel is publicly readable and writable, with a blacklist for blocking.",
+          village: "A village is privately readable and writable, with a whitelist for inviting.",
+          journal: "A journal is publicly readable and privately writable, with a whitelist for authors.",
+          mailbox: "A mailbox is owner-readable and publicly writable, with a blacklist for blocking."
+        }
+      },
+      deleteStream: "",
+      editLoaded: false
     };
-    _this.createStream = _this.createStream.bind(_this);
+    _this.submitStream = _this.submitStream.bind(_this);
     _this.valueChange = _this.valueChange.bind(_this);
+    _this.addAud = _this.addAud.bind(_this);
+    _this.remAud = _this.remAud.bind(_this);
+    _this.deleteStream = _this.deleteStream.bind(_this);
+    _this.deleteChange = _this.deleteChange.bind(_this);
     return _this;
   }
 
   _createClass(StreamCreatePage, [{
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      if (!this.state.editLoaded) return;
+      var newAud = nextProps.store.configs["~".concat(this.props.store.usership, "/").concat(this.state.stream.nom)].con.sis;
+
+      if (!util.arrayEqual(this.state.stream.aud, newAud)) {
+        this.setState({
+          stream: Object.assign(this.state.stream, {
+            aud: newAud
+          })
+        });
+      }
+    }
+  }, {
+    key: "loadEdit",
+    value: function loadEdit() {
+      var editStation = this.props.queryParams.station;
+
+      if (editStation && this.props.store.configs[editStation] && !this.state.editLoaded) {
+        var station = this.props.store.configs[editStation];
+        var stream = {
+          nom: editStation.split("/").slice(1).join("/"),
+          // TODO: This will need editing if there are multiple /'s in a station name`
+          des: station.cap,
+          sec: station.con.sec,
+          aud: station.con.sis,
+          dis: "no"
+        };
+        this.setState({
+          stream: stream,
+          oldStream: Object.assign({}, stream),
+          // For some reason we need to make a shallow copy here... wtf?!?
+          editLoaded: true
+        });
+      }
+    }
+  }, {
+    key: "deleteChange",
+    value: function deleteChange(event) {
+      console.log(event.target.value);
+      this.setState({
+        deleteStream: event.target.value
+      });
+    }
+  }, {
+    key: "deleteStream",
+    value: function deleteStream() {
+      console.log("deleting"); // this.props.api.hall({
+      //   delete: {
+      //     nom: this.state.deleteStream,
+      //     why: "cuz"
+      //   }
+      // });
+
+      this.props.api.hall({
+        source: {
+          nom: "inbox",
+          sub: false,
+          srs: [this.state.deleteStream]
+        }
+      });
+    }
+  }, {
+    key: "submitStream",
+    value: function submitStream() {
+      if (this.state.editLoaded) {
+        this.editStream();
+      } else {
+        this.createStream();
+      }
+    }
+  }, {
+    key: "editStream",
+    value: function editStream() {
+      if (!this.state.oldStream) return;
+
+      if (this.state.stream.des !== this.state.oldStream.des) {
+        this.props.api.hall({
+          depict: {
+            nom: this.state.oldStream.nom,
+            des: this.state.stream.des
+          }
+        });
+      }
+    }
+  }, {
     key: "createStream",
     value: function createStream() {
-      var usership = this.props.store.usership;
       this.props.api.hall({
         create: {
           nom: this.state.stream.nom,
@@ -33329,7 +33633,7 @@ function (_Component) {
           sec: this.state.stream.sec
         }
       }, {
-        target: "/~~/pages/nutalk/stream?station=~".concat(usership, "/").concat(this.state.stream.nom)
+        target: "/~~/pages/nutalk/stream?station=~".concat(this.props.store.usership, "/").concat(this.state.stream.nom)
       });
       this.setState({
         loading: true
@@ -33355,33 +33659,109 @@ function (_Component) {
         stream.aud = value.split([", "]);
       }
 
-      console.log("stream? = ", this.state.stream, stream);
+      var des = stream.des || this.state.stream.des;
+      var aud = stream.aud || this.state.stream.aud;
+
+      if (des === "dm") {
+        console.log('usership = ', this.props.store.usership);
+        stream.sec = "village";
+        stream.nom = "".concat(aud.concat(this.props.store.usership).sort().join("."));
+      }
+
       this.setState({
         stream: Object.assign(this.state.stream, stream)
       });
     }
   }, {
+    key: "addAud",
+    value: function addAud() {
+      if (this.state.editLoaded) {
+        var inv = this.state.stream.sec === "village" || this.state.stream.sec === "journal";
+        this.props.api.hall({
+          permit: {
+            nom: this.state.stream.nom,
+            inv: inv,
+            sis: [this.state.stream.audNew]
+          }
+        });
+        this.setState({
+          stream: Object.assign(this.state.stream, {
+            audNew: ""
+          })
+        });
+      } else {
+        this.setState({
+          stream: Object.assign(this.state.stream, {
+            aud: this.state.stream.aud.concat(this.state.stream.audNew),
+            audNew: ""
+          })
+        });
+      }
+    }
+  }, {
+    key: "remAud",
+    value: function remAud(evt) {
+      if (this.state.editLoaded) {
+        this.props.api.hall({
+          permit: {
+            nom: this.state.stream.nom,
+            inv: false,
+            sis: [evt.target.dataset.ship]
+          }
+        });
+      } else {
+        this.setState({
+          stream: Object.assign(this.state.stream, {
+            aud: this.state.stream.aud.filter(function (mem) {
+              return mem !== evt.target.dataset.ship;
+            })
+          })
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
+      this.loadEdit();
+      var typeDesc = this.state.descriptions.type[this.state.stream.des];
+      var secDesc = this.state.descriptions.security[this.state.stream.sec];
+      var nomDisabled = this.state.loading || this.state.stream.des === "dm";
+      var secDisabled = this.state.loading || this.state.stream.des === "dm";
+      var audienceLabel = this.state.stream.sec === "village" || this.state.stream.sec === "journal" ? "Whitelist" : "Blacklist";
+      var audienceList = this.state.stream.aud.map(function (mem) {
+        if (mem === _this2.props.store.usership) return null;
+        return react.createElement("div", {
+          className: "row space-between"
+        }, react.createElement("div", {
+          className: "col-sm-8"
+        }, "~".concat(mem)), react.createElement("div", {
+          className: "col-sm-offset-3 col-sm-1 minus",
+          "data-ship": mem,
+          onClick: _this2.remAud
+        }, "-"));
+      });
       return react.createElement("div", {
         className: "row"
       }, react.createElement("div", {
-        className: "col-sm-6"
+        className: "col-sm-12"
       }, react.createElement("div", {
-        className: "create-stream-page container"
+        className: "create-stream-page"
       }, react.createElement("div", {
-        className: "input-group"
+        className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "nom"
       }, "Name"), react.createElement("input", {
         type: "text",
+        className: "input-text-lg",
         name: "nom",
         placeholder: "Secret club",
-        disabled: this.state.loading,
+        disabled: nomDisabled,
         onChange: this.valueChange,
         value: this.state.stream.nom
       })), react.createElement("div", {
-        className: "input-group"
+        className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "stream-type"
       }, "Type"), react.createElement("div", {
@@ -33402,14 +33782,14 @@ function (_Component) {
         value: "chat"
       }, "Chat"), react.createElement("option", {
         value: "list"
-      }, "List")), react.createElement("span", {
+      }, "List"), react.createElement("option", {
+        value: "dm"
+      }, "DM")), react.createElement("span", {
         className: "select-icon"
       }, "\u2193"))), react.createElement("div", {
         className: "col-sm-offset-1 col-sm-5"
-      }, react.createElement("i", {
-        className: "text-sm"
-      }, "A Feed is a time-ordered (newest-first) list of microblogging messages with character limits.")))), react.createElement("div", {
-        className: "input-group"
+      }, react.createElement("i", null, typeDesc)))), react.createElement("div", {
+        className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "stream-security"
       }, "Security model"), react.createElement("div", {
@@ -33418,10 +33798,10 @@ function (_Component) {
         className: "col-sm-6"
       }, react.createElement("div", {
         className: "select-dropdown",
-        disabled: this.state.loading
+        disabled: secDisabled
       }, react.createElement("select", {
         name: "sec",
-        disabled: this.state.loading,
+        disabled: secDisabled,
         value: this.state.stream.sec,
         onChange: this.valueChange
       }, react.createElement("option", {
@@ -33436,24 +33816,38 @@ function (_Component) {
         className: "select-icon"
       }, "\u2193"))), react.createElement("div", {
         className: "col-sm-offset-1 col-sm-5"
-      }, react.createElement("i", {
-        className: "text-sm"
-      }, "A Village is privately readable and writable, with a whitelist for inviting.")))), react.createElement("div", {
-        className: "input-group"
+      }, react.createElement("i", null, secDesc)))), react.createElement("div", {
+        className: "row"
+      }, react.createElement("div", {
+        className: "col-sm-6"
+      }, react.createElement("div", {
+        className: "input-group mb-9"
       }, react.createElement("label", {
         htmlFor: "stream-ships"
-      }, "Whitelist"), react.createElement("textarea", {
-        name: "audRaw",
-        placeholder: "~ravmel-rodpyl, ~sorreg-namtyv",
+      }, audienceLabel), audienceList, react.createElement("div", {
+        className: "text-700 mt-8"
+      }, "Add New"), react.createElement("div", {
+        className: "row"
+      }, react.createElement("input", {
+        type: "text",
+        name: "audNew",
+        className: "col-sm-8",
+        placeholder: "ramvel-rodpyl",
         disabled: this.state.loading,
-        value: this.state.stream.audRaw,
+        value: this.state.stream.audNew,
         onChange: this.valueChange
-      })), react.createElement("div", {
-        className: "input-group"
-      }, react.createElement("h5", null, "Discoverable?"), react.createElement("label", {
+      }), react.createElement("span", {
+        className: "col-sm-offset-3 col-sm-1 plus",
+        onClick: this.addAud
+      }, "+"))))), react.createElement("div", {
+        className: "input-group input-group-radio mb-9"
+      }, react.createElement("div", {
+        className: "text-700 mt-4"
+      }, "Discoverable?"), react.createElement("label", {
         htmlFor: "stream-discoverable-yes",
-        disabled: this.state.loading
-      }, "Yes", react.createElement("input", {
+        disabled: this.state.loading,
+        className: this.state.stream.dis === "yes" ? "radio-active" : ""
+      }, " Yes", react.createElement("input", {
         type: "radio",
         name: "dis",
         value: "yes",
@@ -33463,8 +33857,9 @@ function (_Component) {
         onChange: this.valueChange
       })), react.createElement("label", {
         htmlFor: "stream-discoverable-no",
-        disabled: this.state.loading
-      }, "No", react.createElement("input", {
+        disabled: this.state.loading,
+        className: this.state.stream.dis === "no" ? "radio-active" : ""
+      }, " No", react.createElement("input", {
         type: "radio",
         name: "dis",
         value: "no",
@@ -33474,9 +33869,17 @@ function (_Component) {
         onChange: this.valueChange
       }))), react.createElement("button", {
         type: "submit",
-        className: "btn btn-primary",
-        onClick: this.createStream
-      }, "Create \u2192"))));
+        className: "btn btn-primary mt-12",
+        onClick: this.submitStream
+      }, this.state.editLoaded ? "Submit" : "Create", " \u2192"))), react.createElement("div", {
+        className: "sidebar fawef"
+      }, react.createElement("input", {
+        type: "text",
+        onChange: this.deleteChange
+      }), react.createElement("button", {
+        type: "button",
+        onClick: this.deleteStream
+      }, "Delete")));
     }
   }]);
   return StreamCreatePage;
@@ -33681,8 +34084,8 @@ function () {
       this.bind("/public", "PUT"); // owner's circles
 
       this.bind("/circles/~".concat(this.authTokens.ship), "PUT"); // bind to collections
-
-      this.bind("/", "PUT", "collections"); // delete subscriptions when you're done with them, like...
+      // this.bind("/", "PUT", "collections");
+      // delete subscriptions when you're done with them, like...
       // this.bind("/circle/inbox/grams/0", "DELETE");
     } // keep default bind to hall, since its bind procedure more complex for now AA
 
@@ -33773,7 +34176,8 @@ function () {
       return {
         configs: this.parseInboxConfigs(bs),
         messages: this.parseInboxMessages(bs),
-        ownedStations: this.parseOwnedStations(bs)
+        ownedStations: this.parseOwnedStations(bs) // discard this result for now, just call it for side effects.
+
       };
     }
   }, {
@@ -33830,46 +34234,45 @@ function () {
       var pathTokens = bs.from.path.split("/");
 
       if (pathTokens[1] === "circle" && pathTokens[2] === "inbox" && pathTokens[3] === "config") {
-        var circle = bs.data.json.circle;
+        var circle = bs.data.json.circle; // add new created station to inbox's configs
 
         if (circle.config && circle.config.dif && circle.config.dif.full) {
           console.log('circle circle.config.dif.full', circle.config.cir);
           configs[circle.config.cir] = circle.config.dif.full;
-        }
+        } // add to config blacklist or whitelist
 
-        if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
+
+        if (circle.config && circle.config.dif && circle.config.dif.permit) {
           console.log('circle circle.config.dif.full', circle.config.cir);
           configs[circle.config.cir] = configs[circle.config.cir] || {};
-          configs[circle.config.cir].sis = circle.config.dif.permit.sis;
-        }
+          configs[circle.config.cir].permit = circle.config.dif.permit;
+        } // Add inbox config
+
 
         if (circle.cos && circle.cos.loc) {
-          // Add inbox config
-          console.log('circle config.cos.loc', circle.cos.loc);
           var inbox = "~".concat(this.authTokens.ship, "/inbox");
           configs[inbox] = circle.cos.loc;
-        }
+        } // Add remote configs
+
 
         if (circle.cos && circle.cos.rem) {
-          // Add remote configs
           // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
-          console.log('circle config.cos.rem', circle.cos.rem);
           Object.keys(circle.cos.rem).forEach(function (remConfig) {
             configs[remConfig] = circle.cos.rem[remConfig];
           });
-        }
+        } // Add remote presences
+
 
         if (circle.pes && circle.pes.rem) {
-          // Add remote configs
-          // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
-          console.log('circle config.pes.rem', circle.pes.rem);
           Object.keys(circle.pes.rem).forEach(function (pes) {
             configs[pes].pes = circle.pes.rem[pes];
           });
-        }
+        } // For all the new configs, if there are pending invites for them, send the invites
+
 
         Object.keys(configs).forEach(function (cos) {
           _this4.warehouse.store.pendingInvites.forEach(function (inv) {
+            // TOOD:  Maybe we should also check the invitees are in config.sis list, if whitelist
             if (cos.indexOf(inv.nom) !== -1) {
               _this4.hall({
                 permit: {
@@ -33880,6 +34283,8 @@ function () {
               });
             }
           });
+
+          _this4.warehouse.store.pendingInvites = [];
         });
       }
 
@@ -33894,10 +34299,11 @@ function () {
         var ownedStations = bs.data.json.circles;
 
         if (ownedStations.cir && ownedStations.add) {
+          console.log('does this actually work?');
           this.hall({
             source: {
               nom: "inbox",
-              sub: true,
+              sub: ownedStations.add,
               srs: ["~".concat(this.authTokens.ship, "/").concat(ownedStations.cir)]
             }
           });
@@ -33905,37 +34311,32 @@ function () {
       }
 
       return [];
-    }
-  }, {
-    key: "processSideEffects",
-    value: function processSideEffects() {// this.subscribeToOwnedStations();
-    }
-  }, {
-    key: "subscribeToOwnedStations",
-    value: function subscribeToOwnedStations() {
-      var _this5 = this;
+    } // processSideEffects() {
+    // this.subscribeToOwnedStations();
+    // }
+    // subscribeToOwnedStations() {
+    //   let {ownedStations, configs} = this.warehouse.store;
+    //   let pendingStations = [];
+    //
+    //   console.log('ownedStations = ', ownedStations);
+    //
+    //   ownedStations.forEach(station => {
+    //     if (!configs[station]) {
+    //       pendingStations.push(`${this.authTokens.ship}/${station}`);
+    //     }
+    //   });
+    //
+    //   if (pendingStations.length > 0) {
+    //     this.hall({
+    //       source: {
+    //         nom: `~${this.authTokens.ship}/inbox`,
+    //         sub: true,
+    //         srs: [pendingStations]
+    //       }
+    //     });
+    //   }
+    // }
 
-      var _warehouse$store = this.warehouse.store,
-          ownedStations = _warehouse$store.ownedStations,
-          configs = _warehouse$store.configs;
-      var pendingStations = [];
-      console.log('ownedStations = ', ownedStations);
-      ownedStations.forEach(function (station) {
-        if (!configs[station]) {
-          pendingStations.push("".concat(_this5.authTokens.ship, "/").concat(station));
-        }
-      });
-
-      if (pendingStations.length > 0) {
-        this.hall({
-          source: {
-            nom: "~".concat(this.authTokens.ship, "/inbox"),
-            sub: true,
-            srs: [pendingStations]
-          }
-        });
-      }
-    }
   }]);
   return UrbitApi;
 }();
@@ -51040,10 +51441,13 @@ function () {
         if (!storeConfigs[cos]) {
           storeConfigs[cos] = newConfigs[cos];
           return;
-        }
+        } // Add or remove new ships to b/w list
 
-        if (newConfigs[cos].sis) {
-          storeConfigs[cos].con.sis = storeConfigs[cos].con.sis ? storeConfigs[cos].con.sis.concat(newConfigs[cos].sis) : newConfigs[cos].sis;
+
+        if (newConfigs[cos].permit) {
+          storeConfigs[cos].con.sis = newConfigs[cos].permit.add ? storeConfigs[cos].con.sis.concat(newConfigs[cos].permit.sis) : storeConfigs[cos].con.sis.filter(function (mem) {
+            return !newConfigs[cos].permit.sis.includes(mem);
+          });
         }
       });
       return storeConfigs;
@@ -51057,29 +51461,32 @@ function () {
     key: "messages",
     value: function messages(newMessages, storeMessages) {
       newMessages.forEach(function (newMsg) {
-        var station = storeMessages[newMsg.aud];
+        console.log('newMsg.aud = ', newMsg.aud);
+        newMsg.aud.forEach(function (aud) {
+          var station = storeMessages[aud];
 
-        if (!station) {
-          storeMessages[newMsg.aud] = {
-            name: newMsg.aud,
-            messages: [newMsg]
-          };
-        } else if (station.messages.findIndex(function (o) {
-          return o.uid === newMsg.uid;
-        }) === -1) {
-          for (var i = 0; i < station.messages.length; i++) {
-            if (newMsg.wen < station.messages[i].wen) {
-              storeMessages[newMsg.aud].messages.splice(i, 0, newMsg);
-            } else if (i === station.messages.length - 1) {
-              storeMessages[newMsg.aud].messages.push(newMsg);
-              i = i + 1;
-            }
-          } // Pring messages by date, for debugging:
-          // for (let msg of station.messages) {
-          //   console.log(`msg ${msg.uid}: ${msg.wen}`);
-          // }
+          if (!station) {
+            storeMessages[aud] = {
+              name: aud,
+              messages: [newMsg]
+            };
+          } else if (station.messages.findIndex(function (o) {
+            return o.uid === newMsg.uid;
+          }) === -1) {
+            for (var i = 0; i < station.messages.length; i++) {
+              if (newMsg.wen < station.messages[i].wen) {
+                storeMessages[aud].messages.splice(i, 0, newMsg);
+              } else if (i === station.messages.length - 1) {
+                storeMessages[aud].messages.push(newMsg);
+                i = i + 1;
+              }
+            } // Pring messages by date, for debugging:
+            // for (let msg of station.messages) {
+            //   console.log(`msg ${msg.uid}: ${msg.wen}`);
+            // }
 
-        }
+          }
+        });
       });
       return storeMessages;
     }
@@ -51140,40 +51547,6 @@ function () {
   return UrbitWarehouse;
 }();
 
-var RootComponent =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(RootComponent, _Component);
-
-  function RootComponent(props) {
-    var _this;
-
-    _classCallCheck(this, RootComponent);
-    _this = _possibleConstructorReturn(this, (RootComponent.__proto__ || Object.getPrototypeOf(RootComponent)).call(this, props));
-    _this.state = {
-      kids: null
-    };
-    return _this;
-  }
-
-  _createClass(RootComponent, [{
-    key: "renderKids",
-    value: function renderKids(kids) {
-      this.setState({
-        kids: kids
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      {
-        this.state.kids;
-      }
-    }
-  }]);
-  return RootComponent;
-}(react_1);
-
 var UrbitRouter =
 /*#__PURE__*/
 function () {
@@ -51183,12 +51556,10 @@ function () {
     // this.pageRoot = "/~~/pages/nutalk/";
     this.pageRoot = "";
     this.domRoot = "#root";
-    this.pendingTransitions = [];
-    this.root = new RootComponent(); // TODO: This... might be a circular dependency? Seems to work though.
+    this.pendingTransitions = []; // TODO: This... might be a circular dependency? Seems to work though.
 
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
-    this.api = new UrbitApi(this.warehouse); // ReactDOM.render(component, elem);
-
+    this.api = new UrbitApi(this.warehouse);
     this.instantiateReactComponents();
     this.registerAnchorListeners();
     this.registerHistoryListeners();
@@ -51197,7 +51568,7 @@ function () {
   _createClass(UrbitRouter, [{
     key: "instantiateReactComponents",
     value: function instantiateReactComponents() {
-      var _this2 = this;
+      var _this = this;
 
       // if userhip is null, auth tokens haven't been loaded yet, so api isn't unavablable. so we wait.
       if (this.warehouse.store.usership === "") {
@@ -51219,9 +51590,9 @@ function () {
         var componentName = elem.dataset.component; // look up the component type in component-map, instantiate it
 
         var component = react.createElement(ComponentMap[componentName].comp, {
-          api: _this2.api,
-          store: _this2.warehouse.store,
-          storeData: _this2.warehouse.storeData.bind(_this2.warehouse),
+          api: _this.api,
+          store: _this.warehouse.store,
+          storeData: _this.warehouse.storeData.bind(_this.warehouse),
           queryParams: util.getQueryParams()
         });
         reactDom.render(component, elem);
@@ -51237,7 +51608,7 @@ function () {
   }, {
     key: "transitionTo",
     value: function transitionTo(targetUrl, noHistory) {
-      var _this3 = this;
+      var _this2 = this;
 
       // trim queryparams
       var q = targetUrl.indexOf('?');
@@ -51253,15 +51624,15 @@ function () {
           window.history.pushState({}, null, targetUrl);
         }
 
-        document.querySelectorAll(_this3.domRoot)[0].innerHTML = resText;
+        document.querySelectorAll(_this2.domRoot)[0].innerHTML = resText;
 
-        _this3.instantiateReactComponents();
+        _this2.instantiateReactComponents();
       });
     }
   }, {
     key: "registerAnchorListeners",
     value: function registerAnchorListeners() {
-      var _this4 = this;
+      var _this3 = this;
 
       window.document.addEventListener('click', function (e) {
         // Walk the DOM node's parents to find 'a' tags up the chain
@@ -51277,9 +51648,9 @@ function () {
 
           if (href.indexOf('.') === -1) {
             e.preventDefault();
-            var targetUrl = _this4.pageRoot + href;
+            var targetUrl = _this3.pageRoot + href;
 
-            _this4.transitionTo(targetUrl);
+            _this3.transitionTo(targetUrl);
           }
         }
       });
@@ -51287,10 +51658,10 @@ function () {
   }, {
     key: "registerHistoryListeners",
     value: function registerHistoryListeners() {
-      var _this5 = this;
+      var _this4 = this;
 
       window.onpopstate = function (state) {
-        _this5.transitionTo(window.location.href, true);
+        _this4.transitionTo(window.location.href, true);
       };
     }
   }]);

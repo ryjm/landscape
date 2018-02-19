@@ -68,7 +68,7 @@ export class UrbitApi {
     this.bind(`/circles/~${this.authTokens.ship}`, "PUT");
 
     // bind to collections
-    this.bind("/", "PUT", "collections");
+    // this.bind("/", "PUT", "collections");
 
     // delete subscriptions when you're done with them, like...
     // this.bind("/circle/inbox/grams/0", "DELETE");
@@ -152,7 +152,7 @@ export class UrbitApi {
     return {
       configs: this.parseInboxConfigs(bs),
       messages: this.parseInboxMessages(bs),
-      ownedStations: this.parseOwnedStations(bs)
+      ownedStations: this.parseOwnedStations(bs) // discard this result for now, just call it for side effects.
     }
   }
 
@@ -210,45 +210,45 @@ export class UrbitApi {
 
       let circle = bs.data.json.circle;
 
+      // add new created station to inbox's configs
       if (circle.config && circle.config.dif && circle.config.dif.full) {
         console.log('circle circle.config.dif.full', circle.config.cir);
         configs[circle.config.cir] = circle.config.dif.full;
       }
 
-      if (circle.config && circle.config.dif && circle.config.dif.permit && circle.config.dif.permit.add) {
+      // add to config blacklist or whitelist
+      if (circle.config && circle.config.dif && circle.config.dif.permit) {
         console.log('circle circle.config.dif.full', circle.config.cir);
 
         configs[circle.config.cir] = configs[circle.config.cir] || {};
-        configs[circle.config.cir].sis = circle.config.dif.permit.sis;
+        configs[circle.config.cir].permit = circle.config.dif.permit;
       }
 
+      // Add inbox config
       if (circle.cos && circle.cos.loc) {
-        // Add inbox config
-        console.log('circle config.cos.loc', circle.cos.loc);
         let inbox = `~${this.authTokens.ship}/inbox`;
         configs[inbox] = circle.cos.loc;
       }
 
+      // Add remote configs
       if (circle.cos && circle.cos.rem) {
-        // Add remote configs
         // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
-        console.log('circle config.cos.rem', circle.cos.rem);
         Object.keys(circle.cos.rem).forEach((remConfig) => {
           configs[remConfig] = circle.cos.rem[remConfig];
         });
       }
 
+      // Add remote presences
       if (circle.pes && circle.pes.rem) {
-        // Add remote configs
-        // TODO: Do .rem's nest infinitely? Can I keep going here if there's a chain of subscriptions?
-        console.log('circle config.pes.rem', circle.pes.rem);
         Object.keys(circle.pes.rem).forEach((pes) => {
           configs[pes].pes = circle.pes.rem[pes];
         });
       }
 
+      // For all the new configs, if there are pending invites for them, send the invites
       Object.keys(configs).forEach(cos => {
         this.warehouse.store.pendingInvites.forEach(inv => {
+          // TOOD:  Maybe we should also check the invitees are in config.sis list, if whitelist
           if (cos.indexOf(inv.nom) !== -1) {
             this.hall({
               permit: {
@@ -259,6 +259,8 @@ export class UrbitApi {
             });
           }
         });
+
+        this.warehouse.store.pendingInvites = [];
       })
     }
 
@@ -274,10 +276,11 @@ export class UrbitApi {
       let ownedStations = bs.data.json.circles;
 
       if (ownedStations.cir && ownedStations.add) {
+        console.log('does this actually work?');
         this.hall({
           source: {
             nom: `inbox`,
-            sub: true,
+            sub: ownedStations.add,
             srs: [`~${this.authTokens.ship}/${ownedStations.cir}`]
           }
         });
@@ -287,30 +290,30 @@ export class UrbitApi {
     return [];
   }
 
-  processSideEffects() {
+  // processSideEffects() {
     // this.subscribeToOwnedStations();
-  }
+  // }
 
-  subscribeToOwnedStations() {
-    let {ownedStations, configs} = this.warehouse.store;
-    let pendingStations = [];
-
-    console.log('ownedStations = ', ownedStations);
-
-    ownedStations.forEach(station => {
-      if (!configs[station]) {
-        pendingStations.push(`${this.authTokens.ship}/${station}`);
-      }
-    });
-
-    if (pendingStations.length > 0) {
-      this.hall({
-        source: {
-          nom: `~${this.authTokens.ship}/inbox`,
-          sub: true,
-          srs: [pendingStations]
-        }
-      });
-    }
-  }
+  // subscribeToOwnedStations() {
+  //   let {ownedStations, configs} = this.warehouse.store;
+  //   let pendingStations = [];
+  //
+  //   console.log('ownedStations = ', ownedStations);
+  //
+  //   ownedStations.forEach(station => {
+  //     if (!configs[station]) {
+  //       pendingStations.push(`${this.authTokens.ship}/${station}`);
+  //     }
+  //   });
+  //
+  //   if (pendingStations.length > 0) {
+  //     this.hall({
+  //       source: {
+  //         nom: `~${this.authTokens.ship}/inbox`,
+  //         sub: true,
+  //         srs: [pendingStations]
+  //       }
+  //     });
+  //   }
+  // }
 }
