@@ -24,16 +24,7 @@ export class TopicCreatePage extends Component {
 
   createTopic() {
     let dat = {}
-    console.log(this.props);
     if (top in this.props) {
-      dat = {
-        submit: {
-          col: this.props.queryParams.coll,
-          tit: this.titleExtract(this.state.topicContent),
-          wat: this.state.topicContent
-        }
-      }
-    } else {
       dat = {
         resubmit: {
           col: this.props.coll,
@@ -42,7 +33,16 @@ export class TopicCreatePage extends Component {
           wat: this.state.topicContent
         }
       }
+    } else {
+      dat = {
+        submit: {
+          col: this.props.queryParams.coll,
+          tit: this.titleExtract(this.state.topicContent),
+          wat: this.state.topicContent
+        }
+      }
     };
+
 
     this.props.api.sendCollAction(dat, {
       target: top in this.props ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/collections/${this.props.queryParams.coll}`
