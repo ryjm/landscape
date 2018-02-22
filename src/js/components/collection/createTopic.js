@@ -24,7 +24,8 @@ export class TopicCreatePage extends Component {
 
   createTopic() {
     let dat = {}
-    if (top in this.props) {
+    //
+    if ('top' in this.props) {
       dat = {
         resubmit: {
           col: this.props.coll,
