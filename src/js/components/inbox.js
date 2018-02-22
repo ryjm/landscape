@@ -6,13 +6,19 @@ export class InboxPage extends Component {
 
     this.state = {
       filter: "",
-      feed: ""
+      feed: "",
+      collections: {}
     };
 
     this.filterChange = this.filterChange.bind(this);
     this.feedChange = this.feedChange.bind(this);
     this.acceptInvite = this.acceptInvite.bind(this);
     this.addFeed = this.addFeed.bind(this);
+    fetch("/collections/topic-index.collections-json").then(res => {
+      return res.json();
+    }).then(d => {
+      this.state.collections = d.data;
+    });
   }
 
   filterChange(evt) {
@@ -118,14 +124,33 @@ export class InboxPage extends Component {
       // Filter out messages set to "null" in last step, messages that aren't sourced from inbox
       messageElems = messageElems.filter(elem => (elem !== null));
       if (messageElems.length > 0) {
-        return (
-          <div className="mb-4" key={stationName}>
-            <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
-            <ul>
-              {messageElems}
-            </ul>
-          </div>
-        );
+        if (stationName.indexOf('collection_') > -1) {
+          let collId = /(.*)\/collection_~(~.*)/.exec(stationName);
+          // below is a hack for development bug where there are ghost collections
+          // to which we are still subscribed even though they no longer exist
+          // TODO Do we want to link out to collection? or to circle?
+          if (this.state.collections && this.state.collections[collId[2]]) {
+            return (
+              <div className="mb-4" key={stationName}>
+                <a href={`/~~/collections/${collId[2]}`}><b><u>{collId[1]}/{this.state.collections[collId[2]].desc}</u></b></a>
+                <ul>
+                  {messageElems}
+                </ul>
+              </div>
+            );
+          } else {
+            return null;
+          }
+        } else {
+          return (
+            <div className="mb-4" key={stationName}>
+              <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
+              <ul>
+                {messageElems}
+              </ul>
+            </div>
+          );
+        }
       } else {
         return null;
       }
