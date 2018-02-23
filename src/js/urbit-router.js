@@ -86,7 +86,7 @@ export class UrbitRouter {
     console.log("Transition to: ", baseUrl);
 
     // TODO: Extremely brittle. Expecting parts of form: /~~/pages/nutalk + /show
-    fetch(baseUrl + ".htm", {credentials: "same-origin"}).then((res) => {
+    fetch(baseUrl.endsWith(".collections-edit") ? baseUrl : baseUrl + ".htm", {credentials: "same-origin"}).then((res) => {
       return res.text();
     }).then((resText) => {
       if (!noHistory) {
@@ -109,7 +109,8 @@ export class UrbitRouter {
         let href = el.getAttribute('href');
 
         // TODO: *Extremely* rough way of detecting an external link...
-        if (href.indexOf('.') === -1) {
+        //if (href.indexOf('.') === -1) {
+        if (el.hostname === "localhost") {
           e.preventDefault();
           let targetUrl = this.pageRoot + href;
           this.transitionTo(targetUrl);
