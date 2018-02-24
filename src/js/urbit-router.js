@@ -77,16 +77,29 @@ export class UrbitRouter {
     });
   }
 
+  filterUrl(url) {
+    let q = url.indexOf('?');
+    var baseUrl;
+
+    if (url.substr(0, q).endsWith("post")) {
+      baseUrl = `${url.substr(0, q)}.htm?${url.substr(q + 1)}`;
+    } else if (q !== -1) {
+      baseUrl = url.substr(0, q);
+    } else if (url.endsWith(".collections-edit")) {
+      baseUrl = url;
+    } else {
+      baseUrl = url + ".htm";
+    }
+
+    return baseUrl;
+  }
+
   transitionTo(targetUrl, noHistory) {
 
-    // trim queryparams
-    let q = targetUrl.indexOf('?');
-    let baseUrl = (q !== -1) ? targetUrl.substr(0, q) : targetUrl;
-
-    console.log("Transition to: ", baseUrl);
+    console.log("Transition to: ", this.filterUrl(targetUrl));
 
     // TODO: Extremely brittle. Expecting parts of form: /~~/pages/nutalk + /show
-    fetch(baseUrl.endsWith(".collections-edit") ? baseUrl : baseUrl + ".htm", {credentials: "same-origin"}).then((res) => {
+    fetch(this.filterUrl(targetUrl), {credentials: "same-origin"}).then((res) => {
       return res.text();
     }).then((resText) => {
       if (!noHistory) {
