@@ -44,9 +44,10 @@ export class TopicCreatePage extends Component {
       }
     };
 
+    console.log('dat...', dat);
 
     this.props.api.sendCollAction(dat, {
-      target: top in this.props ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/collections/${this.props.queryParams.coll}`
+      target: 'top' in this.props ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/collections/${this.props.queryParams.coll}`
     });
   }
 
