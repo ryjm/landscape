@@ -5,6 +5,7 @@ import { StreamCreatePage } from './components/stream/create';
 import { CollectionCreatePage } from './components/collection/create';
 import { TopicCreatePage } from './components/collection/createTopic';
 import { CommentCreate } from './components/collection/comment';
+import { Subscribe } from './components/subscribe';
 
 /**
   Anatomy:
@@ -39,5 +40,8 @@ export var ComponentMap = {
   },
   "InboxPage": {
     comp: InboxPage
+  },
+  "Subscribe": {
+    comp: Subscribe,
   }
 };
