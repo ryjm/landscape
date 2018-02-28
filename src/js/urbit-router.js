@@ -77,20 +77,21 @@ export class UrbitRouter {
     });
   }
 
+  //
   filterUrl(url) {
     let q = url.indexOf('?');
     var baseUrl;
 
-    if (url.substr(0, q).endsWith("post")) {
+    // If there are query params, preserve 'em
+    if (q !== -1) {
       baseUrl = `${url.substr(0, q)}.htm?${url.substr(q + 1)}`;
-    } else if (q !== -1) {
-      baseUrl = url.substr(0, q);
+    // Don't append .htm if it's a known renderer
     } else if (url.endsWith(".collections-edit")) {
       baseUrl = url;
+    // Otherwise append .htm
     } else {
       baseUrl = url + ".htm";
     }
-
     return baseUrl;
   }
 
