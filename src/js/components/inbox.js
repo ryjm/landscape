@@ -14,11 +14,13 @@ export class InboxPage extends Component {
     this.feedChange = this.feedChange.bind(this);
     this.acceptInvite = this.acceptInvite.bind(this);
     this.addFeed = this.addFeed.bind(this);
-    fetch("/collections/topic-index.collections-json").then(res => {
-      return res.json();
-    }).then(d => {
-      this.state.collections = d.data;
-    });
+  }
+
+  // move this to utils
+  // comet to planet
+  filterShip(ship) {
+    const sp = ship.split('-');
+    return sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship;
   }
 
   filterChange(evt) {
@@ -126,21 +128,12 @@ export class InboxPage extends Component {
       if (messageElems.length > 0) {
         if (stationName.indexOf('collection_') > -1) {
           let collId = /(.*)\/collection_~(~.*)/.exec(stationName);
-          // below is a hack for development bug where there are ghost collections
-          // to which we are still subscribed even though they no longer exist
-          // TODO Do we want to link out to collection? or to circle?
-          if (this.state.collections && this.state.collections[collId[2]]) {
-            return (
-              <div className="mb-4" key={stationName}>
-                <a href={`/~~/collections/${collId[2]}`}><b><u>{collId[1]}/{this.state.collections[collId[2]].desc}</u></b></a>
-                <ul>
-                  {messageElems}
-                </ul>
-              </div>
-            );
-          } else {
-            return null;
-          }
+          // need to work on how collection updates are sent to hall
+          return (
+            <div className="mb-4" key={stationName}>
+              <a href={`/~~/collections/${collId[2]}`}><b><u>{this.filterShip(collId[1])}/{this.props.store.configs[stationName]['cap']}</u></b></a>
+            </div>
+          );
         } else {
           return (
             <div className="mb-4" key={stationName}>
