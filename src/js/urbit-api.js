@@ -200,7 +200,9 @@ export class UrbitApi {
   }
 
   parseInboxConfigs(bs) {
-    let configs = {};
+    console.log('bs...', bs);
+    // adapt old state in case we are just getting difs
+    let configs = this.warehouse.store.configs ? this.warehouse.store.configs : {};
 
     let pathTokens = bs.from.path.split("/");
 
@@ -214,6 +216,17 @@ export class UrbitApi {
       if (circle.config && circle.config.dif && circle.config.dif.full) {
         console.log('circle circle.config.dif.full', circle.config.cir);
         configs[circle.config.cir] = circle.config.dif.full;
+      }
+
+      // add or remove src from a circle
+      if (circle.config && circle.config.dif && circle.config.dif.source) {
+        console.log('circle circle.config.dif.source', circle.config.cir);
+
+        if (circle.config.dif.source.add) {
+          configs[circle.config.cir]['src'] = [...configs[circle.config.cir]['src'], circle.config.dif.source.src];
+        } else {
+          configs[circle.config.cir]['src'] = configs[circle.config.cir]['src'].filter((v) => v != circle.config.dif.source.src);
+        }
       }
 
       // add to config blacklist or whitelist
