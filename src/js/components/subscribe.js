@@ -15,7 +15,7 @@ export class Subscribe extends Component {
     this.props.api.hall(
       {
         source: {
-          sub: !(this.props.circle in this.props.store.configs),
+          sub: !(this.checkSubscribed()),
           //what is this name?
           nom: 'inbox',
           srs: [this.props.circle]
@@ -24,14 +24,26 @@ export class Subscribe extends Component {
     )
   }
 
+  checkSubscribed() {
+    let inbox = this.props.store.configs[`~${this.props.store.usership}/inbox`];
+    if (!inbox) {
+      return false;
+    } else if (inbox.src.indexOf(this.props.circle) == -1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   render() {
+    let inbox = this.props.store.configs[`~${this.props.store.usership}/inbox`];
     return (
       <div className="subscribe">
         <button
-          className={this.props.circle in this.props.store.configs ? "btn btn-tetiary" : "btn btn-primary"}
+          className={this.checkSubscribed() ? "btn btn-tetiary" : "btn btn-primary"}
           onClick={this.subscribe}
           >
-          {this.props.circle in this.props.store.configs ? "Unsubscribe ×" : "Subscribe →"}
+          {this.checkSubscribed() ? "Unsubscribe ×" : "Subscribe →"}
         </button>
       </div>
     )
