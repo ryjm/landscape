@@ -202,7 +202,7 @@ export class UrbitApi {
   parseInboxConfigs(bs) {
     console.log('bs...', bs);
     // adapt old state in case we are just getting difs
-    let configs = this.warehouse.store.configs ? this.warehouse.store.configs : {};
+    let configs = this.warehouse.store.configs ? Object.assign({}, this.warehouse.store.configs) : {};
 
     let pathTokens = bs.from.path.split("/");
 
