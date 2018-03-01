@@ -164,10 +164,10 @@ export class InboxPage extends Component {
 
         return (
           <li key={msg.uid} className={`row ${appClass}`}>
-            <div className="col-sm-2">
+            <div className="col-sm-3">
               {autLabel}
             </div>
-            <div className="col-sm-10">
+            <div className="col-sm-9">
               {message}
             </div>
           </li>
