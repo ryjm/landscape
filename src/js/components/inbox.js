@@ -74,8 +74,57 @@ export class InboxPage extends Component {
     })
   }
 
+  // parses the tac, which is the attached message to the collections update
+  collUpdateParse(str) {
+    const lim = 100;
+    const wain = str.split('\n');
+    const hed = wain.filter((l) => l.startsWith('# '));
+    const talwain = hed.length > 0 ? wain.slice(1, 5) : wain.slice(0, 4);
+    const tal = talwain.join('\n');
+    // dumb word count
+    const words = tal.split(' ');
+    const wc = words.length;
+    const more = wc > lim;
+    return {
+      more,
+      head: hed.length > 0 ? hed[0].substr(2) : '', 
+      tail: more ? words.slice(0, lim).join(' ') : words.join(' '),
+    }
+  }
+
+  // parse
+  stationIdParse(sn) {
+    const collMeta = /(.*)\/collection_~(~.*)/.exec(sn);
+    return {
+      ship: collMeta[1],
+      coll: collMeta[2]
+    }
+  }
+
+  // render a message on a collection circle that 
+  renderCollectionUpdate(str, sn) {
+    const collUpdate = this.collUpdateParse(str);
+    const collMeta = this.stationIdParse(sn);
+    if (collUpdate.more) {
+      return (
+        <div>
+          <a href={`/~~/collections/${collMeta.coll}`} className="text-600">{collUpdate.head}</a>
+          <p>{collUpdate.tail} <a href="">[...]</a></p>
+          <a href={`/~~/collections/${collMeta.coll}`}>More →</a>
+        </div>
+      );
+      
+    } else {
+      return (
+        <div>
+          <a href="" className="text-600">{collUpdate.head}</a>
+          <p>{collUpdate.tail}</p>
+        </div>
+      );
+    }
+  }
+
   render() {
-    console.log(this.state.filter);
 
     const inboxMessages = this.props.store.messages;
     const inboxKeys = Object.keys(inboxMessages).filter(k => k.indexOf(this.state.filter) !== -1);
@@ -91,7 +140,7 @@ export class InboxPage extends Component {
         let message = "";
 
         if (prevName !== msg.aut) {
-          autLabel = `~${msg.aut}`;
+          autLabel = this.filterShip(`~${msg.aut}`);
           prevName = msg.aut;
         }
 
@@ -107,6 +156,8 @@ export class InboxPage extends Component {
           );
         } else if (!this.props.store.configs[stationName]) {  // If message isn't sourced by inbox & is not an invite, render nothing
           return null;
+        } else if (msg.sep.fat) {  // This is an update on a collection circle
+          message = this.renderCollectionUpdate(msg.sep.fat.tac.text, stationName);
         } else if (msg.sep.lin) {
           message = msg.sep.lin.msg;
         }
@@ -126,12 +177,16 @@ export class InboxPage extends Component {
       // Filter out messages set to "null" in last step, messages that aren't sourced from inbox
       messageElems = messageElems.filter(elem => (elem !== null));
       if (messageElems.length > 0) {
+        // a collection-based circle
         if (stationName.indexOf('collection_') > -1) {
-          let collId = /(.*)\/collection_~(~.*)/.exec(stationName);
+          const collId = this.stationIdParse(stationName);
           // need to work on how collection updates are sent to hall
           return (
             <div className="mb-4" key={stationName}>
-              <a href={`/~~/collections/${collId[2]}`}><b><u>{this.filterShip(collId[1])}/{this.props.store.configs[stationName]['cap']}</u></b></a>
+              <a href={`/~~/collections/${collId.coll}`}><b><u>{this.filterShip(collId.ship)}/{this.props.store.configs[stationName]['cap']}</u></b></a>
+              <ul>
+                {messageElems}
+              </ul>
             </div>
           );
         } else {
