@@ -202,7 +202,8 @@ export class UrbitApi {
   parseInboxConfigs(bs) {
     console.log('bs...', bs);
     // adapt old state in case we are just getting difs
-    let configs = this.warehouse.store.configs ? Object.assign({}, this.warehouse.store.configs) : {};
+    //let configs = this.warehouse.store.configs ? Object.assign({}, this.warehouse.store.configs) : {};
+    let configs = {}
 
     let pathTokens = bs.from.path.split("/");
 
@@ -219,15 +220,15 @@ export class UrbitApi {
       }
 
       // add or remove src from a circle
-      if (circle.config && circle.config.dif && circle.config.dif.source) {
-        console.log('circle circle.config.dif.source', circle.config.cir);
+      //if (circle.config && circle.config.dif && circle.config.dif.source) {
+      //  console.log('circle circle.config.dif.source', circle.config.cir);
 
-        if (circle.config.dif.source.add) {
-          configs[circle.config.cir]['src'] = [...configs[circle.config.cir]['src'], circle.config.dif.source.src];
-        } else {
-          configs[circle.config.cir]['src'] = configs[circle.config.cir]['src'].filter((v) => v != circle.config.dif.source.src);
-        }
-      }
+      //  if (circle.config.dif.source.add) {
+      //    configs[circle.config.cir]['src'] = [...configs[circle.config.cir]['src'], circle.config.dif.source.src];
+      //  } else {
+      //    configs[circle.config.cir]['src'] = configs[circle.config.cir]['src'].filter((v) => v != circle.config.dif.source.src);
+      //  }
+      //}
 
       // add to config blacklist or whitelist
       if (circle.config && circle.config.dif && circle.config.dif.permit) {
