@@ -55,10 +55,10 @@ export class UrbitApi {
     // parses client-specific info (ship nicknames, glyphs, etc)
     this.bind("/client", "PUT");
 
-    // inbox local + remote configs
+    // inbox local + remote configs, remote presences
     this.bind("/circle/inbox/config/group-r/0", "PUT");
 
-    // inbox messages, remote presences
+    // inbox messages
     this.bind("/circle/inbox/grams/0/500", "PUT");
 
     // public membership
