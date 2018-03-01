@@ -7,6 +7,17 @@ export class UrbitReducer {
         return;
       }
 
+      // Add or remove a src to an existing circle (most useful for the inbox)
+      if (newConfigs[cos].src) {
+        // update existing config
+        if (newConfigs[cos].add) {
+          storeConfigs[cos].src = [...storeConfigs[cos].src, newConfigs[cos].src];
+        } else {
+          let n = newConfigs[cos].src;
+          storeConfigs[cos].src = storeConfigs[cos].src.filter((val) => val != n);
+        }
+      }
+
       // Add or remove new ships to b/w list
       if (newConfigs[cos].permit) {
         storeConfigs[cos].con.sis = (newConfigs[cos].permit.add) ?
