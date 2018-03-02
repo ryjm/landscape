@@ -40,7 +40,7 @@ export class Subscribe extends Component {
     return (
       <div className="subscribe">
         <button
-          className={this.checkSubscribed() ? "btn btn-tetiary" : "btn btn-primary"}
+          className={this.checkSubscribed() ? "btn btn-tetiary mb-4" : "btn btn-primary mb-4"}
           onClick={this.subscribe}
           >
           {this.checkSubscribed() ? "Unsubscribe ×" : "Subscribe →"}
