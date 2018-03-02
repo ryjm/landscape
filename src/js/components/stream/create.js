@@ -84,20 +84,20 @@ export class StreamCreatePage extends Component {
   deleteStream() {
     console.log("deleting")
 
-    // this.props.api.hall({
-    //   delete: {
-    //     nom: this.state.deleteStream,
-    //     why: "cuz"
-    //   }
-    // });
-
     this.props.api.hall({
-      source: {
-        nom: `inbox`,
-        sub: false,
-        srs: [this.state.deleteStream]
+      delete: {
+        nom: this.state.deleteStream,
+        why: "cuz"
       }
     });
+
+    // this.props.api.hall({
+    //   source: {
+    //     nom: `inbox`,
+    //     sub: false,
+    //     srs: [this.state.deleteStream]
+    //   }
+    // });
   }
 
   submitStream() {
@@ -162,7 +162,6 @@ export class StreamCreatePage extends Component {
     let aud = stream.aud || this.state.stream.aud;
 
     if (des === "dm") {
-      console.log('usership = ', this.props.store.usership);
       stream.sec = "village";
       stream.nom = `${aud.concat(this.props.store.usership).sort().join(".")}`;
     }
@@ -187,20 +186,30 @@ export class StreamCreatePage extends Component {
         }
       });
 
-      this.setState({
-        stream: Object.assign(this.state.stream, {audNew: ""})
-      });
+      newStream = {
+        audNew: ""
+      }
     } else {
-      this.setState({
-        stream: Object.assign(this.state.stream, {
-          aud: this.state.stream.aud.concat(this.state.stream.audNew),
-          audNew: ""
-        })
-      });
+      newStream = {
+        aud: this.state.stream.aud.concat(this.state.stream.audNew),
+        audNew: ""
+      };
     }
+
+    let aud = newStream.aud || this.state.stream.aud;
+
+    if (this.state.stream.des === "dm") {
+      newStream.nom = `${aud.concat(this.props.store.usership).sort().join(".")}`;
+    }
+
+    this.setState({
+      stream: Object.assign(this.state.stream, newStream)
+    });
   }
 
   remAud(evt) {
+    let newStream = {};
+
     if (this.state.editLoaded) {
       this.props.api.hall({
         permit: {
@@ -210,12 +219,18 @@ export class StreamCreatePage extends Component {
         }
       })
     } else {
-      this.setState({
-        stream: Object.assign(this.state.stream, {
-          aud: this.state.stream.aud.filter(mem => mem !== evt.target.dataset.ship),
-        })
-      });
+      newStream.aud = this.state.stream.aud.filter(mem => mem !== evt.target.dataset.ship);
     }
+
+    let aud = newStream.aud || this.state.stream.aud;
+
+    if (this.state.stream.des === "dm") {
+      newStream.nom = `${aud.concat(this.props.store.usership).sort().join(".")}`;
+    }
+
+    this.setState({
+      stream: Object.assign(this.state.stream, newStream)
+    });
   }
 
   render() {
