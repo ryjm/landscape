@@ -3,6 +3,9 @@ import { StreamPage, StreamPageHeader } from './components/stream';
 import { StreamEditPage } from './components/stream/edit';
 import { StreamCreatePage } from './components/stream/create';
 import { CollectionCreatePage } from './components/collection/create';
+import { TopicCreatePage } from './components/collection/createTopic';
+import { CommentCreate } from './components/collection/comment';
+import { Subscribe } from './components/subscribe';
 
 /**
   Anatomy:
@@ -26,10 +29,19 @@ export var ComponentMap = {
   "CollectionCreatePage": {
     comp: CollectionCreatePage
   },
+  "TopicCreatePage": {
+    comp: TopicCreatePage
+  },
   "StreamEditPage": {
     comp: StreamEditPage
   },
+  "CommentCreate": {
+    comp: CommentCreate
+  },
   "InboxPage": {
     comp: InboxPage
+  },
+  "Subscribe": {
+    comp: Subscribe,
   }
 };

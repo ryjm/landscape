@@ -1,4 +1,3 @@
-::
 ::::  /hoon/urb/ren
   ::
 /?    310
@@ -9,6 +8,11 @@
           /;  urb-split  /#  /;  nutalk  /!htm/
               /web/pages
           /;  urb-split  /#  /!hymn/
+              /web/collections
+          ::/urb-collections/
+          :: put collections through the same .htm
+          :: routing structure as nutalk
+          /;  urb-split  /#  /;  nutalk  /|(/!htm/ /htm/)  ::a lot of stuff in here isn't .hoon files
               /
           /urb-tree/
       ==

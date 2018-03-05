@@ -56,13 +56,25 @@ export class UrbitRouter {
       // grab the name of the component
       let componentName = elem.dataset.component;
 
+      // all remaining data-* are presumed to be props
+      const dataset = elem.dataset
+      const propsReducer = (a, v) => {
+        const x = {}
+        x[v] = dataset[v];
+        return Object.assign(a, x);
+      }
+      const propsObj = Object.keys(elem.dataset)
+                      .filter(e => e != 'component')
+                      .reduce(propsReducer, {});
+
+      //console.log('propsObj', propsObj);
       // look up the component type in component-map, instantiate it
-      let component = React.createElement(ComponentMap[componentName].comp, {
+      let component = React.createElement(ComponentMap[componentName].comp, Object.assign({
         api: this.api,
         store: this.warehouse.store,
         storeData: this.warehouse.storeData.bind(this.warehouse),
         queryParams: util.getQueryParams()
-      });
+      }, propsObj));
 
       ReactDOM.render(component, elem);
 
@@ -76,16 +88,30 @@ export class UrbitRouter {
     });
   }
 
+  //
+  filterUrl(url) {
+    let q = url.indexOf('?');
+    var baseUrl;
+
+    // If there are query params, preserve 'em
+    if (q !== -1) {
+      baseUrl = `${url.substr(0, q)}.htm?${url.substr(q + 1)}`;
+    // Don't append .htm if it's a known renderer
+    } else if (url.endsWith(".collections-edit")) {
+      baseUrl = url;
+    // Otherwise append .htm
+    } else {
+      baseUrl = url + ".htm";
+    }
+    return baseUrl;
+  }
+
   transitionTo(targetUrl, noHistory) {
 
-    // trim queryparams
-    let q = targetUrl.indexOf('?');
-    let baseUrl = (q !== -1) ? targetUrl.substr(0, q) : targetUrl;
-
-    console.log("Transition to: ", baseUrl);
+    console.log("Transition to: ", this.filterUrl(targetUrl));
 
     // TODO: Extremely brittle. Expecting parts of form: /~~/pages/nutalk + /show
-    fetch(baseUrl + ".htm", {credentials: "same-origin"}).then((res) => {
+    fetch(this.filterUrl(targetUrl), {credentials: "same-origin"}).then((res) => {
       return res.text();
     }).then((resText) => {
       if (!noHistory) {
@@ -120,7 +146,8 @@ export class UrbitRouter {
         let href = el.getAttribute('href');
 
         // TODO: *Extremely* rough way of detecting an external link...
-        if (href.indexOf('.') === -1) {
+        //if (href.indexOf('.') === -1) {
+        if (el.hostname === "localhost") {
           e.preventDefault();
           let targetUrl = this.pageRoot + href;
           this.transitionTo(targetUrl);

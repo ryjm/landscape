@@ -5,85 +5,203 @@ export class InboxPage extends Component {
     super(props);
 
     this.state = {
-      filter: ""
+      filter: "",
+      feed: "",
+      collections: {}
     };
 
     this.filterChange = this.filterChange.bind(this);
-    this.subCircle = this.subCircle.bind(this);
+    this.feedChange = this.feedChange.bind(this);
+    this.acceptInvite = this.acceptInvite.bind(this);
+    this.addFeed = this.addFeed.bind(this);
+  }
+
+  // move this to utils
+  // comet to planet
+  filterShip(ship) {
+    const sp = ship.split('-');
+    return sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship;
   }
 
   filterChange(evt) {
-    console.log('evt = ', evt);
     this.setState({
       filter: evt.target.value
     });
   }
 
-  subCircle(evt) {
+  feedChange(evt) {
+    this.setState({
+      feed: evt.target.value
+    });
+  }
+
+  acceptInvite(evt) {
     let cir = evt.target.dataset.cir;
     let val = evt.target.attributes.value;
 
+    // TODO:  Reallly hacky way of telling if circle is DM group or not
+    if (cir.indexOf('.') === -1) {
+      this.subCircle(cir, true);
+    } else {
+      let stationBase = cir.split("/").slice(1)[0];
+      this.props.api.hall({
+        create: {
+          nom: stationBase,
+          des: "dm",
+          sec: "village"
+        }
+      }, {
+        target: `/~~/pages/nutalk/stream?station=~${this.props.store.usership}/${stationBase}`
+      });
+    }
+  }
+
+  addFeed(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    this.subCircle(this.state.feed, true);
+    this.setState({feed: ""});
+  }
+
+  subCircle(cir, sub) {
     this.props.api.hall({
       source: {
         nom: "inbox",
-        sub: true,
+        sub: sub,
         srs: [cir]
       }
     })
   }
 
+  // parses the tac, which is the attached message to the collections update
+  collUpdateParse(str) {
+    const lim = 100;
+    const wain = str.split('\n');
+    const hed = wain.filter((l) => l.startsWith('# '));
+    const talwain = hed.length > 0 ? wain.slice(1, 5) : wain.slice(0, 4);
+    const tal = talwain.join('\n');
+    // dumb word count
+    const words = tal.split(' ');
+    const wc = words.length;
+    const more = wc > lim;
+    return {
+      more,
+      head: hed.length > 0 ? hed[0].substr(2) : '',
+      tail: more ? words.slice(0, lim).join(' ') : words.join(' '),
+    }
+  }
+
+  // parse
+  stationIdParse(sn) {
+    const collMeta = /(.*)\/collection_~(~.*)/.exec(sn);
+    return {
+      ship: collMeta[1],
+      coll: collMeta[2]
+    }
+  }
+
+  // render a message on a collection circle that
+  renderCollectionUpdate(str, sn) {
+    const collUpdate = this.collUpdateParse(str);
+    const collMeta = this.stationIdParse(sn);
+    if (collUpdate.more) {
+      return (
+        <div>
+          <a href={`/~~/collections/${collMeta.coll}`} className="text-600">{collUpdate.head}</a>
+          <p>{collUpdate.tail} <a href="">[...]</a></p>
+          <a href={`/~~/collections/${collMeta.coll}`}>More →</a>
+        </div>
+      );
+
+    } else {
+      return (
+        <div>
+          <a href="" className="text-600">{collUpdate.head}</a>
+          <p>{collUpdate.tail}</p>
+        </div>
+      );
+    }
+  }
+
   render() {
-    console.log(this.state.filter);
 
     const inboxMessages = this.props.store.messages;
     const inboxKeys = Object.keys(inboxMessages).filter(k => k.indexOf(this.state.filter) !== -1);
 
     const stationElems = inboxKeys.map((stationName) => {
       let prevName = "";
+      let invitePresent = false;
 
-      const messageElems = inboxMessages[stationName].messages.map((msg) => {
+      let messageElems = inboxMessages[stationName].messages.map((msg) => {
         let appClass = msg.app ? " chat-msg-app" : "";
 
         let autLabel = "";
         let message = "";
 
         if (prevName !== msg.aut) {
-          autLabel = `~${msg.aut}`;
+          autLabel = this.filterShip(`~${msg.aut}`);
           prevName = msg.aut;
         }
 
-        if (msg.sep.lin) {
-          message = msg.sep.lin.msg;
-        } else if (msg.sep.inv && !this.props.store.configs[msg.sep.inv.cir]) {
+        if (msg.sep.inv && !this.props.store.configs[msg.sep.inv.cir]) {
+          invitePresent = true;
+
           message = (
             <span className="ml-4">
               <span>Invite to <b>{msg.sep.inv.cir}</b>. Would you like to join?</span>
-              <span className="text-500 underline ml-2 mr-2" onClick={this.subCircle} value="yes" data-cir={msg.sep.inv.cir}>Yes</span>
-              <span className="text-500 underline ml-2 mr-2" onClick={this.subCircle} value="no" data-cir={msg.sep.inv.cir}>No</span>
+              <span className="text-500 underline ml-2 mr-2 pointer" onClick={this.acceptInvite} value="yes" data-cir={msg.sep.inv.cir}>Yes</span>
+              <span className="text-500 underline ml-2 mr-2 pointer" onClick={this.acceptInvite} value="no" data-cir={msg.sep.inv.cir}>No</span>
             </span>
           );
+        } else if (!this.props.store.configs[stationName]) {  // If message isn't sourced by inbox & is not an invite, render nothing
+          return null;
+        } else if (msg.sep.fat && msg.sep.fat.tac.text) {  // This is an update on a collection circle
+          message = this.renderCollectionUpdate(msg.sep.fat.tac.text, stationName);
+        } else if (msg.sep.lin) {
+          message = msg.sep.lin.msg;
         }
 
         return (
           <li key={msg.uid} className={`row ${appClass}`}>
-            <div className="col-sm-2">
+            <div className="col-sm-3">
               {autLabel}
             </div>
-            <div className="col-sm-10">
+            <div className="col-sm-9">
               {message}
             </div>
           </li>
         );
       });
 
-      return (
-        <div className="mb-4" key={stationName}>
-          <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
-          <ul>
-            {messageElems}
-          </ul>
-        </div>
-      );
+      // Filter out messages set to "null" in last step, messages that aren't sourced from inbox
+      messageElems = messageElems.filter(elem => (elem !== null));
+      if (messageElems.length > 0) {
+        // a collection-based circle
+        if (stationName.indexOf('collection_') > -1) {
+          const collId = this.stationIdParse(stationName);
+          // need to work on how collection updates are sent to hall
+          return (
+            <div className="mb-4" key={stationName}>
+              <a href={`/~~/collections/${collId.coll}`}><b><u>{this.filterShip(collId.ship)}/{this.props.store.configs[stationName]['cap']}</u></b></a>
+              <ul>
+                {messageElems}
+              </ul>
+            </div>
+          );
+        } else {
+          return (
+            <div className="mb-4" key={stationName}>
+              <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
+              <ul>
+                {messageElems}
+              </ul>
+            </div>
+          );
+        }
+      } else {
+        return null;
+      }
     });
 
     let olderStations = Object.keys(this.props.store.configs).map(cos => {
@@ -104,6 +222,9 @@ export class InboxPage extends Component {
         <a href="/~~/pages/nutalk/collection/create">
           <button className="btn btn-tetiary" type="button">Create Collection →</button>
         </a>
+        <form className="inline-block" onSubmit={this.addFeed}>
+          <input className="w-51 inbox-feed" type="text" value={this.state.feed} onChange={this.feedChange} placeholder="Add feed: ~marzod/club" />
+        </form>
         <div className="row">
           <input className="mt-4 w-80 input-sm" type="text" value={this.state.filter} onChange={this.filterChange} placeholder="Filter..." />
         </div>

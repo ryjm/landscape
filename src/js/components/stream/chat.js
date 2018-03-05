@@ -33,9 +33,26 @@ export class ChatPage extends Component {
     event.preventDefault();
     event.stopPropagation();
 
+    let aud;
+    let config = this.props.store.configs[this.props.queryParams.station];
+
+    if (config.cap === "dm") {
+      // TODO: Actually, ships should = config.con.sis instead of getting it from name
+      // but config.con.sis isn't filled because we don't formally invite host ships in case of mirroring
+      // need to add to config.con.sis without sending invites
+      let ships = this.props.queryParams.station.split("/").slice(1)[0].split(".");
+      aud = ships.sort().map((mem) => {
+        // EG,  ~polzod/marzod.polzod.zod
+        console.log('mem = ', mem);
+        return `~${mem}/${ships.join('.')}`;
+      })
+    } else {
+      aud = [this.props.queryParams.station];
+    }
+
     let message = {
       uid: util.uuid(),
-      aud: [this.props.queryParams.station],
+      aud: aud,
       aut: this.props.store.usership,
       wen: Date.now(),
       sep: {
@@ -215,18 +232,7 @@ export class ChatPage extends Component {
             </form>
           </div>
         </div>
-        <ul className="nav-main">
-          <li>
-            <a href="javascript:void(0)">12 members</a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">3 pending invites </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">invite +</a>
-          </li>
-        </ul>
-        <div className="chat-members">
+        <div className="sidebar">
           {chatMembers}
         </div>
       </div>

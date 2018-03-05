@@ -1,3 +1,17 @@
+/***
+  Inbox
+***/
+
+.inbox-feed {
+  height: 10rem;
+  position: relative;
+  top: 1px;
+}
+
+/***
+  Edit
+***/
+
 .page-notes-edit textarea {
   border: none;
   height: 800px;
@@ -44,8 +58,48 @@
   border-color: red !important;
 }
 
-.create-stream-page.container {
-  /* max-width: 600px; */
+.create-stream-page .plus, .create-stream-page .minus {
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.create-stream-page .plus {
+  line-height: 41px;
+}
+
+.create-stream-page .input-group i {
+  padding-top: 2rem;
+}
+
+.create-stream-page textarea {
+  border: 6px solid black;
+}
+
+.create-stream-page input[type="text"] {
+  border: 3px solid black;
+}
+
+.create-stream-page input[type="text"].input-text-lg {
+  border: 6px solid black;
+  font-size: 9rem;
+  line-height: 18rem;
+  padding: 0 4rem;
+}
+
+.create-stream-page label {
+  font-size: 6rem;
+  line-height: 9rem;
+  font-weight: 500;
+}
+
+.create-stream-page .input-group-radio label {
+  padding-top: 0;
+  height: 18rem;
+  width: 38rem;
+  font-size: 9rem;
+  line-height: 18rem;
+  text-align: center;
 }
 
 /**
@@ -83,12 +137,6 @@
   color: #9B9B9B;
 }
 
-.chat-members {
-  position: absolute;
-  right: 24rem;
-  top: 48rem;
-}
-
 .cir-status {
   width: 2rem;
   height: 2rem;
@@ -114,3 +162,96 @@
 .cir-red {
   background-color: #FF4444;
 }
+
+textarea.post-edit
+{
+  height: 80%;
+  border: none;
+  resize: none;
+  padding: 8rem 12rem;
+}
+
+textarea.comment-edit
+{
+  border: none;
+  resize: none;
+  padding: 0;
+}
+
+.coms ol
+{
+  counter-reset: a -1;
+}
+
+.coms ol>li::before
+{
+  font-weight: 400;
+  position: absolute;
+  font-family: Source Code Pro,Roboto mono,Courier New,monospace;
+  color: #9b9b9b;
+}
+
+.coms ol>li>div.da
+{
+  color: #9b9b9b;
+}
+
+/* collections */
+
+.create-comment button.disabled
+{
+  display: none;
+}
+
+.create-comment .usership
+{
+  color: #000;
+}
+
+div.coll-title
+{
+  font-size: 6rem;
+}
+div.mod
+{
+  font-size: 6rem;
+}
+
+.collection-index li.forum::before {
+  content: "•";
+  position: absolute;
+  font-size: 10rem;
+  margin-left: -12rem;
+  margin-top: 9rem;
+}
+
+.collection-index li.forum .meta-cont > div
+{
+  float: left;
+}
+
+.collection-index li.blog::before {
+  content: "•";
+  position: absolute;
+  font-size: 10rem;
+  margin-left: -12rem;
+  margin-top: 11rem;
+}
+
+.collection-index li.notes .da {
+  position: absolute;
+  margin-left: -12rem;
+  margin-top: 1rem;
+}
+
+.collection-index .note-uuid {
+  font-weight: inherit;
+}
+
+.post #edit
+{
+  display: none;
+}
+
+
+

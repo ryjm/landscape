@@ -12,10 +12,31 @@ input[disabled], label[disabled], select[disabled], textarea[disabled], .select-
   border-color: #aaa;
 }
 
+
+
 input.input-sm {
   font-size: 3rem;
   padding: 6px;
   border-width: 1px;
+}
+
+.input-group-radio input[type="radio"] {
+  position: relative;
+  top: -9999px;
+}
+
+.input-group-radio label {
+  display: inline-block;
+  padding-top: 2rem;
+
+  background-color: #ECECEC;
+  color: #B0B0B0;
+  font-weight: 700;
+}
+
+.input-group-radio label.radio-active {
+  color: white;
+  background-color: black;
 }
 
 /***
@@ -105,15 +126,34 @@ input, textarea {
   outline: none;
 }
 
+.select-dropdown {
+  border: 6px solid #000;
+  background-color: #fff;
+  text-align: center;
+}
+
 .select-dropdown select {
-  padding: 12px;
+  padding: 0;
+  height: 18rem;
+  line-height: 18rem;
+  font-size: 9rem;
+  color: white;
+  background-color: black;
+  border-radius: 0;
+  font-weight: 700;
+  text-align-last: center;
 }
 
 .select-icon {
-  position: relative;
   font-weight: 700;
-  top: 12px;
-  right: 12px;
+  font-size: 9rem;
+  padding: 0 5rem;
+  line-height: 18rem;
+}
+
+button.disabled {
+  color: white;
+  cursor: inherit;
 }
 
 /***
@@ -122,4 +162,16 @@ input, textarea {
 
 .flex {
   display: flex;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.pointer {
+  cursor: pointer;
 }
