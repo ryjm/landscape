@@ -87,7 +87,7 @@ export class InboxPage extends Component {
     const more = wc > lim;
     return {
       more,
-      head: hed.length > 0 ? hed[0].substr(2) : '', 
+      head: hed.length > 0 ? hed[0].substr(2) : '',
       tail: more ? words.slice(0, lim).join(' ') : words.join(' '),
     }
   }
@@ -101,7 +101,7 @@ export class InboxPage extends Component {
     }
   }
 
-  // render a message on a collection circle that 
+  // render a message on a collection circle that
   renderCollectionUpdate(str, sn) {
     const collUpdate = this.collUpdateParse(str);
     const collMeta = this.stationIdParse(sn);
@@ -113,7 +113,7 @@ export class InboxPage extends Component {
           <a href={`/~~/collections/${collMeta.coll}`}>More →</a>
         </div>
       );
-      
+
     } else {
       return (
         <div>
@@ -156,7 +156,7 @@ export class InboxPage extends Component {
           );
         } else if (!this.props.store.configs[stationName]) {  // If message isn't sourced by inbox & is not an invite, render nothing
           return null;
-        } else if (msg.sep.fat) {  // This is an update on a collection circle
+        } else if (msg.sep.fat && msg.sep.fat.tac.text) {  // This is an update on a collection circle
           message = this.renderCollectionUpdate(msg.sep.fat.tac.text, stationName);
         } else if (msg.sep.lin) {
           message = msg.sep.lin.msg;

@@ -4,5 +4,6 @@
 
 node_modules/
 dist/
-urbit-code/web/pages/nutalk/{js,css}/
+urbit-code/web/pages/nutalk/js/*
+urbit-code/web/pages/nutalk/css/*
 *.swp
