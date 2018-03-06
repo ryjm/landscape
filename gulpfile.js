@@ -10,6 +10,7 @@ var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
 var json = require('rollup-plugin-json');
+var builtins = require('rollup-plugin-node-builtins');
 
 var serve = require('gulp-webserver');
 
@@ -51,6 +52,7 @@ gulp.task('bundle-js', function() {
         'process.env.NODE_ENV': JSON.stringify('development')
       }),
       json(),
+      builtins(),
       resolve()
     ]
   }).on('bundle', function(bundle){ cache = bundle; })
@@ -76,7 +78,6 @@ gulp.task('copy-urbit', function () {
 });
 
 gulp.task('watch', function() {
-  gulp.run('default');
   gulp.watch('src/**/*.js', ['bundle-js']);
   gulp.watch('src/**/*.css', ['bundle-css']);
 

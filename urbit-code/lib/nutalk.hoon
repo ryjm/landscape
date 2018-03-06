@@ -30,8 +30,7 @@
       ;div.container
         ;div.row
           ;div.col-sm-10.col-sm-offset-2
-            ;div#root;
-            ;div#dyna
+            ;div#root
               ;+  inner
             ==
           ==

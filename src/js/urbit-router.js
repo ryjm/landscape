@@ -9,8 +9,9 @@ import HtmlToReact from 'html-to-react';
 class RootComponent extends Component {
   render() {
     return (
-      <div dangerouslySetInnerHTML={{__html: this.props.content}}>
-
+      <div>
+        <h1>I am root.</h1>
+        {this.props.children}
       </div>
     )
   }
@@ -24,14 +25,25 @@ export class UrbitRouter {
     this.pageRoot = "";
     this.domRoot = "#root";
     this.pendingTransitions = [];
+    this.htmlParser = HtmlToReact.Parser();
 
     // TODO: This... might be a circular dependency? Seems to work though.
     this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
     this.api = new UrbitApi(this.warehouse);
 
-    this.instantiateReactComponents();
+    let initialPage = document.querySelectorAll("#root")[0];
+    let children = this.reactify(initialPage.innerHTML);
+
+    ReactDOM.render(<RootComponent children={children} />, document.querySelectorAll("#root")[0]);
+
+    // this.instantiateReactComponents();
     this.registerAnchorListeners();
     this.registerHistoryListeners();
+  }
+
+  reactify(input) {
+    let reactElement = this.htmlParser.parse(input);
+    return reactElement;
   }
 
   instantiateReactComponents() {
@@ -121,16 +133,13 @@ export class UrbitRouter {
       // let elem = new DOMParser().parseFromString(resText, "text/html").body.childNodes[0];
       // ReactDOM.render(React.createElement(elem), document.querySelectorAll(this.domRoot)[0]);
 
-      let htmlInput = '<div><h1>Title</h1><p>A paragraph</p></div>';
-      let parser = new HtmlToReact.Parser();
-      let reactElement = parser.parse(htmlInput);
+      // let htmlInput = '<div><h1>Title</h1><p>A paragraph</p></div>';
+      let reactElement = this.reactify(resText);
 
-      debugger
-
-      ReactDOM.render(reactElement, document.querySelectorAll("#dyna")[0]);
+      ReactDOM.render(<RootComponent children={reactElement} />, document.querySelectorAll("#root")[0]);
 
       // document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
-      this.instantiateReactComponents();
+      // this.instantiateReactComponents();
     });
   }
 
