@@ -7,8 +7,13 @@
 Pull the MVE arvo branch. This is our development branch that includes the latest `%collections` app and the necessary updates to `%clay` and `%ford`
 > git clone git@github.com:vvisigoth/arvo.git -b collections
 
-Copy the arvo files from the above repo into your pier.
+If you've already got a ship running, copy the arvo files from the above repo into your pier.
 > cp -r /pulled/arvo/\* /your/ship/home
+
+If you're planning on developing with a fakezod, you can run. This will start a fakezod using the specified arvo.
+> urbit -c -F -I zod -A <path to arvo repo> <destination dir>
+
+*Remember:* if you're running a fakezod, you still have to run `|mount /===` in the dojo to make your `%home` desk visible to Unix.
 
 You have to reboot your ship, since we've changed some vanes.
 In the `%dojo`, run:
