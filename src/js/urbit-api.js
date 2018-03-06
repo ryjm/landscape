@@ -248,11 +248,11 @@ export class UrbitApi {
       }
 
       // Add remote presences
-      if (circle.pes && circle.pes.rem) {
-        Object.keys(circle.pes.rem).forEach((pes) => {
-          configs[pes].pes = circle.pes.rem[pes];
-        });
-      }
+      //if (circle.pes && circle.pes.rem) {
+      //  Object.keys(circle.pes.rem).forEach((pes) => {
+      //    configs[pes].pes = circle.pes.rem[pes];
+      //  });
+      //}
 
       // For all the new configs, if there are pending invites for them, send the invites
       Object.keys(configs).forEach(cos => {

@@ -4,19 +4,25 @@
 
 ## Back End Setup
 
-Pull the MVE arvo branch. This is a branch that includes the latest `%collections` app and the necessary updates to `%clay` and `%ford`
-> git clone git@github.com:vvisigoth/arvo.git -b mve-ui
+Pull the MVE arvo branch. This is our development branch that includes the latest `%collections` app and the necessary updates to `%clay` and `%ford`
+> git clone git@github.com:vvisigoth/arvo.git -b collections
 
-*Note* This should be updated to pull the mve branch of urbit/arvo
-
-Copy the arvo files from the above repo into your pier.
+If you've already got a ship running, copy the arvo files from the above repo into your pier.
 > cp -r /pulled/arvo/\* /your/ship/home
+
+If you're planning on developing with a fakezod, you can run. This will start a fakezod using the specified arvo.
+> urbit -c -F -I zod -A <path to arvo repo> <destination dir>
+
+*Remember:* if you're running a fakezod, you still have to run `|mount /===` in the dojo to make your `%home` desk visible to Unix.
 
 You have to reboot your ship, since we've changed some vanes.
 In the `%dojo`, run:
 > |reboot
 
 You should see messages iterating through all the vanes (ames, behn, clay, etc.)
+
+Once this is done, make sure that you've started the collections app, by running:
+> |start %collections
 
 ## Front End Setup
 
