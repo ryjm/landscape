@@ -206,11 +206,21 @@ export class InboxPage extends Component {
 
     let olderStations = Object.keys(this.props.store.configs).map(cos => {
       if (inboxKeys.indexOf(cos) === -1) {
-        return (
-          <div className="mb-4" key={cos}>
-            <a href={`/~~/pages/nutalk/stream?station=${cos}`}><b><u>{cos}</u></b></a>
-          </div>
-        )
+        if (cos.indexOf('collection_') > -1) {
+          const collId = this.stationIdParse(cos);
+          //
+          return (
+            <div className="mb-4" key={cos}>
+              <a href={`/~~/collections/${collId.coll}`}><b><u>{this.filterShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
+            </div>
+          )
+        } else {
+          return (
+            <div className="mb-4" key={cos}>
+              <a href={`/~~/pages/nutalk/stream?station=${cos}`}><b><u>{cos}</u></b></a>
+            </div>
+          )
+        }
       }
     });
 
