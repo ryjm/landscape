@@ -25,25 +25,53 @@ export class UrbitRouter {
     this.pageRoot = "";
     this.domRoot = "#root";
     this.pendingTransitions = [];
+
+    // Required to convert arbitrary HTML into React elements
     this.htmlParser = HtmlToReact.Parser();
+    this.htmlParserNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
 
     // TODO: This... might be a circular dependency? Seems to work though.
-    this.warehouse = new UrbitWarehouse(this.instantiateReactComponents.bind(this));
+    this.warehouse = new UrbitWarehouse(this.renderRoot.bind(this));
     this.api = new UrbitApi(this.warehouse);
 
     let initialPage = document.querySelectorAll("#root")[0];
-    let children = this.reactify(initialPage.innerHTML);
-
-    ReactDOM.render(<RootComponent children={children} />, document.querySelectorAll("#root")[0]);
 
     // this.instantiateReactComponents();
+    this.reactify(initialPage.innerHTML);
+    this.renderRoot();
+
     this.registerAnchorListeners();
     this.registerHistoryListeners();
   }
 
+  renderRoot() {
+    ReactDOM.render(<RootComponent children={this.currentPage} />, document.querySelectorAll("#root")[0]);
+  }
+
   reactify(input) {
-    let reactElement = this.htmlParser.parse(input);
-    return reactElement;
+    let instructions = [{
+      replaceChildren: true,
+      shouldProcessNode: (node) => {
+        return node.attribs && !!node.attribs['data-component']
+      },
+      processNode: (node) => {
+        let componentName = node.attribs['data-component'];
+        let propsObj = {};
+
+        return React.createElement(ComponentMap[componentName].comp, Object.assign({
+          api: this.api,
+          store: this.warehouse.store,
+          storeData: this.warehouse.storeData.bind(this.warehouse),
+          queryParams: util.getQueryParams()
+        }, propsObj));
+      }
+    }, {
+      shouldProcessNode: () => true,
+      processNode: this.htmlParserNodeDefinitions.processDefaultNode
+    }];
+
+    this.currentPage = this.htmlParser.parseWithInstructions(input, () => true, instructions);
+    this.renderRoot();
   }
 
   instantiateReactComponents() {
@@ -134,9 +162,10 @@ export class UrbitRouter {
       // ReactDOM.render(React.createElement(elem), document.querySelectorAll(this.domRoot)[0]);
 
       // let htmlInput = '<div><h1>Title</h1><p>A paragraph</p></div>';
-      let reactElement = this.reactify(resText);
+      this.reactify(resText);
+      this.renderRoot();
 
-      ReactDOM.render(<RootComponent children={reactElement} />, document.querySelectorAll("#root")[0]);
+      // ReactDOM.render(<RootComponent children={reactElement} />, document.querySelectorAll("#root")[0]);
 
       // document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
       // this.instantiateReactComponents();

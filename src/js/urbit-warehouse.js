@@ -44,6 +44,6 @@ export class UrbitWarehouse {
     console.log('new store obj =', data);
     console.log('full store = ', this.store);
 
-    // this.updateFunc();
+    this.updateFunc();
   }
 }
