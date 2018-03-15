@@ -21,7 +21,9 @@ export class CommentCreate extends Component {
         com: '~',
         wat: this.state.comment
       }
-    });
+    }, {
+      target: `/~~/${this.props.coll}/${this.props.top}`
+  });
   }
 
   valueChange(event) {
