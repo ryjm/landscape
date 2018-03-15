@@ -22,7 +22,7 @@ export class CommentCreate extends Component {
         wat: this.state.comment
       }
     }, {
-      target: `/~~/${this.props.coll}/${this.props.top}`
+      target: `/~~/collections/${this.props.coll}/${this.props.top}`
   });
   }
 
