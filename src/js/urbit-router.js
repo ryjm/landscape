@@ -7,11 +7,44 @@ import { util } from './util';
 import HtmlToReact from 'html-to-react';
 
 class RootComponent extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      children: this.reactify()
+    }
+  }
+
+  reactify() {
+    let instructions = [{
+      replaceChildren: true,
+      shouldProcessNode: (node) => {
+        return node.attribs && !!node.attribs['data-component']
+      },
+      processNode: (node) => {
+        let componentName = node.attribs['data-component'];
+        let propsObj = {};
+
+        return React.createElement(ComponentMap[componentName].comp, Object.assign({
+          api: this.props.api,
+          store: this.props.store,
+          storeData: this.props.storeData,
+          queryParams: this.props.queryParams
+        }, propsObj));
+      }
+    }, {
+      shouldProcessNode: () => true,
+      processNode: this.htmlParserNodeDefinitions.processDefaultNode
+    }];
+
+    return this.htmlParser.parseWithInstructions(this.props.rawChildren, () => true, instructions);
+  }
+
   render() {
     return (
       <div>
         <h1>I am root.</h1>
-        {this.props.children}
+        {this.state.children}
       </div>
     )
   }
