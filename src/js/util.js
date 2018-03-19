@@ -18,6 +18,37 @@ export function uuid() {
   return str.slice(0,-1);
 }
 
+export function parseCollCircle(st) {
+  let collMeta = /(.*)\/collection_~(~[a-z,\.,0-9]*)(:?_~)?(:?~.*)?/.exec(st);
+  let r;
+  console.log('regex', collMeta);
+  if (collMeta) {
+    r = {
+      ship: collMeta[1],
+      coll: collMeta[2],
+      top: collMeta[4]
+    }
+  }   
+  return r;
+}
+
+export function daToDate(st) {
+  var dub = function(n) {
+    return parseInt(n) < 10 ? "0" + parseInt(n) : n.toString();
+  };
+  var da = st.split('..');
+  var bigEnd = da[0].split('.');
+  var lilEnd = da[1].split('.');
+  var ds = `${bigEnd[0].slice(1)}-${dub(bigEnd[1])}-${dub(bigEnd[2])}T${dub(lilEnd[0])}:${dub(lilEnd[1])}:${dub(lilEnd[2])}Z`;
+  return new Date(ds);
+}
+
+  // ascending for clarity
+export function sortSrc(circleArray, topic=false){
+  let sc = circleArray.map((c) => util.parseCollCircle(c)).filter((pc) => typeof pc != 'undefined' && typeof pc.top == 'undefined');
+  return sc.map((src) => src.coll).sort((a, b) => util.daToDate(a) - util.daToDate(b));
+}
+
 export function arrayEqual(a, b) {
   if (a === b) return true;
   if (a == null || b == null) return false;
