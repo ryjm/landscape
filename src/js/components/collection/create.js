@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { util } from '../../util';
+//import { util } from '../../util';
 import urbitOb from 'urbit-ob';
 
 export class CollectionCreatePage extends Component {
