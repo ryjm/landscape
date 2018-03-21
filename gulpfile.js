@@ -1,16 +1,16 @@
 var gulp = require('gulp');
 var cssimport = require('gulp-cssimport');
 var cssnano = require('gulp-cssnano');
+var rsync = require('gulp-rsync');
+var serve = require('gulp-webserver');
 
 var rollup = require('rollup-stream');
-var source = require('vinyl-source-stream');
-
 var babel = require('rollup-plugin-babel');
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
 
-var serve = require('gulp-webserver');
+var source = require('vinyl-source-stream');
 
 /***
   Main config options
@@ -66,14 +66,29 @@ gulp.task('server', function () {
 });
 
 gulp.task('copy-urbit', function () {
-  urbitrc.URBIT_PIERS.forEach(function(pier) {
-    gulp.src('urbit-code/**/*')
-        .pipe(gulp.dest(pier));
-  })
+  // urbitrc.LOCAL_PIERS.forEach(function(pier) {
+  //   console.log('woops');
+  //   return gulp.src('urbit-code/**/*')
+  //     .pipe(gulp.dest(pier));
+  // });
+
+  var ret = {};
+
+  urbitrc.REMOTE_PIERS.forEach(function(pier) {
+    var opts = Object.assign({}, pier, {
+      root: 'urbit-code/',
+      username: 'root',
+      silent: false
+    });
+
+    ret = gulp.src('urbit-code/**/*')
+      .pipe(rsync(opts));
+  });
+
+  return ret;
 });
 
-gulp.task('watch', function() {
-  gulp.run('default');
+gulp.task('watch', ['default'], function() {
   gulp.watch('src/**/*.js', ['bundle-js']);
   gulp.watch('src/**/*.css', ['bundle-css']);
 
