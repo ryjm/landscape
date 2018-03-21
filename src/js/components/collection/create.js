@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { util } from '../../util';
+//import { util } from '../../util';
 import urbitOb from 'urbit-ob';
 
 export class CollectionCreatePage extends Component {
@@ -37,7 +37,7 @@ export class CollectionCreatePage extends Component {
         ses: this.state.collectionShips.replace(/~|,/g, '')
       }
     }, {
-      target: '/~~/pages/nutalk'
+      target: '/~~/collections/latest'
     });
 ;
   }

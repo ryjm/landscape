@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { util } from '../../util';
+import { arrayEqual } from '../../util';
 
 export class StreamCreatePage extends Component {
   constructor(props) {
@@ -58,7 +58,7 @@ export class StreamCreatePage extends Component {
 
     let newAud = nextProps.store.configs[`~${this.props.store.usership}/${this.state.stream.nom}`].con.sis;
 
-    if (!util.arrayEqual(this.state.stream.aud, newAud)) {
+    if (!arrayEqual(this.state.stream.aud, newAud)) {
       this.setState({
         stream: Object.assign(this.state.stream, {aud: newAud})
       });

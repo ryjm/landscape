@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { util } from '../../util';
+import { uuid } from '../../util';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -51,7 +51,7 @@ export class ChatPage extends Component {
     }
 
     let message = {
-      uid: util.uuid(),
+      uid: uuid(),
       aud: aud,
       aut: this.props.store.usership,
       wen: Date.now(),

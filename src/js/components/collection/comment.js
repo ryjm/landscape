@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import { util } from '../../util';
+//import { util } from '../../util';
 
 export class CommentCreate extends Component {
   constructor(props) {
@@ -21,7 +21,9 @@ export class CommentCreate extends Component {
         com: '~',
         wat: this.state.comment
       }
-    });
+    }, {
+      target: `/~~/collections/${this.props.coll}/${this.props.top}`
+  });
   }
 
   valueChange(event) {

@@ -238,6 +238,7 @@ div.mod
   margin-top: 11rem;
 }
 
+
 .collection-index li.notes .da {
   position: absolute;
   margin-left: -12rem;
@@ -248,10 +249,26 @@ div.mod
   font-weight: inherit;
 }
 
+.collection-index img {
+  width: 100%;
+}
+
+.post img {
+  width: 100%;
+}
+
+
 .post #edit
 {
   display: none;
 }
 
+.profile li.profile::before {
+  content: "•";
+  position: absolute;
+  font-size: 10rem;
+  margin-left: -12rem;
+  margin-top: 4rem;
+}
 
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { util } from '../../util';
+//import { util } from '../../util';
 
 export class TopicCreatePage extends Component {
   constructor(props) {
@@ -35,19 +35,43 @@ export class TopicCreatePage extends Component {
         }
       }
     } else {
-      dat = {
-        submit: {
-          col: this.props.queryParams.coll,
-          tit: this.titleExtract(this.state.topicContent),
-          wat: this.state.topicContent
+      // this means that we're using "latest" 
+      if ('coll' in this.props) {
+        dat = {
+          submit: {
+            col: this.props.coll,
+            tit: this.titleExtract(this.state.topicContent),
+            wat: this.state.topicContent
+          }
+        }
+      } else {
+        dat = {
+          submit: {
+            col: this.props.queryParams.coll,
+            tit: this.titleExtract(this.state.topicContent),
+            wat: this.state.topicContent
+          }
         }
       }
     };
 
     console.log('dat...', dat);
 
+    var target;
+    
+    if ('coll' in this.props && 'top' in this.props) {
+      // this means that it is an edit
+      target = `/~~/collections/${this.props.coll}/${this.props.top}`;
+    } else if ('coll' in this.props) {
+      // this means that it is from a "latest" page
+      target = `/~~/collections/${this.props.coll}/latest`;
+    } else {
+      // normal-ass page
+      target = `/~~/collections/${this.props.queryParams.coll}/latest`;
+    };
+
     this.props.api.sendCollAction(dat, {
-      target: 'top' in this.props ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/collections/${this.props.queryParams.coll}`
+      target
     });
   }
 

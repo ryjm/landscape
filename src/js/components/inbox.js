@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { prettyShip, foreignUrl } from '../util';
 
 export class InboxPage extends Component {
   constructor(props) {
@@ -24,13 +25,6 @@ export class InboxPage extends Component {
 
   componentWillUnmount() {
     console.log('stage 3 : unloading');
-  }
-
-  // move this to utils
-  // comet to planet
-  filterShip(ship) {
-    const sp = ship.split('-');
-    return sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship;
   }
 
   filterChange(evt) {
@@ -118,9 +112,9 @@ export class InboxPage extends Component {
     if (collUpdate.more) {
       return (
         <div>
-          <a href={`/~~/collections/${collMeta.coll}`} className="text-600">{collUpdate.head}</a>
+          <a href={foreignUrl(collMeta.ship, this.props.store.usership, `/~~/collections/${collMeta.coll}`)} className="text-600">{collUpdate.head}</a>
           <p>{collUpdate.tail} <a href="">[...]</a></p>
-          <a href={`/~~/collections/${collMeta.coll}`}>More →</a>
+          <a href={foreignUrl(collMeta.ship, this.props.store.usership, `/~~/collections/${collMeta.coll}`)}>More →</a>
         </div>
       );
 
@@ -150,7 +144,7 @@ export class InboxPage extends Component {
         let message = "";
 
         if (prevName !== msg.aut) {
-          autLabel = this.filterShip(`~${msg.aut}`);
+          autLabel = prettyShip(`~${msg.aut}`);
           prevName = msg.aut;
         }
 
@@ -193,7 +187,7 @@ export class InboxPage extends Component {
           // need to work on how collection updates are sent to hall
           return (
             <div className="mb-4" key={stationName}>
-              <a href={`/~~/collections/${collId.coll}`}><b><u>{this.filterShip(collId.ship)}/{this.props.store.configs[stationName]['cap']}</u></b></a>
+              <a href={`/~~/collections/${collId.coll}`}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[stationName]['cap']}</u></b></a>
               <ul>
                 {messageElems}
               </ul>
@@ -216,11 +210,21 @@ export class InboxPage extends Component {
 
     let olderStations = Object.keys(this.props.store.configs).map(cos => {
       if (inboxKeys.indexOf(cos) === -1) {
-        return (
-          <div className="mb-4" key={cos}>
-            <a href={`/~~/pages/nutalk/stream?station=${cos}`}><b><u>{cos}</u></b></a>
-          </div>
-        )
+        if (cos.indexOf('collection_') > -1) {
+          const collId = this.stationIdParse(cos);
+          //
+          return (
+            <div className="mb-4" key={cos}>
+              <a href={foreignUrl(collId.ship, this.props.store.usership, `/~~/collections/${collId.coll}`)}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
+            </div>
+          )
+        } else {
+          return (
+            <div className="mb-4" key={cos}>
+              <a href={`/~~/pages/nutalk/stream?station=${cos}`}><b><u>{cos}</u></b></a>
+            </div>
+          )
+        }
       }
     });
 

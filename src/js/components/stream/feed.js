@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { util } from '../../util';
+import { uuid } from '../../util';
 import moment from 'moment';
 
 export class FeedPage extends Component {
@@ -23,7 +23,7 @@ export class FeedPage extends Component {
     event.stopPropagation();
 
     let message = {
-      uid: util.uuid(),
+      uid: uuid(),
       aud: [this.props.queryParams.station],
       aut: this.props.store.usership,
       wen: Date.now(),

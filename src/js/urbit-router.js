@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import { ComponentMap } from './component-map';
 import { UrbitApi } from './urbit-api';
 import { UrbitWarehouse } from './urbit-warehouse';
-import { util } from './util';
 import HtmlToReact from 'html-to-react';
+import { getQueryParams } from './util';
 
 class RootComponent extends Component {
   constructor(props) {
@@ -95,7 +95,7 @@ export class UrbitRouter {
           api: this.api,
           store: this.warehouse.store,
           storeData: this.warehouse.storeData.bind(this.warehouse),
-          queryParams: util.getQueryParams()
+          queryParams: getQueryParams()
         }, propsObj));
       }
     }, {
@@ -146,14 +146,14 @@ export class UrbitRouter {
         api: this.api,
         store: this.warehouse.store,
         storeData: this.warehouse.storeData.bind(this.warehouse),
-        queryParams: util.getQueryParams()
+        queryParams: getQueryParams()
       }, propsObj));
 
       ReactDOM.render(component, elem);
 
       if (ComponentMap[componentName].head) {
         let headerComponent = React.createElement(ComponentMap[componentName].head, {
-          queryParams: util.getQueryParams(),
+          queryParams: getQueryParams(),
         });
 
         ReactDOM.render(headerComponent, headerElem);
