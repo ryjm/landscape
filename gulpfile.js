@@ -45,7 +45,7 @@ gulp.task('bundle-js', function() {
       }),
       commonjs({
         namedExports: {
-          'node_modules/react/index.js': [ 'Component' ],
+          'node_modules/react/index.js': [ 'Component' ]
         }
       }),
       replace({
@@ -77,7 +77,7 @@ gulp.task('copy-urbit', function () {
   })
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['default'], function() {
   gulp.watch('src/**/*.js', ['bundle-js']);
   gulp.watch('src/**/*.css', ['bundle-css']);
 

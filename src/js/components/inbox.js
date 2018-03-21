@@ -5,8 +5,6 @@ export class InboxPage extends Component {
   constructor(props) {
     super(props);
 
-    console.log('stage 1 : instantiating');
-
     this.state = {
       filter: "",
       feed: "",
@@ -17,14 +15,6 @@ export class InboxPage extends Component {
     this.feedChange = this.feedChange.bind(this);
     this.acceptInvite = this.acceptInvite.bind(this);
     this.addFeed = this.addFeed.bind(this);
-  }
-
-  componentWillUpdate() {
-    console.log('stage 2 : updating');
-  }
-
-  componentWillUnmount() {
-    console.log('stage 3 : unloading');
   }
 
   filterChange(evt) {

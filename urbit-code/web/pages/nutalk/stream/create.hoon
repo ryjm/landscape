@@ -1,6 +1,3 @@
 ^-  manx
 
-;div
-  ;div(data-component "StreamCreatePage");
-  ;h1: Stream creatin' goodness
-==
+;div(urb-component "StreamCreatePage");
