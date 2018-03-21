@@ -5,8 +5,6 @@ export class StreamCreatePage extends Component {
   constructor(props) {
     super(props);
 
-    console.log('stage 1 : instantiating');
-
     this.state = {
       loading: false,
       stream: {
@@ -43,14 +41,6 @@ export class StreamCreatePage extends Component {
 
     this.deleteStream = this.deleteStream.bind(this);
     this.deleteChange = this.deleteChange.bind(this);
-  }
-
-  componentWillUpdate() {
-    console.log('stage 2 : updating');
-  }
-
-  componentWillUnmount() {
-    console.log('stage 3 : unloading');
   }
 
   componentWillReceiveProps(nextProps) {

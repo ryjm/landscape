@@ -24,7 +24,7 @@
               ;a/"/~~/pages/nutalk": Inbox
             ==
           ==
-          ;div(data-component-header "");
+          ;div(urb-component-header "");
         ==
       ==
       ;div.container

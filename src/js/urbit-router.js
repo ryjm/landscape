@@ -10,20 +10,27 @@ class RootComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      children: this.reactify()
-    }
+    // Required to convert arbitrary HTML into React elements
+    this.htmlParser = HtmlToReact.Parser();
+    this.htmlParserNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
   }
 
   reactify() {
     let instructions = [{
       replaceChildren: true,
       shouldProcessNode: (node) => {
-        return node.attribs && !!node.attribs['data-component']
+        return node.attribs && !!node.attribs['urb-component']
       },
       processNode: (node) => {
-        let componentName = node.attribs['data-component'];
+        let componentName = node.attribs['urb-component'];
         let propsObj = {};
+
+        Object.keys(node.attribs)
+          .filter((key) => key.indexOf('urb-') !== -1 && key !== "urb-component")
+          .forEach((key) => {
+            let keyName = key.substr(4);  // "urb-timestamp" => "timestamp"
+            propsObj[keyName] = node.attribs[key];
+          });
 
         return React.createElement(ComponentMap[componentName].comp, Object.assign({
           api: this.props.api,
@@ -37,14 +44,15 @@ class RootComponent extends Component {
       processNode: this.htmlParserNodeDefinitions.processDefaultNode
     }];
 
-    return this.htmlParser.parseWithInstructions(this.props.rawChildren, () => true, instructions);
+    return this.htmlParser.parseWithInstructions(this.props.scaffold, () => true, instructions);
   }
 
   render() {
+    let children = this.reactify();
+
     return (
       <div>
-        <h1>I am root.</h1>
-        {this.state.children}
+        {children}
       </div>
     )
   }
@@ -54,23 +62,14 @@ export class UrbitRouter {
   constructor() {
     // TODO: Fix this later to not suck.
     // this.pageRoot = "/~~/pages/nutalk/";
-
     this.pageRoot = "";
     this.domRoot = "#root";
     this.pendingTransitions = [];
 
-    // Required to convert arbitrary HTML into React elements
-    this.htmlParser = HtmlToReact.Parser();
-    this.htmlParserNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
-
-    // TODO: This... might be a circular dependency? Seems to work though.
     this.warehouse = new UrbitWarehouse(this.renderRoot.bind(this));
     this.api = new UrbitApi(this.warehouse);
 
-    let initialPage = document.querySelectorAll("#root")[0];
-
-    // this.instantiateReactComponents();
-    this.reactify(initialPage.innerHTML);
+    this.scaffold = document.querySelectorAll("#root")[0].innerHTML;
     this.renderRoot();
 
     this.registerAnchorListeners();
@@ -78,90 +77,30 @@ export class UrbitRouter {
   }
 
   renderRoot() {
-    ReactDOM.render(<RootComponent children={this.currentPage} />, document.querySelectorAll("#root")[0]);
-  }
-
-  reactify(input) {
-    let instructions = [{
-      replaceChildren: true,
-      shouldProcessNode: (node) => {
-        return node.attribs && !!node.attribs['data-component']
-      },
-      processNode: (node) => {
-        let componentName = node.attribs['data-component'];
-        let propsObj = {};
-
-        return React.createElement(ComponentMap[componentName].comp, Object.assign({
-          api: this.api,
-          store: this.warehouse.store,
-          storeData: this.warehouse.storeData.bind(this.warehouse),
-          queryParams: getQueryParams()
-        }, propsObj));
-      }
-    }, {
-      shouldProcessNode: () => true,
-      processNode: this.htmlParserNodeDefinitions.processDefaultNode
-    }];
-
-    this.currentPage = this.htmlParser.parseWithInstructions(input, () => true, instructions);
-    this.renderRoot();
-  }
-
-  instantiateReactComponents() {
     // if userhip is null, auth tokens haven't been loaded yet, so api isn't unavablable. so we wait.
     if (this.warehouse.store.usership === "") {
       return;
     }
 
+    // TODO: This is very brittle and bad.
     if (this.warehouse.pendingTransition) {
       this.transitionTo(this.warehouse.pendingTransition.target);
       this.warehouse.pendingTransition = null;
       return;
     }
 
-    // clear header
-    let headerElem = document.querySelectorAll('[data-component-header]')[0];
-    ReactDOM.render(<div />, headerElem);
+    let rootComponent = (
+      <RootComponent
+        api={this.api}
+        store={this.warehouse.store}
+        storeData={this.warehouse.storeData.bind(this.warehouse)}
+        queryParams={getQueryParams()}
+        scaffold={this.scaffold} />
+    )
 
-    let componentElements = document.querySelectorAll('[data-component]');
-
-    componentElements.forEach((elem) => {
-      // grab the name of the component
-      let componentName = elem.dataset.component;
-
-      // all remaining data-* are presumed to be props
-      const dataset = elem.dataset
-      const propsReducer = (a, v) => {
-        const x = {}
-        x[v] = dataset[v];
-        return Object.assign(a, x);
-      }
-      const propsObj = Object.keys(elem.dataset)
-                      .filter(e => e != 'component')
-                      .reduce(propsReducer, {});
-
-      //console.log('propsObj', propsObj);
-      // look up the component type in component-map, instantiate it
-      let component = React.createElement(ComponentMap[componentName].comp, Object.assign({
-        api: this.api,
-        store: this.warehouse.store,
-        storeData: this.warehouse.storeData.bind(this.warehouse),
-        queryParams: getQueryParams()
-      }, propsObj));
-
-      ReactDOM.render(component, elem);
-
-      if (ComponentMap[componentName].head) {
-        let headerComponent = React.createElement(ComponentMap[componentName].head, {
-          queryParams: getQueryParams(),
-        });
-
-        ReactDOM.render(headerComponent, headerElem);
-      }
-    });
+    ReactDOM.render(rootComponent, document.querySelectorAll("#root")[0]);
   }
 
-  //
   filterUrl(url) {
     let q = url.indexOf('?');
     var baseUrl;
@@ -190,18 +129,8 @@ export class UrbitRouter {
       if (!noHistory) {
         window.history.pushState({}, null, targetUrl);
       }
-
-      // let elem = new DOMParser().parseFromString(resText, "text/html").body.childNodes[0];
-      // ReactDOM.render(React.createElement(elem), document.querySelectorAll(this.domRoot)[0]);
-
-      // let htmlInput = '<div><h1>Title</h1><p>A paragraph</p></div>';
-      this.reactify(resText);
+      this.scaffold = resText;
       this.renderRoot();
-
-      // ReactDOM.render(<RootComponent children={reactElement} />, document.querySelectorAll("#root")[0]);
-
-      // document.querySelectorAll(this.domRoot)[0].innerHTML = resText;
-      // this.instantiateReactComponents();
     });
   }
 
