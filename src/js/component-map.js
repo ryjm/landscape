@@ -6,6 +6,7 @@ import { CollectionCreatePage } from './components/collection/create';
 import { TopicCreatePage } from './components/collection/createTopic';
 import { CommentCreate } from './components/collection/comment';
 import { Subscribe } from './components/subscribe';
+import { Elapsed } from './components/elapsed';
 
 /**
   Anatomy:
@@ -42,6 +43,9 @@ export var ComponentMap = {
     comp: InboxPage
   },
   "Subscribe": {
-    comp: Subscribe,
+    comp: Subscribe
+  },
+  "Elapsed": {
+    comp: Elapsed
   }
 };

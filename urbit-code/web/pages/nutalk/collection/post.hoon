@@ -37,5 +37,5 @@ id
       ; @now
     ==
   ==
-  ;div(data-component "TopicCreatePage", data-coll "{(trip p.config-pair)}");
+  ;div(urb-component "TopicCreatePage", urb-coll "{(trip p.config-pair)}");
 ==
