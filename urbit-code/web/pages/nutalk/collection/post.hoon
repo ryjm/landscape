@@ -4,14 +4,14 @@
 /=  configs  /:  /===/web/collections
             /^  (map knot config:collections)  /_  /collections-config/
 =/  id  %+  fall
-          %-  %~  get 
-                  by 
-                  qix.gas 
+          %-  %~  get
+                  by
+                  qix.gas
               ==
           %coll
         ''
 :: get either the indicated config or the latest
-=/  config-pair/(pair knot config:collections)  
+=/  config-pair/(pair knot config:collections)
 ?:  =(id 'latest')
   =/  sorted-configs  %+  sort
                         ~(tap by configs)
@@ -21,8 +21,8 @@
   i:-.sorted-configs
 :-  id
 %-  need
-%-  %~  get 
-      by 
+%-  %~  get
+      by
       configs
   ==
 id
