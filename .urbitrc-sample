@@ -1,5 +1,12 @@
 module.exports = {
-  URBIT_PIERS: [
-    "/Users/bono/urbit/piers/zod/home"
+  LOCAL_PIERS: [
+    "/Users/chris/ciqss/proj/urbit/piers/testnet/hallut-navlex/home"
+  ],
+  REMOTE_PIERS: [
+    {
+      username: 'root',
+      hostname: '45.33.39.46',
+      destination: '/root/realcomet/home/'
+    }
   ]
 };

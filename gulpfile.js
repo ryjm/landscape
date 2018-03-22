@@ -66,18 +66,17 @@ gulp.task('server', function () {
 });
 
 gulp.task('copy-urbit', function () {
-  // urbitrc.LOCAL_PIERS.forEach(function(pier) {
-  //   console.log('woops');
-  //   return gulp.src('urbit-code/**/*')
-  //     .pipe(gulp.dest(pier));
-  // });
+  urbitrc.LOCAL_PIERS.forEach(function(pier) {
+    console.log('woops');
+    return gulp.src('urbit-code/**/*')
+      .pipe(gulp.dest(pier));
+  });
 
   var ret = {};
 
   urbitrc.REMOTE_PIERS.forEach(function(pier) {
     var opts = Object.assign({}, pier, {
       root: 'urbit-code/',
-      username: 'root',
       silent: false
     });
 
