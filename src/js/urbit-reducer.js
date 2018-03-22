@@ -21,7 +21,7 @@ export class UrbitReducer {
       // Add or remove new ships to b/w list
       if (newConfigs[cos].permit) {
         storeConfigs[cos].con.sis = (newConfigs[cos].permit.add) ?
-          storeConfigs[cos].con.sis.concat(newConfigs[cos].permit.sis) : 
+          storeConfigs[cos].con.sis.concat(newConfigs[cos].permit.sis) :
           storeConfigs[cos].con.sis.filter(mem => !newConfigs[cos].permit.sis.includes(mem));
       }
     })
@@ -46,16 +46,19 @@ export class UrbitReducer {
             messages: [newMsg]
           };
         } else if (station.messages.findIndex(o => o.uid === newMsg.uid) === -1) {
+          let newest = true;
+
           for (let i = 0; i < station.messages.length; i++) {
             if (newMsg.wen < station.messages[i].wen) {
               storeMessages[aud].messages.splice(i, 0, newMsg);
-            } else if (i === (station.messages.length - 1)) {
-              storeMessages[aud].messages.push(newMsg);
-              i = i + 1;
+              newest = false;
+              break;
             }
           }
 
-          // Pring messages by date, for debugging:
+          if (newest) storeMessages[aud].messages.push(newMsg);
+
+          // Print messages by date, for debugging:
           // for (let msg of station.messages) {
           //   console.log(`msg ${msg.uid}: ${msg.wen}`);
           // }
