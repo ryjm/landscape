@@ -135,8 +135,10 @@ export class UrbitApi {
         } else {
           console.log("new server data: ", data);
 
-          const hallData = this.parseBS(data);
-          this.warehouse.storeData(hallData);
+          if (data.data) {
+            const hallData = this.parseBS(data);
+            this.warehouse.storeData(hallData);
+          }
 
           // TODO:  Side effects get processed here, after warehouse data is updated. Would prefer to do this inside warehouse itself, but warehouse doesn't have access to the API. Need to think through this much more carefully, as this is the crux of asychronous state updates in the system.
           // this.processSideEffects();
