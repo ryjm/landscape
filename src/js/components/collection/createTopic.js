@@ -8,7 +8,7 @@ export class TopicCreatePage extends Component {
     this.createTopic = this.createTopic.bind(this);
     this.valueChange = this.valueChange.bind(this);
     this.state = {
-      topicContent: this.props.topText ? this.props.topText : ''
+      topicContent: this.props.text ? this.props.text : ''
     };
   }
 
