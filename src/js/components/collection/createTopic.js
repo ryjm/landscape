@@ -70,7 +70,7 @@ export class TopicCreatePage extends Component {
       target = `/~~/collections/${this.props.queryParams.coll}/latest`;
     };
 
-    this.props.api.sendCollAction(dat, {
+    this.props.api.coll(dat, {
       target
     });
   }

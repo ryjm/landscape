@@ -24,7 +24,7 @@ export class CollectionCreatePage extends Component {
   }
 
   createCollection() {
-    this.props.api.sendCollAction({
+    this.props.api.coll({
       create: {
         desc: this.state.collectionName,
         publ: this.state.visibility,

@@ -14,7 +14,7 @@ export class CommentCreate extends Component {
   }
 
   createComment() {
-    this.props.api.sendCollAction({
+    this.props.api.coll({
       comment: {
         col: this.props.coll,
         top: this.props.top,
@@ -43,7 +43,7 @@ export class CommentCreate extends Component {
         <div className="usership text-mono">
           ~{this.props.store.usership}
         </div>
-        <textarea 
+        <textarea
           value={this.state.comment}
           onChange={this.valueChange}
           name="comment"
@@ -55,7 +55,7 @@ export class CommentCreate extends Component {
           className={this.state.comment.length > 0 ? "btn btn-tetiary" : "btn disabled"}>
           Publish →
         </button>
-        
+
       </div>
     )
   }
