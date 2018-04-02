@@ -8,15 +8,10 @@ export class UrbitWarehouse {
   constructor(updateFunc) {
     this.store = {
       messages: {},
-      configs: {},
-      ownedStations: [],
-      pendingInvites: [],
-      usership: ""
+      configs: {}
     };
 
-    this.reducer = new UrbitReducer();
     this.updateFunc = updateFunc;
-    this.pendingTransition = null;
 
     this.messagesReducer = new MessagesReducer();
     this.configsReducer = new ConfigsReducer();
@@ -44,45 +39,4 @@ export class UrbitWarehouse {
   pushPending(key, data) {
     Reports[key].pending = (Reports[key].pending || []).concat(data);
   }
-
-
-
-
-
-
-
-
-
-
-
-  // setPendingTransition(transition) {
-  //   this.pendingTransition = transition;
-  // }
-  //
-  // storeData(data) {
-  //   if (data.messages) {
-  //     this.store.messages = this.reducer.messages(data.messages, this.store.messages);
-  //   }
-  //
-  //   if (data.configs) {
-  //     this.store.configs = this.reducer.configs(data.configs, this.store.configs);
-  //   }
-  //
-  //   if (data.usership) {
-  //     this.store.usership = data.usership;
-  //   }
-  //
-  //   if (data.ownedStations) {
-  //     this.store.ownedStations = data.ownedStations;
-  //   }
-  //
-  //   if (data.pendingInvites) {
-  //     this.store.pendingInvites = this.store.pendingInvites.concat(data.pendingInvites);
-  //   }
-  //
-  //   console.log('new store obj =', data);
-  //   console.log('full store = ', this.store);
-  //
-  //   this.updateFunc();
-  // }
 }

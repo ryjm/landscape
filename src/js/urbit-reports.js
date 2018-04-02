@@ -1,4 +1,5 @@
 import { api } from './urbit-api';
+import { uuid } from './util';
 
 export let Reports = {
   'circle.gram': {}, // messages
@@ -16,6 +17,8 @@ export let Reports = {
               window.router.transitionTo(item.data.target)
               break;
             case "invites":
+              let inv = item.data;
+
               api.hall({
                 permit: {
                   nom: inv.nom,
@@ -24,25 +27,25 @@ export let Reports = {
                 }
               });
 
-              // let audInboxes = inv.aud.map((aud) => `~${aud}/inbox`);
+              let audInboxes = inv.aud.map((aud) => `~${aud}/inbox`);
               // console.log('inboxes = ', audInboxes);
-              //
-              // let message = {
-              //   uid: uuid(),
-              //   aud: audInboxes,
-              //   aut: this.props.store.usership,
-              //   wen: Date.now(),
-              //   sep: {
-              //     inv: {
-              //       inv: true,
-              //       circle: `${this.props.store.usership}/${inv.nom}`
-              //     }
-              //   }
-              // };
-              //
-              // this.props.api.hall({
-              //   convey: [message]
-              // });
+
+              let message = {
+                uid: uuid(),
+                aud: audInboxes,
+                aut: api.authTokens.ship,
+                wen: Date.now(),
+                sep: {
+                  inv: {
+                    inv: true,
+                    cir: `~${api.authTokens.ship}/${inv.nom}`
+                  }
+                }
+              };
+
+              api.hall({
+                convey: [message]
+              });
           }
         })
       }
@@ -51,7 +54,9 @@ export let Reports = {
     }
   },
   'circle.config.dif.source': {},
-  'circle.config.dif.permit': {},
+  'circle.config.dif.permit': {
+    include: "circle.config"
+  },
   'circles': {
     execute: function () {
       if (this.pending) {

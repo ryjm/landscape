@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { prettyShip, foreignUrl } from '../util';
+import { api } from '../urbit-api';
 
 export class InboxPage extends Component {
   constructor(props) {
@@ -45,7 +46,7 @@ export class InboxPage extends Component {
           sec: "village"
         }
       }, {
-        target: `/~~/pages/nutalk/stream?station=~${this.props.store.usership}/${stationBase}`
+        target: `/~~/pages/nutalk/stream?station=~${api.authTokens.ship}/${stationBase}`
       });
     }
   }
@@ -102,9 +103,9 @@ export class InboxPage extends Component {
     if (collUpdate.more) {
       return (
         <div>
-          <a href={foreignUrl(collMeta.ship, this.props.store.usership, `/~~/collections/${collMeta.coll}`)} className="text-600">{collUpdate.head}</a>
+          <a href={foreignUrl(collMeta.ship, api.authTokens.ship, `/~~/collections/${collMeta.coll}`)} className="text-600">{collUpdate.head}</a>
           <p>{collUpdate.tail} <a href="">[...]</a></p>
-          <a href={foreignUrl(collMeta.ship, this.props.store.usership, `/~~/collections/${collMeta.coll}`)}>More →</a>
+          <a href={foreignUrl(collMeta.ship, api.authTokens.ship, `/~~/collections/${collMeta.coll}`)}>More →</a>
         </div>
       );
 
@@ -205,7 +206,7 @@ export class InboxPage extends Component {
           //
           return (
             <div className="mb-4" key={cos}>
-              <a href={foreignUrl(collId.ship, this.props.store.usership, `/~~/collections/${collId.coll}`)}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
+              <a href={foreignUrl(collId.ship, api.authTokens.ship, `/~~/collections/${collId.coll}`)}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
             </div>
           )
         } else {

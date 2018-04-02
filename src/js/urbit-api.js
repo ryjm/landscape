@@ -3,10 +3,6 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
 class UrbitApi {
-  constructor() {
-    console.log("API IS BEING INSTANTIATED");
-  }
-
   setAuthTokens(authTokens) {
     this.authTokens = authTokens;
   }

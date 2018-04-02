@@ -9,11 +9,8 @@ import { api } from './urbit-api';
 
 export class UrbitRouter {
   constructor() {
-    // TODO: Fix this later to not suck.
-    // this.pageRoot = "/~~/pages/nutalk/";
     this.pageRoot = "";
     this.domRoot = "#root";
-    this.pendingTransitions = [];
 
     this.warehouse = new UrbitWarehouse(this.renderRoot.bind(this));
     this.operator = new UrbitOperator(this.warehouse);
@@ -26,13 +23,6 @@ export class UrbitRouter {
   }
 
   renderRoot() {
-    // TODO: This is very brittle and bad.
-    // if (this.warehouse.pendingTransition) {
-    //   this.transitionTo(this.warehouse.pendingTransition.target);
-    //   this.warehouse.pendingTransition = null;
-    //   return;
-    // }
-
     let rootComponent = (
       <RootComponent
         store={this.warehouse.store}

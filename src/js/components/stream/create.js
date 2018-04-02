@@ -159,15 +159,6 @@ export class StreamCreatePage extends Component {
         }
       });
     }
-
-    if (this.state.stream.aud.length > 0) {
-      // this.props.storeData({
-      //   pendingInvites: [{
-      //     aud: this.state.stream.aud,
-      //     nom: this.state.stream.nom
-      //   }]
-      // });
-    }
   }
 
   valueChange(event) {
