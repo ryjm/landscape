@@ -36,6 +36,7 @@ export class UrbitRouter {
     let rootComponent = (
       <RootComponent
         store={this.warehouse.store}
+        pushPending={this.warehouse.pushPending}
         queryParams={getQueryParams()}
         scaffold={this.scaffold} />
     )
@@ -134,6 +135,7 @@ class RootComponent extends Component {
         return React.createElement(ComponentMap[componentName].comp, Object.assign({
           api: api,
           store: this.props.store,
+          pushPending: this.props.pushPending,
           queryParams: this.props.queryParams
         }, propsObj));
       }

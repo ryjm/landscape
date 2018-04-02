@@ -129,12 +129,36 @@ export class StreamCreatePage extends Component {
         sec: this.state.stream.sec
       }
     }, {
-      target: `/~~/pages/nutalk/stream?station=~${this.props.store.usership}/${this.state.stream.nom}`
+      target: `/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
     });
 
     this.setState({
       loading: true
     });
+
+    this.props.pushPending("circles", {
+      type: "subscribe-inbox",
+      data: {
+        cir: `~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
+      }
+    })
+
+    this.props.pushPending("circle.config.dif.full", {
+      type: "transition",
+      data: {
+        target: `/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
+      }
+    });
+
+    if (this.state.stream.aud.length > 0) {
+      this.props.pushPending("circle.config.dif.full", {
+        type: "invites",
+        data: {
+          aud: this.state.stream.aud,
+          nom: this.state.stream.nom
+        }
+      });
+    }
 
     if (this.state.stream.aud.length > 0) {
       // this.props.storeData({
