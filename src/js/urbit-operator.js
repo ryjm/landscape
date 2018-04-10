@@ -45,7 +45,7 @@ export class UrbitOperator {
     api.bind("/circle/inbox/config/group-r/0", "PUT");
 
     // inbox messages
-    api.bind("/circle/inbox/grams/0/500", "PUT");
+    api.bind("/circle/inbox/grams/-50", "PUT");
 
     // owner's circles
     api.bind(`/circles/~${api.authTokens.ship}`, "PUT");

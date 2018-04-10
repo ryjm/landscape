@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { UrbitReducer } from './urbit-reducer';
 import { MessagesReducer, ConfigsReducer } from './urbit-reducer';
 import { api } from './urbit-api';
 import { Reports } from './urbit-reports';

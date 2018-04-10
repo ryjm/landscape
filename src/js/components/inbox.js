@@ -120,7 +120,6 @@ export class InboxPage extends Component {
   }
 
   render() {
-
     const inboxMessages = this.props.store.messages;
     const inboxKeys = Object.keys(inboxMessages).filter(k => k.indexOf(this.state.filter) !== -1);
 

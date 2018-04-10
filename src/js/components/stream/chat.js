@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { uuid } from '../../util';
+import { api } from '../../urbit-api';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -9,9 +10,16 @@ export class ChatPage extends Component {
 
     this.presence = false;
 
+    let station = this.props.queryParams.station;
+    let circle = station.split("/")[1];
+
     this.state = {
+      station: station,
+      circle: circle,
       message: "",
-      invitee: ""
+      invitee: "",
+      numMessages: 0,
+      scrollLocked: true
     };
 
     this.messageChange = this.messageChange.bind(this);
@@ -19,6 +27,57 @@ export class ChatPage extends Component {
 
     this.inviteChange = this.inviteChange.bind(this);
     this.inviteSubmit = this.inviteSubmit.bind(this);
+
+    this.onScrollStop = this.onScrollStop.bind(this);
+
+    this.scrollbarRef = React.createRef();
+  }
+
+  componentDidMount() {
+    let path = `/circle/${this.state.circle}/grams/-20`;
+
+    api.bind(path, "PUT");
+  }
+
+  componentWillUnmount() {
+    let path = `/circle/${this.state.circle}/grams/-20`;
+
+    api.bind(path, "DELETE");
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let station = prevProps.store.messages[this.state.station] || {messages: []};
+    let numMessages = station.messages.length;
+
+    if (numMessages > prevState.numMessages && this.scrollbarRef.current) {
+      this.setState({
+        numMessages: numMessages
+      });
+
+      if (this.state.scrollLocked) {
+        this.scrollbarRef.current.scrollToBottom();
+      }
+    }
+  }
+
+  requestChatBatch() {
+    let newNumMessages = this.state.numMessages + 50;
+
+    let path = `/circle/${this.state.circle}/grams/-${newNumMessages}/-${this.state.numMessages}`;
+
+    api.bind(path, "PUT");
+  }
+
+  onScrollStop() {
+    let scroll = this.scrollbarRef.current.getValues();
+
+    this.setState({
+      scrollLocked: (scroll.top === 1)
+    });
+
+    if (scroll.top === 0) {
+      this.requestChatBatch();
+    }
   }
 
   messageChange(event) {
@@ -216,8 +275,11 @@ export class ChatPage extends Component {
     return (
       <div>
         <Scrollbars
+          ref={this.scrollbarRef}
           renderTrackHorizontal={props => <div style={{display: "none"}}/>}
           style={{height: 650}}
+          onScrollStop={this.onScrollStop}
+          renderView={props => <div {...props} className="chat-scrollpane-view"/>}
           autoHide
           className="chat-scrollpane">
           {chatMessages}

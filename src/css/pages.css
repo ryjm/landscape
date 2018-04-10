@@ -163,6 +163,43 @@
   background-color: #FF4444;
 }
 
+.chat-scrollpane-view {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-end; */
+}
+
+.chat-scrollpane-view > * {
+  flex-shrink: 0;
+}
+
+.chat-scrollpane-view > :first-child {
+    margin-top: auto !important;
+    /* use !important to prevent breakage from child margin settings */
+}
+
+.scrollpane {
+  height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-end; */
+}
+
+.scrollpane > * {
+  flex-shrink: 0;
+}
+
+.scrollpane > :first-child {
+    margin-top: auto !important;
+    /* use !important to prevent breakage from child margin settings */
+}
+
+/**
+  Collections
+**/
+
 textarea.post-edit
 {
   height: 80%;
@@ -195,8 +232,6 @@ textarea.comment-edit
 {
   color: #9b9b9b;
 }
-
-/* collections */
 
 .create-comment button.disabled
 {
@@ -270,5 +305,3 @@ div.mod
   margin-left: -12rem;
   margin-top: 4rem;
 }
-
-
