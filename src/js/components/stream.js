@@ -24,9 +24,9 @@ export class StreamPage extends Component {
     let subpage = null;
 
     if (cos && (cos.cap === "chat" || cos.cap === "dm")) {
-      subpage = [(<ChatPage {...this.props} />)];
+      subpage = [(<ChatPage key={this.props.queryParams.station} {...this.props} />)];
     } else if (cos && cos.cap === "feed") {
-      subpage = [(<FeedPage {...this.props} />)];
+      subpage = [(<FeedPage key={this.props.queryParams.station} {...this.props} />)];
     }
 
     return (

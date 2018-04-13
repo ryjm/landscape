@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
+import { uuid } from './util';
 
 class UrbitApi {
   setAuthTokens(authTokens) {
@@ -49,6 +50,40 @@ class UrbitApi {
       method: "POST",
       body: JSON.stringify(params)
     });
+  }
+
+  /*
+    Special actions
+  */
+
+  permit(nom, aud, message) {
+    this.hall({
+      permit: {
+        nom: nom,
+        sis: aud,
+        inv: true
+      }
+    });
+
+    if (message) {
+      let audInboxes = aud.map((aud) => `~${aud}/inbox`);
+      let inviteMessage = {
+        uid: uuid(),
+        aud: audInboxes,
+        aut: this.authTokens.ship,
+        wen: Date.now(),
+        sep: {
+          inv: {
+            inv: true,
+            cir: `~${this.authTokens.ship}/${nom}`
+          }
+        }
+      };
+
+      this.hall({
+        convey: [inviteMessage]
+      });
+    }
   }
 }
 

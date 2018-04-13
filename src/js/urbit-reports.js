@@ -14,38 +14,29 @@ export let Reports = {
         this.pending.forEach((item) => {
           switch(item.type) {
             case "transition":
+              window.router.transitionTo(item.data.target);
+              break;
+            case "permit":
+              api.permit(item.data.nom, item.data.aud, item.data.message);
+              break;
+            case "fill-dms":
+              api.bind(`/circle/inbox/${item.data.nom}/grams`, 'PUT');
+              break;
+          }
+        });
+      }
+
+      this.pending = [];
+    }
+  },
+  'circle.config.dif.source': {
+    execute: function () {
+      if (this.pending) {
+        this.pending.forEach((item) => {
+          switch(item.type) {
+            case "transition":
               window.router.transitionTo(item.data.target)
               break;
-            case "invites":
-              let inv = item.data;
-
-              api.hall({
-                permit: {
-                  nom: inv.nom,
-                  sis: inv.aud,
-                  inv: true
-                }
-              });
-
-              let audInboxes = inv.aud.map((aud) => `~${aud}/inbox`);
-              // console.log('inboxes = ', audInboxes);
-
-              let message = {
-                uid: uuid(),
-                aud: audInboxes,
-                aut: api.authTokens.ship,
-                wen: Date.now(),
-                sep: {
-                  inv: {
-                    inv: true,
-                    cir: `~${api.authTokens.ship}/${inv.nom}`
-                  }
-                }
-              };
-
-              api.hall({
-                convey: [message]
-              });
           }
         })
       }
@@ -53,8 +44,10 @@ export let Reports = {
       this.pending = [];
     }
   },
-  'circle.config.dif.source': {},
   'circle.config.dif.permit': {
+    include: "circle.config"
+  },
+  'circle.config.dif.remove': {
     include: "circle.config"
   },
   'circles': {
@@ -78,6 +71,4 @@ export let Reports = {
       }
     }
   }
-
-
 }

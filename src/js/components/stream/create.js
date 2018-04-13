@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { arrayEqual } from '../../util';
+import { api } from '../../urbit-api';
 
 export class StreamCreatePage extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ export class StreamCreatePage extends Component {
   componentWillReceiveProps(nextProps) {
     if (!this.state.editLoaded) return;
 
-    let newAud = nextProps.store.configs[`~${this.props.store.usership}/${this.state.stream.nom}`].con.sis;
+    let newAud = nextProps.store.configs[`~${api.authTokens.ship}/${this.state.stream.nom}`].con.sis;
 
     if (!arrayEqual(this.state.stream.aud, newAud)) {
       this.setState({
@@ -82,22 +83,12 @@ export class StreamCreatePage extends Component {
   }
 
   deleteStream() {
-    console.log("deleting")
-
-    this.props.api.hall({
+    api.hall({
       delete: {
         nom: this.state.deleteStream,
-        why: "cuz"
+        why: "<station deleted>"
       }
     });
-
-    // this.props.api.hall({
-    //   source: {
-    //     nom: `inbox`,
-    //     sub: false,
-    //     srs: [this.state.deleteStream]
-    //   }
-    // });
   }
 
   submitStream() {
@@ -112,7 +103,7 @@ export class StreamCreatePage extends Component {
     if (!this.state.oldStream) return;
 
     if (this.state.stream.des !== this.state.oldStream.des) {
-      this.props.api.hall({
+      api.hall({
         depict: {
           nom: this.state.oldStream.nom,
           des: this.state.stream.des
@@ -122,14 +113,12 @@ export class StreamCreatePage extends Component {
   }
 
   createStream() {
-    this.props.api.hall({
+    api.hall({
       create: {
         nom: this.state.stream.nom,
         des: this.state.stream.des,
         sec: this.state.stream.sec
       }
-    }, {
-      target: `/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
     });
 
     this.setState({
@@ -139,23 +128,24 @@ export class StreamCreatePage extends Component {
     this.props.pushPending("circles", {
       type: "subscribe-inbox",
       data: {
-        cir: `~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
+        cir: `~${api.authTokens.ship}/${this.state.stream.nom}`
       }
     })
 
     this.props.pushPending("circle.config.dif.full", {
       type: "transition",
       data: {
-        target: `/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
+        target: `/~~/pages/nutalk/stream?station=~${api.authTokens.ship}/${this.state.stream.nom}`
       }
     });
 
     if (this.state.stream.aud.length > 0) {
       this.props.pushPending("circle.config.dif.full", {
-        type: "invites",
+        type: "permit",
         data: {
           aud: this.state.stream.aud,
-          nom: this.state.stream.nom
+          nom: this.state.stream.nom,
+          inv: true
         }
       });
     }
@@ -178,7 +168,7 @@ export class StreamCreatePage extends Component {
 
     if (des === "dm") {
       stream.sec = "village";
-      stream.nom = `${aud.concat(this.props.store.usership).sort().join(".")}`;
+      stream.nom = `${aud.concat(api.authTokens.ship).sort().join(".")}`;
     }
 
     this.setState({
@@ -190,16 +180,7 @@ export class StreamCreatePage extends Component {
     let newStream = {};
 
     if (this.state.editLoaded) {
-      let inv = (this.state.stream.sec === "village" ||
-                 this.state.stream.sec === "journal");
-
-      this.props.api.hall({
-        permit: {
-          nom: this.state.stream.nom,
-          inv: inv,
-          sis: [this.state.stream.audNew]
-        }
-      });
+      api.permit(this.state.stream.nom, [this.state.stream.audNew], true);
 
       newStream = {
         audNew: ""
@@ -214,7 +195,7 @@ export class StreamCreatePage extends Component {
     let aud = newStream.aud || this.state.stream.aud;
 
     if (this.state.stream.des === "dm") {
-      newStream.nom = `${aud.concat(this.props.store.usership).sort().join(".")}`;
+      newStream.nom = `${aud.concat(api.authTokens.ship).sort().join(".")}`;
     }
 
     this.setState({
@@ -226,13 +207,14 @@ export class StreamCreatePage extends Component {
     let newStream = {};
 
     if (this.state.editLoaded) {
-      this.props.api.hall({
+      api.hall({
         permit: {
           nom: this.state.stream.nom,
-          inv: false,
-          sis: [evt.target.dataset.ship]
+          sis: [evt.target.dataset.ship],
+          inv: false
         }
-      })
+      });
+
     } else {
       newStream.aud = this.state.stream.aud.filter(mem => mem !== evt.target.dataset.ship);
     }
@@ -240,7 +222,7 @@ export class StreamCreatePage extends Component {
     let aud = newStream.aud || this.state.stream.aud;
 
     if (this.state.stream.des === "dm") {
-      newStream.nom = `${aud.concat(this.props.store.usership).sort().join(".")}`;
+      newStream.nom = `${aud.concat(api.authTokens.ship).sort().join(".")}`;
     }
 
     this.setState({
@@ -262,10 +244,10 @@ export class StreamCreatePage extends Component {
                          "Whitelist" : "Blacklist";
 
     let audienceList = this.state.stream.aud.map(mem => {
-      if (mem === this.props.store.usership) return null;
+      if (mem === api.authTokens.ship) return null;
 
       return (
-        <div className="row space-between">
+        <div key={mem} className="row space-between">
           <div className="col-sm-8">{`~${mem}`}</div>
           <div className="col-sm-offset-3 col-sm-1 minus" data-ship={mem} onClick={this.remAud}>-</div>
         </div>

@@ -30,24 +30,63 @@ export class InboxPage extends Component {
     });
   }
 
+  inviteIsDM(cir) {
+    let host = cir.split('/')[0].substr(1);
+    let station = cir.split('/')[1];
+
+    return (
+      cir.indexOf('.') !== -1 &&
+      station.indexOf(host) !== -1
+    );
+  }
+
+  createDMStation(cir) {
+    let dmName = cir.split("/")[1];
+    let everyoneElse = dmName.split(".").filter((ship) => ship !== api.authTokens.ship);
+
+    this.props.api.hall({
+      create: {
+        nom: dmName,
+        des: "dm",
+        sec: "village"
+      }
+    });
+
+    this.props.pushPending("circles", {
+      type: "subscribe-inbox",
+      data: {
+        cir: `~${api.authTokens.ship}/${dmName}`
+      }
+    });
+
+    this.props.pushPending("circle.config.dif.full", {
+      type: "transition",
+      data: {
+        target: `/~~/pages/nutalk/stream?station=~${api.authTokens.ship}/${dmName}`
+      }
+    });
+
+    this.props.pushPending("circle.config.dif.full", {
+      type: "fill-dms",
+      data: {
+        aud: everyoneElse,
+        nom: cir
+      }
+    });
+  }
+
   acceptInvite(evt) {
     let cir = evt.target.dataset.cir;
     let val = evt.target.attributes.value;
 
-    // TODO:  Reallly hacky way of telling if circle is DM group or not
-    if (cir.indexOf('.') === -1) {
-      this.subCircle(cir, true);
+    if (val === "no") {
+      return;
+    }
+
+    if (this.inviteIsDM(cir)) {
+      this.createDMStation(cir);
     } else {
-      let stationBase = cir.split("/").slice(1)[0];
-      this.props.api.hall({
-        create: {
-          nom: stationBase,
-          des: "dm",
-          sec: "village"
-        }
-      }, {
-        target: `/~~/pages/nutalk/stream?station=~${api.authTokens.ship}/${stationBase}`
-      });
+      this.subCircle(cir);
     }
   }
 
@@ -55,18 +94,25 @@ export class InboxPage extends Component {
     evt.preventDefault();
     evt.stopPropagation();
 
-    this.subCircle(this.state.feed, true);
+    this.subCircle(this.state.feed);
     this.setState({feed: ""});
   }
 
-  subCircle(cir, sub) {
+  subCircle(cir) {
     this.props.api.hall({
       source: {
         nom: "inbox",
-        sub: sub,
+        sub: true,
         srs: [cir]
       }
-    })
+    });
+
+    this.props.pushPending("circle.config.dif.source", {
+      type: "transition",
+      data: {
+        target: `/~~/pages/nutalk/stream?station=${cir}`
+      }
+    });
   }
 
   // parses the tac, which is the attached message to the collections update

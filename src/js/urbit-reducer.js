@@ -9,6 +9,10 @@ export class MessagesReducer {
           break;
         case "circle.gram":
           this.storeMessages([rep.data], storeMessages);
+          break;
+        case "circle.config.dif.remove":
+          delete storeMessages[rep.data.cir];
+          break;
       }
     });
   }
@@ -62,9 +66,13 @@ export class ConfigsReducer {
         case "circle.cos.rem":
           this.storeConfigs(rep.data, storeConfigs);
           break;
+        case "circle.pes.loc":
+          stationName = `~${rep.from.ship}/${rep.from.path.split("/")[2]}`;
+          this.updateConfig({pes: rep.data}, storeConfigs[stationName]);
+          break;
         case "circle.config.dif.source":
           stationName = `~${rep.from.ship}/${rep.from.path.split("/")[2]}`;
-          this.updateConfig(stationName, rep.data, storeConfigs);
+          this.updateConfig(rep.data, storeConfigs[stationName]);
           break;
         case "circle.config.dif.full":
           stationName = rep.data.src[0];  // TODO:  API weirdness; we have to get name of new station from new station config's src property. Should maybe return a dict.
@@ -73,7 +81,10 @@ export class ConfigsReducer {
           break;
         case "circle.config.dif.permit":  // TODO:  This is very wonky, should be fixed with API discussion
           stationName = rep.data.cir;
-          this.updateConfig(stationName, rep.data.dif.permit, storeConfigs);
+          this.updateConfig(rep.data.dif.permit, storeConfigs[stationName]);
+          break;
+        case "circle.config.dif.remove":
+          delete storeConfigs[rep.data.cir];
           break;
       }
     });
@@ -81,25 +92,32 @@ export class ConfigsReducer {
 
   storeConfigs(configs, storeConfigs) {
     Object.keys(configs).forEach((cos) => {
-      storeConfigs[cos] = configs[cos];
+      storeConfigs[cos] = storeConfigs[cos] || {};
+      Object.assign(storeConfigs[cos], configs[cos]);
     });
   }
 
-  updateConfig(stationName, data, storeConfigs) {
+  updateConfig(data, station) {
     if (data.src) {
       if (data.add) {
-        storeConfigs[stationName].src.push(data.src);
+        station.src.push(data.src);
       } else {
-        storeConfigs[stationName].src = storeConfigs[stationName].src.filter((val) => val !== data.src);
+        station.src = station.src.filter((val) => val !== data.src);
       }
     }
 
     if (data.sis) {
       if (data.add) {
-        storeConfigs[stationName].con.sis = storeConfigs[stationName].con.sis.concat(data.sis);
+        station.con.sis = station.con.sis.concat(data.sis);
       } else {
-        storeConfigs[stationName].con.sis = storeConfigs[stationName].con.sis.filter((val) => !data.sis.includes(val));
+        station.con.sis = station.con.sis.filter((val) => !data.sis.includes(val));
       }
+    }
+
+    if (data.pes) {
+      station.pes = station.pes || {};
+
+      Object.assign(station.pes, data.pes);
     }
   }
 }

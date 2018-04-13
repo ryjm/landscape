@@ -12,10 +12,12 @@ export class ChatPage extends Component {
 
     let station = this.props.queryParams.station;
     let circle = station.split("/")[1];
+    let host = station.split("/")[0].substr(1);
 
     this.state = {
       station: station,
       circle: circle,
+      host: host,
       message: "",
       invitee: "",
       numMessages: 0,
@@ -34,13 +36,13 @@ export class ChatPage extends Component {
   }
 
   componentDidMount() {
-    let path = `/circle/${this.state.circle}/grams/-20`;
+    let path = `/circle/inbox/${this.state.station}/grams/-20`;
 
     api.bind(path, "PUT");
   }
 
   componentWillUnmount() {
-    let path = `/circle/${this.state.circle}/grams/-20`;
+    let path = `/circle/inbox/${this.state.station}/grams/-20`;
 
     api.bind(path, "DELETE");
   }
@@ -63,7 +65,7 @@ export class ChatPage extends Component {
   requestChatBatch() {
     let newNumMessages = this.state.numMessages + 50;
 
-    let path = `/circle/${this.state.circle}/grams/-${newNumMessages}/-${this.state.numMessages}`;
+    let path = `/circle/${this.state.circle}/${this.state.host}/grams/-${newNumMessages}/-${this.state.numMessages}`;
 
     api.bind(path, "PUT");
   }
@@ -93,26 +95,18 @@ export class ChatPage extends Component {
     event.stopPropagation();
 
     let aud;
-    let config = this.props.store.configs[this.props.queryParams.station];
+    let config = this.props.store.configs[this.state.station];
 
     if (config.cap === "dm") {
-      // TODO: Actually, ships should = config.con.sis instead of getting it from name
-      // but config.con.sis isn't filled because we don't formally invite host ships in case of mirroring
-      // need to add to config.con.sis without sending invites
-      let ships = this.props.queryParams.station.split("/").slice(1)[0].split(".");
-      aud = ships.sort().map((mem) => {
-        // EG,  ~polzod/marzod.polzod.zod
-        console.log('mem = ', mem);
-        return `~${mem}/${ships.join('.')}`;
-      })
+      aud = config.con.sis.map((mem) => `~${mem}/${this.state.station}`);
     } else {
-      aud = [this.props.queryParams.station];
+      aud = [this.state.station];
     }
 
     let message = {
       uid: uuid(),
       aud: aud,
-      aut: this.props.store.usership,
+      aut: api.authTokens.ship,
       wen: Date.now(),
       sep: {
         lin: {
@@ -135,13 +129,7 @@ export class ChatPage extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    this.props.api.hall({
-      permit: {
-        nom: this.props.queryParams.station.split("/")[1],
-        sis: [this.state.invitee],
-        inv: true
-      }
-    });
+    this.props.api.permit(this.state.circle, [this.state.invitee], true);
 
     this.setState({
       invitee: ""
@@ -246,13 +234,12 @@ export class ChatPage extends Component {
   }
 
   render() {
-    let stationName = this.props.queryParams.station;
-    let station = this.props.store.messages[stationName] || {messages: []};
+    let station = this.props.store.messages[this.state.station] || {messages: []};
 
-    this.setPresence(stationName);
+    this.setPresence(this.state.station);
 
     let chatRows = this.assembleChatRows(station.messages);
-    let chatMembers = this.assembleMembers(stationName);
+    let chatMembers = this.assembleMembers(this.state.station);
 
     let chatMessages = chatRows.map((msg) => {
       let autLabel = msg.printship ? `~${msg.aut}` : null;
@@ -286,7 +273,7 @@ export class ChatPage extends Component {
         </Scrollbars>
         <div className="chat-input row mt-6">
           <div className="col-sm-2 text-700">
-            ~{this.props.store.usership}
+            ~{api.authTokens.ship}
           </div>
           <div className="col-sm-8">
             <form onSubmit={this.messageSubmit}>
