@@ -143,9 +143,9 @@ export class StreamCreatePage extends Component {
       this.props.pushPending("circle.config.dif.full", {
         type: "permit",
         data: {
-          aud: this.state.stream.aud,
           nom: this.state.stream.nom,
-          inv: true
+          aud: this.state.stream.aud,
+          message: true
         }
       });
     }
