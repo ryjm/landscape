@@ -65,7 +65,7 @@ export class ChatPage extends Component {
   requestChatBatch() {
     let newNumMessages = this.state.numMessages + 50;
 
-    let path = `/circle/${this.state.circle}/${this.state.host}/grams/-${newNumMessages}/-${this.state.numMessages}`;
+    let path = `/circle/inbox/${this.state.station}/grams/-${newNumMessages}/-${this.state.numMessages}`;
 
     api.bind(path, "PUT");
   }
