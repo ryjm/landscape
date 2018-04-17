@@ -67,10 +67,11 @@ export class InboxPage extends Component {
     });
 
     this.props.pushPending("circle.config.dif.full", {
-      type: "fill-dms",
+      type: "permit",
       data: {
+        nom: dmName,
         aud: everyoneElse,
-        nom: cir
+        message: false
       }
     });
   }

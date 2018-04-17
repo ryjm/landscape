@@ -98,7 +98,7 @@ export class ChatPage extends Component {
     let config = this.props.store.configs[this.state.station];
 
     if (config.cap === "dm") {
-      aud = config.con.sis.map((mem) => `~${mem}/${this.state.station}`);
+      aud = config.con.sis.map((mem) => `~${mem}/${this.state.circle}`);
     } else {
       aud = [this.state.station];
     }
