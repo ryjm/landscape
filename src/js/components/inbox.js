@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { prettyShip, foreignUrl } from '../util';
-import { api } from '../urbit-api';
+import { isDMStation } from '../util';
 
 export class InboxPage extends Component {
   constructor(props) {
@@ -30,23 +30,13 @@ export class InboxPage extends Component {
     });
   }
 
-  inviteIsDM(cir) {
-    let host = cir.split('/')[0].substr(1);
-    let station = cir.split('/')[1];
-
-    return (
-      cir.indexOf('.') !== -1 &&
-      station.indexOf(host) !== -1
-    );
-  }
-
-  createDMStation(cir) {
-    let dmName = cir.split("/")[1];
-    let everyoneElse = dmName.split(".").filter((ship) => ship !== api.authTokens.ship);
+  createDMStation(station) {
+    let circle = station.split("/")[1];
+    let everyoneElse = circle.split(".").filter((ship) => ship !== this.props.api.authTokens.ship);
 
     this.props.api.hall({
       create: {
-        nom: dmName,
+        nom: circle,
         des: "dm",
         sec: "village"
       }
@@ -55,21 +45,21 @@ export class InboxPage extends Component {
     this.props.pushPending("circles", {
       type: "subscribe-inbox",
       data: {
-        cir: `~${api.authTokens.ship}/${dmName}`
+        cir: `~${this.props.api.authTokens.ship}/${circle}`
       }
     });
 
     this.props.pushPending("circle.config.dif.full", {
       type: "transition",
       data: {
-        target: `/~~/pages/nutalk/stream?station=~${api.authTokens.ship}/${dmName}`
+        target: `/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`
       }
     });
 
     this.props.pushPending("circle.config.dif.full", {
       type: "permit",
       data: {
-        nom: dmName,
+        nom: circle,
         aud: everyoneElse,
         message: false
       }
@@ -77,17 +67,17 @@ export class InboxPage extends Component {
   }
 
   acceptInvite(evt) {
-    let cir = evt.target.dataset.cir;
+    let station = evt.target.dataset.station;
     let val = evt.target.attributes.value;
 
     if (val === "no") {
       return;
     }
 
-    if (this.inviteIsDM(cir)) {
-      this.createDMStation(cir);
+    if (isDMStation(station)) {
+      this.createDMStation(station);
     } else {
-      this.subCircle(cir);
+      this.subStation(station);
     }
   }
 
@@ -95,23 +85,23 @@ export class InboxPage extends Component {
     evt.preventDefault();
     evt.stopPropagation();
 
-    this.subCircle(this.state.feed);
+    this.subStation(this.state.feed);
     this.setState({feed: ""});
   }
 
-  subCircle(cir) {
+  subStation(station) {
     this.props.api.hall({
       source: {
         nom: "inbox",
         sub: true,
-        srs: [cir]
+        srs: [station]
       }
     });
 
     this.props.pushPending("circle.config.dif.source", {
       type: "transition",
       data: {
-        target: `/~~/pages/nutalk/stream?station=${cir}`
+        target: `/~~/pages/nutalk/stream?station=${station}`
       }
     });
   }
@@ -150,9 +140,9 @@ export class InboxPage extends Component {
     if (collUpdate.more) {
       return (
         <div>
-          <a href={foreignUrl(collMeta.ship, api.authTokens.ship, `/~~/collections/${collMeta.coll}`)} className="text-600">{collUpdate.head}</a>
+          <a href={foreignUrl(collMeta.ship, this.props.api.authTokens.ship, `/~~/collections/${collMeta.coll}`)} className="text-600">{collUpdate.head}</a>
           <p>{collUpdate.tail} <a href="">[...]</a></p>
-          <a href={foreignUrl(collMeta.ship, api.authTokens.ship, `/~~/collections/${collMeta.coll}`)}>More →</a>
+          <a href={foreignUrl(collMeta.ship, this.props.api.authTokens.ship, `/~~/collections/${collMeta.coll}`)}>More →</a>
         </div>
       );
 
@@ -252,7 +242,7 @@ export class InboxPage extends Component {
           //
           return (
             <div className="mb-4" key={cos}>
-              <a href={foreignUrl(collId.ship, api.authTokens.ship, `/~~/collections/${collId.coll}`)}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
+              <a href={foreignUrl(collId.ship, this.props.api.authTokens.ship, `/~~/collections/${collId.coll}`)}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
             </div>
           )
         } else {
@@ -265,6 +255,17 @@ export class InboxPage extends Component {
       }
     });
 
+    /*
+    let unusedDom = (
+      <form className="inline-block" onSubmit={this.addFeed}>
+        <input className="w-51 inbox-feed" type="text" value={this.state.feed} onChange={this.feedChange} placeholder="Add feed: ~marzod/club" />
+      </form>
+      <div className="row">
+        <input className="mt-4 w-80 input-sm" type="text" value={this.state.filter} onChange={this.filterChange} placeholder="Filter..." />
+      </div>
+    )
+    */
+
     return (
       <div>
         <a href="/~~/pages/nutalk/stream/create">
@@ -273,12 +274,9 @@ export class InboxPage extends Component {
         <a href="/~~/pages/nutalk/collection/create">
           <button className="btn btn-tetiary" type="button">Create Collection →</button>
         </a>
-        <form className="inline-block" onSubmit={this.addFeed}>
-          <input className="w-51 inbox-feed" type="text" value={this.state.feed} onChange={this.feedChange} placeholder="Add feed: ~marzod/club" />
-        </form>
-        <div className="row">
-          <input className="mt-4 w-80 input-sm" type="text" value={this.state.filter} onChange={this.filterChange} placeholder="Filter..." />
-        </div>
+        <a href="/~~/pages/nutalk/list">
+          <button className="btn btn-tetiary" type="button">List</button>
+        </a>
         <div className="text-mono mt-8">
           {stationElems}
         </div>

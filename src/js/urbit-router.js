@@ -23,15 +23,32 @@ export class UrbitRouter {
   }
 
   renderRoot() {
+    this.setHeader(null);
+
     let rootComponent = (
       <RootComponent
         store={this.warehouse.store}
         pushPending={this.warehouse.pushPending}
         queryParams={getQueryParams()}
+        setHeader={this.setHeader}
         scaffold={this.scaffold} />
     )
 
     ReactDOM.render(rootComponent, document.querySelectorAll("#root")[0]);
+  }
+
+  setHeader(headerElem) {
+    if (!headerElem) {
+      headerElem = (
+        <div>
+          <h3 className="underline text-gray">
+            <a href="/~~/pages/nutalk">Inbox</a>
+          </h3>
+        </div>
+      );
+    }
+
+    ReactDOM.render(headerElem, document.querySelectorAll("[urb-component-header]")[0]);
   }
 
   filterUrl(url) {
@@ -126,7 +143,8 @@ class RootComponent extends Component {
           api: api,
           store: this.props.store,
           pushPending: this.props.pushPending,
-          queryParams: this.props.queryParams
+          queryParams: this.props.queryParams,
+          setHeader: this.props.setHeader
         }, propsObj));
       }
     }, {

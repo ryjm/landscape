@@ -30,7 +30,7 @@ export class UrbitWarehouse {
     reports.forEach((rep) => {
       let type = Reports[rep.type];
       if (type && type.execute) {
-        type.execute();
+        type.execute(rep);
       }
     })
   }

@@ -1,3 +1,7 @@
+[urb-component-header] {
+  line-height: 40px;
+}
+
 .sidebar {
   position: absolute;
   right: 24rem;

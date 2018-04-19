@@ -9,7 +9,7 @@ export let Reports = {
   'circle.cos.loc': {}, // configs
   'circle.cos.rem': {}, // configs
   'circle.config.dif.full': {
-    execute: function () {
+    execute: function (rep) {
       if (this.pending) {
         this.pending.forEach((item) => {
           switch(item.type) {
@@ -30,12 +30,12 @@ export let Reports = {
     }
   },
   'circle.config.dif.source': {
-    execute: function () {
+    execute: function (rep) {
       if (this.pending) {
         this.pending.forEach((item) => {
           switch(item.type) {
             case "transition":
-              window.router.transitionTo(item.data.target)
+              window.router.transitionTo(item.data.target);
               break;
           }
         })
@@ -51,16 +51,18 @@ export let Reports = {
     include: "circle.config"
   },
   'circles': {
-    execute: function () {
+    execute: function (rep) {
       if (this.pending) {
         this.pending.forEach((item) => {
           switch(item.type) {
             case "subscribe-inbox":
+              let cir = (item.data && item.data.cir) ? item.data.cir : `~${api.authTokens.ship}/${rep.data.cir}`;
+
               api.hall({
                 source: {
                   nom: `inbox`,
                   sub: true,
-                  srs: [item.data.cir]
+                  srs: [cir]
                 }
               });
               break;

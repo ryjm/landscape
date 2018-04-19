@@ -36,10 +36,18 @@ export class CollectionCreatePage extends Component {
         // *BAD* '~zod ~polryt-tarnyr ~binzod'
         ses: this.state.collectionShips.replace(/~|,/g, '')
       }
-    }, {
-      target: '/~~/collections/latest'
     });
-;
+
+    this.props.pushPending("circles", {
+      type: "subscribe-inbox"
+    });
+
+    this.props.pushPending("circle.config.dif.full", {
+      type: "transition",
+      data: {
+        target: '/~~/collections/latest'
+      }
+    });
   }
 
   // make sure that the white/blacklist is composed of ships

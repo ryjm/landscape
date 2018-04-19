@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { arrayEqual } from '../../util';
-import { api } from '../../urbit-api';
 
 export class StreamCreatePage extends Component {
   constructor(props) {
@@ -47,7 +46,7 @@ export class StreamCreatePage extends Component {
   componentWillReceiveProps(nextProps) {
     if (!this.state.editLoaded) return;
 
-    let newAud = nextProps.store.configs[`~${api.authTokens.ship}/${this.state.stream.nom}`].con.sis;
+    let newAud = nextProps.store.configs[`~${this.props.api.authTokens.ship}/${this.state.stream.nom}`].con.sis;
 
     if (!arrayEqual(this.state.stream.aud, newAud)) {
       this.setState({
@@ -83,7 +82,7 @@ export class StreamCreatePage extends Component {
   }
 
   deleteStream() {
-    api.hall({
+    this.props.api.hall({
       delete: {
         nom: this.state.deleteStream,
         why: "<station deleted>"
@@ -103,7 +102,7 @@ export class StreamCreatePage extends Component {
     if (!this.state.oldStream) return;
 
     if (this.state.stream.des !== this.state.oldStream.des) {
-      api.hall({
+      this.props.api.hall({
         depict: {
           nom: this.state.oldStream.nom,
           des: this.state.stream.des
@@ -113,7 +112,7 @@ export class StreamCreatePage extends Component {
   }
 
   createStream() {
-    api.hall({
+    this.props.api.hall({
       create: {
         nom: this.state.stream.nom,
         des: this.state.stream.des,
@@ -128,14 +127,14 @@ export class StreamCreatePage extends Component {
     this.props.pushPending("circles", {
       type: "subscribe-inbox",
       data: {
-        cir: `~${api.authTokens.ship}/${this.state.stream.nom}`
+        cir: `~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
       }
     })
 
     this.props.pushPending("circle.config.dif.full", {
       type: "transition",
       data: {
-        target: `/~~/pages/nutalk/stream?station=~${api.authTokens.ship}/${this.state.stream.nom}`
+        target: `/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
       }
     });
 
@@ -168,7 +167,7 @@ export class StreamCreatePage extends Component {
 
     if (des === "dm") {
       stream.sec = "village";
-      stream.nom = `${aud.concat(api.authTokens.ship).sort().join(".")}`;
+      stream.nom = `${aud.concat(this.props.api.authTokens.ship).sort().join(".")}`;
     }
 
     this.setState({
@@ -180,7 +179,7 @@ export class StreamCreatePage extends Component {
     let newStream = {};
 
     if (this.state.editLoaded) {
-      api.permit(this.state.stream.nom, [this.state.stream.audNew], true);
+      this.props.api.permit(this.state.stream.nom, [this.state.stream.audNew], true);
 
       newStream = {
         audNew: ""
@@ -195,7 +194,7 @@ export class StreamCreatePage extends Component {
     let aud = newStream.aud || this.state.stream.aud;
 
     if (this.state.stream.des === "dm") {
-      newStream.nom = `${aud.concat(api.authTokens.ship).sort().join(".")}`;
+      newStream.nom = `${aud.concat(this.props.api.authTokens.ship).sort().join(".")}`;
     }
 
     this.setState({
@@ -207,7 +206,7 @@ export class StreamCreatePage extends Component {
     let newStream = {};
 
     if (this.state.editLoaded) {
-      api.hall({
+      this.props.api.hall({
         permit: {
           nom: this.state.stream.nom,
           sis: [evt.target.dataset.ship],
@@ -222,7 +221,7 @@ export class StreamCreatePage extends Component {
     let aud = newStream.aud || this.state.stream.aud;
 
     if (this.state.stream.des === "dm") {
-      newStream.nom = `${aud.concat(api.authTokens.ship).sort().join(".")}`;
+      newStream.nom = `${aud.concat(this.props.api.authTokens.ship).sort().join(".")}`;
     }
 
     this.setState({
@@ -244,7 +243,7 @@ export class StreamCreatePage extends Component {
                          "Whitelist" : "Blacklist";
 
     let audienceList = this.state.stream.aud.map(mem => {
-      if (mem === api.authTokens.ship) return null;
+      if (mem === this.props.api.authTokens.ship) return null;
 
       return (
         <div key={mem} className="row space-between">

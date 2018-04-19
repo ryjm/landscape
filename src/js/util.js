@@ -28,7 +28,7 @@ export function parseCollCircle(st) {
       coll: collMeta[2],
       top: collMeta[4]
     }
-  }   
+  }
   return r;
 }
 
@@ -82,4 +82,12 @@ export function prettyShip(ship) {
   return sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship;
 }
 
+export function isDMStation(station) {
+  let host = station.split('/')[0].substr(1);
+  let circle = station.split('/')[1];
 
+  return (
+    station.indexOf('.') !== -1 &&
+    circle.indexOf(host) !== -1
+  );
+}

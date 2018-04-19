@@ -16,14 +16,11 @@
             ==
           ==
           ;div.col-sm-1
-            ;div.liang;
-          ==
-          ;div.col-sm-1
-            ;h3.underline.text-gray
-              ;a/"/~~/pages/nutalk": Inbox
+            ;a/"/~~/pages/nutalk"
+              ;div.liang;
             ==
           ==
-          ;div(urb-component-header "");
+          ;div.col-sm-10(urb-component-header "");
         ==
       ==
       ;div.container
