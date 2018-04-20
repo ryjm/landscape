@@ -1,6 +1,7 @@
 import { api } from './urbit-api';
 import { Reports } from './urbit-reports';
 import _ from 'lodash';
+import Mousetrap from 'mousetrap';
 
 /**
   Response format
@@ -35,9 +36,23 @@ export class UrbitOperator {
   constructor(warehouse) {
     this.seqn = 1;
     this.warehouse = warehouse;
+    this.menuActive = false;
 
     this.runPoll();
     this.bindInbox();
+    this.bindShortcuts();
+  }
+
+  bindShortcuts() {
+    Mousetrap.bind(["command+k"], () => {
+      if (this.menuActive) {
+        window.history.back();
+      } else {
+        window.router.transitionTo('/~~/pages/nutalk/menu');
+      }
+
+      this.menuActive = !this.menuActive;
+    });
   }
 
   bindInbox() {

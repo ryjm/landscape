@@ -11,7 +11,7 @@
       ;div.container.header-container
         ;div.row
           ;div.col-sm-1
-            ;a/"menu"
+            ;a/"/~~/pages/nutalk/menu"
               ;div.panini;
             ==
           ==

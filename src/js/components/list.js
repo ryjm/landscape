@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { calculateStations } from '../util';
 import { isDMStation } from '../util';
 
 export class ListPage extends Component {
@@ -7,14 +8,7 @@ export class ListPage extends Component {
   }
 
   buildHeader() {
-    let numSubs = Object.keys(this.props.store.configs).filter((sta) => !isDMStation(sta) && !sta.includes("inbox")).length;
-    let numDMs = Object.keys(this.props.store.configs).filter((sta) => isDMStation(sta)).length;
-
-    let numString = [];
-    if (numSubs) numString.push(`${numSubs} subscriptions`);
-    if (numDMs) numString.push(`${numDMs} DMs`);
-
-    numString = numString.join(", ");
+    let numString = calculateStations(this.props.store.configs);
 
     return (
       <div>

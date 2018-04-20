@@ -91,3 +91,16 @@ export function isDMStation(station) {
     circle.indexOf(host) !== -1
   );
 }
+
+export function calculateStations(configs) {
+  let numSubs = Object.keys(configs).filter((sta) => !isDMStation(sta) && !sta.includes("inbox")).length;
+  let numDMs = Object.keys(configs).filter((sta) => isDMStation(sta)).length;
+
+  let numString = [];
+  if (numSubs) numString.push(`${numSubs} subscriptions`);
+  if (numDMs) numString.push(`${numDMs} DMs`);
+
+  numString = numString.join(", ");
+
+  return numString;
+}

@@ -62,8 +62,6 @@ input.input-sm {
   display: inline-block;
   width: 35px;
   height: 35px;
-
-  border-color: red;
 }
 
 .cross:before {
@@ -174,4 +172,8 @@ button.disabled {
 
 .pointer {
   cursor: pointer;
+}
+
+.hide {
+  display: none;
 }

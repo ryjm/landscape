@@ -1,5 +1,6 @@
 import { InboxPage } from './components/inbox';
 import { ListPage } from './components/list';
+import { MenuPage } from './components/menu';
 import { StreamPage, StreamPageHeader } from './components/stream';
 import { StreamEditPage } from './components/stream/edit';
 import { StreamCreatePage } from './components/stream/create';
@@ -45,6 +46,9 @@ export var ComponentMap = {
   },
   "ListPage": {
     comp: ListPage
+  },
+  "MenuPage": {
+    comp: MenuPage
   },
   "Subscribe": {
     comp: Subscribe
