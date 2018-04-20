@@ -32,6 +32,18 @@ export class MenuPage extends Component {
                 <b>Profile</b>
               </a>
             </div>
+            <div className="row mb-6">
+              <a className="menu-anchor" href="/~~/pages/nutalk/stream/create">
+                <div className="circle mr-7"></div>
+                <b>Create stream</b>
+              </a>
+            </div>
+            <div className="row mb-6">
+              <a className="menu-anchor" href="/~~/pages/nutalk/collection/create">
+                <div className="circle mr-7"></div>
+                <b>Create collection</b>
+              </a>
+            </div>
           </div>
         </div>
       </div>
