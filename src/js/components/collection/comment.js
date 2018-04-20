@@ -21,9 +21,14 @@ export class CommentCreate extends Component {
         com: '~',
         wat: this.state.comment
       }
-    }, {
-      target: `/~~/collections/${this.props.coll}/${this.props.top}`
-  });
+    });
+
+    this.props.pushPending("circle.gram", {
+      type: "transition",
+      data: {
+        target: `/~~/collections/${this.props.coll}/${this.props.top}`
+      }
+    });
   }
 
   valueChange(event) {
