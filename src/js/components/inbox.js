@@ -268,15 +268,6 @@ export class InboxPage extends Component {
 
     return (
       <div>
-        <a href="/~~/pages/nutalk/stream/create">
-          <button className="btn btn-secondary" type="button">Create Stream →</button>
-        </a>
-        <a href="/~~/pages/nutalk/collection/create">
-          <button className="btn btn-tetiary" type="button">Create Collection →</button>
-        </a>
-        <a href="/~~/pages/nutalk/list">
-          <button className="btn btn-tetiary" type="button">List</button>
-        </a>
         <div className="text-mono mt-8">
           {stationElems}
         </div>
