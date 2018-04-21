@@ -46,7 +46,7 @@ export class CommentCreate extends Component {
     return (
       <div className="create-comment">
         <div className="usership text-mono">
-          ~{this.props.store.usership}
+          ~{this.props.api.authTokens.ship}
         </div>
         <textarea
           value={this.state.comment}
