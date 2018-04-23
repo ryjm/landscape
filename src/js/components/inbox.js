@@ -255,24 +255,18 @@ export class InboxPage extends Component {
       }
     });
 
-    /*
-    let unusedDom = (
-      <form className="inline-block" onSubmit={this.addFeed}>
-        <input className="w-51 inbox-feed" type="text" value={this.state.feed} onChange={this.feedChange} placeholder="Add feed: ~marzod/club" />
-      </form>
-      <div className="row">
-        <input className="mt-4 w-80 input-sm" type="text" value={this.state.filter} onChange={this.filterChange} placeholder="Filter..." />
-      </div>
-    )
-    */
-
     return (
       <div>
-        <div className="text-mono mt-8">
+        <div className="icon-chat"></div>
+        <div className="icon-text"></div>
+        <div className="icon-text">
+          <div className="icon-text-topic"></div>
+        </div>
+        <div className="icon-dm"></div>
+
+        <div className="text-mono mt-4">
           {stationElems}
         </div>
-        <h3 className="mt-8">Older stations</h3>
-        {olderStations}
       </div>
     );
   }

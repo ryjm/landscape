@@ -305,6 +305,10 @@ div.mod
   width: 30px;
 }
 
+.menu-page .cross {
+  cursor: pointer;
+}
+
 .menu-anchor {
   display: flex;
   align-items: center;
@@ -327,4 +331,12 @@ div.mod
 .menu-canvas .cross:before,
 .menu-canvas .cross:after, {
   border-color: red !important;
+}
+
+/***
+  List
+***/
+
+.list-page a {
+  text-decoration: none;
 }

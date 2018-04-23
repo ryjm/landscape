@@ -4,7 +4,7 @@ import { calculateStations } from '../util';
 
 export class MenuPage extends Component {
   crossClick() {
-    window.location.back();
+    window.history.back();
   }
 
   render() {
@@ -28,7 +28,7 @@ export class MenuPage extends Component {
                 <div className="circle mr-7"></div>
                 <b>List</b>
               </a>
-              <div className="ml-7">{numStationsString}</div>
+              <div className="ml-7 pt-1">{numStationsString}</div>
             </div>
             <div className="row mb-6">
               <a className="menu-anchor" href="/~~/pages/nutalk/profile">

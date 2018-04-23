@@ -36,7 +36,6 @@ export class UrbitOperator {
   constructor(warehouse) {
     this.seqn = 1;
     this.warehouse = warehouse;
-    this.menuActive = false;
 
     this.runPoll();
     this.bindInbox();
@@ -45,13 +44,12 @@ export class UrbitOperator {
 
   bindShortcuts() {
     Mousetrap.bind(["command+k"], () => {
-      if (this.menuActive) {
+      let menuActive = window.location.href.includes("menu");
+      if (menuActive) {
         window.history.back();
       } else {
         window.router.transitionTo('/~~/pages/nutalk/menu');
       }
-
-      this.menuActive = !this.menuActive;
     });
   }
 

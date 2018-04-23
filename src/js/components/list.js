@@ -25,11 +25,15 @@ export class ListPage extends Component {
 
   buildChatStations() {
     return Object.arrayify(this.props.store.configs).filter((item) => item.value.cap === "chat").map((item) => {
-      let expandedStationName = item.key.split("/").join("  /  ");
+      let expandedStationName = item.key.split("/");
 
       return (
         <div key={item.key} className="mt-3">
-          <div className="text-mono text-600"><a href={`/~~/pages/nutalk/stream?station=${item.key}`}>{expandedStationName}</a></div>
+          <div className="text-mono"><a href={`/~~/pages/nutalk/stream?station=${item.key}`}>
+            <u>{expandedStationName[0]}</u>
+            <span className="text-600">  /  </span>
+            <u className="text-600">{expandedStationName[1]}</u>
+          </a></div>
           <div>{item.value.con.sis.length} Members</div>
         </div>
       );
@@ -45,7 +49,7 @@ export class ListPage extends Component {
 
       return (
         <div key={item.key} className="mt-3">
-          <div className="text-mono text-600"><a href={`/~~/pages/nutalk/stream?station=${item.key}`}>{title}</a></div>
+          <div className="text-mono text-600"><a href={`/~~/pages/nutalk/stream?station=${item.key}`}><u>{title}</u></a></div>
         </div>
       );
     });
@@ -53,7 +57,7 @@ export class ListPage extends Component {
 
   buildTextStations() {
     return Object.arrayify(this.props.store.configs).filter((item) => item.key.includes("collection")).map((item) => {
-      let expandedStationName = `${item.key.split("/")[0]}  /  ${item.value.cap}`;
+      let expandedStationName = [`${item.key.split("/")[0]}`, `${item.value.cap}`];
 
       // go from "~tappyl-dabwex/collection_~~2018.4.19..22.58.12..4c19"
       // to      "~2018.4.19..22.58.12..4c19"
@@ -61,7 +65,11 @@ export class ListPage extends Component {
 
       return (
         <div key={item.key} className="mt-3">
-          <div className="text-mono text-600"><a href={`/~~/collections/${targetPath}`}>{expandedStationName}</a></div>
+          <div className="text-mono"><a href={`/~~/collections/${targetPath}`}>
+            <u>{expandedStationName[0]}</u>
+            <span className="text-600">  /  </span>
+            <u className="text-600">{expandedStationName[1]}</u>
+          </a></div>
           <div>{item.value.con.sis.length} Members</div>
         </div>
       );
@@ -74,17 +82,17 @@ export class ListPage extends Component {
     const DMStations = this.buildDMStations();
 
     return (
-      <div>
+      <div className="list-page">
         <div className="mt-9">
-          <div className="text-700">Chat</div>
+          <div className="text-700">Chats</div>
           {chatStations}
         </div>
         <div className="mt-9">
-          <div className="text-700">Text</div>
+          <div className="text-700">Blogs, Forum and Notes</div>
           {textStations}
         </div>
         <div className="mt-9">
-          <div className="text-700">DM</div>
+          <div className="text-700">Direct Messages</div>
           {DMStations}
         </div>
       </div>

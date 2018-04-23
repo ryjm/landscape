@@ -40,7 +40,7 @@ export class UrbitRouter {
   setHeader(headerElem) {
     if (!headerElem) {
       headerElem = (
-        <div>
+        <div className="flex align-center">
           <h3 className="underline text-gray">
             <a href="/~~/pages/nutalk">Inbox</a>
           </h3>
