@@ -44,6 +44,7 @@ export class UrbitRouter {
           <h3 className="underline text-gray">
             <a href="/~~/pages/nutalk">Inbox</a>
           </h3>
+          <span className="ml-15"><i>"Try using cmd+k to open the menu"</i></span>
         </div>
       );
     }

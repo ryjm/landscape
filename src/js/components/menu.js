@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { calculateStations } from '../util';
 
 export class MenuPage extends Component {
+  crossClick() {
+    window.location.back();
+  }
+
   render() {
     let numStationsString = calculateStations(this.props.store.configs);
 
@@ -10,7 +14,7 @@ export class MenuPage extends Component {
       <div className="container menu-page">
         <div className="row">
           <div className="col-sm-1">
-            <div className="cross"></div>
+            <div className="cross" onClick={crossClick}></div>
           </div>
           <div className="col-sm-11">
             <div className="row mb-6">
