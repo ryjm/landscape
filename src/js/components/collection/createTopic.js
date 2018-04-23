@@ -70,8 +70,19 @@ export class TopicCreatePage extends Component {
       target = `/~~/collections/${this.props.queryParams.coll}/latest`;
     };
 
-    this.props.api.coll(dat, {
-      target
+    console.log('transition to...', target);
+
+    this.props.api.coll(dat);
+
+    this.props.pushPending("circles", {
+      type: "subscribe-inbox"
+    });
+
+    this.props.pushPending("circle.config.dif.full", {
+      type: "transition",
+      data: {
+        target
+      }
     });
   }
 

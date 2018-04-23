@@ -21,9 +21,14 @@ export class CommentCreate extends Component {
         com: '~',
         wat: this.state.comment
       }
-    }, {
-      target: `/~~/collections/${this.props.coll}/${this.props.top}`
-  });
+    });
+
+    this.props.pushPending("circle.gram", {
+      type: "transition",
+      data: {
+        target: `/~~/collections/${this.props.coll}/${this.props.top}`
+      }
+    });
   }
 
   valueChange(event) {
@@ -41,7 +46,7 @@ export class CommentCreate extends Component {
     return (
       <div className="create-comment">
         <div className="usership text-mono">
-          ~{this.props.store.usership}
+          ~{this.props.api.authTokens.ship}
         </div>
         <textarea
           value={this.state.comment}

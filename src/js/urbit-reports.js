@@ -2,7 +2,21 @@ import { api } from './urbit-api';
 import { uuid } from './util';
 
 export let Reports = {
-  'circle.gram': {}, // messages
+  'circle.gram': {
+    execute: function (rep) {
+      if (this.pending) {
+        this.pending.forEach((item) => {
+          switch(item.type) {
+            case "transition":
+              window.router.transitionTo(item.data.target);
+              break;
+          }
+        });
+      }
+
+      this.pending = [];
+    }
+  }, // messages
   'circle.nes': {}, // messages
   'circle.pes.loc': {},
   'circle.pes.rem': {},
