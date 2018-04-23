@@ -14,7 +14,7 @@ export class MenuPage extends Component {
       <div className="container menu-page">
         <div className="row">
           <div className="col-sm-1">
-            <div className="cross" onClick={crossClick}></div>
+            <div className="cross" onClick={this.crossClick}></div>
           </div>
           <div className="col-sm-11">
             <div className="row mb-6">
