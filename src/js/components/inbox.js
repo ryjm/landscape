@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { prettyShip, foreignUrl } from '../util';
 import { isDMStation } from '../util';
+import _ from 'lodash';
 
 export class InboxPage extends Component {
   constructor(props) {
@@ -12,22 +13,7 @@ export class InboxPage extends Component {
       collections: {}
     };
 
-    this.filterChange = this.filterChange.bind(this);
-    this.feedChange = this.feedChange.bind(this);
     this.acceptInvite = this.acceptInvite.bind(this);
-    this.addFeed = this.addFeed.bind(this);
-  }
-
-  filterChange(evt) {
-    this.setState({
-      filter: evt.target.value
-    });
-  }
-
-  feedChange(evt) {
-    this.setState({
-      feed: evt.target.value
-    });
   }
 
   createDMStation(station) {
@@ -81,14 +67,6 @@ export class InboxPage extends Component {
     }
   }
 
-  addFeed(evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-
-    this.subStation(this.state.feed);
-    this.setState({feed: ""});
-  }
-
   subStation(station) {
     this.props.api.hall({
       source: {
@@ -106,65 +84,14 @@ export class InboxPage extends Component {
     });
   }
 
-  // parses the tac, which is the attached message to the collections update
-  collUpdateParse(str) {
-    const lim = 100;
-    const wain = str.split('\n');
-    const hed = wain.filter((l) => l.startsWith('# '));
-    const talwain = hed.length > 0 ? wain.slice(1, 5) : wain.slice(0, 4);
-    const tal = talwain.join('\n');
-    // dumb word count
-    const words = tal.split(' ');
-    const wc = words.length;
-    const more = wc > lim;
-    return {
-      more,
-      head: hed.length > 0 ? hed[0].substr(2) : '',
-      tail: more ? words.slice(0, lim).join(' ') : words.join(' '),
-    }
-  }
+  buildStationElems() {
+    const inboxMessages = this.props.store.messages.inboxMessages;
 
-  // parse
-  stationIdParse(sn) {
-    const collMeta = /(.*)\/collection_~(~.*)/.exec(sn);
-    return {
-      ship: collMeta[1],
-      coll: collMeta[2]
-    }
-  }
-
-  // render a message on a collection circle that
-  renderCollectionUpdate(str, sn) {
-    const collUpdate = this.collUpdateParse(str);
-    const collMeta = this.stationIdParse(sn);
-    if (collUpdate.more) {
-      return (
-        <div>
-          <a href={foreignUrl(collMeta.ship, this.props.api.authTokens.ship, `/~~/collections/${collMeta.coll}`)} className="text-600">{collUpdate.head}</a>
-          <p>{collUpdate.tail} <a href="">[...]</a></p>
-          <a href={foreignUrl(collMeta.ship, this.props.api.authTokens.ship, `/~~/collections/${collMeta.coll}`)}>More →</a>
-        </div>
-      );
-
-    } else {
-      return (
-        <div>
-          <a href="" className="text-600">{collUpdate.head}</a>
-          <p>{collUpdate.tail}</p>
-        </div>
-      );
-    }
-  }
-
-  render() {
-    const inboxMessages = this.props.store.messages;
-    const inboxKeys = Object.keys(inboxMessages).filter(k => k.indexOf(this.state.filter) !== -1);
-
-    const stationElems = inboxKeys.map((stationName) => {
+    Object.keys(inboxMessages).map((stationName) => {
       let prevName = "";
       let invitePresent = false;
 
-      let messageElems = inboxMessages[stationName].messages.map((msg) => {
+      let messageElems = inboxMessages.map((msg) => {
         let appClass = msg.app ? " chat-msg-app" : "";
 
         let autLabel = "";
@@ -234,38 +161,118 @@ export class InboxPage extends Component {
         return null;
       }
     });
+  }
 
-    let olderStations = Object.keys(this.props.store.configs).map(cos => {
-      if (inboxKeys.indexOf(cos) === -1) {
-        if (cos.indexOf('collection_') > -1) {
-          const collId = this.stationIdParse(cos);
-          //
-          return (
-            <div className="mb-4" key={cos}>
-              <a href={foreignUrl(collId.ship, this.props.api.authTokens.ship, `/~~/collections/${collId.coll}`)}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
-            </div>
-          )
-        } else {
-          return (
-            <div className="mb-4" key={cos}>
-              <a href={`/~~/pages/nutalk/stream?station=${cos}`}><b><u>{cos}</u></b></a>
-            </div>
-          )
-        }
+  buildSectionElems(sections) {
+    return sections.map((section) => {
+      return (
+        <div className="row">
+          <div className="col-sm-1 col-sm-offset-1">
+
+          </div>
+          <div className="col-sm-10">
+
+          </div>
+        </div>
+      )
+    })
+  }
+
+  getSectionType(section) {
+    if (section.includes("inbox")) return "inbox";
+    if (section.includes("collection")) return "text";
+    if (isDMStation(section)) return "dm";
+
+    let config = this.props.store.configs[section];
+    if (config && config.cap === "chat") return "chat";
+  }
+
+  trimAudiences(aud) {
+    if (aud.length === 1) {
+      return aud[0];
+    } else if (isDMStation(aud[0])) {
+      let circle = aud[0].split("/")[1];
+      return `~${this.props.api.authTokens.ship}/${circle}`;
+    } else {
+      console.log("~~~ Error : Multiple audiences, probably inbox ~~~");
+      return aud[0];
+    }
+  }
+
+  // Group inbox messages by time-chunked stations, strictly ordered by message time.
+  // TODO:  Inbox does not handle messages with multiple audiences very well
+  buildSections() {
+    let inbox = this.props.store.messages.inboxMessages;
+
+    let lastStationName = [];
+    let sections = [];
+    let stationIndex = -1;
+
+    for (var i = 0; i < inbox.length; i++) {
+      let msg = inbox[i];
+      let aud = this.trimAudiences(msg.aud);
+
+      if (!_.isEqual(aud, lastStationName)) {
+        let sectionType = this.getSectionType(aud);
+
+        sections.push({
+          name: aud,
+          msgs: [msg]
+        });
+        stationIndex++;
+      } else {
+        sections[stationIndex].msgs.push(msg);
       }
-    });
+
+      lastStationName = aud;
+    }
+
+    return sections;
+  }
+
+  render() {
+    // const stationElems = this.buildStationElems();
+    const sections = this.buildSections();
+    const sectionElems = this.buildSectionElems(sections);
+
+    // let olderStations = Object.keys(this.props.store.configs).map(cos => {
+    //   if (inboxKeys.indexOf(cos) === -1) {
+    //     if (cos.indexOf('collection_') > -1) {
+    //       const collId = this.stationIdParse(cos);
+    //       //
+    //       return (
+    //         <div className="mb-4" key={cos}>
+    //           <a href={foreignUrl(collId.ship, this.props.api.authTokens.ship, `/~~/collections/${collId.coll}`)}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
+    //         </div>
+    //       )
+    //     } else {
+    //       return (
+    //         <div className="mb-4" key={cos}>
+    //           <a href={`/~~/pages/nutalk/stream?station=${cos}`}><b><u>{cos}</u></b></a>
+    //         </div>
+    //       )
+    //     }
+    //   }
+    // });
+
+    // <div className="icon-chat"></div>
+    // <div className="icon-text"></div>
+    // <div className="icon-text">
+    //   <div className="icon-text-topic"></div>
+    // </div>
+    // <div className="icon-dm"></div>
 
     return (
-      <div>
-        <div className="icon-chat"></div>
-        <div className="icon-text"></div>
-        <div className="icon-text">
-          <div className="icon-text-topic"></div>
-        </div>
-        <div className="icon-dm"></div>
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-1 col-sm-offset-1">
 
-        <div className="text-mono mt-4">
-          {stationElems}
+          </div>
+
+
+          <div className="text-mono mt-4">
+            {sectionElems}
+          </div>
         </div>
       </div>
     );

@@ -48,8 +48,8 @@ export class ChatPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let station = prevProps.store.messages[this.state.station] || {messages: []};
-    let numMessages = station.messages.length;
+    let station = prevProps.store.messages.stations[this.state.station] || [];
+    let numMessages = station.length;
 
     if (numMessages > prevState.numMessages && this.scrollbarRef.current) {
       this.setState({
@@ -234,11 +234,11 @@ export class ChatPage extends Component {
   }
 
   render() {
-    let station = this.props.store.messages[this.state.station] || {messages: []};
+    let station = this.props.store.messages.stations[this.state.station] || [];
 
     this.setPresence(this.state.station);
 
-    let chatRows = this.assembleChatRows(station.messages);
+    let chatRows = this.assembleChatRows(station);
     let chatMembers = this.assembleMembers(this.state.station);
 
     let chatMessages = chatRows.map((msg) => {

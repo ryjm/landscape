@@ -1,14 +1,30 @@
+import _ from 'lodash';
+
 // TODO: This being a class is an error, since UrbitReducer doesn't hold state. Export these as individual functions or bundle them some other way.
+
+/**
+  storeMessages ==
+
+  store: {
+    messages: {
+      inboxMessages: [{num: 1244, msg: "Hey friends"}, {num: 1244, msg: "Hiya ~ravmel"}]
+      stations: {
+        ~ravmel-rodpyl/friendclub: [{num: 1244, msg: "Hey friends"}, {num: 1244, msg: "Hiya ~ravmel"}]
+        ~ravmel-rodpyl/members: [{num: 1244, msg: "Hey friends"}, {num: 1244, msg: "Hiya ~ravmel"}]
+      }
+    }
+  }
+**/
 
 export class MessagesReducer {
   reduce(reports, storeMessages) {
     reports.forEach((rep) => {
       switch (rep.type) {
         case "circle.nes":
-          this.storeMessages(rep.data, storeMessages);
+          this.processMessages(rep.data, storeMessages);
           break;
         case "circle.gram":
-          this.storeMessages([rep.data], storeMessages);
+          this.processMessages([rep.data], storeMessages);
           break;
         case "circle.config.dif.remove":
           delete storeMessages[rep.data.cir];
@@ -17,29 +33,31 @@ export class MessagesReducer {
     });
   }
 
-  storeMessages(messages, storeMessages) {
+  processMessages(messages, storeMessages) {
+    this.storeStationMessages(messages, storeMessages);
+    this.storeInboxMessages(messages, storeMessages);
+  }
+
+  storeStationMessages(messages, storeMessages) {
     messages.forEach((message) => {
       let msg = message.gam;
       msg.aud.forEach((aud) => {
-        let station = storeMessages[aud];
+        let station = storeMessages.stations[aud];
 
         if (!station) {
-          storeMessages[aud] = {
-            name: aud,
-            messages: [msg]
-          }
-        } else if (station.messages.findIndex(o => o.uid === msg.uid) === -1) {
+          storeMessages.stations[aud] = [msg];
+        } else if (station.findIndex(o => o.uid === msg.uid) === -1) {
           let newest = true;
 
-          for (let i = 0; i < station.messages.length; i++) {
-            if (msg.wen < station.messages[i].wen) {
-              storeMessages[aud].messages.splice(i, 0, msg);
+          for (let i = 0; i < station.length; i++) {
+            if (msg.wen < station[i].wen) {
+              station.splice(i, 0, msg);
               newest = false;
               break;
             }
           }
 
-          if (newest) storeMessages[aud].messages.push(msg);
+          if (newest) station.push(msg);
 
           // Print messages by date, for debugging:
           // for (let msg of station.messages) {
@@ -48,6 +66,32 @@ export class MessagesReducer {
         }
       })
     });
+  }
+
+  storeInboxMessages(messages, storeMessages) {
+    let inbox = storeMessages.inboxMessages.slice();
+
+    messages.forEach((message) => {
+      let msg = message.gam;
+
+      if (inbox.length === 0) {
+        inbox.push(message);
+      } else if (inbox.findIndex(o => o.uid === msg.uid) === -1) {
+        let newest = true;
+
+        for (let i = 0; i < inbox.length; i++) {
+          if (msg.wen < inbox[i].wen) {
+            inbox.splice(i, 0, msg);
+            newest = false;
+            break;
+          }
+        }
+
+        if (newest) inbox.push(msg);
+      }
+    });
+
+    storeMessages.inboxMessages = inbox.reverse().slice(0, 20);
   }
 }
 

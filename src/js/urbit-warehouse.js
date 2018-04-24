@@ -6,7 +6,10 @@ import { Reports } from './urbit-reports';
 export class UrbitWarehouse {
   constructor(updateFunc) {
     this.store = {
-      messages: {},
+      messages: {
+        inboxMessages: [],
+        stations: {}
+      },
       configs: {}
     };
 
