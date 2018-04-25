@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { uuid } from '../../util';
-import { api } from '../../urbit-api';
+import { uuid } from '../util';
+import { api } from '../urbit-api';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -260,29 +260,31 @@ export class ChatPage extends Component {
     });
 
     return (
-      <div>
-        <Scrollbars
-          ref={this.scrollbarRef}
-          renderTrackHorizontal={props => <div style={{display: "none"}}/>}
-          style={{height: 650}}
-          onScrollStop={this.onScrollStop}
-          renderView={props => <div {...props} className="chat-scrollpane-view"/>}
-          autoHide
-          className="chat-scrollpane">
-          {chatMessages}
-        </Scrollbars>
-        <div className="chat-input row mt-6">
-          <div className="col-sm-2 text-700">
-            ~{api.authTokens.ship}
+      <div className="row">
+        <div className="col-sm-10 col-sm-offset-2">
+          <Scrollbars
+            ref={this.scrollbarRef}
+            renderTrackHorizontal={props => <div style={{display: "none"}}/>}
+            style={{height: 650}}
+            onScrollStop={this.onScrollStop}
+            renderView={props => <div {...props} className="chat-scrollpane-view"/>}
+            autoHide
+            className="chat-scrollpane">
+            {chatMessages}
+          </Scrollbars>
+          <div className="chat-input row mt-6">
+            <div className="col-sm-2 text-700">
+              ~{api.authTokens.ship}
+            </div>
+            <div className="col-sm-8">
+              <form onSubmit={this.messageSubmit}>
+                <input className="chat-input-field" type="text" placeholder="Say something" value={this.state.message} onChange={this.messageChange}/>
+              </form>
+            </div>
           </div>
-          <div className="col-sm-8">
-            <form onSubmit={this.messageSubmit}>
-              <input className="chat-input-field" type="text" placeholder="Say something" value={this.state.message} onChange={this.messageChange}/>
-            </form>
+          <div className="sidebar">
+            {chatMembers}
           </div>
-        </div>
-        <div className="sidebar">
-          {chatMembers}
         </div>
       </div>
     )

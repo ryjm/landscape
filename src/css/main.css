@@ -1,3 +1,7 @@
+body {
+  padding-bottom: 40px;
+}
+
 [urb-component-header] {
   line-height: 40px;
 }
@@ -41,7 +45,8 @@
 }
 
 .header-container {
-  padding: 12rem 2rem 9rem;
+  padding-top: 12rem;
+  padding-bottom: 9rem;
 }
 
 .header-main {

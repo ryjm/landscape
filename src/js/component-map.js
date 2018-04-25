@@ -1,7 +1,7 @@
 import { InboxPage } from './components/inbox';
 import { ListPage } from './components/list';
 import { MenuPage } from './components/menu';
-import { StreamPage, StreamPageHeader } from './components/stream';
+import { ChatPage } from './components/chat';
 import { StreamEditPage } from './components/stream/edit';
 import { StreamCreatePage } from './components/stream/create';
 import { CollectionCreatePage } from './components/collection/create';
@@ -22,9 +22,8 @@ import { Elapsed } from './components/common/elapsed';
 **/
 
 export var ComponentMap = {
-  "StreamPage": {
-    comp: StreamPage,
-    head: StreamPageHeader
+  "ChatPage": {
+    comp: ChatPage
   },
   "StreamCreatePage": {
     comp: StreamCreatePage

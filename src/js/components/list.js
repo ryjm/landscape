@@ -82,18 +82,20 @@ export class ListPage extends Component {
     const DMStations = this.buildDMStations();
 
     return (
-      <div className="list-page">
-        <div className="mt-9">
-          <div className="text-700">Chats</div>
-          {chatStations}
-        </div>
-        <div className="mt-9">
-          <div className="text-700">Blogs, Forum and Notes</div>
-          {textStations}
-        </div>
-        <div className="mt-9">
-          <div className="text-700">Direct Messages</div>
-          {DMStations}
+      <div className="row">
+        <div className="list-page col-sm-10 col-sm-offset-2">
+          <div className="mt-9">
+            <div className="text-700">Chats</div>
+            {chatStations}
+          </div>
+          <div className="mt-9">
+            <div className="text-700">Blogs, Forum and Notes</div>
+            {textStations}
+          </div>
+          <div className="mt-9">
+            <div className="text-700">Direct Messages</div>
+            {DMStations}
+          </div>
         </div>
       </div>
     );
