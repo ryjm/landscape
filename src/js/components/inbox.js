@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Elapsed } from './common/elapsed';
 import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageContent } from '../util';
 import { Icon } from './common/icon';
 import _ from 'lodash';
@@ -88,11 +89,12 @@ export class InboxPage extends Component {
     let lastAut = "";
 
     let messageRows = section.msgs.map((msg, i) => {
-      let deets = getMessageContent(msg, section.deets.type);
+      let messageDeets = getMessageContent(msg, section.deets.type);
       let rowAuthor = null;
 
       if (lastAut !== msg.aut) {
-        let timestamp = (i === 0) ? (<div className="timestamp">~3m</div>) : null;
+        let timestamp = (i === 0) ? (<div className="timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
+        let topicLink = (section.deets.type === "text") ? <a className="pr-2 text-600 underline" href={section.deets.postURL}>{messageDeets.content.substr(0, 20)}</a> : null;
 
         rowAuthor = (
           <div className="row mt-3">
@@ -100,7 +102,8 @@ export class InboxPage extends Component {
               {timestamp}
             </div>
             <div className="col-sm-10">
-              <div className="text-mono">~{msg.aut}</div>
+              <span>{topicLink}</span>
+              <span className="text-mono">~{msg.aut}</span>
             </div>
           </div>
         );
@@ -113,7 +116,7 @@ export class InboxPage extends Component {
           {rowAuthor}
           <div className="row">
             <div className="col-sm-10 col-sm-offset-2">
-              {deets.content}
+              {messageDeets.content}
             </div>
           </div>
         </div>
@@ -134,6 +137,13 @@ export class InboxPage extends Component {
         </span>
       );
 
+      let postDisplay = (section.deets.type !== "text-topic") ? null : (
+        <span>
+          <span className="ml-2 mr-2">/</span>
+          <a href={section.deets.postURL} className="text-600 underline">~{section.deets.postTitle}</a>
+        </span>
+      )
+
       return (
         <div className="mt-9 mb-4" key={i}>
           <div className="row">
@@ -142,7 +152,8 @@ export class InboxPage extends Component {
             </div>
             <div className="col-sm-10">
               {hostDisplay}
-              <a href={section.deets.stationURL} className="text-700 text-mono underline">{section.deets.displayTitle}</a>
+              <a href={section.deets.stationURL} className="text-700 text-mono underline">{section.deets.stationTitle}</a>
+              {postDisplay}
             </div>
           </div>
           {sectionContent}

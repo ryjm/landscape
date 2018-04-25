@@ -8,7 +8,7 @@ import { CollectionCreatePage } from './components/collection/create';
 import { TopicCreatePage } from './components/collection/createTopic';
 import { CommentCreate } from './components/collection/comment';
 import { Subscribe } from './components/subscribe';
-import { Elapsed } from './components/elapsed';
+import { Elapsed } from './components/common/elapsed';
 
 /**
   Anatomy:
