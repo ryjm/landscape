@@ -107,7 +107,7 @@ export function calculateStations(configs) {
   return numString;
 }
 
-export function getStationDetails(station, config, usership) {
+export function getStationDetails(station, config = {}, usership) {
   let ret = {
     type: "none",
     host: station.split("/")[0].substr(1),
@@ -119,10 +119,10 @@ export function getStationDetails(station, config, usership) {
   if (isDMStation(station)) ret.type = "dm";
   if (config && config.cap === "chat") ret.type = "chat";
 
-  if (station.includes("collection")){
-    let st = parseCollCircle(station);
+  let collParts = parseCollCircle(station);
 
-    if (st.top) {
+  if (station.includes("collection")){
+    if (collParts.top) {
       ret.type = "text-topic";
     } else {
       ret.type = "text";
@@ -132,11 +132,11 @@ export function getStationDetails(station, config, usership) {
   switch (ret.type) {
     case "inbox":
       ret.stationURL = "/~~/pages/nutalk";
-      ret.displayTitle = ret.cir;
+      ret.stationTitle = ret.cir;
       break;
     case "chat":
       ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
-      ret.displayTitle = ret.cir;
+      ret.stationTitle = ret.cir;
       break;
     case "dm":
       let title = config.con.sis
@@ -145,14 +145,18 @@ export function getStationDetails(station, config, usership) {
         .join(", ");
 
       ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
-      ret.displayTitle = title;
+      ret.stationTitle = title;
       break;
     case "text":
-      ret.stationURL = `/~~/collections/${ret.cir.substr(12)}`;
-      ret.displayTitle = config.cap;
+      ret.stationURL = `/~~/collections/${collParts.coll}`;
+      ret.stationTitle = config.cap;
+      ret.postURL = `/~~/collections/${collParts.coll}`;
       break;
     case "text-topic":
-      // TODO
+      ret.stationURL = `/~~/collections/${collParts.coll}`;
+      ret.stationTitle = config.cap;
+      ret.postURL = `/~~/collections/${collParts.coll}/${collParts.top}`;
+      ret.postTitle = "what does the =, rune do?";
       break;
   }
 
@@ -161,9 +165,6 @@ export function getStationDetails(station, config, usership) {
 
 export function getMessageContent(msg, type) {
   let ret = {};
-
-  console.log('msg = ', msg);
-  console.log('type = ', type);
 
   switch (type) {
     case "inbox":
@@ -182,7 +183,7 @@ export function getMessageContent(msg, type) {
       ret.content = msg.sep.lin.msg;
       break;
     case "text":
-      ret.content = msg.sep.fat.tac.text;
+      ret.content = msg.sep.fat.tac.text.substr(0, 500);
       break;
     case "text-topic":
       ret.content = msg.sep.fat.tac.text;
