@@ -8,6 +8,17 @@
   top: 1px;
 }
 
+.inbox-page .icon {
+  position: relative;
+  left: 10px;
+  top: 5px;
+}
+
+.inbox-page .timestamp {
+  position: relative;
+  left: 6px;
+}
+
 /***
   Edit
 ***/

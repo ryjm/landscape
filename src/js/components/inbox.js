@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { prettyShip, foreignUrl } from '../util';
-import { isDMStation } from '../util';
+import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageContent } from '../util';
+import { Icon } from './common/icon';
 import _ from 'lodash';
 
 export class InboxPage extends Component {
@@ -84,107 +84,71 @@ export class InboxPage extends Component {
     });
   }
 
-  buildStationElems() {
-    const inboxMessages = this.props.store.messages.inboxMessages;
+  buildSectionContent(section) {
+    let lastAut = "";
 
-    Object.keys(inboxMessages).map((stationName) => {
-      let prevName = "";
-      let invitePresent = false;
+    let messageRows = section.msgs.map((msg, i) => {
+      let deets = getMessageContent(msg, section.deets.type);
+      let rowAuthor = null;
 
-      let messageElems = inboxMessages.map((msg) => {
-        let appClass = msg.app ? " chat-msg-app" : "";
+      if (lastAut !== msg.aut) {
+        let timestamp = (i === 0) ? (<div className="timestamp">~3m</div>) : null;
 
-        let autLabel = "";
-        let message = "";
-
-        if (prevName !== msg.aut) {
-          autLabel = prettyShip(`~${msg.aut}`);
-          prevName = msg.aut;
-        }
-
-        if (msg.sep.inv && !this.props.store.configs[msg.sep.inv.cir]) {
-          invitePresent = true;
-
-          message = (
-            <span className="ml-4">
-              <span>Invite to <b>{msg.sep.inv.cir}</b>. Would you like to join?</span>
-              <span className="text-500 underline ml-2 mr-2 pointer" onClick={this.acceptInvite} value="yes" data-cir={msg.sep.inv.cir}>Yes</span>
-              <span className="text-500 underline ml-2 mr-2 pointer" onClick={this.acceptInvite} value="no" data-cir={msg.sep.inv.cir}>No</span>
-            </span>
-          );
-        } else if (!this.props.store.configs[stationName]) {  // If message isn't sourced by inbox & is not an invite, render nothing
-          return null;
-        } else if (msg.sep.fat && msg.sep.fat.tac.text) {  // This is an update on a collection circle
-          message = this.renderCollectionUpdate(msg.sep.fat.tac.text, stationName);
-        } else if (msg.sep.lin) {
-          message = msg.sep.lin.msg;
-        }
-
-        return (
-          <li key={msg.uid} className={`row ${appClass}`}>
-            <div className="col-sm-3">
-              {autLabel}
+        rowAuthor = (
+          <div className="row mt-3">
+            <div className="col-sm-1 col-sm-offset-1">
+              {timestamp}
             </div>
-            <div className="col-sm-9">
-              {message}
+            <div className="col-sm-10">
+              <div className="text-mono">~{msg.aut}</div>
             </div>
-          </li>
-        );
-      });
-
-      // Filter out messages set to "null" in last step, messages that aren't sourced from inbox
-      messageElems = messageElems.filter(elem => (elem !== null));
-      if (messageElems.length > 0) {
-        // a collection-based circle
-        if (stationName.indexOf('collection_') > -1) {
-          const collId = this.stationIdParse(stationName);
-          // need to work on how collection updates are sent to hall
-          return (
-            <div className="mb-4" key={stationName}>
-              <a href={`/~~/collections/${collId.coll}`}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[stationName]['cap']}</u></b></a>
-              <ul>
-                {messageElems}
-              </ul>
-            </div>
-          );
-        } else {
-          return (
-            <div className="mb-4" key={stationName}>
-              <a href={`/~~/pages/nutalk/stream?station=${stationName}`}><b><u>{stationName}</u></b></a>
-              <ul>
-                {messageElems}
-              </ul>
-            </div>
-          );
-        }
-      } else {
-        return null;
-      }
-    });
-  }
-
-  buildSectionElems(sections) {
-    return sections.map((section) => {
-      return (
-        <div className="row">
-          <div className="col-sm-1 col-sm-offset-1">
-
           </div>
-          <div className="col-sm-10">
+        );
+      }
 
+      lastAut = msg.aut;
+
+      return (
+        <div key={i}>
+          {rowAuthor}
+          <div className="row">
+            <div className="col-sm-10 col-sm-offset-2">
+              {deets.content}
+            </div>
           </div>
         </div>
       )
-    })
+    });
+
+    return messageRows;
   }
 
-  getSectionType(section) {
-    if (section.includes("inbox")) return "inbox";
-    if (section.includes("collection")) return "text";
-    if (isDMStation(section)) return "dm";
+  buildSections(sections) {
+    return sections.map((section, i) => {
+      let host = section.deets.host;
+      let sectionContent = this.buildSectionContent(section);
+      let hostDisplay = (section.deets.type === "dm") ? null : (
+        <span>
+          <a href={section.deets.hostProfileURL} className="text-700 text-mono underline">~{section.deets.host}</a>
+          <span className="ml-2 mr-2">/</span>
+        </span>
+      );
 
-    let config = this.props.store.configs[section];
-    if (config && config.cap === "chat") return "chat";
+      return (
+        <div className="mt-9 mb-4" key={i}>
+          <div className="row">
+            <div className="col-sm-1 col-sm-offset-1">
+              <Icon className="inbox-icon" type={section.deets.type} />
+            </div>
+            <div className="col-sm-10">
+              {hostDisplay}
+              <a href={section.deets.stationURL} className="text-700 text-mono underline">{section.deets.displayTitle}</a>
+            </div>
+          </div>
+          {sectionContent}
+        </div>
+      )
+    })
   }
 
   trimAudiences(aud) {
@@ -201,7 +165,7 @@ export class InboxPage extends Component {
 
   // Group inbox messages by time-chunked stations, strictly ordered by message time.
   // TODO:  Inbox does not handle messages with multiple audiences very well
-  buildSections() {
+  getSectionData() {
     let inbox = this.props.store.messages.inboxMessages;
 
     let lastStationName = [];
@@ -213,11 +177,10 @@ export class InboxPage extends Component {
       let aud = this.trimAudiences(msg.aud);
 
       if (!_.isEqual(aud, lastStationName)) {
-        let sectionType = this.getSectionType(aud);
-
         sections.push({
           name: aud,
-          msgs: [msg]
+          msgs: [msg],
+          deets: getStationDetails(aud, this.props.store.configs[aud], this.props.api.authTokens.ship)
         });
         stationIndex++;
       } else {
@@ -231,49 +194,12 @@ export class InboxPage extends Component {
   }
 
   render() {
-    // const stationElems = this.buildStationElems();
-    const sections = this.buildSections();
-    const sectionElems = this.buildSectionElems(sections);
-
-    // let olderStations = Object.keys(this.props.store.configs).map(cos => {
-    //   if (inboxKeys.indexOf(cos) === -1) {
-    //     if (cos.indexOf('collection_') > -1) {
-    //       const collId = this.stationIdParse(cos);
-    //       //
-    //       return (
-    //         <div className="mb-4" key={cos}>
-    //           <a href={foreignUrl(collId.ship, this.props.api.authTokens.ship, `/~~/collections/${collId.coll}`)}><b><u>{prettyShip(collId.ship)}/{this.props.store.configs[cos]['cap']}</u></b></a>
-    //         </div>
-    //       )
-    //     } else {
-    //       return (
-    //         <div className="mb-4" key={cos}>
-    //           <a href={`/~~/pages/nutalk/stream?station=${cos}`}><b><u>{cos}</u></b></a>
-    //         </div>
-    //       )
-    //     }
-    //   }
-    // });
-
-    // <div className="icon-chat"></div>
-    // <div className="icon-text"></div>
-    // <div className="icon-text">
-    //   <div className="icon-text-topic"></div>
-    // </div>
-    // <div className="icon-dm"></div>
+    const sections = this.getSectionData();
+    const sectionElems = this.buildSections(sections);
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-1 col-sm-offset-1">
-
-          </div>
-
-
-          <div className="text-mono mt-4">
-            {sectionElems}
-          </div>
-        </div>
+      <div className="inbox-page">
+        {sectionElems}
       </div>
     );
   }

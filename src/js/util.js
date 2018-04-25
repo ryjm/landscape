@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export function getQueryParams() {
   if (window.location.search !== "") {
     return JSON.parse('{"' + decodeURI(window.location.search.substr(1).replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}');
@@ -103,4 +105,89 @@ export function calculateStations(configs) {
   numString = numString.join(", ");
 
   return numString;
+}
+
+export function getStationDetails(station, config, usership) {
+  let ret = {
+    type: "none",
+    host: station.split("/")[0].substr(1),
+    cir: station.split("/")[1],
+    hostProfileURL: '/~~/pages/nutalk/profile' // TODO: Implement actual foreign profile URL
+  };
+
+  if (station.includes("inbox")) ret.type = "inbox";
+  if (isDMStation(station)) ret.type = "dm";
+  if (config && config.cap === "chat") ret.type = "chat";
+
+  if (station.includes("collection")){
+    let st = parseCollCircle(station);
+
+    if (st.top) {
+      ret.type = "text-topic";
+    } else {
+      ret.type = "text";
+    }
+  }
+
+  switch (ret.type) {
+    case "inbox":
+      ret.stationURL = "/~~/pages/nutalk";
+      ret.displayTitle = ret.cir;
+      break;
+    case "chat":
+      ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
+      ret.displayTitle = ret.cir;
+      break;
+    case "dm":
+      let title = config.con.sis
+        .filter((mem) => mem !== usership)
+        .map((mem) => `~${mem}`)
+        .join(", ");
+
+      ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
+      ret.displayTitle = title;
+      break;
+    case "text":
+      ret.stationURL = `/~~/collections/${ret.cir.substr(12)}`;
+      ret.displayTitle = config.cap;
+      break;
+    case "text-topic":
+      // TODO
+      break;
+  }
+
+  return ret;
+}
+
+export function getMessageContent(msg, type) {
+  let ret = {};
+
+  console.log('msg = ', msg);
+  console.log('type = ', type);
+
+  switch (type) {
+    case "inbox":
+      if (_.has(msg, 'sep.app')) {
+        ret.type = "app";
+        ret.content = msg.sep.app.sep.fat.sep.lin.msg;
+      } else if (_.has(msg, 'sep.inv')) {
+        ret.type = "inv";
+        ret.content = msg.sep.inv.cir;
+      }
+      break;
+    case "chat":
+      ret.content = msg.sep.lin.msg;
+      break;
+    case "dm":
+      ret.content = msg.sep.lin.msg;
+      break;
+    case "text":
+      ret.content = msg.sep.fat.tac.text;
+      break;
+    case "text-topic":
+      ret.content = msg.sep.fat.tac.text;
+      break;
+  }
+
+  return ret;
 }

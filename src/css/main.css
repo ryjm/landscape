@@ -68,3 +68,9 @@
 .header-settings {
   margin-left: 30rem;
 }
+
+.timestamp {
+  font-size: 9px;
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+  font-weight: 300;
+}

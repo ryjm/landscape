@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+const INBOX_MESSAGE_COUNT = 30;
+
 // TODO: This being a class is an error, since UrbitReducer doesn't hold state. Export these as individual functions or bundle them some other way.
 
 /**
@@ -91,7 +93,7 @@ export class MessagesReducer {
       }
     });
 
-    storeMessages.inboxMessages = inbox.reverse().slice(0, 20);
+    storeMessages.inboxMessages = inbox.reverse().slice(0, INBOX_MESSAGE_COUNT);
   }
 }
 
