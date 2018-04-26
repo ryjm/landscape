@@ -13,7 +13,7 @@ export class TopicCreatePage extends Component {
   }
 
   titleExtract(s) {
-    const r = s.split('\n').filter(x => 
+    const r = s.split('\n').filter(x =>
       x.startsWith('# ')
     );
     if (r.length > 0) {
@@ -35,7 +35,7 @@ export class TopicCreatePage extends Component {
         }
       }
     } else {
-      // this means that we're using "latest" 
+      // this means that we're using "latest"
       if ('coll' in this.props) {
         dat = {
           submit: {
@@ -58,7 +58,7 @@ export class TopicCreatePage extends Component {
     console.log('dat...', dat);
 
     var target;
-    
+
     if ('coll' in this.props && 'top' in this.props) {
       // this means that it is an edit
       target = `/~~/collections/${this.props.coll}/${this.props.top}`;
@@ -98,25 +98,31 @@ export class TopicCreatePage extends Component {
 
   render() {
     return (
-      <div className="create-collection-page">
-        <div className="input-group">
-          <button 
-            onClick={this.createTopic}
-            className="btn btn-secondary">
-            Save →
-          </button>
-          <button className="btn btn-primary">
-            Preview →
-          </button>
-        </div>
+      <div className="container">
         <div className="row">
-            <textarea
-              className="text-code post-edit"
-              name="topicContent"
-              placeholder="New post"
-              value={this.state.topicContent}
-              onChange={this.valueChange}
-              />
+          <div className="col-sm-offset-2 col-sm-10">
+            <div className="create-collection-page">
+              <div className="input-group">
+                <button
+                  onClick={this.createTopic}
+                  className="btn btn-secondary">
+                  Save →
+                </button>
+                <button className="btn btn-primary">
+                  Preview →
+                </button>
+              </div>
+              <div className="row">
+                  <textarea
+                    className="text-code post-edit"
+                    name="topicContent"
+                    placeholder="New post"
+                    value={this.state.topicContent}
+                    onChange={this.valueChange}
+                    />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )

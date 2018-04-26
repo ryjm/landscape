@@ -81,66 +81,72 @@ export class CollectionCreatePage extends Component {
 
   render() {
     return (
-      <div className="create-collection-page container">
-        <div className="input-group">
-          <label htmlFor="collectionName">Name</label>
-          <input
-            type="text"
-            name="collectionName"
-            placeholder="deep-thoughts"
-            onChange={this.valueChange}
-            value={this.state.collectionName}/>
-        </div>
+      <div className="container">
         <div className="row">
-          <div className="input-group col-md-3">
-            <label htmlFor="visibility">Public</label>
-            <button name="visibility" value="true" className={this.state.visibility ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
-              Yes
-            </button>
-            <button name="visibility" value="false" className={this.state.visibility ? "btn" : "btn-warning"} onClick={this.valueChange}>
-              No
-            </button>
-          </div>
-          <div className="input-group col-md-3">
-            <label htmlFor="comments">Comments</label>
-            <button name="comments" value="true" className={this.state.comments ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
-              Yes
-            </button>
-            <button name="comments" value="false" className={this.state.comments ? "btn" : "btn-warning"} onClick={this.valueChange}>
-              No
-            </button>
-          </div>
-          <div className="input-group col-md-3">
-            <label htmlFor="foreignPost">Others can post</label>
-            <button name="foreignPost" value="true" className={this.state.foreignPost ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
-              Yes
-            </button>
-            <button name="foreignPost" value="false" className={this.state.foreignPost ? "btn" : "btn-warning"} onClick={this.valueChange}>
-              No
-            </button>
+          <div className="col-sm-offset-2 col-sm-10">
+            <div className="create-collection-page">
+              <div className="input-group">
+                <label htmlFor="collectionName">Name</label>
+                <input
+                  type="text"
+                  name="collectionName"
+                  placeholder="deep-thoughts"
+                  onChange={this.valueChange}
+                  value={this.state.collectionName}/>
+              </div>
+              <div className="row">
+                <div className="input-group col-md-3">
+                  <label htmlFor="visibility">Public</label>
+                  <button name="visibility" value="true" className={this.state.visibility ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
+                    Yes
+                  </button>
+                  <button name="visibility" value="false" className={this.state.visibility ? "btn" : "btn-warning"} onClick={this.valueChange}>
+                    No
+                  </button>
+                </div>
+                <div className="input-group col-md-3">
+                  <label htmlFor="comments">Comments</label>
+                  <button name="comments" value="true" className={this.state.comments ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
+                    Yes
+                  </button>
+                  <button name="comments" value="false" className={this.state.comments ? "btn" : "btn-warning"} onClick={this.valueChange}>
+                    No
+                  </button>
+                </div>
+                <div className="input-group col-md-3">
+                  <label htmlFor="foreignPost">Others can post</label>
+                  <button name="foreignPost" value="true" className={this.state.foreignPost ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
+                    Yes
+                  </button>
+                  <button name="foreignPost" value="false" className={this.state.foreignPost ? "btn" : "btn-warning"} onClick={this.valueChange}>
+                    No
+                  </button>
+                </div>
+              </div>
+              <div className="row">
+                <div className="input-group col-md-3">
+                  <label htmlFor="onProfile">On profile</label>
+                  <button name="onProfile" value="true" className={this.state.onProfile ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
+                    Yes
+                  </button>
+                  <button name="onProfile" value="false" className={this.state.onProfile ? "btn" : "btn-warning"} onClick={this.valueChange}>
+                    No
+                  </button>
+                </div>
+              </div>
+              <div className={this.state.sesValidated ? "input-group" : "input-group error"}>
+                <label htmlFor="collection-ships">{this.state.visibility ? 'Blacklist' : 'Whitelist'}</label>
+                <textarea
+                  name="collectionShips"
+                  placeholder="poldec-tonteg sorreg-namtyv"
+                  value={this.state.collectionShips}
+                  onChange={this.valueChange}
+                  />
+              </div>
+              <button type="submit" className={this.state.collectionName.length > 0 ? "btn btn-primary" : "btn disabled"} onClick={this.canSubmit ? this.createCollection : null}> Create →</button>
+            </div>
           </div>
         </div>
-        <div className="row">
-          <div className="input-group col-md-3">
-            <label htmlFor="onProfile">On profile</label>
-            <button name="onProfile" value="true" className={this.state.onProfile ? "btn btn-secondary" : "btn"} onClick={this.valueChange}>
-              Yes
-            </button>
-            <button name="onProfile" value="false" className={this.state.onProfile ? "btn" : "btn-warning"} onClick={this.valueChange}>
-              No
-            </button>
-          </div>
-        </div>
-        <div className={this.state.sesValidated ? "input-group" : "input-group error"}>
-          <label htmlFor="collection-ships">{this.state.visibility ? 'Blacklist' : 'Whitelist'}</label>
-          <textarea
-            name="collectionShips"
-            placeholder="poldec-tonteg sorreg-namtyv"
-            value={this.state.collectionShips}
-            onChange={this.valueChange}
-            />
-        </div>
-        <button type="submit" className={this.state.collectionName.length > 0 ? "btn btn-primary" : "btn disabled"} onClick={this.canSubmit ? this.createCollection : null}> Create →</button>
       </div>
     )
   }

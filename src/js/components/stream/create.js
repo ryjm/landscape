@@ -254,130 +254,132 @@ export class StreamCreatePage extends Component {
     });
 
     return (
-      <div className="row">
-        <div className="col-sm-12">
-          <div className="create-stream-page">
-            <div className="input-group mb-9">
-              <label htmlFor="nom">Name</label>
-              <input
-                type="text"
-                className="input-text-lg"
-                name="nom"
-                placeholder="Secret club"
-                disabled={nomDisabled}
-                onChange={this.valueChange}
-                value={this.state.stream.nom}/>
-            </div>
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-offset-2 col-sm-10">
+            <div className="create-stream-page">
+              <div className="input-group mb-9">
+                <label htmlFor="nom">Name</label>
+                <input
+                  type="text"
+                  className="input-text-lg"
+                  name="nom"
+                  placeholder="Secret club"
+                  disabled={nomDisabled}
+                  onChange={this.valueChange}
+                  value={this.state.stream.nom}/>
+              </div>
 
-            <div className="input-group mb-9">
-              <label htmlFor="stream-type">Type</label>
+              <div className="input-group mb-9">
+                <label htmlFor="stream-type">Type</label>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <div className="select-dropdown" disabled={this.state.loading}>
+                      <select
+                        name="des"
+                        disabled={this.state.loading}
+                        value={this.state.stream.des}
+                        onChange={this.valueChange}>
+
+                        <option value="feed">Feed</option>
+                        <option value="chat">Chat</option>
+                        <option value="list">List</option>
+                        <option value="dm">DM</option>
+                      </select>
+                      <span className="select-icon">↓</span>
+                    </div>
+                  </div>
+                  <div className="col-sm-offset-1 col-sm-5">
+                    <i>{typeDesc}</i>
+                  </div>
+                </div>
+              </div>
+
+              <div className="input-group mb-9">
+                <label htmlFor="stream-security">Security model</label>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <div className="select-dropdown" disabled={secDisabled}>
+                      <select
+                        name="sec"
+                        disabled={secDisabled}
+                        value={this.state.stream.sec}
+                        onChange={this.valueChange}>
+
+                        <option value="village">Village</option>
+                        <option value="channel">Channel</option>
+                        <option value="journal">Journal</option>
+                        <option value="mailbox">Mailbox</option>
+                      </select>
+                      <span className="select-icon">↓</span>
+                    </div>
+                  </div>
+                  <div className="col-sm-offset-1 col-sm-5">
+                    <i>{secDesc}</i>
+                  </div>
+                </div>
+              </div>
+
               <div className="row">
                 <div className="col-sm-6">
-                  <div className="select-dropdown" disabled={this.state.loading}>
-                    <select
-                      name="des"
-                      disabled={this.state.loading}
-                      value={this.state.stream.des}
-                      onChange={this.valueChange}>
+                  <div className="input-group mb-9">
+                    <label htmlFor="stream-ships">{audienceLabel}</label>
 
-                      <option value="feed">Feed</option>
-                      <option value="chat">Chat</option>
-                      <option value="list">List</option>
-                      <option value="dm">DM</option>
-                    </select>
-                    <span className="select-icon">↓</span>
-                  </div>
-                </div>
-                <div className="col-sm-offset-1 col-sm-5">
-                  <i>{typeDesc}</i>
-                </div>
-              </div>
-            </div>
+                    {audienceList}
+                    <div className="text-700 mt-8">Add New</div>
+                    <div className="row">
+                      <input
+                        type="text"
+                        name="audNew"
+                        className="col-sm-8"
+                        placeholder="ramvel-rodpyl"
+                        disabled={this.state.loading}
+                        value={this.state.stream.audNew}
+                        onChange={this.valueChange} />
 
-            <div className="input-group mb-9">
-              <label htmlFor="stream-security">Security model</label>
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="select-dropdown" disabled={secDisabled}>
-                    <select
-                      name="sec"
-                      disabled={secDisabled}
-                      value={this.state.stream.sec}
-                      onChange={this.valueChange}>
-
-                      <option value="village">Village</option>
-                      <option value="channel">Channel</option>
-                      <option value="journal">Journal</option>
-                      <option value="mailbox">Mailbox</option>
-                    </select>
-                    <span className="select-icon">↓</span>
-                  </div>
-                </div>
-                <div className="col-sm-offset-1 col-sm-5">
-                  <i>{secDesc}</i>
-                </div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="input-group mb-9">
-                  <label htmlFor="stream-ships">{audienceLabel}</label>
-
-                  {audienceList}
-                  <div className="text-700 mt-8">Add New</div>
-                  <div className="row">
-                    <input
-                      type="text"
-                      name="audNew"
-                      className="col-sm-8"
-                      placeholder="ramvel-rodpyl"
-                      disabled={this.state.loading}
-                      value={this.state.stream.audNew}
-                      onChange={this.valueChange} />
-
-                    <span className="col-sm-offset-3 col-sm-1 plus" onClick={this.addAud}>+</span>
+                      <span className="col-sm-offset-3 col-sm-1 plus" onClick={this.addAud}>+</span>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <div className="input-group input-group-radio mb-9">
+                <div className="text-700 mt-4">Discoverable?</div>
+
+                <label htmlFor="stream-discoverable-yes"
+                       disabled={this.state.loading}
+                       className={this.state.stream.dis === "yes" ? "radio-active" : ""}> Yes
+                  <input
+                    type="radio"
+                    name="dis"
+                    value="yes"
+                    id="stream-discoverable-yes"
+                    disabled={this.state.loading}
+                    checked={this.state.stream.dis === "yes"}
+                    onChange={this.valueChange}/>
+                </label>
+
+                <label htmlFor="stream-discoverable-no"
+                       disabled={this.state.loading}
+                       className={this.state.stream.dis === "no" ? "radio-active" : ""}> No
+                  <input
+                    type="radio"
+                    name="dis"
+                    value="no"
+                    id="stream-discoverable-no"
+                    disabled={this.state.loading}
+                    checked={this.state.stream.dis === "no"}
+                    onChange={this.valueChange}/>
+                </label>
+              </div>
+
+              <button type="submit" className="btn btn-primary mt-12" onClick={this.submitStream}>{this.state.editLoaded ? "Submit" : "Create"} →</button>
             </div>
-
-            <div className="input-group input-group-radio mb-9">
-              <div className="text-700 mt-4">Discoverable?</div>
-
-              <label htmlFor="stream-discoverable-yes"
-                     disabled={this.state.loading}
-                     className={this.state.stream.dis === "yes" ? "radio-active" : ""}> Yes
-                <input
-                  type="radio"
-                  name="dis"
-                  value="yes"
-                  id="stream-discoverable-yes"
-                  disabled={this.state.loading}
-                  checked={this.state.stream.dis === "yes"}
-                  onChange={this.valueChange}/>
-              </label>
-
-              <label htmlFor="stream-discoverable-no"
-                     disabled={this.state.loading}
-                     className={this.state.stream.dis === "no" ? "radio-active" : ""}> No
-                <input
-                  type="radio"
-                  name="dis"
-                  value="no"
-                  id="stream-discoverable-no"
-                  disabled={this.state.loading}
-                  checked={this.state.stream.dis === "no"}
-                  onChange={this.valueChange}/>
-              </label>
-            </div>
-
-            <button type="submit" className="btn btn-primary mt-12" onClick={this.submitStream}>{this.state.editLoaded ? "Submit" : "Create"} →</button>
           </div>
-        </div>
-        <div className="sidebar fawef">
-          <input type="text" onChange={this.deleteChange} />
-          <button type="button" onClick={this.deleteStream}>Delete</button>
+          <div className="sidebar fawef">
+            <input type="text" onChange={this.deleteChange} />
+            <button type="button" onClick={this.deleteStream}>Delete</button>
+          </div>
         </div>
       </div>
     )

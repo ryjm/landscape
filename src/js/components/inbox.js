@@ -209,7 +209,7 @@ export class InboxPage extends Component {
     const sectionElems = this.buildSections(sections);
 
     return (
-      <div className="inbox-page">
+      <div className="inbox-page container">
         {sectionElems}
       </div>
     );

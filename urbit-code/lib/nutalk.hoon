@@ -23,10 +23,8 @@
           ;div.col-sm-10(urb-component-header "");
         ==
       ==
-      ;div.container
-        ;div#root
-          ;+  inner
-        ==
+      ;div#root
+        ;+  inner
       ==
     ==
 
