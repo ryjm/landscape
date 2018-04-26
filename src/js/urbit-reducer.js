@@ -71,29 +71,20 @@ export class MessagesReducer {
   }
 
   storeInboxMessages(messages, storeMessages) {
-    let inbox = storeMessages.inboxMessages.slice();
+    let msgGams = messages.map(m => m.gam)                  // grab the gam
 
-    messages.forEach((message) => {
-      let msg = message.gam;
+    let ret = storeMessages.inboxMessages
+      .slice()                          // make a shallow copy
+      .concat(msgGams)                  // add new messages
+      .uniq('uid')                      // dedupe
+      .sort((a, b) => b.wen - a.wen)    // sort by date
+      .slice(0, INBOX_MESSAGE_COUNT);   // grab the first 30 or so
 
-      if (inbox.length === 0) {
-        inbox.push(message);
-      } else if (inbox.findIndex(o => o.uid === msg.uid) === -1) {
-        let newest = true;
+    for (let msg of ret) {
+      console.log(`msg ${msg.uid}: ${msg.wen}`);
+    }
 
-        for (let i = 0; i < inbox.length; i++) {
-          if (msg.wen < inbox[i].wen) {
-            inbox.splice(i, 0, msg);
-            newest = false;
-            break;
-          }
-        }
-
-        if (newest) inbox.push(msg);
-      }
-    });
-
-    storeMessages.inboxMessages = inbox.reverse().slice(0, INBOX_MESSAGE_COUNT);
+    storeMessages.inboxMessages = ret;
   }
 }
 

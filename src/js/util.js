@@ -23,7 +23,7 @@ export function uuid() {
 export function parseCollCircle(st) {
   let collMeta = /(.*)\/collection_~(~[a-z,\.,0-9]*)(:?_~)?(:?~.*)?/.exec(st);
   let r;
-  console.log('regex', collMeta);
+  // console.log('regex', collMeta);
   if (collMeta) {
     r = {
       ship: collMeta[1],
@@ -173,7 +173,7 @@ export function getMessageContent(msg, type) {
         ret.content = msg.sep.app.sep.fat.sep.lin.msg;
       } else if (_.has(msg, 'sep.inv')) {
         ret.type = "inv";
-        ret.content = msg.sep.inv.cir;
+        ret.content = `invite to ${msg.sep.inv.cir}...`;
       }
       break;
     case "chat":

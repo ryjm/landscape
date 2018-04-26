@@ -64,7 +64,7 @@ const secToString = function(secs) {
 export class Elapsed extends Component {
   constructor(props) {
     super(props);
-    console.log('elapsed props...', props);
+    // console.log('elapsed props...', props);
   }
 
   renderTime() {
