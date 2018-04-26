@@ -79,3 +79,13 @@ body {
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
   font-weight: 300;
 }
+
+.circle {
+  padding: 0;
+  border-width: 8px;
+  height: 30px;
+  width: 30px;
+
+  position: relative;
+  top: 3px;
+}

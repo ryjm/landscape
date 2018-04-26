@@ -17,7 +17,7 @@
           ==
           ;div.col-sm-1
             ;a/"/~~/pages/nutalk"
-              ;div.liang;
+              ;div.circle;
             ==
           ==
           ;div.col-sm-10(urb-component-header "");

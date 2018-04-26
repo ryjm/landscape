@@ -259,8 +259,6 @@ export class ChatPage extends Component {
       }
     });
 
-    return null;
-
     return (
       <div className="container">
         <div className="row">

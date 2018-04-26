@@ -12,8 +12,6 @@ input[disabled], label[disabled], select[disabled], textarea[disabled], .select-
   border-color: #aaa;
 }
 
-
-
 input.input-sm {
   font-size: 3rem;
   padding: 6px;
@@ -44,10 +42,10 @@ input.input-sm {
 ***/
 
 .panini {
-  border-top: 12px solid #D8D8D8;
-  border-bottom: 12px solid #D8D8D8;
-  height: 36px;
-  width: 36px;
+  border-top: 10px solid black;
+  border-bottom: 10px solid black;
+  height: 32px;
+  width: 32px;
 }
 
 .liang {

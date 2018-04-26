@@ -308,13 +308,6 @@ div.mod
   margin-top: 48px;
 }
 
-.menu-page .circle {
-  padding: 0;
-  border-width: 8px;
-  height: 30px;
-  width: 30px;
-}
-
 .menu-page .cross {
   cursor: pointer;
 }
