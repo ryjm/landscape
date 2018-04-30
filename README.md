@@ -4,7 +4,7 @@
 
 Pull the MVE arvo branch. This is our development branch that includes the latest `%collections` app and the necessary updates to `%clay` and `%ford`
 ```
-git clone git@github.com:vvisigoth/arvo.git -b collections
+git clone git@github.com:urbit/arvo.git -b collections
 ```
 
 ### If you've got a ship running
