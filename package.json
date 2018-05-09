@@ -39,5 +39,8 @@
     "react-router-dom": "^4.2.2",
     "rollup-plugin-json": "^2.3.0",
     "urbit-ob": "^1.0.0"
+  },
+  "resolutions": {
+    "natives": "1.1.3"
   }
 }
