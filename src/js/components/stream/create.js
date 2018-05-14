@@ -75,7 +75,6 @@ export class StreamCreatePage extends Component {
   }
 
   deleteChange(event) {
-    console.log(event.target.value)
     this.setState({
       deleteStream: event.target.value
     });

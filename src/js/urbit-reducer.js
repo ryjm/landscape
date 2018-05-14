@@ -135,6 +135,8 @@ export class ConfigsReducer {
   }
 
   updateConfig(data, station) {
+    if (!station) return;
+
     if (data.src) {
       if (data.add) {
         station.src.push(data.src);

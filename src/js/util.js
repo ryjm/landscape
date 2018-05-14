@@ -139,13 +139,17 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationTitle = ret.cir;
       break;
     case "dm":
-      let title = config.con.sis
-        .filter((mem) => mem !== usership)
-        .map((mem) => `~${mem}`)
-        .join(", ");
+      if (config.con) {
+        ret.stationTitle = ret.cir
+          .split(".")
+          .filter((mem) => mem !== usership)
+          .map((mem) => `~${mem}`)
+          .join(", ");;
+      } else {
+        ret.stationTitle = "unknown";
+      }
 
       ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
-      ret.stationTitle = title;
       break;
     case "text":
       ret.stationURL = `/~~/collections/${collParts.coll}`;
@@ -174,6 +178,7 @@ export function getMessageContent(msg, type) {
       } else if (_.has(msg, 'sep.inv')) {
         ret.type = "inv";
         ret.content = `invite to ${msg.sep.inv.cir}...`;
+        ret.station = msg.sep.inv.cir;
       }
       break;
     case "chat":

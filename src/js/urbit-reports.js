@@ -33,8 +33,15 @@ export let Reports = {
             case "permit":
               api.permit(item.data.nom, item.data.aud, item.data.message);
               break;
-            case "fill-dms":
-              api.bind(`/circle/inbox/${item.data.nom}/grams`, 'PUT');
+            case "subscribe-dm":
+              let dmHost = item.data.nom.split("/")[0].substr(1);
+              api.hall({
+                source: {
+                  nom: item.data.nom,
+                  sub: true,
+                  srs: item.data.srs
+                }
+              });
               break;
           }
         });
@@ -88,3 +95,5 @@ export let Reports = {
     }
   }
 }
+
+window.reports = Reports;

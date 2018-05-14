@@ -51,6 +51,14 @@ export class InboxPage extends Component {
         message: false
       }
     });
+
+    this.props.pushPending("circle.config.dif.full", {
+      type: "subscribe-dm",
+      data: {
+        nom: circle,
+        srs: [station]
+      }
+    });
   }
 
   acceptInvite(evt) {
@@ -85,6 +93,20 @@ export class InboxPage extends Component {
     });
   }
 
+  buildMessageContent(msg) {
+    if (msg.type !== "inv") {
+      return msg.content;
+    } else {
+      return (
+        <div>
+          {msg.content}
+          <span className="btn btn-primary" onClick={this.acceptInvite} data-station={msg.station}>Yes</span>
+          <span className="btn btn-secondary">No</span>
+        </div>
+      )
+    }
+  }
+
   buildSectionContent(section) {
     let lastAut = "";
 
@@ -116,7 +138,7 @@ export class InboxPage extends Component {
           {rowAuthor}
           <div className="row">
             <div className="col-sm-10 col-sm-offset-2">
-              {messageDeets.content}
+              {this.buildMessageContent(messageDeets)}
             </div>
           </div>
         </div>
