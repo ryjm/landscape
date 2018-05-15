@@ -110,7 +110,7 @@ export class UrbitRouter {
 
   registerHistoryListeners() {
     window.onpopstate = (state) => {
-      this.transitionTo(window.location.href, true);
+      this.transitionTo(window.location.pathname + window.location.search, true);
     }
   }
 }
