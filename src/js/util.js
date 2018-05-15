@@ -112,7 +112,7 @@ export function getStationDetails(station, config = {}, usership) {
     type: "none",
     host: station.split("/")[0].substr(1),
     cir: station.split("/")[1],
-    hostProfileURL: '/~~/pages/nutalk/profile' // TODO: Implement actual foreign profile URL
+    hostProfileURL: station.split("/")[0].substr(1) == usership ? '/~~/pages/nutalk/profile' : `/~~/~${station.split("/")[0].substr(1)}/==/web/pages/nutalk/profile`// TODO: Implement actual foreign profile URL
   };
 
   if (station.includes("inbox")) ret.type = "inbox";
@@ -152,7 +152,7 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
       break;
     case "text":
-      ret.stationURL = `/~~/collections/${collParts.coll}`;
+      ret.stationURL = ret.host == usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
       ret.postURL = `/~~/collections/${collParts.coll}`;
       break;

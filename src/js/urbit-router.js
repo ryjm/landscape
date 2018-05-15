@@ -63,6 +63,8 @@ export class UrbitRouter {
     } else if (url.endsWith(".collections-edit")) {
       baseUrl = url;
     // Otherwise append .htm
+    } else if (url.split("/")[2][0] == "~") {
+      baseUrl = url + ".x-htm";
     } else {
       baseUrl = url + ".htm";
     }
@@ -101,7 +103,7 @@ export class UrbitRouter {
         if (el.hostname === "localhost") {
           e.preventDefault();
           let targetUrl = this.pageRoot + href;
-          this.transitionTo(targetUrl);
+          this.transitionTo(el.pathname ? el.pathname : targetUrl);
         }
       }
     });
