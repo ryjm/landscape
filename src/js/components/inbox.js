@@ -93,17 +93,32 @@ export class InboxPage extends Component {
     });
   }
 
-  buildMessageContent(msg) {
-    if (msg.type !== "inv") {
-      return msg.content;
+  buildPostTitle(messageDetails) {
+    if (messageDetails.postURL) {
+      return (
+        <a className="pr-12 text-600 underline"
+          href={messageDetails.postURL}>
+          {messageDetails.postTitle}
+        </a>
+      )
     } else {
+      return null;
+    }
+  }
+
+  buildMessageContent(messageDetails) {
+    if (messageDetails.type === "text") {
+      return this.buildPostTitle(messageDetails);
+    } else if (messageDetails.type === "inv") {
       return (
         <div>
-          {msg.content}
-          <span className="btn btn-primary" onClick={this.acceptInvite} data-station={msg.station}>Yes</span>
+          {messageDetails.content}
+          <span className="btn btn-primary" onClick={this.acceptInvite} data-station={messageDetails.station}>Yes</span>
           <span className="btn btn-secondary">No</span>
         </div>
       )
+    } else {
+      return messageDetails.content;
     }
   }
 
@@ -111,12 +126,12 @@ export class InboxPage extends Component {
     let lastAut = "";
 
     let messageRows = section.msgs.map((msg, i) => {
-      let messageDeets = getMessageContent(msg, section.deets.type);
+      let messageDetails = getMessageContent(msg, section.details);
       let rowAuthor = null;
 
       if (lastAut !== msg.aut) {
+        let topicLink = this.buildPostTitle(messageDetails);
         let timestamp = (i === 0) ? (<div className="timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
-        let topicLink = (section.deets.type === "text") ? <a className="pr-2 text-600 underline" href={section.deets.postURL}>{messageDeets.content.substr(0, 20)}</a> : null;
 
         rowAuthor = (
           <div className="row mt-3">
@@ -138,7 +153,7 @@ export class InboxPage extends Component {
           {rowAuthor}
           <div className="row">
             <div className="col-sm-10 col-sm-offset-2">
-              {this.buildMessageContent(messageDeets)}
+              {this.buildMessageContent(messageDetails)}
             </div>
           </div>
         </div>
@@ -150,19 +165,18 @@ export class InboxPage extends Component {
 
   buildSections(sections) {
     return sections.map((section, i) => {
-      let host = section.deets.host;
       let sectionContent = this.buildSectionContent(section);
-      let hostDisplay = (section.deets.type === "dm") ? null : (
+      let hostDisplay = (section.details.type === "dm") ? null : (
         <span>
-          <a href={section.deets.hostProfileURL} className="text-700 text-mono underline">~{section.deets.host}</a>
+          <a href={section.details.hostProfileURL} className="text-700 text-mono underline">~{section.details.host}</a>
           <span className="ml-2 mr-2">/</span>
         </span>
       );
 
-      let postDisplay = (section.deets.type !== "text-topic") ? null : (
+      let postDisplay = (section.details.type !== "text-topic") ? null : (
         <span>
           <span className="ml-2 mr-2">/</span>
-          <a href={section.deets.postURL} className="text-600 underline">~{section.deets.postTitle}</a>
+          <a href={section.details.postURL} className="text-600 underline">~{section.details.postTitle}</a>
         </span>
       )
 
@@ -170,11 +184,11 @@ export class InboxPage extends Component {
         <div className="mt-9 mb-4" key={i}>
           <div className="row">
             <div className="col-sm-1 col-sm-offset-1">
-              <Icon className="inbox-icon" type={section.deets.type} />
+              <Icon className="inbox-icon" type={section.details.type} />
             </div>
             <div className="col-sm-10">
               {hostDisplay}
-              <a href={section.deets.stationURL} className="text-700 text-mono underline">{section.deets.stationTitle}</a>
+              <a href={section.details.stationURL} className="text-700 text-mono underline">{section.details.stationTitle}</a>
               {postDisplay}
             </div>
           </div>
@@ -213,7 +227,7 @@ export class InboxPage extends Component {
         sections.push({
           name: aud,
           msgs: [msg],
-          deets: getStationDetails(aud, this.props.store.configs[aud], this.props.api.authTokens.ship)
+          details: getStationDetails(aud, this.props.store.configs[aud], this.props.api.authTokens.ship)
         });
         stationIndex++;
       } else {
