@@ -152,7 +152,7 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
       break;
     case "text":
-      ret.stationURL = ret.host == usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
+      ret.stationURL = ret.host === usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
       ret.postURL = `/~~/collections/${collParts.coll}`;
       break;
@@ -167,10 +167,10 @@ export function getStationDetails(station, config = {}, usership) {
   return ret;
 }
 
-export function getMessageContent(msg, type) {
+export function getMessageContent(msg, stationDetails) {
   let ret = {};
 
-  switch (type) {
+  switch (stationDetails.type) {
     case "inbox":
       if (_.has(msg, 'sep.app')) {
         ret.type = "app";
@@ -188,7 +188,11 @@ export function getMessageContent(msg, type) {
       ret.content = msg.sep.lin.msg;
       break;
     case "text":
+      let metadata = msg.sep.fat.sep.lin.msg.split("|");
       ret.content = msg.sep.fat.tac.text.substr(0, 500);
+      ret.postId = metadata[0];
+      ret.postTitle = metadata[1] || ret.content.substr(0, 20);
+      ret.postURL = `${stationDetails.stationURL}/${metadata[0]}`;
       break;
     case "text-topic":
       ret.content = msg.sep.fat.tac.text;

@@ -52,27 +52,33 @@ export class UrbitRouter {
     ReactDOM.render(headerElem, document.querySelectorAll("[urb-component-header]")[0]);
   }
 
-  filterUrl(url) {
-    let q = url.indexOf('?');
-    var baseUrl;
-
-    // If there are query params, preserve 'em
-    if (q !== -1) {
-      baseUrl = `${url.substr(0, q)}.htm?${url.substr(q + 1)}`;
-    // Don't append .htm if it's a known renderer
-    } else if (url.endsWith(".collections-edit")) {
-      baseUrl = url;
-    // Otherwise append .htm
-    } else if (url.split("/")[2][0] == "~") {
-      baseUrl = url + ".x-htm";
+  linkType(path) {
+    if (path.endsWith(".collections-edit")) {
+      return "renderer";
+    } else if (path.split("/")[2][0] == "~") {
+      return "foreign";
     } else {
-      baseUrl = url + ".htm";
+      return "local";
     }
-    return baseUrl;
+  }
+
+  filterUrl(url) {
+    let path = url.split("?");
+    let linkType = this.linkType(path[0]);
+
+    switch (linkType) {
+      case "foreign":
+        path[0] += ".x-htm";
+        break;
+      case "local":
+        path[0] += ".htm";
+        break;
+    }
+
+    return path.join("?");
   }
 
   transitionTo(targetUrl, noHistory) {
-
     console.log("Transition to: ", this.filterUrl(targetUrl));
 
     // TODO: Extremely brittle. Expecting parts of form: /~~/pages/nutalk + /show
@@ -95,23 +101,16 @@ export class UrbitRouter {
         el = el.parentNode;
       }
       // If you find an "a" tag in the clicked element's parents, it's a link
-      if (el) {
-        let href = el.getAttribute('href');
-
-        // TODO: *Extremely* rough way of detecting an external link...
-        //if (href.indexOf('.') === -1) {
-        if (el.hostname === "localhost") {
-          e.preventDefault();
-          let targetUrl = this.pageRoot + href;
-          this.transitionTo(el.pathname ? el.pathname : targetUrl);
-        }
+      if (el && el.hostname === "localhost") {
+        e.preventDefault();
+        this.transitionTo(el.pathname + el.search);
       }
     });
   }
 
   registerHistoryListeners() {
     window.onpopstate = (state) => {
-      this.transitionTo(window.location.href, true);
+      this.transitionTo(window.location.pathname + window.location.search, true);
     }
   }
 }
