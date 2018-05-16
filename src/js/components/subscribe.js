@@ -25,7 +25,7 @@ export class Subscribe extends Component {
   }
 
   checkSubscribed() {
-    let inbox = this.props.store.configs[`~${this.props.store.usership}/inbox`];
+    let inbox = this.props.store.configs[`~${this.props.api.authTokens.user}/inbox`];
     if (!inbox) {
       return false;
     } else if (inbox.src.indexOf(this.props.circle) == -1) {
@@ -36,7 +36,7 @@ export class Subscribe extends Component {
   }
 
   render() {
-    let inbox = this.props.store.configs[`~${this.props.store.usership}/inbox`];
+    let inbox = this.props.store.configs[`~${this.props.api.authTokens.user}/inbox`];
     return (
       <div className="subscribe">
         <button
