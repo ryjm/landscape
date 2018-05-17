@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { calculateStations } from '../util';
-import { isDMStation } from '../util';
+import { calculateStations, isDMStation, getStationDetails } from '../util';
+//import { isDMStation } from '../util';
+//
 
 export class ListPage extends Component {
   constructor(props) {
@@ -57,15 +58,17 @@ export class ListPage extends Component {
 
   buildTextStations() {
     return Object.arrayify(this.props.store.configs).filter((item) => item.key.includes("collection")).map((item) => {
+      console.log('item', item);
+      let deets = getStationDetails(item.key, item.value, this.props.api.authTokens.ship);
       let expandedStationName = [`${item.key.split("/")[0]}`, `${item.value.cap}`];
 
       // go from "~tappyl-dabwex/collection_~~2018.4.19..22.58.12..4c19"
       // to      "~2018.4.19..22.58.12..4c19"
-      let targetPath = item.key.split("/")[1].substr(12);
+      //let targetPath = item.key.split("/")[1].substr(12);
 
       return (
         <div key={item.key} className="mt-3">
-          <div className="text-mono"><a href={`/~~/collections/${targetPath}`}>
+          <div className="text-mono"><a href={deets.stationURL}>
             <u>{expandedStationName[0]}</u>
             <span className="text-600">  /  </span>
             <u className="text-600">{expandedStationName[1]}</u>
