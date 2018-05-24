@@ -172,9 +172,12 @@ export function getMessageContent(msg, stationDetails) {
 
   switch (stationDetails.type) {
     case "inbox":
-      if (_.has(msg, 'sep.app')) {
+      if (_.has(msg, 'sep.app.sep.fat')) {
         ret.type = "app";
         ret.content = msg.sep.app.sep.fat.sep.lin.msg;
+      } else if (_.has(msg, 'sep.app.sep.lin')) {
+        ret.type = "app";
+        ret.content = msg.sep.app.sep.lin.msg;
       } else if (_.has(msg, 'sep.inv')) {
         ret.type = "inv";
         ret.content = `invite to ${msg.sep.inv.cir}...`;
