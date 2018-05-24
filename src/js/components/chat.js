@@ -248,7 +248,7 @@ export class ChatPage extends Component {
           <div className="chat-sep" key={msg.date}>{msg.date}</div>
         )
       } else if (_.has(msg, 'sep.url')) {
-          if (/(jpg|img|png|tiff|jpeg|JPG|IMG|PNG|TIFF)$/.exec(msg.sep.url)) {
+          if (/(jpg|img|png|tiff|gif|jpeg|JPG|IMG|PNG|TIFF)$/.exec(msg.sep.url)) {
             return (
               <img style={{width:"100%"}} src={msg.sep.url}></img>
             )

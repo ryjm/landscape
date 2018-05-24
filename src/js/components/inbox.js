@@ -118,7 +118,7 @@ export class InboxPage extends Component {
         </div>
       )
     } else if (messageDetails.type === "url") {
-        if (/(jpg|img|png|tiff|jpeg|JPG|IMG|PNG|TIFF)$/.exec(messageDetails.content)) {
+        if (/(jpg|img|png|gif|tiff|jpeg|JPG|IMG|PNG|TIFF)$/.exec(messageDetails.content)) {
           return (
             <img src={messageDetails.content}></img>
           )
