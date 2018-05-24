@@ -104,20 +104,17 @@ export class ChatPage extends Component {
     }
 
     let message = {
-      uid: uuid(),
       aud: aud,
-      aut: api.authTokens.ship,
-      wen: Date.now(),
-      sep: {
+      ses: [{
         lin: {
           msg: this.state.message,
           pat: false
         }
-      }
+      }]
     };
 
     this.props.api.hall({
-      convey: [message]
+      phrase: message
     });
 
     this.setState({
