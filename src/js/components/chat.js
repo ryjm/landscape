@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { uuid } from '../util';
@@ -249,6 +250,20 @@ export class ChatPage extends Component {
         return (
           <div className="chat-sep" key={msg.date}>{msg.date}</div>
         )
+      } else if (_.has(msg, 'sep.url')) {
+          if (/(jpg|img|png|tiff|jpeg|JPG|IMG|PNG|TIFF)$/.exec(msg.sep.url)) {
+            return (
+              <img style={{width:"100%"}} src={msg.sep.url}></img>
+            )
+          }
+          else {
+            return (
+              <div key={msg.uid} className={`row ${appClass}`}>
+                <div className="col-sm-2 text-mono">{autLabel}</div>
+                <div className="col-sm-8 url"><a href={msg.sep.url}>{msg.sep.url}</a></div>
+              </div>
+            )
+          }
       } else {
         return (
           <div key={msg.uid} className={`row ${appClass}`}>

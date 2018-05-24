@@ -117,6 +117,17 @@ export class InboxPage extends Component {
           <span className="btn btn-secondary">No</span>
         </div>
       )
+    } else if (messageDetails.type === "url") {
+        if (/(jpg|img|png|tiff|jpeg|JPG|IMG|PNG|TIFF)$/.exec(messageDetails.content)) {
+          return (
+            <img src={messageDetails.content}></img>
+          )
+        }
+        else {
+          return (
+            <a href={messageDetails.content}>{messageDetails.content}</a>
+          )
+        }
     } else {
       return messageDetails.content;
     }

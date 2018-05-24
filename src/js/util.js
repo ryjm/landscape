@@ -175,17 +175,31 @@ export function getMessageContent(msg, stationDetails) {
       if (_.has(msg, 'sep.app')) {
         ret.type = "app";
         ret.content = msg.sep.app.sep.fat.sep.lin.msg;
+      } else if (_.has(msg, 'sep.url')) {
+        ret.type = "url";
+        ret.content = msg.sep.url;
       } else if (_.has(msg, 'sep.inv')) {
         ret.type = "inv";
         ret.content = `invite to ${msg.sep.inv.cir}...`;
         ret.station = msg.sep.inv.cir;
       }
       break;
+    // do these need to be all separate?
     case "chat":
-      ret.content = msg.sep.lin.msg;
+      if (_.has(msg, 'sep.url')) {
+        ret.type = "url";
+        ret.content = msg.sep.url;
+      } else {
+        ret.content = msg.sep.lin.msg;
+      }
       break;
     case "dm":
-      ret.content = msg.sep.lin.msg;
+      if (_.has(msg, 'sep.url')) {
+        ret.type = "url";
+        ret.content = msg.sep.url;
+      } else {
+        ret.content = msg.sep.lin.msg;
+      }
       break;
     case "text":
       let metadata = msg.sep.fat.sep.lin.msg.split("|");

@@ -19,6 +19,10 @@
   left: 6px;
 }
 
+.inbox-page img {
+  width: 100%;
+}
+
 /***
   Edit
 ***/
@@ -161,6 +165,10 @@
   display: flex;
   flex-direction: column;
   /* justify-content: flex-end; */
+}
+
+.chat-scrollpane img {
+  width: 100%;
 }
 
 .chat-scrollpane-view > * {
