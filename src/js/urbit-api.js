@@ -68,20 +68,17 @@ class UrbitApi {
     if (message) {
       let audInboxes = aud.map((aud) => `~${aud}/inbox`);
       let inviteMessage = {
-        uid: uuid(),
         aud: audInboxes,
-        aut: this.authTokens.ship,
-        wen: Date.now(),
-        sep: {
+        ses: [{
           inv: {
             inv: true,
             cir: `~${this.authTokens.ship}/${nom}`
           }
-        }
+        }]
       };
 
       this.hall({
-        convey: [inviteMessage]
+        phrase: inviteMessage
       });
     }
   }
