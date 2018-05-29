@@ -16,6 +16,7 @@
 =,  old-zuse
 
 ;div.container
+  ;input(type "hidden", name "urb-header", value "collection-index");
   ;div.row
     ;div.col-sm-10.col-sm-offset-2
       ;div.collection-index

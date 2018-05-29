@@ -6,6 +6,19 @@ body {
   line-height: 40px;
 }
 
+.header-container {
+  padding-top: 1rem;
+  border-bottom: 1px solid #E6E6E6;
+}
+
+.header-link {
+  font-size: 3rem;
+  line-height: 3rem;
+
+  font-weight: 500;
+  text-decoration: none;
+}
+
 .sidebar {
   position: absolute;
   right: 24rem;
@@ -42,11 +55,6 @@ body {
 
 .nav-main li {
   margin: 0 2rem;
-}
-
-.header-container {
-  padding-top: 12rem;
-  padding-bottom: 9rem;
 }
 
 .header-main {

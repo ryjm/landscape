@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { ComponentMap } from './component-map';
 import { UrbitWarehouse } from './urbit-warehouse';
 import { UrbitOperator } from './urbit-operator';
-import HtmlToReact from 'html-to-react';
 import { getQueryParams } from './util';
 import { api } from './urbit-api';
+import { Root } from './root';
 
 export class UrbitRouter {
   constructor() {
@@ -23,33 +22,15 @@ export class UrbitRouter {
   }
 
   renderRoot() {
-    this.setHeader(null);
-
     let rootComponent = (
-      <RootComponent
+      <Root
         store={this.warehouse.store}
         pushPending={this.warehouse.pushPending}
         queryParams={getQueryParams()}
-        setHeader={this.setHeader}
         scaffold={this.scaffold} />
     )
 
     ReactDOM.render(rootComponent, document.querySelectorAll("#root")[0]);
-  }
-
-  setHeader(headerElem) {
-    if (!headerElem) {
-      headerElem = (
-        <div className="flex align-center">
-          <h3 className="underline text-gray">
-            <a href="/~~/pages/nutalk">Inbox</a>
-          </h3>
-          <span className="ml-15"><i>"Try using cmd+k to open the menu"</i></span>
-        </div>
-      );
-    }
-
-    ReactDOM.render(headerElem, document.querySelectorAll("[urb-component-header]")[0]);
   }
 
   linkType(path) {
@@ -112,58 +93,5 @@ export class UrbitRouter {
     window.onpopstate = (state) => {
       this.transitionTo(window.location.pathname + window.location.search, true);
     }
-  }
-}
-
-class RootComponent extends Component {
-  constructor(props) {
-    super(props);
-
-    // Required to convert arbitrary HTML into React elements
-    this.htmlParser = HtmlToReact.Parser();
-    this.htmlParserNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
-  }
-
-  reactify() {
-    let instructions = [{
-      replaceChildren: true,
-      shouldProcessNode: (node) => {
-        return node.attribs && !!node.attribs['urb-component']
-      },
-      processNode: (node) => {
-        let componentName = node.attribs['urb-component'];
-        let propsObj = {};
-
-        Object.keys(node.attribs)
-          .filter((key) => key.indexOf('urb-') !== -1 && key !== "urb-component")
-          .forEach((key) => {
-            let keyName = key.substr(4);  // "urb-timestamp" => "timestamp"
-            propsObj[keyName] = node.attribs[key];
-          });
-
-        return React.createElement(ComponentMap[componentName].comp, Object.assign({
-          api: api,
-          store: this.props.store,
-          pushPending: this.props.pushPending,
-          queryParams: this.props.queryParams,
-          setHeader: this.props.setHeader
-        }, propsObj));
-      }
-    }, {
-      shouldProcessNode: () => true,
-      processNode: this.htmlParserNodeDefinitions.processDefaultNode
-    }];
-
-    return this.htmlParser.parseWithInstructions(this.props.scaffold, () => true, instructions);
-  }
-
-  render() {
-    let children = this.reactify();
-
-    return (
-      <div>
-        {children}
-      </div>
-    )
   }
 }

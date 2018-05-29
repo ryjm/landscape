@@ -1,6 +1,4 @@
-
 import React, { Component } from 'react';
-//import { util } from '../../util';
 
 export class CommentCreate extends Component {
   constructor(props) {
