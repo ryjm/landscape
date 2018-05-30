@@ -14,6 +14,8 @@ export class UrbitRouter {
     this.warehouse = new UrbitWarehouse(this.renderRoot.bind(this));
     this.operator = new UrbitOperator(this.warehouse);
 
+    window.warehouse = this.warehouse;
+
     this.scaffold = document.querySelectorAll("#root")[0].innerHTML;
     this.renderRoot();
 

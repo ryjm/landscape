@@ -1,8 +1,43 @@
 import React, { Component } from 'react';
 import { IconBlog } from './icons/icon-blog';
+import { getQueryParams } from './util';
+import { api } from './urbit-api';
 
 export class Header extends Component {
+  constructor(props) {
+    super(props);
+
+    let stationName = `${props.data.ship}/collection_~${props.data.id}`;
+
+    this.state = {
+      stationName: stationName
+    };
+
+    this.toggleSubscribe = this.toggleSubscribe.bind(this);
+  }
+
+  isSubscribed() {
+    let inbox = this.props.store.configs[`~${api.authTokens.ship}/inbox`];
+    return inbox.src.includes(this.state.stationName);
+  }
+
+  toggleSubscribe() {
+    let subscribed = this.isSubscribed();
+
+    api.hall({
+      source: {
+        nom: "inbox",
+        sub: !subscribed,
+        srs: [this.state.stationName]
+      }
+    });
+  }
+
   getContent() {
+    let subscribeButton = (this.isSubscribed()) ?
+      (<button type="button" onClick={this.toggleSubscribe} className="btn btn-sm btn-secondary">Unsubscribe</button>) :
+      (<button type="button" onClick={this.toggleSubscribe} className="btn btn-sm btn-primary">Subscribe</button>);
+
     switch(this.props.type) {
       case "collection-index":
         return (
@@ -12,20 +47,28 @@ export class Header extends Component {
                 <div className="panini"></div>
               </a>
               <div className="mr-8"><IconBlog /></div>
-              <h3>Urbit Development</h3>
+              <h3>{this.props.data.title}</h3>
             </div>
             <div className="flex align-center">
               <a href="/~~/details" className="header-link mr-6">Details</a>
-              <a href="/~~/subscribe">
-                <button type="button" className="btn btn-sm btn-primary">Subscribe</button>
-              </a>
+              {subscribeButton}
             </div>
           </div>
         )
         break;
       default:
-        return null;
-        break;
+      return (
+        <div className="flex">
+          <div className="flex align-center">
+            <a href="/~~/pages/nutalk/menu" className="mr-22">
+              <div className="panini"></div>
+            </a>
+            <div className="mr-8"><div style={{width: "18px", height: "18px"}}></div></div>
+            <h3>Inbox</h3>
+          </div>
+        </div>
+      )
+      break;
     }
   }
 

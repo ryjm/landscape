@@ -49,12 +49,21 @@ export class Root extends Component {
     let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
     let headerQuery = tempDOM.querySelectorAll('[name="urb-header"]');
     let header = (headerQuery.length > 0) ? headerQuery[0].getAttribute('value') : "default";
+    let headerData = {
+      title: (headerQuery.length > 0) ? headerQuery[0].getAttribute('title') : null,
+      id: (headerQuery.length > 0) ? headerQuery[0].getAttribute('id') : null,
+      ship: (headerQuery.length > 0) ? headerQuery[0].getAttribute('ship') : null
+    }
 
     let children = this.reactify();
 
     return (
       <div>
-        <Header type={header} />
+        <Header
+          type={header}
+          data={headerData}
+          store={this.props.store}
+        />
         {children}
       </div>
     )

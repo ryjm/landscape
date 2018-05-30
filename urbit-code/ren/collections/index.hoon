@@ -16,7 +16,7 @@
 =,  old-zuse
 
 ;div.container
-  ;input(type "hidden", name "urb-header", value "collection-index", blogname "{(trip desc.config)}");
+  ;input(type "hidden", name "urb-header", value "collection-index", title "{(trip desc.config)}", id "{(trip -.s.bem.gas)}", ship "{(scow %p p.bem.gas)}");
   ;div.row
     ;div.col-sm-10.col-sm-offset-2
       ;div.collection-index.mt-12
