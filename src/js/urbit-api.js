@@ -9,18 +9,18 @@ class UrbitApi {
   }
 
   // keep default bind to hall, since its bind procedure more complex for now AA
-  bind(path, method, appl = "hall") {
+  bind(path, method, ship = this.authTokens.ship, appl = "hall") {
     console.log('binding to ...', appl);
     const params = {
       appl,
       mark: "json",
       oryx: this.authTokens.oryx,
-      ship: this.authTokens.ship,
+      ship: ship,
       path: path,
       wire: path
     };
 
-    fetch(`/~/is/~${this.authTokens.user}/${appl}${path}.json?${method}`, {
+    fetch(`/~/is/~${ship}/${appl}${path}.json?${method}`, {
       credentials: "same-origin",
       method: "POST",
       body: JSON.stringify(params)
