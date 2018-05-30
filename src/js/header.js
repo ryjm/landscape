@@ -7,18 +7,17 @@ export class Header extends Component {
   constructor(props) {
     super(props);
 
-    let stationName = `${props.data.ship}/collection_~${props.data.id}`;
-
-    this.state = {
-      stationName: stationName
-    };
-
     this.toggleSubscribe = this.toggleSubscribe.bind(this);
+  }
+
+  stationName() {
+    return `${this.props.data.ship}/collection_~${this.props.data.id}`;
   }
 
   isSubscribed() {
     let inbox = this.props.store.configs[`~${api.authTokens.ship}/inbox`];
-    return inbox.src.includes(this.state.stationName);
+    if (!inbox) return false;
+    return inbox.src.includes(this.stationName());
   }
 
   toggleSubscribe() {
@@ -28,7 +27,7 @@ export class Header extends Component {
       source: {
         nom: "inbox",
         sub: !subscribed,
-        srs: [this.state.stationName]
+        srs: [this.stationName()]
       }
     });
   }

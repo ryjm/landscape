@@ -12,6 +12,7 @@
 ^-  manx
 ;div.container
   ;div.row
+    ;input(type "hidden", name "urb-header", value "collection-index", title "{(trip desc:(need config))}", id "{(trip +<:s.bem.gas)}", ship "{(scow %p p.bem.gas)}");
     ;div.col-sm-10.col-sm-offset-2
       ;div.post
         ;div.topic-info.mb-4
