@@ -16,27 +16,27 @@
 =,  old-zuse
 
 ;div.container
-  ;input(type "hidden", name "urb-header", value "collection-index");
+  ;input(type "hidden", name "urb-header", value "collection-index", blogname "{(trip desc.config)}");
   ;div.row
     ;div.col-sm-10.col-sm-offset-2
-      ;div.collection-index
-        ;h1: {(trip desc.config)}
-        ;*  ?:  (authed:colls gas)
-          ;=
-            ;div.row
-              ;a(href "/~~/pages/nutalk/collection/post?coll={(trip -.s.bem.gas)}")
-                ;button.btn.btn-secondary
-                  ; Write →
-                ==
-              ==
-              ;a.ml-4.mt-2.text-600(href "")
-                  ; Settings →
-              ==
-            ==
-          ==
-        ;=
-          ;div(urb-component "Subscribe", urb-circle "{(scow %p p.bem.gas)}/collection_~{(trip -:s.bem.gas)}");
-        ==
+      ;div.collection-index.mt-12
+        :: ;h1: {(trip desc.config)}
+        :: ;*  ?:  (authed:colls gas)
+        ::   ;=
+        ::     ;div.row
+        ::       ;a(href "/~~/pages/nutalk/collection/post?coll={(trip -.s.bem.gas)}")
+        ::         ;button.btn.btn-secondary
+        ::           ; Write →
+        ::         ==
+        ::       ==
+        ::       ;a.ml-4.mt-2.text-600(href "")
+        ::           ; Settings →
+        ::       ==
+        ::     ==
+        ::   ==
+        :: ;=
+        ::   ;div(urb-component "Subscribe", urb-circle "{(scow %p p.bem.gas)}/collection_~{(trip -:s.bem.gas)}");
+        :: ==
         ;ul
           ;*  %+  turn
                 %+  sort
@@ -46,11 +46,11 @@
               |=  [t=knot topi=topicshow:collections]
               ;*  ?:  comm.config
                     ;*  ?:  xeno.config
-                      ;li.forum.mb-8
-                        ;div.text-mono
+                      ;li.collection-post.mt-6
+                        ;div.collection-date
                           ; {(trip t)}
                         ==
-                        ;div.h3.mt-0
+                        ;h3
                           ;a(href "/~~/collections/{(trip -.s.bem.gas)}/{(trip t)}"): {(trip tit.info.top.topi)}
                         ==
                         ;div.who.text-mono.text-600
@@ -63,11 +63,11 @@
                           ==
                         ==
                       ==
-                    ;li.blog.mb-8
-                      ;div.text-mono
+                    ;li.collection-post.mt-6
+                      ;div.collection-date
                         ; {(trip t)}
                       ==
-                      ;div.h2.mt-0
+                      ;h3
                         ;a(href "/~~/collections/{(trip -.s.bem.gas)}/{(trip t)}")
                         *{hed.snip.topi}
                         ==

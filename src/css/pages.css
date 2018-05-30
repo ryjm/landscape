@@ -254,27 +254,10 @@ div.mod
   font-size: 6rem;
 }
 
-.collection-index li.forum::before {
-  content: "•";
-  position: absolute;
-  font-size: 10rem;
-  margin-left: -12rem;
-  margin-top: 9rem;
-}
-
 .collection-index li.forum .meta-cont > div
 {
   float: left;
 }
-
-.collection-index li.blog::before {
-  content: "•";
-  position: absolute;
-  font-size: 10rem;
-  margin-left: -12rem;
-  margin-top: 11rem;
-}
-
 
 .collection-index li.notes .da {
   position: absolute;
@@ -290,10 +273,20 @@ div.mod
   width: 100%;
 }
 
+.collection-index ul {
+  list-style-type: none;
+}
+
+.collection-date {
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+  font-weight: 300;
+  font-size: 3rem;
+  line-height: 3rem;
+}
+
 .post img {
   width: 100%;
 }
-
 
 .post #edit
 {
@@ -306,6 +299,31 @@ div.mod
   font-size: 10rem;
   margin-left: -12rem;
   margin-top: 4rem;
+}
+
+.collection-post::before {
+  content: "";
+  background-color: #0A7960;
+  border-radius: 1px;
+
+  width: 2rem;
+  height: 2rem;
+
+  position: absolute;
+  margin-left: -11rem;
+  margin-top: 30px;
+}
+
+.collection-post h3 {
+  font-weight: 500;
+  margin: 1rem 0 3rem;
+}
+
+.collection-text, .snippet p {
+  font-size: 14px;
+  line-height: 24px;
+
+  font-family: "San Francisco Text", arial;
 }
 
 /***
