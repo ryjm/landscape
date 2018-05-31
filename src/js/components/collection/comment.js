@@ -58,7 +58,6 @@ export class CommentCreate extends Component {
           className={this.state.comment.length > 0 ? "btn btn-tetiary" : "btn disabled"}>
           Publish →
         </button>
-
       </div>
     )
   }

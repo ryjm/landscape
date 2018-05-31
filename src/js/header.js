@@ -39,7 +39,7 @@ export class Header extends Component {
 
     switch(this.props.type) {
       case "collection-index":
-        let collectionURL = `/~~/collections/${this.props.data.id}`;
+        let collectionURL = `../${this.props.data.id}`;
 
         return (
           <div className="flex space-between">

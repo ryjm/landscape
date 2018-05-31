@@ -39,31 +39,31 @@
           ==
           ;*  ?:  comm:(need config)
             ;=
-              ;div.coms
-                ;div(urb-component "IconComment");
-                  ;ol
-                    ;*  %+  turn
-                          %+  sort
-                            ~(tap by coms.metawcom)
-                          |=  [a=[c=@da d=[mod=@da who=@p wat=wain]] b=[c=@da d=[mod=@da who=@p wat=wain]]]
-                          (lth (unt c.a) (unt c.b))
-                          ::
-                        |=  [c=@da d=[mod=@da who=@p wat=wain]]
-                        ;li
-                          ;div.da.text-mono.ml-12(urb-component "Elapsed", urb-timestring "{(esoo:colls mod.d)}");
-                          ;div.com.ml-12.mb-6
-                            ;div.who.text-mono
-                              ;a(href "")
-                                {(trip (scot %p who.d))}
-                              ==
-                            ==
-                            ;div.com-body
-                              ; {(trip (of-wain:format wat.d))}
-                            ==
+              ;div
+                ;div.mb-2
+                  ;div(urb-component "IconComment");
+                ==
+                ;ul
+                  ;*  %+  turn
+                        %+  sort
+                          ~(tap by coms.metawcom)
+                        |=  [a=[c=@da d=[mod=@da who=@p wat=wain]] b=[c=@da d=[mod=@da who=@p wat=wain]]]
+                        (lth (unt c.a) (unt c.b))
+                        ::
+                      |=  [c=@da d=[mod=@da who=@p wat=wain]]
+                      ;li.collection-comment
+                        ;div.collection-comment-avatar;
+                        ;div
+                          ;div
+                            ;a.collection-comment-author.text-mono(href ""): {(trip (scot %p who.d))}
                           ==
+                          ;p: {(trip (of-wain:format wat.d))}
                         ==
-                  ==
-                  ;div.ml-12(urb-component "CommentCreate", urb-coll "{(trip +<:s.bem.gas)}", urb-top "{(trip -:s.bem.gas)}");
+                        ;span.collection-date.text-black.mr-2(urb-component "Elapsed", urb-timestring "{(esoo:colls mod.d)}");
+                        ;span.collection-date: {(esoo:colls mod.d)}
+                      ==
+                ==
+                ;div(urb-component "CommentCreate", urb-coll "{(trip +<:s.bem.gas)}", urb-top "{(trip -:s.bem.gas)}");
               ==
             ==
           ~

@@ -1,13 +1,14 @@
-.body-text, p {
+body, .body-text, p {
   font-size: 14px;
   line-height: 24px;
 
-  font-family: "San Francisco Text", arial;  
+  font-family: "San Francisco Text", arial;
 }
 
 ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 ul li {
@@ -143,6 +144,10 @@ input.input-sm {
   color: #9B9B9B;
 }
 
+.text-black {
+  color: black !important;
+}
+
 /***
   Form elements
 ***/
@@ -223,4 +228,8 @@ button.disabled {
 
 .block {
   display: block;
+}
+
+.no-underline {
+  text-decoration: none;
 }

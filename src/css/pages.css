@@ -217,24 +217,6 @@ textarea.comment-edit
   padding: 0;
 }
 
-.coms ol
-{
-  counter-reset: a -1;
-}
-
-.coms ol>li::before
-{
-  font-weight: 400;
-  position: absolute;
-  font-family: Source Code Pro,Roboto mono,Courier New,monospace;
-  color: #9b9b9b;
-}
-
-.coms ol>li>div.da
-{
-  color: #9b9b9b;
-}
-
 .create-comment button.disabled
 {
   display: none;
@@ -342,6 +324,24 @@ div.mod
 
 .collection-post-page {
   padding-top: 12rem;
+}
+
+.collection-comment {
+  margin-bottom: 11rem;
+  position: relative;
+}
+
+.collection-comment-avatar {
+  position: absolute;
+  margin-left: -10rem;
+  content: "hi!"
+}
+
+.collection-comment-author {
+  font-size: 14px;
+  line-height: 24px;
+  text-decoration: none;
+  font-weight: 700;
 }
 
 /***
