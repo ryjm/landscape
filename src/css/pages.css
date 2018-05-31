@@ -333,8 +333,12 @@ div.mod
 
 .collection-comment-avatar {
   position: absolute;
-  margin-left: -10rem;
-  content: "hi!"
+
+  left: -12rem;
+  top: 7px;
+
+  width: 32px;
+  height: 32px;
 }
 
 .collection-comment-author {

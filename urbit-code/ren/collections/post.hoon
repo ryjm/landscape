@@ -52,7 +52,9 @@
                         ::
                       |=  [c=@da d=[mod=@da who=@p wat=wain]]
                       ;li.collection-comment
-                        ;div.collection-comment-avatar;
+                        ;div.collection-comment-avatar
+                          ;div(urb-component "AvatarSample1");
+                        ==
                         ;div
                           ;div
                             ;a.collection-comment-author.text-mono(href ""): {(trip (scot %p who.d))}
