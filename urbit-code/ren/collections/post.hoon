@@ -12,22 +12,16 @@
 ^-  manx
 ;div.container
   ;div.row
+    ;input(type "hidden", name "urb-header", value "collection-index", title "{(trip desc:(need config))}", id "{(trip +<:s.bem.gas)}", ship "{(scow %p p.bem.gas)}");
     ;div.col-sm-10.col-sm-offset-2
-      ;div.post
-        ;div.topic-info.mb-4
-          ;div.row.coll-title
-            ;a(href "/~~/collections/{(trip +<:s.bem.gas)}")
-              {(trip desc:(need config))} /
-            ==
-          ==
-          ;div.row.mod.text-mono
-            ; {(trip -:s.bem.gas)}
-          ==
+      ;div.post.collection-post-page
+        ;div.row.collection-date
+          ;span: {(trip -:s.bem.gas)}
         ==
         ::
         ;div#show
-          ;div.row.tit
-            ;h1: {(trip tit.info.metawcom)}
+          ;div.row.tit.mt-6.collection-title
+            ;h3: {(trip tit.info.metawcom)}
           ==
           ;*  ?:  (authed:colls gas)
                 ;=
@@ -38,38 +32,40 @@
                   ==
                 ==
               ;=
-                ;div(urb-component "Subscribe", urb-circle "{(scow %p p.bem.gas)}/collection_~{(trip +<:s.bem.gas)}_~{(trip -:s.bem.gas)}");
+                ;div;
               ==
-          ;div.row.content.mb-18
+          ;div.row.content.mb-18.mt-6
             +{content}
           ==
           ;*  ?:  comm:(need config)
             ;=
-              ;div.coms
-                ;h3: Comments
-                  ;ol
-                    ;*  %+  turn
-                          %+  sort
-                            ~(tap by coms.metawcom)
-                          |=  [a=[c=@da d=[mod=@da who=@p wat=wain]] b=[c=@da d=[mod=@da who=@p wat=wain]]]
-                          (lth (unt c.a) (unt c.b))
-                          ::
-                        |=  [c=@da d=[mod=@da who=@p wat=wain]]
-                        ;li
-                          ;div.da.text-mono.ml-12(urb-component "Elapsed", urb-timestring "{(esoo:colls mod.d)}");
-                          ;div.com.ml-12.mb-6
-                            ;div.who.text-mono
-                              ;a(href "")
-                                {(trip (scot %p who.d))}
-                              ==
-                            ==
-                            ;div.com-body
-                              ; {(trip (of-wain:format wat.d))}
-                            ==
-                          ==
+              ;div
+                ;div.mb-2
+                  ;div(urb-component "IconComment");
+                ==
+                ;ul
+                  ;*  %+  turn
+                        %+  sort
+                          ~(tap by coms.metawcom)
+                        |=  [a=[c=@da d=[mod=@da who=@p wat=wain]] b=[c=@da d=[mod=@da who=@p wat=wain]]]
+                        (lth (unt c.a) (unt c.b))
+                        ::
+                      |=  [c=@da d=[mod=@da who=@p wat=wain]]
+                      ;li.collection-comment
+                        ;div.collection-comment-avatar
+                          ;div(urb-component "AvatarSample1");
                         ==
-                  ==
-                  ;div.ml-12(urb-component "CommentCreate", urb-coll "{(trip +<:s.bem.gas)}", urb-top "{(trip -:s.bem.gas)}");
+                        ;div
+                          ;div
+                            ;a.collection-comment-author.text-mono(href ""): {(trip (scot %p who.d))}
+                          ==
+                          ;p: {(trip (of-wain:format wat.d))}
+                        ==
+                        ;span.collection-date.text-black.mr-2(urb-component "Elapsed", urb-timestring "{(esoo:colls mod.d)}");
+                        ;span.collection-date: {(esoo:colls mod.d)}
+                      ==
+                ==
+                ;div(urb-component "CommentCreate", urb-coll "{(trip +<:s.bem.gas)}", urb-top "{(trip -:s.bem.gas)}");
               ==
             ==
           ~

@@ -1,27 +1,9 @@
 import React, { Component } from 'react';
 import { calculateStations, isDMStation, getStationDetails } from '../util';
-//import { isDMStation } from '../util';
-//
 
 export class ListPage extends Component {
   constructor(props) {
     super(props);
-  }
-
-  buildHeader() {
-    let numString = calculateStations(this.props.store.configs);
-
-    return (
-      <div>
-        <b>List —</b>
-        <span className="ml-4">{numString}</span>
-      </div>
-    );
-  }
-
-  componentDidUpdate() {
-    let header = this.buildHeader();
-    this.props.setHeader(header);
   }
 
   buildChatStations() {

@@ -1,6 +1,4 @@
-
 import React, { Component } from 'react';
-//import { util } from '../../util';
 
 export class CommentCreate extends Component {
   constructor(props) {
@@ -60,7 +58,6 @@ export class CommentCreate extends Component {
           className={this.state.comment.length > 0 ? "btn btn-tetiary" : "btn disabled"}>
           Publish →
         </button>
-
       </div>
     )
   }
