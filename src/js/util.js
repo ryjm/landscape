@@ -160,7 +160,8 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationURL = `/~~/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
       ret.postURL = `/~~/collections/${collParts.coll}/${collParts.top}`;
-      ret.postTitle = "what does the =, rune do?";
+      ret.postID = collParts.top;
+      ret.postTitle = null;  // TODO: Should be able to determine this from the station metadata alone.
       break;
   }
 

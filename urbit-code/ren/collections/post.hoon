@@ -35,7 +35,7 @@
                 ;div;
               ==
           ;div.row.content.mb-18.mt-6
-            +{content}
+            ;div: +{content}
           ==
           ;*  ?:  comm:(need config)
             ;=
