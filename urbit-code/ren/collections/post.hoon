@@ -14,21 +14,14 @@
   ;div.row
     ;input(type "hidden", name "urb-header", value "collection-index", title "{(trip desc:(need config))}", id "{(trip +<:s.bem.gas)}", ship "{(scow %p p.bem.gas)}");
     ;div.col-sm-10.col-sm-offset-2
-      ;div.post
-        ;div.topic-info.mb-4
-          ;div.row.coll-title
-            ;a(href "/~~/collections/{(trip +<:s.bem.gas)}")
-              {(trip desc:(need config))} /
-            ==
-          ==
-          ;div.row.mod.text-mono
-            ; {(trip -:s.bem.gas)}
-          ==
+      ;div.post.collection-post-page
+        ;div.row.collection-date
+          ;span: {(trip -:s.bem.gas)}
         ==
         ::
         ;div#show
-          ;div.row.tit
-            ;h1: {(trip tit.info.metawcom)}
+          ;div.row.tit.mt-6.collection-title
+            ;h3: {(trip tit.info.metawcom)}
           ==
           ;*  ?:  (authed:colls gas)
                 ;=
@@ -39,15 +32,15 @@
                   ==
                 ==
               ;=
-                ;div(urb-component "Subscribe", urb-circle "{(scow %p p.bem.gas)}/collection_~{(trip +<:s.bem.gas)}_~{(trip -:s.bem.gas)}");
+                ;div;
               ==
-          ;div.row.content.mb-18
+          ;div.row.content.mb-18.mt-6
             +{content}
           ==
           ;*  ?:  comm:(need config)
             ;=
               ;div.coms
-                ;h3: Comments
+                ;div(urb-component "IconComment");
                   ;ol
                     ;*  %+  turn
                           %+  sort

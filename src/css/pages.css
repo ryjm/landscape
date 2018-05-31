@@ -277,13 +277,6 @@ div.mod
   list-style-type: none;
 }
 
-.collection-date {
-  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
-  font-weight: 300;
-  font-size: 3rem;
-  line-height: 3rem;
-}
-
 .post img {
   width: 100%;
 }
@@ -301,7 +294,20 @@ div.mod
   margin-top: 4rem;
 }
 
-.collection-post::before {
+/**/
+
+.collection-date {
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+  font-weight: 300;
+  font-size: 3rem;
+  line-height: 3rem;
+}
+
+.collection-title {
+  position: relative;
+}
+
+.collection-post::before, .collection-title::before {
   content: "";
   background-color: #0A7960;
   border-radius: 1px;
@@ -310,8 +316,16 @@ div.mod
   height: 2rem;
 
   position: absolute;
-  margin-left: -11rem;
+}
+
+.collection-post::before {
   margin-top: 30px;
+  margin-left: -11rem;
+}
+
+.collection-title::before {
+  margin-top: 22px;
+  margin-left: -10rem;
 }
 
 .collection-post h3 {
@@ -324,6 +338,10 @@ div.mod
   line-height: 24px;
 
   font-family: "San Francisco Text", arial;
+}
+
+.collection-post-page {
+  padding-top: 12rem;
 }
 
 /***

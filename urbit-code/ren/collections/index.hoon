@@ -69,7 +69,7 @@
                       ==
                       ;h3
                         ;a(href "/~~/collections/{(trip -.s.bem.gas)}/{(trip t)}")
-                        *{hed.snip.topi}
+                          ;span: *{hed.snip.topi}
                         ==
                       ==
                       ;*  ?~  hed.snip.topi

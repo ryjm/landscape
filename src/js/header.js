@@ -39,6 +39,8 @@ export class Header extends Component {
 
     switch(this.props.type) {
       case "collection-index":
+        let collectionURL = `/~~/collections/${this.props.data.id}`;
+
         return (
           <div className="flex space-between">
             <div className="flex align-center">
@@ -46,7 +48,7 @@ export class Header extends Component {
                 <div className="panini"></div>
               </a>
               <div className="mr-8"><IconBlog /></div>
-              <h3>{this.props.data.title}</h3>
+              <h3><a href={collectionURL}>{this.props.data.title}</a></h3>
             </div>
             <div className="flex align-center">
               <a href="/~~/details" className="header-link mr-6">Details</a>
