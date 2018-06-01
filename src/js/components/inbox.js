@@ -208,7 +208,7 @@ export class InboxPage extends Component {
         postDisplay = (
           <span>
             <span className="ml-2 mr-2">/</span>
-            <a href={section.details.postURL} className="text-600 underline">{postTitle}</a>
+            <a href={section.details.postURL} className="text-700 underline">{postTitle}</a>
           </span>
         )
       }
@@ -221,7 +221,7 @@ export class InboxPage extends Component {
             </div>
             <div className="col-sm-10">
               {hostDisplay}
-              <a href={section.details.stationURL} className="text-700 text-mono underline">{section.details.stationTitle}</a>
+              <a href={section.details.stationURL} className="text-700 underline">{section.details.stationTitle}</a>
               {postDisplay}
             </div>
           </div>

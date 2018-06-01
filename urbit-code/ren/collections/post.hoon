@@ -16,6 +16,7 @@
     ;div.col-sm-10.col-sm-offset-2
       ;div.post.collection-post-page
         ;div.row.collection-date
+          ;span.mr-2.text-black.text-500(urb-component "Elapsed", urb-timestring "{(esoo:colls mod.info.metawcom)}");
           ;span: {(trip -:s.bem.gas)}
         ==
         ::
@@ -25,7 +26,7 @@
           ==
           ;*  ?:  (authed:colls gas)
                 ;=
-                  ;a(href "/~~/collections/{(trip +<:s.bem.gas)}/{(trip -:s.bem.gas)}.collections-edit")
+                  ;a(href ".collections-edit")
                     ;button#edit-btn.btn.btn-primary.mb-4
                       ; Edit →
                     ==
@@ -41,7 +42,8 @@
             ;=
               ;div
                 ;div.mb-2
-                  ;div(urb-component "IconComment");
+                  ;span(urb-component "IconComment");
+                  ;span: {<~(wyt by coms.metawcom)>}
                 ==
                 ;ul
                   ;*  %+  turn
@@ -57,7 +59,7 @@
                         ==
                         ;div
                           ;div
-                            ;a.collection-comment-author.text-mono(href ""): {(trip (scot %p who.d))}
+                            ;a.collection-comment-author.text-mono(href "/~~/pages/nutalk/profile"): {(trip (scot %p who.d))}
                           ==
                           ;p: {(trip (of-wain:format wat.d))}
                         ==
