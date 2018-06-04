@@ -190,6 +190,14 @@ button.disabled {
   margin-bottom: 0;
 }
 
+.btn-spinner {
+  animation: spin linear 1s infinite;
+  position: relative;
+  left: 5px;
+
+  display: inline-block;
+}
+
 /***
   Utils
 ***/

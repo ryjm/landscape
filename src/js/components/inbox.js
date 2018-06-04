@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Elapsed } from './common/elapsed';
+import { Elapsed } from '../common/elapsed';
 import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageContent } from '../util';
-import { Icon } from './common/icon';
+import { Icon } from '../common/icon';
 import _ from 'lodash';
 
 export class InboxPage extends Component {

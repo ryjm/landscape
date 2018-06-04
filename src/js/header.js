@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { IconBlog } from './icons/icon-blog';
 import { getQueryParams } from './util';
 import { api } from './urbit-api';
+import { Button } from './common/button';
 
 export class Header extends Component {
   constructor(props) {
@@ -33,9 +34,8 @@ export class Header extends Component {
   }
 
   getContent() {
-    let subscribeButton = (this.isSubscribed()) ?
-      (<button type="button" onClick={this.toggleSubscribe} className="btn btn-sm btn-secondary">Unsubscribe</button>) :
-      (<button type="button" onClick={this.toggleSubscribe} className="btn btn-sm btn-primary">Subscribe</button>);
+    let btnClass = (this.isSubscribed()) ? " btn-secondary" : " btn-primary";
+    let btnLabel = (this.isSubscribed()) ? "Unsubscribe" : "Subscribe";
 
     switch(this.props.type) {
       case "collection-index":
@@ -52,7 +52,13 @@ export class Header extends Component {
             </div>
             <div className="flex align-center">
               <a href="/~~/details" className="header-link mr-6">Details</a>
-              {subscribeButton}
+              <Button
+                classes={`btn btn-sm${btnClass}`}
+                action={this.toggleSubscribe}
+                content={btnLabel}
+                pushPending={this.props.pushPending}
+                responseKey="circle.config.dif.source"
+                 />
             </div>
           </div>
         )
@@ -66,6 +72,7 @@ export class Header extends Component {
             </a>
             <div className="mr-8"><div style={{width: "18px", height: "18px"}}></div></div>
             <h3>Inbox</h3>
+            <span className="ml-16"><i>Try using "cmd+k" to open the menu.</i></span>
           </div>
         </div>
       )

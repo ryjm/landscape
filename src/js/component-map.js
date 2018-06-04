@@ -7,7 +7,7 @@ import { CollectionCreatePage } from './components/collection/create';
 import { TopicCreatePage } from './components/collection/createTopic';
 import { CommentCreate } from './components/collection/comment';
 import { Subscribe } from './components/subscribe';
-import { Elapsed } from './components/common/elapsed';
+import { Elapsed } from './common/elapsed';
 import { IconComment } from './icons/icon-comment';
 import { AvatarSample1 } from './icons/avatar-sample-1';
 

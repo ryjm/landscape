@@ -54,6 +54,9 @@ export let Reports = {
     execute: function (rep) {
       if (this.pending) {
         this.pending.forEach((item) => {
+          if (typeof item === "function") {
+            item(rep);
+          }
           switch(item.type) {
             case "transition":
               window.router.transitionTo(item.data.target);

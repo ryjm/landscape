@@ -101,3 +101,9 @@ body {
   position: relative;
   top: 3px;
 }
+
+/**
+  Keyframes
+**/
+
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

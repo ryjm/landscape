@@ -63,6 +63,7 @@ export class Root extends Component {
           type={header}
           data={headerData}
           store={this.props.store}
+          pushPending={this.props.pushPending}
         />
         {children}
       </div>
