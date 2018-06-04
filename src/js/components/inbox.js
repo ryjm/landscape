@@ -111,10 +111,10 @@ export class InboxPage extends Component {
       return this.buildPostTitle(messageDetails);
     } else if (messageDetails.type === "inv") {
       return (
-        <div>
+        <div className="invite">
           {messageDetails.content}
           <button className="btn btn-primary accept" onClick={this.acceptInvite} data-station={messageDetails.station}>Yes</button>
-          <button className="btn btn-secondary">No</button>
+          <button className="btn btn-secondary decline">No</button>
         </div>
       )
     } else if (messageDetails.type === "url") {
