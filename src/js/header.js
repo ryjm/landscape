@@ -56,7 +56,7 @@ export class Header extends Component {
                 classes={`btn btn-sm${btnClass}`}
                 action={this.toggleSubscribe}
                 content={btnLabel}
-                pushPending={this.props.pushPending}
+                pushCallback={this.props.pushCallback}
                 responseKey="circle.config.dif.source"
                  />
             </div>

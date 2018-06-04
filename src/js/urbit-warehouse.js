@@ -59,7 +59,14 @@ export class UrbitWarehouse {
 
     reportTypes.forEach((type) => {
       let reportData = _.get(json, type, null);
-      if (!_.isEmpty(reportData)) {
+
+      let hasContent = (
+        (_.isArray(reportData) && _.isEmpty(reportData)) ||
+        (_.isObject(reportData) && _.isEmpty(reportData)) ||
+        (reportData !== null)
+      );
+
+      if (hasContent) {
         // TODO: Actually grab the data again, "up the chain", for when
         // fragments don't contain all the data we need
         reportData = _.get(json, this.reports[type].dataKey, null);

@@ -206,11 +206,15 @@ export function getMessageContent(msg, stationDetails) {
       }
       break;
     case "text":
-      let metadata = msg.sep.fat.sep.lin.msg.split("|");
-      ret.content = msg.sep.fat.tac.text.substr(0, 500);
-      ret.postId = metadata[0];
-      ret.postTitle = metadata[1] || ret.content.substr(0, 20);
-      ret.postURL = `${stationDetails.stationURL}/${metadata[0]}`;
+      if (_.has(msg, 'sep.lin.msg')) {
+        ret.content = msg.sep.lin.msg
+      } else if (_.has(msg, 'sep.fat.sep.lin.msg')) {
+        let metadata = msg.sep.fat.sep.lin.msg.split("|");
+        ret.content = msg.sep.fat.tac.text.substr(0, 500);
+        ret.postId = metadata[0];
+        ret.postTitle = metadata[1] || ret.content.substr(0, 20);
+        ret.postURL = `${stationDetails.stationURL}/${metadata[0]}`;
+      }
       break;
     case "text-topic":
       ret.content = msg.sep.fat.tac.text;

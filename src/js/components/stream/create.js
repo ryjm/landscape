@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { arrayEqual } from '../../util';
+import { Button } from '/common/button';
 
 export class StreamCreatePage extends Component {
   constructor(props) {
@@ -367,12 +368,22 @@ export class StreamCreatePage extends Component {
                 </label>
               </div>
 
-              <button type="submit" className="btn btn-primary mt-12" onClick={this.submitStream}>{this.state.editLoaded ? "Submit" : "Create"} →</button>
+              <Button
+                classes="btn btn-primary mt-12"
+                content={this.state.editLoaded ? "Submit →" : "Create →"}
+                action={this.submitStream}
+                pushCallback={this.props.pushCallback}
+                responseKey="circle.config.dif.full" />
             </div>
           </div>
           <div className="sidebar fawef">
             <input type="text" onChange={this.deleteChange} />
-            <button type="button" onClick={this.deleteStream}>Delete</button>
+            <Button
+              classes="button"
+              content="Delete"
+              action={this.deleteStream}
+              pushCallback={this.props.pushCallback}
+              responseKey="circle.config.dif.remove" />
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
 var json = require('rollup-plugin-json');
 var builtins = require('rollup-plugin-node-builtins');
+var rootImport = require('rollup-plugin-root-import');
 
 var serve = require('gulp-webserver');
 
@@ -50,6 +51,11 @@ gulp.task('bundle-js', function() {
       }),
       replace({
         'process.env.NODE_ENV': JSON.stringify('development')
+      }),
+      rootImport({
+        root: `${__dirname}/src/js`,
+        useEntry: 'prepend',
+        extensions: '.js'
       }),
       json(),
       builtins(),
