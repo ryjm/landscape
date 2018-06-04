@@ -109,7 +109,7 @@ export function calculateStations(configs) {
 
 export function getStationDetails(station, config = {}, usership) {
   let ret = {
-    type: "none",
+    type: "chat",
     host: station.split("/")[0].substr(1),
     cir: station.split("/")[1],
     hostProfileURL: station.split("/")[0].substr(1) == usership ? '/~~/pages/nutalk/profile' : `/~~/~${station.split("/")[0].substr(1)}/==/web/pages/nutalk/profile`// TODO: Implement actual foreign profile URL

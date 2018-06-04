@@ -6,8 +6,15 @@ export class ListPage extends Component {
     super(props);
   }
 
+  isChat(i) {
+    console.log('item', i);
+    const s = getStationDetails(i, {}, this.props.api.authTokens.ship);
+    return s.type == "chat"
+  }
+  //
+
   buildChatStations() {
-    return Object.arrayify(this.props.store.configs).filter((item) => item.value.cap === "chat").map((item) => {
+    return Object.arrayify(this.props.store.configs).filter((item) => this.isChat(item.key)).map((item) => {
       let expandedStationName = item.key.split("/");
 
       return (
