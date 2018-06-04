@@ -3,6 +3,7 @@ import { Elapsed } from '../common/elapsed';
 import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageContent } from '../util';
 import { Icon } from '../common/icon';
 import _ from 'lodash';
+import { Button } from '/common/button';
 
 export class InboxPage extends Component {
   constructor(props) {
@@ -58,18 +59,15 @@ export class InboxPage extends Component {
     });
   }
 
-  acceptInvite(evt) {
-    let station = evt.target.dataset.station;
-    let val = evt.target.attributes.value;
-
-    if (val === "no") {
+  acceptInvite(actionData) {
+    if (actionData.response === "no") {
       return;
     }
 
-    if (isDMStation(station)) {
-      this.createDMStation(station);
+    if (isDMStation(actionData.station)) {
+      this.createDMStation(actionData.station);
     } else {
-      this.subStation(station);
+      this.subStation(actionData.station);
     }
   }
 
@@ -107,7 +105,15 @@ export class InboxPage extends Component {
       return (
         <div className="invite">
           {messageDetails.content}
-          <button className="btn btn-primary accept" onClick={this.acceptInvite} data-station={messageDetails.station}>Yes</button>
+          <Button
+            classes="btn btn-primary accept"
+            action={this.acceptInvite}
+            actionData={{station: messageDetails.station, response: "yes"}}
+            pushCallback={this.props.pushCallback}
+            responseKey="circle.config.dif.full"
+            content="Yes"
+           />
+
           <button className="btn btn-secondary decline">No</button>
         </div>
       )

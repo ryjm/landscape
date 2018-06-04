@@ -15,7 +15,7 @@ export class Button extends Component {
   buttonClick() {
     this.setState({ status: STATUS_LOADING });
 
-    this.props.action();
+    this.props.action(this.props.actionData);
 
     this.props.pushCallback(this.props.responseKey, (rep) => {
       this.setState({ status: STATUS_READY });
