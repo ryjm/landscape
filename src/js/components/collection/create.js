@@ -43,10 +43,7 @@ export class CollectionCreatePage extends Component {
     });
 
     this.props.pushPending("circle.config.dif.full", {
-      type: "transition",
-      data: {
-        target: '/~~/collections/latest'
-      }
+      type: "transition-collection"
     });
   }
 

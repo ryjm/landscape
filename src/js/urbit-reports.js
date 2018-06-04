@@ -30,6 +30,11 @@ export let Reports = {
             case "transition":
               window.router.transitionTo(item.data.target);
               break;
+            case "transition-collection":
+              let collID = rep.data.src[0].split("/")[1].substr(12);
+              let url = `/~~/collections/${collID}`;
+              window.router.transitionTo(url);
+              break;
             case "permit":
               api.permit(item.data.nom, item.data.aud, item.data.message);
               break;
