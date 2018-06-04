@@ -51,7 +51,7 @@ export class Header extends Component {
               <h3><a href={collectionURL}>{this.props.data.title}</a></h3>
             </div>
             <div className="flex align-center">
-              <a href="/~~/details" className="header-link mr-6">Details</a>
+              <a href={`/~~/pages/nutalk/collection/post?coll=${this.props.data.id}`} className="header-link mr-6">Details</a>
               <Button
                 classes={`btn btn-sm${btnClass}`}
                 action={this.toggleSubscribe}

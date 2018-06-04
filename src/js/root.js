@@ -32,7 +32,7 @@ export class Root extends Component {
         return React.createElement(ComponentMap[componentName].comp, Object.assign({
           api: api,
           store: this.props.store,
-          pushPending: this.props.pushPending,
+          pushCallback: this.props.pushCallback,
           queryParams: this.props.queryParams
         }, propsObj));
       }

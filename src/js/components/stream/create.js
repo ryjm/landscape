@@ -123,28 +123,23 @@ export class StreamCreatePage extends Component {
       loading: true
     });
 
-    this.props.pushPending("circles", {
-      type: "subscribe-inbox",
-      data: {
-        cir: `~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
-      }
-    })
+    this.props.pushCallback("circles", (rep) => {
+      api.hall({
+        source: {
+          nom: 'inbox',
+          sub: true,
+          srs: [`~${this.props.api.authTokens.ship}/${this.state.stream.nom}`]
+        }
+      })
+    });
 
-    this.props.pushPending("circle.config.dif.full", {
-      type: "transition",
-      data: {
-        target: `/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`
-      }
+    this.props.pushCallback("circle.config.dif.full", (rep) => {
+      window.router.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`)
     });
 
     if (this.state.stream.aud.length > 0) {
-      this.props.pushPending("circle.config.dif.full", {
-        type: "permit",
-        data: {
-          nom: this.state.stream.nom,
-          aud: this.state.stream.aud,
-          message: true
-        }
+      this.props.pushCallback("circle.config.dif.full", (rep) => {
+        api.permit(this.state.stream.nom, this.state.stream.aud, true);
       });
     }
   }

@@ -38,15 +38,20 @@ export class CollectionCreatePage extends Component {
       }
     });
 
-    this.props.pushPending("circles", {
-      type: "subscribe-inbox"
-    });
+    this.props.pushCallback("circles", (rep) => {
+      api.hall({
+        source: {
+          nom: 'inbox',
+          sub: true,
+          srs: [`~${this.props.api.authTokens.ship}/${rep.data.cir}`]
+        }
+      })
+    })
 
-    this.props.pushPending("circle.config.dif.full", {
-      type: "transition",
-      data: {
-        target: '/~~/collections/latest'
-      }
+    this.props.pushCallback("circle.config.dif.full", (rep) => {
+      let collID = rep.data.src[0].split("/")[1].substr(12);
+      let url = `/~~/collections/${collID}`;
+      window.router.transitionTo(url);
     });
   }
 

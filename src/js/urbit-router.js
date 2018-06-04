@@ -27,7 +27,7 @@ export class UrbitRouter {
     let rootComponent = (
       <Root
         store={this.warehouse.store}
-        pushPending={this.warehouse.pushPending}
+        pushCallback={this.warehouse.pushCallback}
         queryParams={getQueryParams()}
         scaffold={this.scaffold} />
     )

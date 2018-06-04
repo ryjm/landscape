@@ -1,5 +1,4 @@
 import { api } from './urbit-api';
-import { Reports } from './urbit-reports';
 import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 
@@ -90,39 +89,12 @@ export class UrbitOperator {
           console.log("new server data: ", data);
 
           if (data.data) {
-            const hallReports = this.extractReports(data);
+            this.warehouse.storePollResponse(data);
           }
 
           this.seqn++;
           this.runPoll();
         }
     });
-  }
-
-  extractReports(serverData) {
-    let reports = [];
-    let reportTypes = Object.keys(Reports);
-    let json = serverData.data.json;
-
-    reportTypes.forEach((type) => {
-      let reportData = _.get(json, type, null);
-      if (!_.isEmpty(reportData)) {
-
-        // TODO: Awful, ugly hack. Maybe fix this with API discussion.
-        if (Reports[type].include) {
-          reportData = _.get(json, Reports[type].include, null);
-        }
-
-        reports.push({
-          type: type,
-          data: reportData,
-          from: serverData.from
-        });
-      }
-    });
-
-    reports.forEach((rep) => console.log('new report: ', rep));
-
-    this.warehouse.storeReports(reports);
   }
 }

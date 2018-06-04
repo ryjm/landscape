@@ -17,7 +17,7 @@ export class Button extends Component {
 
     this.props.action();
 
-    this.props.pushPending(this.props.responseKey, (rep) => {
+    this.props.pushCallback(this.props.responseKey, (rep) => {
       this.setState({ status: STATUS_READY });
     });
   }

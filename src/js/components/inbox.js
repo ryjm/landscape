@@ -29,35 +29,32 @@ export class InboxPage extends Component {
       }
     });
 
-    this.props.pushPending("circles", {
-      type: "subscribe-inbox",
-      data: {
-        cir: `~${this.props.api.authTokens.ship}/${circle}`
-      }
+    this.props.pushCallback("circles", (rep) => {
+      api.hall({
+        source: {
+          nom: 'inbox',
+          sub: true,
+          srs: [`~${this.props.api.authTokens.ship}/${rep.data.cir}`]
+        }
+      })
     });
 
-    this.props.pushPending("circle.config.dif.full", {
-      type: "transition",
-      data: {
-        target: `/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`
-      }
+    this.props.pushCallback("circle.config.dif.full", (rep) => {
+      window.router.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
     });
 
-    this.props.pushPending("circle.config.dif.full", {
-      type: "permit",
-      data: {
-        nom: circle,
-        aud: everyoneElse,
-        message: false
-      }
+    this.props.pushCallback("circle.config.dif.full", (rep) => {
+      api.permit(circle, everyoneElse, false);
     });
 
-    this.props.pushPending("circle.config.dif.full", {
-      type: "subscribe-dm",
-      data: {
-        nom: circle,
-        srs: [station]
-      }
+    this.props.pushCallback("circle.config.dif.full", (rep) => {
+      api.hall({
+        source: {
+          nom: circle,
+          sub: true,
+          srs: [station]
+        }
+      })
     });
   }
 
@@ -85,11 +82,8 @@ export class InboxPage extends Component {
       }
     });
 
-    this.props.pushPending("circle.config.dif.source", {
-      type: "transition",
-      data: {
-        target: `/~~/pages/nutalk/stream?station=${station}`
-      }
+    this.props.pushCallback("circle.config.dif.source", (rep) => {
+      window.router.transitionTo(`/~~/pages/nutalk/stream?station=${station}`);
     });
   }
 
@@ -111,10 +105,10 @@ export class InboxPage extends Component {
       return this.buildPostTitle(messageDetails);
     } else if (messageDetails.type === "inv") {
       return (
-        <div>
+        <div className="invite">
           {messageDetails.content}
           <button className="btn btn-primary accept" onClick={this.acceptInvite} data-station={messageDetails.station}>Yes</button>
-          <button className="btn btn-secondary">No</button>
+          <button className="btn btn-secondary decline">No</button>
         </div>
       )
     } else if (messageDetails.type === "url") {

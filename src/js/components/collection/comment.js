@@ -21,11 +21,8 @@ export class CommentCreate extends Component {
       }
     });
 
-    this.props.pushPending("circle.gram", {
-      type: "transition",
-      data: {
-        target: `/~~/collections/${this.props.coll}/${this.props.top}`
-      }
+    this.props.pushCallback("circle.gram", (rep) => {
+      window.router.transitionTo(`/~~/collections/${this.props.coll}/${this.props.top}`);
     });
   }
 

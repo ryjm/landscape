@@ -74,15 +74,18 @@ export class TopicCreatePage extends Component {
 
     this.props.api.coll(dat);
 
-    this.props.pushPending("circles", {
-      type: "subscribe-inbox"
+    this.props.pushCallback("circles", (rep) => {
+      api.hall({
+        source: {
+          nom: 'inbox',
+          sub: true,
+          srs: [`~${this.props.api.authTokens.ship}/${rep.data.cir}`]
+        }
+      })
     });
 
-    this.props.pushPending("circle.config.dif.full", {
-      type: "transition",
-      data: {
-        target
-      }
+    this.props.pushCallback("circle.config.dif.full", (rep) => {
+      window.router.transitionTo(target);
     });
   }
 
