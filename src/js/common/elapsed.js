@@ -75,7 +75,7 @@ export class Elapsed extends Component {
 
   render() {
     return (
-      <span>-{this.renderTime()}</span>
+      <span className={this.props.classes}>-{this.renderTime()}</span>
     )
   }
 }

@@ -206,12 +206,12 @@
   Collections
 **/
 
-textarea.post-edit
+textarea.collection-post-edit
 {
   height: 80%;
-  border: none;
+  border: 1px solid #D0D0D0;
   resize: none;
-  padding: 8rem 12rem;
+  padding: 13rem 21rem;
 }
 
 textarea.comment-edit
@@ -293,7 +293,7 @@ div.mod
   position: relative;
 }
 
-.collection-post::before, .collection-title::before {
+.collection-post::before, .collection-title::before, .collection-edit::before {
   content: "";
   background-color: #0A7960;
   border-radius: 1px;
@@ -312,6 +312,10 @@ div.mod
 .collection-title::before {
   margin-top: 22px;
   margin-left: -10rem;
+}
+
+.collection-edit::before {
+  margin-left: -11rem;
 }
 
 .collection-post h3 {
@@ -350,6 +354,12 @@ div.mod
   line-height: 24px;
   text-decoration: none;
   font-weight: 700;
+}
+
+.collection-post-actions {
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
 }
 
 /***

@@ -89,7 +89,7 @@ export class CollectionCreatePage extends Component {
       <div className="container">
         <div className="row">
           <div className="col-sm-offset-2 col-sm-10">
-            <div className="create-collection-page">
+            <div>
               <div className="input-group">
                 <label htmlFor="collectionName">Name</label>
                 <input
