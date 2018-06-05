@@ -41,6 +41,10 @@ export class Header extends Component {
       case "collection-index":
         let collectionURL = `../${this.props.data.id}`;
 
+        let actionLink = (this.props.data.postid) ?
+          (<a href={`/~~/pages/nutalk/collection/post?coll=${this.props.data.id}`} className="header-link mr-6">Edit</a>) :
+          (<a href={`/~~/pages/nutalk/collection/post?coll=${this.props.data.id}`} className="header-link mr-6">Write</a>)
+
         return (
           <div className="flex space-between">
             <div className="flex align-center">
@@ -51,7 +55,6 @@ export class Header extends Component {
               <h3><a href={collectionURL}>{this.props.data.title}</a></h3>
             </div>
             <div className="flex align-center">
-              <a href={`/~~/pages/nutalk/collection/post?coll=${this.props.data.id}`} className="header-link mr-6">Details</a>
               <Button
                 classes={`btn btn-sm${btnClass}`}
                 action={this.toggleSubscribe}

@@ -52,7 +52,8 @@ export class Root extends Component {
     let headerData = {
       title: (headerQuery.length > 0) ? headerQuery[0].getAttribute('title') : null,
       id: (headerQuery.length > 0) ? headerQuery[0].getAttribute('id') : null,
-      ship: (headerQuery.length > 0) ? headerQuery[0].getAttribute('ship') : null
+      ship: (headerQuery.length > 0) ? headerQuery[0].getAttribute('ship') : null,
+      postid: (headerQuery.length > 0) ? headerQuery[0].getAttribute('postid') : null,
     }
 
     let children = this.reactify();
