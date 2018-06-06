@@ -45,7 +45,7 @@ export class Header extends Component {
         if (authed) {
           actionLink = (this.props.data.postid) ?
             (<a href={normalizeForeignURL(`collections/${stationDetails.collId}/${this.props.data.postid}.collections-edit`)} className="header-link mr-6">Edit</a>) :
-            (<a href={`/~~/pages/nutalk/collection/post?station=${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)
+            (<a href={`/~~/pages/nutalk/collection/post?station=~${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)
         }
 
         return (

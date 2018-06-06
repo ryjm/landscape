@@ -24,17 +24,6 @@
           ;div.row.tit.mt-6.collection-title
             ;h3: {(trip tit.info.metawcom)}
           ==
-          ;*  ?:  (authed:colls gas)
-                ;=
-                  ;a(href "{(trip -:s.bem.gas)}.collections-edit")
-                    ;button#edit-btn.btn.btn-primary.mb-4
-                      ; Edit →
-                    ==
-                  ==
-                ==
-              ;=
-                ;div;
-              ==
           ;div.row.content.mb-18.mt-6
             ;div: +{content}
           ==

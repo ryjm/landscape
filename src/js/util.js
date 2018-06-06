@@ -8,14 +8,22 @@ export function getQueryParams() {
   }
 }
 
-export function normalizeForeignURL(fragment) {
+export function normalizeForeignURL(fragment, usership) {
   let isForeign = window.location.pathname.includes("/==/web/");
+  let foreignHostship;
+  if (getQueryParams().station && usership) {
+    let hostship = getQueryParams().station.split("/")[0].substr(1);
+    if (hostship !== usership) {
+      foreignHostship = hostship;
+    }
+  }
+
   let prefix;
 
   if (isForeign) {
     prefix = window.location.pathname.split("/").slice(0, 5).join("/");
-  } else if (getQueryParams().station) {
-    prefix = `/~~/~${getQueryParams().station.split("/")[0]}/==/web`;
+  } else if (foreignHostship) {
+    prefix = `/~~/~${foreignHostship}/==/web`;
   } else {
     prefix = '/~~';
   }
