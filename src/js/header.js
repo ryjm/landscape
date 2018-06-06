@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { IconBlog } from './icons/icon-blog';
-import { getQueryParams, normalizeForeignURL } from './util';
+import { getQueryParams, normalizeForeignURL, getStationDetails } from './util';
 import { api } from './urbit-api';
 import { Button } from './common/button';
 
@@ -11,14 +11,10 @@ export class Header extends Component {
     this.toggleSubscribe = this.toggleSubscribe.bind(this);
   }
 
-  stationName() {
-    return `${this.props.data.ship}/collection_~${this.props.data.id}`;
-  }
-
   isSubscribed() {
     let inbox = this.props.store.configs[`~${api.authTokens.ship}/inbox`];
     if (!inbox) return false;
-    return inbox.src.includes(this.stationName());
+    return inbox.src.includes(this.props.data.station);
   }
 
   toggleSubscribe() {
@@ -28,7 +24,7 @@ export class Header extends Component {
       source: {
         nom: "inbox",
         sub: !subscribed,
-        srs: [this.stationName()]
+        srs: [this.props.data.station]
       }
     });
   }
@@ -38,22 +34,19 @@ export class Header extends Component {
     let btnLabel = (this.isSubscribed()) ? "Unsubscribe" : "Subscribe";
 
     switch(this.props.type) {
-      case "collection-index":
-        let collectionURL = normalizeForeignURL(`collections/${this.props.data.id}`);
+      case "collection":
+        let station = this.props.data.station;
+        let stationDetails = getStationDetails(station, this.props.store.configs[station], api.authTokens.ship);
+        let collectionURL = normalizeForeignURL(`collections/${stationDetails.collId}`);
+        let title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
+        let authed = (stationDetails.host === `${api.authTokens.ship}`);
+        let actionLink = null;
 
-        let title;
-        if (this.props.data.title) {
-          title = this.props.data.title;
-        } else {
-          let collId = this.props.data.id;
-          let ship = this.props.data.ship;
-          let config = this.props.store.configs[`${ship}/collection_~${collId}`];
-          title = (config) ? config.cap : null;
+        if (authed) {
+          actionLink = (this.props.data.postid) ?
+            (<a href={normalizeForeignURL(`collections/${stationDetails.collId}/${this.props.data.postid}.collections-edit`)} className="header-link mr-6">Edit</a>) :
+            (<a href={`/~~/pages/nutalk/collection/post?station=${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)
         }
-
-        let actionLink = (this.props.data.postid) ?
-          (<a href={`/~~/pages/nutalk/collection/post?coll=${this.props.data.id}`} className="header-link mr-6">Edit</a>) :
-          (<a href={`/~~/pages/nutalk/collection/post?coll=${this.props.data.id}`} className="header-link mr-6">Write</a>)
 
         return (
           <div className="flex space-between">

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from '/common/button';
-import { getQueryParams } from '/util';
+import { getQueryParams, getStationDetails, normalizeForeignURL } from '/util';
 import { Elapsed } from '/common/elapsed';
 import _ from 'lodash';
 
@@ -32,7 +32,14 @@ export class TopicCreatePage extends Component {
   createTopic() {
     let dat = {};
 
-    let collId = this.props.coll || getQueryParams().coll;
+    let collId;
+
+    if (this.props.coll) {
+      collId = this.props.coll;
+    } else {
+      let stationDetails = getStationDetails(getQueryParams().station);
+      collId = stationDetails.collId;
+    }
 
     if (this.isEdit()) {
       dat = {
@@ -73,7 +80,7 @@ export class TopicCreatePage extends Component {
       postId = postId ? postId.split("|")[0] : null;
 
       if (content && content === this.state.topicContent) {
-        window.router.transitionTo(`/~~/collections/${collId}/${postId}`);
+        window.router.transitionTo(normalizeForeignURL(`collections/${collId}/${postId}`));
         return true;
       }
 

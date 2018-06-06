@@ -12,7 +12,7 @@
 ^-  manx
 ;div.container
   ;div.row
-    ;input(type "hidden", name "urb-header", value "collection-index", title "{(trip desc:(need config))}", id "{(trip +<:s.bem.gas)}", postid "{(trip -:s.bem.gas)}", ship "{(scow %p p.bem.gas)}");
+    ;input(type "hidden", name "urb-header", value "collection", title "{(trip desc:(need config))}", id "{(trip +<:s.bem.gas)}", postid "{(trip -:s.bem.gas)}", ship "{(scow %p p.bem.gas)}", station "{(scow %p p.bem.gas)}/collection_~{(trip +<:s.bem.gas)}");
     ;div.col-sm-10.col-sm-offset-2
       ;div.post.collection-post-page
         ;div.row.collection-date

@@ -52,12 +52,11 @@ export class Root extends Component {
     let header = (headerQuery.length > 0) ? headerQuery[0].getAttribute('value') : "default";
     let headerData = {
       title: (headerQuery.length > 0) ? headerQuery[0].getAttribute('title') : null,
-      id: (headerQuery.length > 0) ? headerQuery[0].getAttribute('id') : null,
-      ship: (headerQuery.length > 0) ? headerQuery[0].getAttribute('ship') : null,
+      station: (headerQuery.length > 0) ? headerQuery[0].getAttribute('station') : null,
       postid: (headerQuery.length > 0) ? headerQuery[0].getAttribute('postid') : null,
     }
 
-    headerData.id = (headerData.id === "query") ? getQueryParams().coll : headerData.id;
+    headerData.station = (headerData.station === "query") ? getQueryParams().station : headerData.station;
 
     let children = this.reactify();
 

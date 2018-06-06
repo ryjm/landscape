@@ -10,13 +10,17 @@ export function getQueryParams() {
 
 export function normalizeForeignURL(fragment) {
   let isForeign = window.location.pathname.includes("/==/web/");
+  let prefix;
 
   if (isForeign) {
-    let prefix = window.location.pathname.split("/").slice(0, 5).join("/");
-    return `${prefix}/${fragment}`;
+    prefix = window.location.pathname.split("/").slice(0, 5).join("/");
+  } else if (getQueryParams().station) {
+    prefix = `/~~/~${getQueryParams().station.split("/")[0]}/==/web`;
   } else {
-    return `/~~/${fragment}`;
+    prefix = '/~~';
   }
+
+  return `${prefix}/${fragment}`;
 }
 
 export function uuid() {
@@ -120,24 +124,25 @@ export function calculateStations(configs) {
 
 export function getStationDetails(station, config = {}, usership) {
   let ret = {
-    type: "chat",
+    type: "none",
+    config: config,
     host: station.split("/")[0].substr(1),
     cir: station.split("/")[1],
     hostProfileURL: station.split("/")[0].substr(1) == usership ? '/~~/pages/nutalk/profile' : `/~~/~${station.split("/")[0].substr(1)}/==/web/pages/nutalk/profile`// TODO: Implement actual foreign profile URL
   };
 
-  if (station.includes("inbox")) ret.type = "inbox";
-  if (isDMStation(station)) ret.type = "dm";
-  if (config && config.cap === "chat") ret.type = "chat";
-
   let collParts = parseCollCircle(station);
 
-  if (station.includes("collection")){
-    if (collParts.top) {
-      ret.type = "text-topic";
-    } else {
-      ret.type = "text";
-    }
+  if (station.includes("inbox")){
+    ret.type = "inbox";
+  } else if (isDMStation(station)) {
+    ret.type = "dm";
+  } else if ((station.includes("collection") && collParts.top)) {
+    ret.type = "text-topic";
+  } else if ((station.includes("collection") && !collParts.top)) {
+    ret.type = "text";
+  } else {
+    ret.type = "chat";
   }
 
   switch (ret.type) {
@@ -163,14 +168,15 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
       break;
     case "text":
-      ret.stationURL = ret.host === usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
+      ret.collId = collParts.coll;
+      ret.stationURL = normalizeForeignURL(`collections/${collParts.coll}`);
       ret.stationTitle = config.cap;
-      ret.postURL = `/~~/collections/${collParts.coll}`;
       break;
     case "text-topic":
-      ret.stationURL = `/~~/collections/${collParts.coll}`;
+      ret.collId = collParts.coll;
+      ret.stationURL = normalizeForeignURL(`collections/${collParts.coll}`);
       ret.stationTitle = config.cap;
-      ret.postURL = `/~~/collections/${collParts.coll}/${collParts.top}`;
+      ret.postURL = normalizeForeignURL(`collections/${collParts.coll}/${collParts.top}`);
       ret.postID = collParts.top;
       ret.postTitle = null;  // TODO: Should be able to determine this from the station metadata alone.
       break;
