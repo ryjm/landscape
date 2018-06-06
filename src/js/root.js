@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Header } from './header';
 import HtmlToReact from 'html-to-react';
 import { ComponentMap } from './component-map';
+import { getQueryParams } from '/util';
 
 export class Root extends Component {
   constructor(props) {
@@ -55,6 +56,8 @@ export class Root extends Component {
       ship: (headerQuery.length > 0) ? headerQuery[0].getAttribute('ship') : null,
       postid: (headerQuery.length > 0) ? headerQuery[0].getAttribute('postid') : null,
     }
+
+    headerData.id = (headerData.id === "query") ? getQueryParams().coll : headerData.id;
 
     let children = this.reactify();
 

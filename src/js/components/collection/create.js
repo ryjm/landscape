@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-//import { util } from '../../util';
 import urbitOb from 'urbit-ob';
+import { Button } from '/common/button';
 
 export class CollectionCreatePage extends Component {
   constructor(props) {
@@ -148,7 +148,12 @@ export class CollectionCreatePage extends Component {
                   onChange={this.valueChange}
                   />
               </div>
-              <button type="submit" className={this.state.collectionName.length > 0 ? "btn btn-primary" : "btn disabled"} onClick={this.canSubmit ? this.createCollection : null}> Create →</button>
+              <Button
+                content="Create →"
+                classes="btn btn-primary"
+                action={this.canSubmit ? this.createCollection : null}
+                responseKey="circle.config.dif.full"
+                pushCallback={this.props.pushCallback} />
             </div>
           </div>
         </div>

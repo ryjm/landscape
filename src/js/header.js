@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { IconBlog } from './icons/icon-blog';
-import { getQueryParams } from './util';
+import { getQueryParams, normalizeForeignURL } from './util';
 import { api } from './urbit-api';
 import { Button } from './common/button';
 
@@ -39,7 +39,17 @@ export class Header extends Component {
 
     switch(this.props.type) {
       case "collection-index":
-        let collectionURL = `../${this.props.data.id}`;
+        let collectionURL = normalizeForeignURL(`collections/${this.props.data.id}`);
+
+        let title;
+        if (this.props.data.title) {
+          title = this.props.data.title;
+        } else {
+          let collId = this.props.data.id;
+          let ship = this.props.data.ship;
+          let config = this.props.store.configs[`${ship}/collection_~${collId}`];
+          title = (config) ? config.cap : null;
+        }
 
         let actionLink = (this.props.data.postid) ?
           (<a href={`/~~/pages/nutalk/collection/post?coll=${this.props.data.id}`} className="header-link mr-6">Edit</a>) :
@@ -52,9 +62,10 @@ export class Header extends Component {
                 <div className="panini"></div>
               </a>
               <div className="mr-8"><IconBlog /></div>
-              <h3><a href={collectionURL}>{this.props.data.title}</a></h3>
+              <h3><a href={collectionURL}>{title}</a></h3>
             </div>
             <div className="flex align-center">
+              {actionLink}
               <Button
                 classes={`btn btn-sm${btnClass}`}
                 action={this.toggleSubscribe}

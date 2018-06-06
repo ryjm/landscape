@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button } from '/common/button';
 import { getQueryParams } from '/util';
 import { Elapsed } from '/common/elapsed';
+import _ from 'lodash';
 
 export class TopicCreatePage extends Component {
   constructor(props) {
@@ -24,55 +25,35 @@ export class TopicCreatePage extends Component {
     return '';
   }
 
+  isEdit() {
+    return 'top' in this.props;
+  }
+
   createTopic() {
-    let dat = {}
-    //
-    if ('top' in this.props) {
+    let dat = {};
+
+    let collId = this.props.coll || getQueryParams().coll;
+
+    if (this.isEdit()) {
       dat = {
         resubmit: {
-          col: getQueryParams().coll,
+          col: collId,
           top: this.props.top,
           tit: this.titleExtract(this.state.topicContent),
           wat: this.state.topicContent
         }
       }
     } else {
-      // this means that we're using "latest"
-      if ('coll' in this.props) {
-        dat = {
-          submit: {
-            col: getQueryParams().coll,
-            tit: this.titleExtract(this.state.topicContent),
-            wat: this.state.topicContent
-          }
-        }
-      } else {
-        dat = {
-          submit: {
-            col: getQueryParams().coll,
-            tit: this.titleExtract(this.state.topicContent),
-            wat: this.state.topicContent
-          }
+      dat = {
+        submit: {
+          col: collId,
+          tit: this.titleExtract(this.state.topicContent),
+          wat: this.state.topicContent
         }
       }
     };
 
     console.log('dat...', dat);
-
-    var target;
-
-    if ('coll' in this.props && 'top' in this.props) {
-      // this means that it is an edit
-      target = `/~~/collections/${getQueryParams().coll}/${this.props.top}`;
-    } else if ('coll' in this.props) {
-      // this means that it is from a "latest" page
-      target = `/~~/collections/${getQueryParams().coll}/latest`;
-    } else {
-      // normal-ass page
-      target = `/~~/collections/${getQueryParams().coll}/latest`;
-    };
-
-    console.log('transition to...', target);
 
     this.props.api.coll(dat);
 
@@ -86,8 +67,17 @@ export class TopicCreatePage extends Component {
       })
     });
 
-    this.props.pushCallback("circle.config.dif.full", (rep) => {
-      window.router.transitionTo(target);
+    this.props.pushCallback("circle.gram", (rep) => {
+      let content = _.get(rep.data, "gam.sep.fat.tac.text", null);
+      let postId = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
+      postId = postId ? postId.split("|")[0] : null;
+
+      if (content && content === this.state.topicContent) {
+        window.router.transitionTo(`/~~/collections/${collId}/${postId}`);
+        return true;
+      }
+
+      return false;
     });
   }
 

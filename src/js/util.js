@@ -8,6 +8,17 @@ export function getQueryParams() {
   }
 }
 
+export function normalizeForeignURL(fragment) {
+  let isForeign = window.location.pathname.includes("/==/web/");
+
+  if (isForeign) {
+    let prefix = window.location.pathname.split("/").slice(0, 5).join("/");
+    return `${prefix}/${fragment}`;
+  } else {
+    return `/~~/${fragment}`;
+  }
+}
+
 export function uuid() {
   let str = "0v"
   str += Math.ceil(Math.random()*8)+"."

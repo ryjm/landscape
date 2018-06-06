@@ -10,5 +10,9 @@
 ::               ==
 ::           %coll
 ::         ''
+/=  gas  /$  fuel:html
 ^-  manx
-;div(urb-component "TopicCreatePage");
+;div
+  ;div(urb-component "TopicCreatePage");
+  ;input(type "hidden", name "urb-header", value "collection-index", id "query", ship "{(scow %p p.bem.gas)}");
+==

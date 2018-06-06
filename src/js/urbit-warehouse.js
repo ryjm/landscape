@@ -97,12 +97,18 @@ export class UrbitWarehouse {
   processPending(reports) {
     reports.forEach((rep) => {
       let reportBucket = this.reports[rep.type];
+      let clearIndexes = [];
 
-      reportBucket.callbacks.forEach((callback) => {
-        callback(rep);
+      reportBucket.callbacks.forEach((callback, i) => {
+        let callSuccess = callback(rep);
+        // callbacks should return true, or _nothing_ to be considered complete)
+        // default behavior is nothing; complete on first keyed response
+        if (callSuccess || typeof callSuccess === "undefined") {
+          clearIndexes.push(i);
+        }
       });
 
-      reportBucket.callbacks = [];
+      reportBucket.callbacks = _.pullAt(reportBucket.callbacks, clearIndexes);
     })
   }
 
