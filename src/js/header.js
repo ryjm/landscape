@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { IconBlog } from './icons/icon-blog';
-import { getQueryParams, normalizeForeignURL, getStationDetails } from './util';
+import { getQueryParams, normalizeForeignURL, getStationDetails, collectionAuthorization } from './util';
 import { api } from './urbit-api';
 import { Button } from './common/button';
 
@@ -39,10 +39,10 @@ export class Header extends Component {
         let stationDetails = getStationDetails(station, this.props.store.configs[station], api.authTokens.ship);
         let collectionURL = normalizeForeignURL(`collections/${stationDetails.collId}`);
         let title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
-        let authed = (stationDetails.host === `${api.authTokens.ship}`);
+        let authorization = collectionAuthorization(stationDetails, api.authTokens.ship);
         let actionLink = null;
 
-        if (authed) {
+        if (authorization === "write") {
           actionLink = (this.props.data.postid) ?
             (<a href={normalizeForeignURL(`collections/${stationDetails.collId}/${this.props.data.postid}.collections-edit`)} className="header-link mr-6">Edit</a>) :
             (<a href={`/~~/pages/nutalk/collection/post?station=~${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)

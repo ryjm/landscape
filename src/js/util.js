@@ -8,6 +8,19 @@ export function getQueryParams() {
   }
 }
 
+export function collectionAuthorization(stationDetails, usership) {
+  if (stationDetails.host === usership) {
+    return "write";
+  } else if (_.has(stationDetails, "config.con.sec")) {
+    let sec = _.get(stationDetails, "config.con.sec", null);
+    if (sec === "journal") {
+      return "write";
+    }
+  }
+
+  return "read";
+}
+
 export function normalizeForeignURL(fragment, usership) {
   let isForeign = window.location.pathname.includes("/==/web/");
   let foreignHostship;
