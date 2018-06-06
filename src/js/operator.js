@@ -1,4 +1,4 @@
-import { api } from './urbit-api';
+import { api } from '/api';
 import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 

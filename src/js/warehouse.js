@@ -2,8 +2,7 @@ import _ from 'lodash';
 import { MessagesReducer } from '/reducers/messages';
 import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
-
-import { api } from './urbit-api';
+import { api } from '/api';
 
 const REPORT_KEYS = [
   'circle.gram',

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Header } from './header';
+import { Header } from '/components/header';
 import HtmlToReact from 'html-to-react';
-import { ComponentMap } from './component-map';
-import { getQueryParams } from '/util';
+import { ComponentMap } from '/lib/component-map';
+import { getQueryParams } from '/lib/util';
 
 export class Root extends Component {
   constructor(props) {

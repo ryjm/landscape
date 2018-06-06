@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Elapsed } from '../common/elapsed';
-import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageContent } from '../util';
-import { Icon } from '../common/icon';
+import { Elapsed } from '/components/lib/elapsed';
+import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageContent } from '/lib/util';
+import { Icon } from '/components/lib/icon';
 import _ from 'lodash';
-import { Button } from '/common/button';
+import { Button } from '/components/lib/button';
 
 export class InboxPage extends Component {
   constructor(props) {

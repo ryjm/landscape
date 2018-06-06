@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import urbitOb from 'urbit-ob';
-import { Button } from '/common/button';
+import { Button } from '/components/lib/button';
 
 export class CollectionCreatePage extends Component {
   constructor(props) {

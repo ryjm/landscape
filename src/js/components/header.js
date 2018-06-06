@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { IconBlog } from '/common/icons/icon-blog';
-import { getQueryParams, normalizeForeignURL, getStationDetails, collectionAuthorization } from '/util';
-import { api } from '/urbit-api';
-import { Button } from '/common/button';
-import { TRANSITION_LOADING } from '/common/constants';
+import { IconBlog } from '/components/lib/icons/icon-blog';
+import { getQueryParams, normalizeForeignURL, getStationDetails, collectionAuthorization } from '/lib/util';
+import { api } from '/api';
+import { Button } from '/components/lib/button';
+import { TRANSITION_LOADING } from '/lib/constants';
 
 export class Header extends Component {
   constructor(props) {

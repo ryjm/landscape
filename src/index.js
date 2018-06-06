@@ -1,7 +1,7 @@
 import "babel-polyfill";
-import "./js/object-extensions";
-import { UrbitRouter } from "./js/urbit-router";
-import { api } from './js/urbit-api';
+import "/object-extensions";
+import { UrbitRouter } from "/router";
+import { api } from '/api';
 
 console.log('app running');
 

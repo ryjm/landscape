@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { STATUS_LOADING, STATUS_READY } from './constants';
+import { STATUS_LOADING, STATUS_READY } from '/lib/constants';
 
 export class Button extends Component {
   constructor(props) {

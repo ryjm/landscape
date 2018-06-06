@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { UrbitWarehouse } from '/urbit-warehouse';
-import { UrbitOperator } from '/urbit-operator';
-import { getQueryParams } from '/util';
-import { api } from '/urbit-api';
-import { Root } from '/root';
-import { TRANSITION_LOADING, TRANSITION_READY } from '/common/constants';
+import { UrbitWarehouse } from '/warehouse';
+import { UrbitOperator } from '/operator';
+import { getQueryParams } from '/lib/util';
+import { api } from '/api';
+import { Root } from '/components/root';
+import { TRANSITION_LOADING, TRANSITION_READY } from '/lib/constants';
 
 export class UrbitRouter {
   constructor() {

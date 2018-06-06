@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { calculateStations, isDMStation, getStationDetails } from '../util';
+import { calculateStations, isDMStation, getStationDetails } from '/lib/util';
 
 export class ListPage extends Component {
   constructor(props) {

@@ -1,15 +1,14 @@
 import { InboxPage } from '/components/inbox';
 import { ListPage } from '/components/list';
 import { MenuPage } from '/components/menu';
-import { ChatPage } from '/components/chat';
+import { ChatPage } from '/components/stream/chat';
 import { StreamCreatePage } from '/components/stream/create';
 import { CollectionCreatePage } from '/components/collection/create';
 import { TopicCreatePage } from '/components/collection/createTopic';
 import { CommentCreate } from '/components/collection/comment';
-import { Subscribe } from '/components/subscribe';
-import { Elapsed } from '/common/elapsed';
-import { IconComment } from '/common/icons/icon-comment';
-import { AvatarSample1 } from '/common/icons/avatar-sample-1';
+import { Elapsed } from '/components/lib/elapsed';
+import { IconComment } from '/components/lib/icons/icon-comment';
+import { AvatarSample1 } from '/components/lib/icons/avatar-sample-1';
 
 /**
   Anatomy:
@@ -46,9 +45,6 @@ export var ComponentMap = {
   },
   "MenuPage": {
     comp: MenuPage
-  },
-  "Subscribe": {
-    comp: Subscribe
   },
   "Elapsed": {
     comp: Elapsed

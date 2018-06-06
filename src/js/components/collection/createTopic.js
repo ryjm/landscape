@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button } from '/common/button';
-import { getQueryParams, getStationDetails, normalizeForeignURL } from '/util';
-import { Elapsed } from '/common/elapsed';
+import { Button } from '/components/lib/button';
+import { getQueryParams, getStationDetails, normalizeForeignURL } from '/lib/util';
+import { Elapsed } from '/components/lib/elapsed';
 import _ from 'lodash';
 
 export class TopicCreatePage extends Component {

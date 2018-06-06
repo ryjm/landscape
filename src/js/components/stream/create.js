@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { arrayEqual } from '../../util';
-import { Button } from '/common/button';
+import { arrayEqual } from '/lib/util';
+import { Button } from '/components/lib/button';
 
 export class StreamCreatePage extends Component {
   constructor(props) {

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { uuid } from '../util';
-import { api } from '../urbit-api';
+import { uuid } from '/lib/util';
+import { api } from '/api';
 
 export class ChatPage extends Component {
   constructor(props) {
