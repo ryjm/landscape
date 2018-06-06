@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TRANSITION_LOADING } from '/lib/constants';
+import { Button } from '/components/lib/button';
 
 export class CommentCreate extends Component {
   constructor(props) {
@@ -56,11 +57,12 @@ export class CommentCreate extends Component {
           className="comment-edit mb-3"
           placeholder="Post a comment">
         </textarea>
-        <button
-          onClick={this.createComment}
-          className={this.state.comment.length > 0 ? "btn btn-tetiary" : "btn disabled"}>
-          Publish →
-        </button>
+        <Button
+          classes={this.state.comment.length > 0 ? "btn btn-tetiary" : "btn disabled"}
+          action={this.createComment}
+          responseKey="circle.gram"
+          pushCallback={this.props.pushCallback}
+          content="Publish →" />
       </div>
     )
   }
