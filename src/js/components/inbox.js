@@ -47,7 +47,7 @@ export class InboxPage extends Component {
     }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
-      window.router.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
+      this.props.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
     });
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
@@ -92,7 +92,7 @@ export class InboxPage extends Component {
     }]);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
-      window.router.transitionTo(`/~~/pages/nutalk/stream?station=${station}`);
+      this.props.transitionTo(`/~~/pages/nutalk/stream?station=${station}`);
     });
   }
 

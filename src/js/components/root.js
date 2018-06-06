@@ -31,11 +31,12 @@ export class Root extends Component {
           });
 
         return React.createElement(ComponentMap[componentName].comp, Object.assign({
-          api: api,
+          api: this.props.api,
           store: this.props.store,
-          pushCallback: this.props.pushCallback,
           storeReports: this.props.storeReports,
-          queryParams: this.props.queryParams
+          pushCallback: this.props.pushCallback,
+          transitionTo: this.props.transitionTo,
+          queryParams: this.props.queryParams,
         }, propsObj));
       }
     }, {
@@ -66,9 +67,11 @@ export class Root extends Component {
         <Header
           type={header}
           data={headerData}
+          api={this.props.api}
           store={this.props.store}
-          pushCallback={this.props.pushCallback}
           storeReports={this.props.storeReports}
+          pushCallback={this.props.pushCallback}
+          transitionTo={this.props.transitionTo}
         />
         {children}
       </div>

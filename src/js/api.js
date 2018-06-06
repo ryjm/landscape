@@ -85,5 +85,4 @@ class UrbitApi {
 }
 
 export let api = new UrbitApi();
-
 window.api = api;

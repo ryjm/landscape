@@ -86,7 +86,7 @@ export class TopicCreatePage extends Component {
       postId = postId ? postId.split("|")[0] : null;
 
       if (content && content === this.state.topicContent) {
-        window.router.transitionTo(normalizeForeignURL(`collections/${collId}/${postId}`, api.authTokens.ship));
+        this.props.transitionTo(normalizeForeignURL(`collections/${collId}/${postId}`, api.authTokens.ship));
         return true;
       }
 

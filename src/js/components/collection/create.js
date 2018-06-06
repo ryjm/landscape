@@ -57,7 +57,7 @@ export class CollectionCreatePage extends Component {
     this.props.pushCallback("circle.config.dif.full", (rep) => {
       let collId = rep.data.src[0].split("/")[1].substr(12);
       let url = `/~~/collections/${collId}`;
-      window.router.transitionTo(url);
+      this.props.transitionTo(url);
     });
   }
 

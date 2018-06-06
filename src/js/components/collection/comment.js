@@ -28,7 +28,7 @@ export class CommentCreate extends Component {
     }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
-      window.router.transitionTo(`/~~/collections/${this.props.coll}/${this.props.top}`);
+      this.props.transitionTo(`/~~/collections/${this.props.coll}/${this.props.top}`);
     });
   }
 

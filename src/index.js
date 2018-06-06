@@ -1,7 +1,9 @@
 import "babel-polyfill";
 import "/lib/object-extensions";
-import { UrbitRouter } from "/router";
 import { api } from '/api';
+import { warehouse } from '/warehouse';
+import { router } from '/router';
+import { operator } from "/operator";
 
 console.log('app running');
 
@@ -19,5 +21,6 @@ fetch('/~/auth.json',{credentials: "same-origin"}).then((res) => {
 .then((authTokens) => {
   api.setAuthTokens(authTokens);
 
-  window.router = new UrbitRouter();
+  router.start();
+  operator.start();
 });

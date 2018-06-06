@@ -3,7 +3,6 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { uuid } from '/lib/util';
-import { api } from '/api';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -39,13 +38,13 @@ export class ChatPage extends Component {
   componentDidMount() {
     let path = `/circle/inbox/${this.state.station}/grams/-20`;
 
-    api.bind(path, "PUT");
+    this.props.api.bind(path, "PUT");
   }
 
   componentWillUnmount() {
     let path = `/circle/inbox/${this.state.station}/grams/-20`;
 
-    api.bind(path, "DELETE");
+    this.props.api.bind(path, "DELETE");
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -68,7 +67,7 @@ export class ChatPage extends Component {
 
     let path = `/circle/inbox/${this.state.station}/grams/-${newNumMessages}/-${this.state.numMessages}`;
 
-    api.bind(path, "PUT");
+    this.props.api.bind(path, "PUT");
   }
 
   onScrollStop() {
@@ -287,7 +286,7 @@ export class ChatPage extends Component {
             </Scrollbars>
             <div className="chat-input row mt-6">
               <div className="col-sm-2 text-700">
-                ~{api.authTokens.ship}
+                ~{this.props.api.authTokens.ship}
               </div>
               <div className="col-sm-8">
                 <form onSubmit={this.messageSubmit}>

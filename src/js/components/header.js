@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { IconBlog } from '/components/lib/icons/icon-blog';
 import { getQueryParams, normalizeForeignURL, getStationDetails, collectionAuthorization } from '/lib/util';
-import { api } from '/api';
 import { Button } from '/components/lib/button';
 import { TRANSITION_LOADING } from '/lib/constants';
 
@@ -13,7 +12,7 @@ export class Header extends Component {
   }
 
   isSubscribed() {
-    let inbox = this.props.store.configs[`~${api.authTokens.ship}/inbox`];
+    let inbox = this.props.store.configs[`~${this.props.api.authTokens.ship}/inbox`];
     if (!inbox) return false;
     return inbox.src.includes(this.props.data.station);
   }
@@ -21,7 +20,7 @@ export class Header extends Component {
   toggleSubscribe() {
     let subscribed = this.isSubscribed();
 
-    api.hall({
+    this.props.api.hall({
       source: {
         nom: "inbox",
         sub: !subscribed,
@@ -38,10 +37,10 @@ export class Header extends Component {
     switch(this.props.type) {
       case "collection":
         let station = this.props.data.station;
-        let stationDetails = getStationDetails(station, this.props.store.configs[station], api.authTokens.ship);
+        let stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
         let collectionURL = normalizeForeignURL(`collections/${stationDetails.collId}`);
         let title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
-        let authorization = collectionAuthorization(stationDetails, api.authTokens.ship);
+        let authorization = collectionAuthorization(stationDetails, this.props.api.authTokens.ship);
         let actionLink = null;
         headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconBlog />;
 

@@ -141,7 +141,7 @@ export class StreamCreatePage extends Component {
     }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
-      window.router.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`)
+      this.props.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`)
     });
 
     if (this.state.stream.aud.length > 0) {

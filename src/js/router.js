@@ -1,35 +1,37 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { UrbitWarehouse } from '/warehouse';
+import { warehouse } from '/warehouse';
 import { UrbitOperator } from '/operator';
 import { getQueryParams } from '/lib/util';
 import { api } from '/api';
 import { Root } from '/components/root';
 import { TRANSITION_LOADING, TRANSITION_READY } from '/lib/constants';
 
-export class UrbitRouter {
+class UrbitRouter {
   constructor() {
-    this.pageRoot = "";
-    this.domRoot = "#root";
+    this.transitionTo = this.transitionTo.bind(this);
+  }
 
-    this.warehouse = new UrbitWarehouse(this.renderRoot.bind(this));
-    this.operator = new UrbitOperator(this.warehouse);
+  start() {
+    if (warehouse) {
+      this.scaffold = document.querySelectorAll("#root")[0].innerHTML;
+      this.renderRoot();
 
-    window.warehouse = this.warehouse;
-
-    this.scaffold = document.querySelectorAll("#root")[0].innerHTML;
-    this.renderRoot();
-
-    this.registerAnchorListeners();
-    this.registerHistoryListeners();
+      this.registerAnchorListeners();
+      this.registerHistoryListeners();
+    } else {
+      console.error("~~~ ERROR: Must initialize warehouse before operation ~~~");
+    }
   }
 
   renderRoot() {
     let rootComponent = (
       <Root
-        store={this.warehouse.store}
-        pushCallback={this.warehouse.pushCallback}
-        storeReports={this.warehouse.storeReports}
+        api={api}
+        store={warehouse.store}
+        storeReports={warehouse.storeReports}
+        pushCallback={warehouse.pushCallback}
+        transitionTo={this.transitionTo}
         queryParams={getQueryParams()}
         scaffold={this.scaffold} />
     )
@@ -66,7 +68,7 @@ export class UrbitRouter {
   transitionTo(targetUrl, noHistory) {
     console.log("Transition to: ", this.filterUrl(targetUrl));
 
-    this.warehouse.storeReports([{
+    warehouse.storeReports([{
       type: "transition",
       data: TRANSITION_LOADING
     }]);
@@ -79,7 +81,7 @@ export class UrbitRouter {
         window.history.pushState({}, null, targetUrl);
       }
       this.scaffold = resText;
-      this.warehouse.storeReports([{
+      warehouse.storeReports([{
         type: "transition",
         data: TRANSITION_READY
       }]);
@@ -108,3 +110,6 @@ export class UrbitRouter {
     }
   }
 }
+
+export let router = new UrbitRouter();
+window.router = router;

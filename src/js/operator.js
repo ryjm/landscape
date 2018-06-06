@@ -1,6 +1,8 @@
 import { api } from '/api';
 import _ from 'lodash';
 import Mousetrap from 'mousetrap';
+import { warehouse } from '/warehouse';
+import { router } from '/router';
 
 /**
   Response format
@@ -32,13 +34,18 @@ import Mousetrap from 'mousetrap';
 **/
 
 export class UrbitOperator {
-  constructor(warehouse) {
+  constructor() {
     this.seqn = 1;
-    this.warehouse = warehouse;
+  }
 
-    this.runPoll();
-    this.bindInbox();
-    this.bindShortcuts();
+  start() {
+    if (api.authTokens) {
+      this.runPoll();
+      this.bindInbox();
+      this.bindShortcuts();
+    } else {
+      console.error("~~~ ERROR: Must set api.authTokens before operation ~~~");
+    }
   }
 
   bindShortcuts() {
@@ -47,7 +54,7 @@ export class UrbitOperator {
       if (menuActive) {
         window.history.back();
       } else {
-        window.router.transitionTo('/~~/pages/nutalk/menu');
+        router.transitionTo('/~~/pages/nutalk/menu');
       }
     });
   }
@@ -89,7 +96,7 @@ export class UrbitOperator {
           console.log("new server data: ", data);
 
           if (data.data) {
-            this.warehouse.storePollResponse(data);
+            warehouse.storePollResponse(data);
           }
 
           this.seqn++;
@@ -98,3 +105,5 @@ export class UrbitOperator {
     });
   }
 }
+
+export let operator = new UrbitOperator();

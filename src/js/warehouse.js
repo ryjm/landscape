@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { MessagesReducer } from '/reducers/messages';
 import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
-import { api } from '/api';
+import { router } from '/router';
 
 const REPORT_KEYS = [
   'circle.gram',
@@ -19,8 +19,8 @@ const REPORT_KEYS = [
   'transition'
 ]
 
-export class UrbitWarehouse {
-  constructor(updateFunc) {
+class UrbitWarehouse {
+  constructor() {
     this.store = {
       messages: {
         inboxMessages: [],
@@ -33,7 +33,6 @@ export class UrbitWarehouse {
     };
 
     this.reports = this.buildReports();
-    this.updateFunc = updateFunc;
 
     this.messagesReducer = new MessagesReducer();
     this.configsReducer = new ConfigsReducer();
@@ -100,7 +99,7 @@ export class UrbitWarehouse {
     console.log('full store = ', this.store);
 
     this.processPending(newReports);
-    this.updateFunc();
+    router.renderRoot();
   }
 
   processPending(reports) {
@@ -125,3 +124,6 @@ export class UrbitWarehouse {
     this.reports[key].callbacks.push(callback);
   }
 }
+
+export let warehouse = new UrbitWarehouse();
+window.warehouse = warehouse;
