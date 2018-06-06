@@ -40,6 +40,7 @@ export class UrbitWarehouse {
     this.viewsReducer = new ViewsReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
+    this.storeReports = this.storeReports.bind(this);
   }
 
   buildReports() {

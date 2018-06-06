@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { TRANSITION_LOADING } from '/lib/constants';
 
 export class CommentCreate extends Component {
   constructor(props) {
@@ -20,6 +21,11 @@ export class CommentCreate extends Component {
         wat: this.state.comment
       }
     });
+
+    this.props.storeReports([{
+      type: "transition",
+      data: TRANSITION_LOADING
+    }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
       window.router.transitionTo(`/~~/collections/${this.props.coll}/${this.props.top}`);

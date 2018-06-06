@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import urbitOb from 'urbit-ob';
 import { Button } from '/components/lib/button';
+import { TRANSITION_LOADING } from '/lib/constants';
 
 export class CollectionCreatePage extends Component {
   constructor(props) {
@@ -46,7 +47,12 @@ export class CollectionCreatePage extends Component {
           srs: [`~${this.props.api.authTokens.ship}/${rep.data.cir}`]
         }
       })
-    })
+    });
+
+    this.props.storeReports([{
+      type: "transition",
+      data: TRANSITION_LOADING
+    }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
       let collId = rep.data.src[0].split("/")[1].substr(12);

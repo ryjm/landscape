@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
 import { getQueryParams, getStationDetails, normalizeForeignURL } from '/lib/util';
 import { Elapsed } from '/components/lib/elapsed';
+import { TRANSITION_LOADING } from '/lib/constants';
 import _ from 'lodash';
 
 export class TopicCreatePage extends Component {
@@ -73,6 +74,11 @@ export class TopicCreatePage extends Component {
         }
       })
     });
+
+    this.props.storeReports([{
+      type: "transition",
+      data: TRANSITION_LOADING
+    }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
       let content = _.get(rep.data, "gam.sep.fat.tac.text", null);

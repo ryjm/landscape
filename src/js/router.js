@@ -29,6 +29,7 @@ export class UrbitRouter {
       <Root
         store={this.warehouse.store}
         pushCallback={this.warehouse.pushCallback}
+        storeReports={this.warehouse.storeReports}
         queryParams={getQueryParams()}
         scaffold={this.scaffold} />
     )

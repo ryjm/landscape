@@ -4,6 +4,7 @@ import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageConte
 import { Icon } from '/components/lib/icon';
 import _ from 'lodash';
 import { Button } from '/components/lib/button';
+import { TRANSITION_LOADING } from '/lib/constants';
 
 export class InboxPage extends Component {
   constructor(props) {
@@ -39,6 +40,11 @@ export class InboxPage extends Component {
         }
       })
     });
+
+    this.props.storeReports([{
+      type: "transition",
+      data: TRANSITION_LOADING
+    }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
       window.router.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
@@ -79,6 +85,11 @@ export class InboxPage extends Component {
         srs: [station]
       }
     });
+
+    this.props.storeReports([{
+      type: "transition",
+      data: TRANSITION_LOADING
+    }]);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
       window.router.transitionTo(`/~~/pages/nutalk/stream?station=${station}`);

@@ -34,6 +34,7 @@ export class Root extends Component {
           api: api,
           store: this.props.store,
           pushCallback: this.props.pushCallback,
+          storeReports: this.props.storeReports,
           queryParams: this.props.queryParams
         }, propsObj));
       }
@@ -67,6 +68,7 @@ export class Root extends Component {
           data={headerData}
           store={this.props.store}
           pushCallback={this.props.pushCallback}
+          storeReports={this.props.storeReports}
         />
         {children}
       </div>

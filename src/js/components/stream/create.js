@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { arrayEqual } from '/lib/util';
 import { Button } from '/components/lib/button';
+import { TRANSITION_LOADING } from '/lib/constants';
 
 export class StreamCreatePage extends Component {
   constructor(props) {
@@ -133,6 +134,11 @@ export class StreamCreatePage extends Component {
         }
       })
     });
+
+    this.props.storeReports([{
+      type: "transition",
+      data: TRANSITION_LOADING
+    }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
       window.router.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${this.state.stream.nom}`)
