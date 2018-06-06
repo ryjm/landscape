@@ -10,17 +10,6 @@ import { Elapsed } from '/components/lib/elapsed';
 import { IconComment } from '/components/lib/icons/icon-comment';
 import { AvatarSample1 } from '/components/lib/icons/avatar-sample-1';
 
-/**
-  Anatomy:
-
-  "ComponentLabel": {
-    comp:         // main component
-    compProps:    // props for main component
-    head:         // header component
-    headProps:    // props for header
-}
-**/
-
 export var ComponentMap = {
   "ChatPage": {
     comp: ChatPage
