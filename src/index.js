@@ -1,5 +1,5 @@
 import "babel-polyfill";
-import "/object-extensions";
+import "/lib/object-extensions";
 import { UrbitRouter } from "/router";
 import { api } from '/api';
 
