@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { UrbitWarehouse } from './urbit-warehouse';
-import { UrbitOperator } from './urbit-operator';
-import { getQueryParams } from './util';
-import { api } from './urbit-api';
-import { Root } from './root';
+import { UrbitWarehouse } from '/urbit-warehouse';
+import { UrbitOperator } from '/urbit-operator';
+import { getQueryParams } from '/util';
+import { api } from '/urbit-api';
+import { Root } from '/root';
+import { TRANSITION_LOADING, TRANSITION_READY } from '/common/constants';
 
 export class UrbitRouter {
   constructor() {
@@ -64,6 +65,11 @@ export class UrbitRouter {
   transitionTo(targetUrl, noHistory) {
     console.log("Transition to: ", this.filterUrl(targetUrl));
 
+    this.warehouse.storeReports([{
+      type: "transition",
+      data: TRANSITION_LOADING
+    }]);
+
     // TODO: Extremely brittle. Expecting parts of form: /~~/pages/nutalk + /show
     fetch(this.filterUrl(targetUrl), {credentials: "same-origin"}).then((res) => {
       return res.text();
@@ -72,6 +78,10 @@ export class UrbitRouter {
         window.history.pushState({}, null, targetUrl);
       }
       this.scaffold = resText;
+      this.warehouse.storeReports([{
+        type: "transition",
+        data: TRANSITION_READY
+      }]);
       this.renderRoot();
     });
   }

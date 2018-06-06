@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { IconBlog } from './icons/icon-blog';
-import { getQueryParams, normalizeForeignURL, getStationDetails, collectionAuthorization } from './util';
-import { api } from './urbit-api';
-import { Button } from './common/button';
+import { IconBlog } from '/common/icons/icon-blog';
+import { getQueryParams, normalizeForeignURL, getStationDetails, collectionAuthorization } from '/util';
+import { api } from '/urbit-api';
+import { Button } from '/common/button';
+import { TRANSITION_LOADING } from '/common/constants';
 
 export class Header extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ export class Header extends Component {
   getContent() {
     let btnClass = (this.isSubscribed()) ? " btn-secondary" : " btn-primary";
     let btnLabel = (this.isSubscribed()) ? "Unsubscribe" : "Subscribe";
+    let headerIcon;
 
     switch(this.props.type) {
       case "collection":
@@ -41,6 +43,7 @@ export class Header extends Component {
         let title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
         let authorization = collectionAuthorization(stationDetails, api.authTokens.ship);
         let actionLink = null;
+        headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconBlog />;
 
         if (authorization === "write") {
           actionLink = (this.props.data.postid) ?
@@ -54,7 +57,7 @@ export class Header extends Component {
               <a href="/~~/pages/nutalk/menu" className="mr-22">
                 <div className="panini"></div>
               </a>
-              <div className="mr-8"><IconBlog /></div>
+              <div className="mr-8">{headerIcon}</div>
               <h3><a href={collectionURL}>{title}</a></h3>
             </div>
             <div className="flex align-center">
@@ -71,19 +74,21 @@ export class Header extends Component {
         )
         break;
       default:
-      return (
-        <div className="flex">
-          <div className="flex align-center">
-            <a href="/~~/pages/nutalk/menu" className="mr-22">
-              <div className="panini"></div>
-            </a>
-            <div className="mr-8"><div style={{width: "18px", height: "18px"}}></div></div>
-            <h3>Inbox</h3>
-            <span className="ml-16"><i>Try using "cmd+k" to open the menu.</i></span>
+        headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <div style={{width: "24px", height: "24px"}}></div>;
+        // headerIcon = (true) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <div style="width: 24px; height: 24px;"></div>;
+        return (
+          <div className="flex">
+            <div className="flex align-center">
+              <a href="/~~/pages/nutalk/menu" className="mr-22">
+                <div className="panini"></div>
+              </a>
+              <div className="mr-8">{headerIcon}</div>
+              <h3>Inbox</h3>
+              <span className="ml-16"><i>Try using "cmd+k" to open the menu.</i></span>
+            </div>
           </div>
-        </div>
-      )
-      break;
+        )
+        break;
     }
   }
 

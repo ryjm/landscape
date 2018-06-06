@@ -1,5 +1,8 @@
 import _ from 'lodash';
-import { MessagesReducer, ConfigsReducer } from './urbit-reducer';
+import { MessagesReducer } from '/reducers/messages';
+import { ConfigsReducer } from '/reducers/configs';
+import { ViewsReducer } from '/reducers/views';
+
 import { api } from './urbit-api';
 
 const REPORT_KEYS = [
@@ -13,7 +16,8 @@ const REPORT_KEYS = [
   'circle.config.dif.source',
   'circle.config.dif.permit/circle.config',
   'circle.config.dif.remove/circle.config',
-  'circles'
+  'circles',
+  'transition'
 ]
 
 export class UrbitWarehouse {
@@ -23,7 +27,10 @@ export class UrbitWarehouse {
         inboxMessages: [],
         stations: {}
       },
-      configs: {}
+      configs: {},
+      views: {
+        transition: ""
+      }
     };
 
     this.reports = this.buildReports();
@@ -31,6 +38,7 @@ export class UrbitWarehouse {
 
     this.messagesReducer = new MessagesReducer();
     this.configsReducer = new ConfigsReducer();
+    this.viewsReducer = new ViewsReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
   }
@@ -79,14 +87,15 @@ export class UrbitWarehouse {
       }
     });
 
-    newReports.forEach((rep) => console.log('new report: ', rep));
-
     this.storeReports(newReports);
   }
 
   storeReports(newReports) {
+    newReports.forEach((rep) => console.log('new report: ', rep));
+
     this.messagesReducer.reduce(newReports, this.store.messages);
     this.configsReducer.reduce(newReports, this.store.configs);
+    this.viewsReducer.reduce(newReports, this.store.views);
 
     console.log('full store = ', this.store);
 

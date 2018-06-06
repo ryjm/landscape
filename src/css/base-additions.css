@@ -198,6 +198,12 @@ button.disabled {
   display: inline-block;
 }
 
+.btn-spinner-lg {
+  font-size: 32px;
+  font-weight: bold;
+  color: #4330FC;
+}
+
 /***
   Utils
 ***/
