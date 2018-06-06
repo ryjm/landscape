@@ -22,6 +22,7 @@ export function collectionAuthorization(stationDetails, usership) {
 }
 
 export function normalizeForeignURL(fragment, usership) {
+  // this only works if you are _on_ a foreign ship. thus doesn't normalize properly for inbox links
   let isForeign = window.location.pathname.includes("/==/web/");
   let foreignHostship;
   if (getQueryParams().station && usership) {
@@ -190,16 +191,20 @@ export function getStationDetails(station, config = {}, usership) {
       break;
     case "text":
       ret.collId = collParts.coll;
-      ret.stationURL = normalizeForeignURL(`collections/${collParts.coll}`);
+      console.log('text', normalizeForeignURL(`collections/${collParts.coll}`, ret.host));
+      ret.stationURL = ret.host === usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
       break;
     case "text-topic":
       ret.collId = collParts.coll;
-      ret.stationURL = normalizeForeignURL(`collections/${collParts.coll}`);
+      //ret.stationURL = normalizeForeignURL(`collections/${collParts.coll}`, ret.host);
+      ret.stationURL = ret.host === usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
-      ret.postURL = normalizeForeignURL(`collections/${collParts.coll}/${collParts.top}`);
+      //ret.postURL = normalizeForeignURL(`collections/${collParts.coll}/${collParts.top}`, ret.host);
+      ret.postURL = ret.host === usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}/${collParts.top}`;
       ret.postID = collParts.top;
       ret.postTitle = null;  // TODO: Should be able to determine this from the station metadata alone.
+      //
       break;
   }
 
