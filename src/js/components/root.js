@@ -56,6 +56,7 @@ export class Root extends Component {
       title: (headerQuery.length > 0) ? headerQuery[0].getAttribute('title') : null,
       station: (headerQuery.length > 0) ? headerQuery[0].getAttribute('station') : null,
       postid: (headerQuery.length > 0) ? headerQuery[0].getAttribute('postid') : null,
+      ship: (headerQuery.length > 0) ? headerQuery[0].getAttribute('ship') : null,
     }
 
     headerData.station = (headerData.station === "query") ? getQueryParams().station : headerData.station;

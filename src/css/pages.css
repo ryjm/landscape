@@ -273,14 +273,6 @@ div.mod
   display: none;
 }
 
-.profile li.profile::before {
-  content: "•";
-  position: absolute;
-  font-size: 10rem;
-  margin-left: -12rem;
-  margin-top: 4rem;
-}
-
 /**/
 
 .collection-date {
@@ -405,4 +397,17 @@ div.mod
 
 .list-page a {
   text-decoration: none;
+}
+
+/***
+  Profile
+***/
+
+.profile-banner {
+  background-color: #4635F5;
+}
+
+.profile-avatar img {
+  width: 300px;
+  height: 300px;
 }

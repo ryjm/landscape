@@ -31,7 +31,7 @@ export class MenuPage extends Component {
               <div className="ml-7 pt-1">{numStationsString}</div>
             </div>
             <div className="row mb-6">
-              <a className="menu-anchor" href="/~~/pages/nutalk/profile">
+              <a className="menu-anchor" href={`/~~/${this.props.ship}/==/web/pages/nutalk/profile`}>
                 <div className="circle mr-7"></div>
                 <b>Profile</b>
               </a>

@@ -40,7 +40,7 @@ export class Header extends Component {
             <div className="panini"></div>
           </a>
           <div className="mr-8">{headerIcon}</div>
-          <h3>Inbox</h3>
+          <h3><a href={`/~~/pages/nutalk`}>Inbox</a></h3>
           <span className="ml-16"><i>Try using "cmd+k" to open the menu.</i></span>
         </div>
       </div>
@@ -115,6 +115,19 @@ export class Header extends Component {
                 pushCallback={this.props.pushCallback}
                 responseKey="circle.config.dif.source"
                  />
+            </div>
+          </div>
+        )
+        break;
+      case "profile":
+        return (
+          <div className="flex">
+            <div className="flex align-center">
+              <a href="/~~/pages/nutalk/menu" className="mr-22">
+                <div className="panini"></div>
+              </a>
+              <div className="mr-8">{headerIcon}</div>
+              <h3><a href={`/~~/~${this.props.data.ship}/==/web/pages/nutalk/profile`}>Profile</a></h3>
             </div>
           </div>
         )
