@@ -33,7 +33,8 @@ export class StreamCreatePage extends Component {
         }
       },
       deleteStream: "",
-      editLoaded: false
+      editLoaded: false,
+      dmLoaded: false
     };
 
     this.submitStream = this.submitStream.bind(this);
@@ -53,6 +54,24 @@ export class StreamCreatePage extends Component {
     if (!arrayEqual(this.state.stream.aud, newAud)) {
       this.setState({
         stream: Object.assign(this.state.stream, {aud: newAud})
+      });
+    }
+  }
+
+  loadDM() {
+    if (!this.state.dmLoaded) {
+      let dmship = this.props.queryParams.dm.substr(1);
+      let stream = {
+        nom: `${[dmship].concat(this.props.api.authTokens.ship).sort().join(".")}`,
+        sec: "village",
+        des: "dm",
+        aud: [dmship]
+      };
+
+      this.setState({
+        stream: stream,
+        oldStream: Object.assign({}, stream), // For some reason we need to make a shallow copy here... wtf?!?
+        dmLoaded: true
       });
     }
   }
@@ -231,7 +250,11 @@ export class StreamCreatePage extends Component {
   }
 
   render() {
-    this.loadEdit();
+    if (this.props.queryParams.station) {
+      this.loadEdit();
+    } else if (this.props.queryParams.dm) {
+      this.loadDM();
+    }
 
     let typeDesc = this.state.descriptions.type[this.state.stream.des];
     let secDesc = this.state.descriptions.security[this.state.stream.sec];
@@ -333,7 +356,7 @@ export class StreamCreatePage extends Component {
                         type="text"
                         name="audNew"
                         className="col-sm-8"
-                        placeholder="ramvel-rodpyl"
+                        placeholder="firfun-sontar"
                         disabled={this.state.loading}
                         value={this.state.stream.audNew}
                         onChange={this.valueChange} />

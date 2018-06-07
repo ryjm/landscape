@@ -127,7 +127,7 @@ export class Header extends Component {
                 <div className="panini"></div>
               </a>
               <div className="mr-8">{headerIcon}</div>
-              <h3><a href={`/~~/~${this.props.data.ship}/==/web/pages/nutalk/profile`}>Profile</a></h3>
+              <h3><a href={`/~~/${this.props.data.ship}/==/web/pages/nutalk/profile`}>Profile</a></h3>
             </div>
           </div>
         )

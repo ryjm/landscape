@@ -19,6 +19,8 @@
         ;div.col-sm-offset-2.col-sm-10
           ;div.profile-avatar
             ;div(urb-component "AvatarLg");
+            ;div.profile-shipname: {(scow %p p.bem.gas)}
+            ;a.no-underline.mb-6.btn.btn-sm.profile-message-btn(href "/~~/pages/nutalk/stream/create?dm={(scow %p p.bem.gas)}"): Message 
           ==
         ==
       ==
@@ -53,7 +55,9 @@
         ==
         ;div.mt-2.text-500.row
           ;span.col-sm-2: Issued:
-          ;span.col-sm-10.text-mono: {(scow %p (sein:title p.bem.gas))}
+          ;span.col-sm-10.text-mono
+            ;a(href "/~~/{(scow %p (sein:title p.bem.gas))}/==/web/pages/nutalk/profile"): {(scow %p (sein:title p.bem.gas))}
+          ==
         ==
         ;div.mt-2.text-500.row
           ;span.col-sm-2: Events:
