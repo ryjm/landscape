@@ -50,7 +50,7 @@ git clone git@github.com:urbit/mockups
 
 To get it running, you'll need to install Gulp globally:
 ```
-npm install -g gulp
+npm install -g gulp-cli
 npm install
 ```
 
