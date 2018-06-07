@@ -51,8 +51,8 @@ export class Root extends Component {
     let parser = new DOMParser();
     let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
     let headerQuery = tempDOM.querySelectorAll('[name="urb-header"]');
-    let header = (headerQuery.length > 0) ? headerQuery[0].getAttribute('value') : "default";
     let headerData = {
+      type: (headerQuery.length > 0) ? headerQuery[0].getAttribute('value') : "default",
       title: (headerQuery.length > 0) ? headerQuery[0].getAttribute('title') : null,
       station: (headerQuery.length > 0) ? headerQuery[0].getAttribute('station') : null,
       postid: (headerQuery.length > 0) ? headerQuery[0].getAttribute('postid') : null,
@@ -65,7 +65,6 @@ export class Root extends Component {
     return (
       <div>
         <Header
-          type={header}
           data={headerData}
           api={this.props.api}
           store={this.props.store}
