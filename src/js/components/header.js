@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { IconBlog } from '/components/lib/icons/icon-blog';
 import { IconStream } from '/components/lib/icons/icon-stream';
-import { getQueryParams, normalizeForeignURL, getStationDetails, collectionAuthorization } from '/lib/util';
+import { getQueryParams, getStationDetails, collectionAuthorization } from '/lib/util';
 import { Button } from '/components/lib/button';
 import { TRANSITION_LOADING } from '/lib/constants';
 import _ from 'lodash';
@@ -69,7 +69,7 @@ export class Header extends Component {
                 <div className="panini"></div>
               </a>
               <div className="mr-8">{headerIcon}</div>
-              <h3><a href={stationDetails.stationURL}>{stationDetails.cir}</a></h3>
+              <h3><a href={stationDetails.stationUrl}>{stationDetails.cir}</a></h3>
             </div>
             <div className="flex align-center">
               {actionLink}
@@ -87,14 +87,13 @@ export class Header extends Component {
       case "collection":
         station = this.props.data.station;
         stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
-        let collectionURL = normalizeForeignURL(`collections/${stationDetails.collId}`);
         let title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
         let authorization = collectionAuthorization(stationDetails, this.props.api.authTokens.ship);
         headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconBlog />;
 
         if (authorization === "write") {
           actionLink = (this.props.data.postid) ?
-            (<a href={normalizeForeignURL(`collections/${stationDetails.collId}/${this.props.data.postid}.collections-edit`)} className="header-link mr-6">Edit</a>) :
+            (<a href={`/~~/~${stationDetails.host}/==/web/collections/${stationDetails.collId}/${this.props.data.postid}.collections-edit`} className="header-link mr-6">Edit</a>) :
             (<a href={`/~~/pages/nutalk/collection/post?station=~${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)
         }
 
@@ -105,7 +104,7 @@ export class Header extends Component {
                 <div className="panini"></div>
               </a>
               <div className="mr-8">{headerIcon}</div>
-              <h3><a href={collectionURL}>{title}</a></h3>
+              <h3><a href={stationDetails.stationUrl}>{title}</a></h3>
             </div>
             <div className="flex align-center">
               {actionLink}

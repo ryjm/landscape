@@ -56,7 +56,7 @@
                         ;span.collection-date: {(esoo:colls mod.d)}
                       ==
                 ==
-                ;div(urb-component "CommentCreate", urb-coll "{(trip +<:s.bem.gas)}", urb-top "{(trip -:s.bem.gas)}");
+                ;div(urb-component "CommentCreate", urb-coll "{(trip +<:s.bem.gas)}", urb-top "{(trip -:s.bem.gas)}", urb-ship "{(scow %p p.bem.gas)}");
               ==
             ==
           ~

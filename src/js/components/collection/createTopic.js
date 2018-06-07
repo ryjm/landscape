@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
-import { getQueryParams, getStationDetails, normalizeForeignURL } from '/lib/util';
+import { getQueryParams, getStationDetails } from '/lib/util';
 import { Elapsed } from '/components/lib/elapsed';
 import { TRANSITION_LOADING } from '/lib/constants';
 import _ from 'lodash';
@@ -12,7 +12,7 @@ export class TopicCreatePage extends Component {
     this.createTopic = this.createTopic.bind(this);
     this.valueChange = this.valueChange.bind(this);
     this.state = {
-      topicContent: this.props.text ? this.props.text : ''
+      topicContent: props.text ? props.text : '',
     };
   }
 
@@ -33,13 +33,15 @@ export class TopicCreatePage extends Component {
   createTopic() {
     let dat = {};
 
-    let collId;
+    let collId, hostship;
 
-    if (this.props.coll) {
+    if (this.isEdit()) {
       collId = this.props.coll;
+      hostship = this.props.ship.substr(1);
     } else {
       let stationDetails = getStationDetails(getQueryParams().station);
       collId = stationDetails.collId;
+      hostship = stationDetails.host;
     }
 
     if (this.isEdit()) {
@@ -61,8 +63,6 @@ export class TopicCreatePage extends Component {
       }
     };
 
-    console.log('dat...', dat);
-
     this.props.api.coll(dat);
 
     this.props.pushCallback("circles", (rep) => {
@@ -70,7 +70,7 @@ export class TopicCreatePage extends Component {
         source: {
           nom: 'inbox',
           sub: true,
-          srs: [`~${this.props.api.authTokens.ship}/${rep.data.cir}`]
+          srs: [`~${hostship}/${rep.data.cir}`]
         }
       })
     });
@@ -86,7 +86,7 @@ export class TopicCreatePage extends Component {
       postId = postId ? postId.split("|")[0] : null;
 
       if (content && content === this.state.topicContent) {
-        this.props.transitionTo(normalizeForeignURL(`collections/${collId}/${postId}`, api.authTokens.ship));
+        this.props.transitionTo(`/~~/~${hostship}/==/web/collections/${collId}/${postId}`);
         return true;
       }
 
@@ -108,6 +108,14 @@ export class TopicCreatePage extends Component {
     // TODO:  Fill these out
     let date = new Date(1527184451038).toISOString();
     let id = "~2018.5.29..20.15.59..55ec/~2018.5.29..20.17.09..79a8";
+    let hostship;
+
+    if (this.isEdit()) {
+      hostship = this.props.ship.substr(1);
+    } else {
+      let stationDetails = getStationDetails(getQueryParams().station);
+      hostship = stationDetails.host;
+    }
 
     return (
       <div className="container">
@@ -126,7 +134,7 @@ export class TopicCreatePage extends Component {
                 onChange={this.valueChange}
                 />
               <div className="collection-post-actions">
-                <a href={`/~~/collections/${id}`} className="header-link mr-6">Cancel</a>
+                <a href={`/~~/~${hostship}/==/web/collections/${id}`} className="header-link mr-6">Cancel</a>
                 <Button
                   content="Save"
                   classes="btn btn-sm btn-primary"

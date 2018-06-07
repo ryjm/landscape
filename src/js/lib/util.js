@@ -21,30 +21,6 @@ export function collectionAuthorization(stationDetails, usership) {
   return "read";
 }
 
-export function normalizeForeignURL(fragment, usership) {
-  // this only works if you are _on_ a foreign ship. thus doesn't normalize properly for inbox links
-  let isForeign = window.location.pathname.includes("/==/web/");
-  let foreignHostship;
-  if (getQueryParams().station && usership) {
-    let hostship = getQueryParams().station.split("/")[0].substr(1);
-    if (hostship !== usership) {
-      foreignHostship = hostship;
-    }
-  }
-
-  let prefix;
-
-  if (isForeign) {
-    prefix = window.location.pathname.split("/").slice(0, 5).join("/");
-  } else if (foreignHostship) {
-    prefix = `/~~/~${foreignHostship}/==/web`;
-  } else {
-    prefix = '/~~';
-  }
-
-  return `${prefix}/${fragment}`;
-}
-
 export function uuid() {
   let str = "0v"
   str += Math.ceil(Math.random()*8)+"."
@@ -145,12 +121,14 @@ export function calculateStations(configs) {
 }
 
 export function getStationDetails(station, config = {}, usership) {
+  let host = station.split("/")[0].substr(1);
+
   let ret = {
     type: "none",
     config: config,
-    host: station.split("/")[0].substr(1),
+    host: host,
     cir: station.split("/")[1],
-    hostProfileURL: station.split("/")[0].substr(1) == usership ? '/~~/pages/nutalk/profile' : `/~~/~${station.split("/")[0].substr(1)}/==/web/pages/nutalk/profile`// TODO: Implement actual foreign profile URL
+    hostProfileUrl: `/~~/~${host}/==/web/pages/nutalk/profile`
   };
 
   let collParts = parseCollCircle(station);
@@ -169,11 +147,11 @@ export function getStationDetails(station, config = {}, usership) {
 
   switch (ret.type) {
     case "inbox":
-      ret.stationURL = "/~~/pages/nutalk";
+      ret.stationUrl = "/~~/pages/nutalk";
       ret.stationTitle = ret.cir;
       break;
     case "chat":
-      ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
+      ret.stationUrl = `/~~/pages/nutalk/stream?station=${station}`;
       ret.stationTitle = ret.cir;
       break;
     case "dm":
@@ -187,24 +165,20 @@ export function getStationDetails(station, config = {}, usership) {
         ret.stationTitle = "unknown";
       }
 
-      ret.stationURL = `/~~/pages/nutalk/stream?station=${station}`;
+      ret.stationUrl = `/~~/pages/nutalk/stream?station=${station}`;
       break;
     case "text":
       ret.collId = collParts.coll;
-      console.log('text', normalizeForeignURL(`collections/${collParts.coll}`, ret.host));
-      ret.stationURL = ret.host === usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
+      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
       break;
     case "text-topic":
       ret.collId = collParts.coll;
-      //ret.stationURL = normalizeForeignURL(`collections/${collParts.coll}`, ret.host);
-      ret.stationURL = ret.host === usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
+      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
-      //ret.postURL = normalizeForeignURL(`collections/${collParts.coll}/${collParts.top}`, ret.host);
-      ret.postURL = ret.host === usership ? `/~~/collections/${collParts.coll}` : `/~~/~${ret.host}/==/web/collections/${collParts.coll}/${collParts.top}`;
+      ret.postUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}/${collParts.top}`;
       ret.postID = collParts.top;
       ret.postTitle = null;  // TODO: Should be able to determine this from the station metadata alone.
-      //
       break;
   }
 
@@ -256,7 +230,7 @@ export function getMessageContent(msg, stationDetails) {
         ret.content = msg.sep.fat.tac.text.substr(0, 500);
         ret.postId = metadata[0];
         ret.postTitle = metadata[1] || ret.content.substr(0, 20);
-        ret.postURL = `${stationDetails.stationURL}/${metadata[0]}`;
+        ret.postUrl = `${stationDetails.stationUrl}/${metadata[0]}`;
       }
       break;
     case "text-topic":

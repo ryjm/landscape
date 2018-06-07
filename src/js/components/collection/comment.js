@@ -5,7 +5,6 @@ import { Button } from '/components/lib/button';
 export class CommentCreate extends Component {
   constructor(props) {
     super(props);
-    console.log('props', props);
     this.createComment = this.createComment.bind(this);
     this.valueChange = this.valueChange.bind(this);
     this.state = {
@@ -29,7 +28,7 @@ export class CommentCreate extends Component {
     }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
-      this.props.transitionTo(`/~~/collections/${this.props.coll}/${this.props.top}`);
+      this.props.transitionTo(`/~~/${this.props.ship}/==/web/collections/${this.props.coll}/${this.props.top}`);
     });
   }
 
