@@ -13,8 +13,6 @@ var json = require('rollup-plugin-json');
 var builtins = require('rollup-plugin-node-builtins');
 var rootImport = require('rollup-plugin-root-import');
 
-var serve = require('gulp-webserver');
-
 /***
   Main config options
 ***/
@@ -26,7 +24,7 @@ var urbitrc = require('./.urbitrc');
 ***/
 
 gulp.task('bundle-css', function() {
-  gulp
+  return gulp
     .src('src/index.css')
     .pipe(cssimport())
     .pipe(cssnano())
@@ -35,7 +33,7 @@ gulp.task('bundle-css', function() {
 
 var cache;
 
-gulp.task('bundle-js', function() {
+gulp.task('bundle-js', function(cb) {
   return rollup({
     input: './src/index.js',
     cache: cache,
@@ -62,33 +60,30 @@ gulp.task('bundle-js', function() {
       resolve()
     ]
   }).on('bundle', function(bundle){ cache = bundle; })
-    .on('error', function(e){ console.log(e)})
+    .on('error', function(e){
+      console.log(e);
+      cb();
+    })
     .pipe(source('index.js'))
-    .pipe(gulp.dest('./urbit-code/web/pages/nutalk/js/'));
-});
-
-gulp.task('server', function () {
-  gulp.src('.')
-    .pipe(serve({
-      livereload: true,
-      directoryListing: true,
-      open: true
-    }));
+    .pipe(gulp.dest('./urbit-code/web/pages/nutalk/js/'))
+    .on('end', cb);
 });
 
 gulp.task('copy-urbit', function () {
+  let ret = gulp.src('urbit-code/**/*');
+
   urbitrc.URBIT_PIERS.forEach(function(pier) {
-    gulp.src('urbit-code/**/*')
-        .pipe(gulp.dest(pier));
-  })
+    ret = ret.pipe(gulp.dest(pier));
+  });
+
+  return ret;
 });
 
-gulp.task('watch', ['default'], function() {
-  gulp.watch('src/**/*.js', ['bundle-js']);
-  gulp.watch('src/**/*.css', ['bundle-css']);
+gulp.task('default', gulp.series(gulp.parallel('bundle-js', 'bundle-css'), 'copy-urbit'));
 
-  gulp.watch('urbit-code/**/*', ['copy-urbit']);
-})
+gulp.task('watch', gulp.series('default', function() {
+  gulp.watch('src/**/*.js', gulp.parallel('bundle-js'));
+  gulp.watch('src/**/*.css', gulp.parallel('bundle-css'));
 
-gulp.task('default', [ 'bundle-js', 'bundle-css', 'copy-urbit' ]);
-gulp.task('serve', ['server', 'watch']);
+  gulp.watch('urbit-code/**/*', gulp.parallel('copy-urbit'));
+}));

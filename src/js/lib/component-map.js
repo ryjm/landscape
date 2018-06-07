@@ -9,10 +9,15 @@ import { CommentCreate } from '/components/collection/comment';
 import { Elapsed } from '/components/lib/elapsed';
 import { IconComment } from '/components/lib/icons/icon-comment';
 import { AvatarSample1 } from '/components/lib/icons/avatar-sample-1';
+import { AvatarLg } from '/components/lib/icons/avatar-lg';
+import { ChatList } from '/components/lib/chat-list';
 
 export var ComponentMap = {
   "ChatPage": {
     comp: ChatPage
+  },
+  "ChatList": {
+    comp: ChatList
   },
   "StreamCreatePage": {
     comp: StreamCreatePage
@@ -43,5 +48,8 @@ export var ComponentMap = {
   },
   "AvatarSample1": {
     comp: AvatarSample1
+  },
+  "AvatarLg": {
+    comp: AvatarLg
   }
 };

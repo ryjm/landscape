@@ -110,13 +110,13 @@ class UrbitWarehouse {
       reportBucket.callbacks.forEach((callback, i) => {
         let callSuccess = callback(rep);
         // callbacks should return true, or _nothing_ to be considered complete)
-        // default behavior is nothing; complete on first keyed response
-        if (callSuccess || typeof callSuccess === "undefined") {
+        // default behavior is return nothing; complete on first keyed response
+        if (callSuccess === true || typeof callSuccess === "undefined") {
           clearIndexes.push(i);
         }
       });
 
-      reportBucket.callbacks = _.pullAt(reportBucket.callbacks, clearIndexes);
+      _.pullAt(reportBucket.callbacks, clearIndexes);
     })
   }
 

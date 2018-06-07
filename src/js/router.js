@@ -10,6 +10,7 @@ import { TRANSITION_LOADING, TRANSITION_READY } from '/lib/constants';
 class UrbitRouter {
   constructor() {
     this.transitionTo = this.transitionTo.bind(this);
+    this.metaPressed = false;
   }
 
   start() {
@@ -90,6 +91,17 @@ class UrbitRouter {
   }
 
   registerAnchorListeners() {
+    window.document.addEventListener('keydown', (e) => {
+      // TODO:  Verify this works on Windows systems...
+      if (e.metaKey) {
+        this.metaPressed = true;
+      }
+    });
+
+    window.document.addEventListener('keyup', (e) => {
+      this.metaPressed = false;
+    });
+
     window.document.addEventListener('click', (e) => {
       // Walk the DOM node's parents to find 'a' tags up the chain
       let el = e.target;
@@ -98,8 +110,10 @@ class UrbitRouter {
       }
       // If you find an "a" tag in the clicked element's parents, it's a link
       if (el && el.hostname === "localhost") {
-        e.preventDefault();
-        this.transitionTo(el.pathname + el.search);
+        if (!this.metaPressed) {
+          e.preventDefault();
+          this.transitionTo(el.pathname + el.search);
+        }
       }
     });
   }

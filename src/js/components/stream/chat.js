@@ -10,7 +10,7 @@ export class ChatPage extends Component {
 
     this.presence = false;
 
-    let station = this.props.queryParams.station;
+    let station = props.queryParams.station;
     let circle = station.split("/")[1];
     let host = station.split("/")[0].substr(1);
 

@@ -57,7 +57,7 @@ export class ListPage extends Component {
 
       return (
         <div key={item.key} className="mt-3">
-          <div className="text-mono"><a href={deets.stationURL}>
+          <div className="text-mono"><a href={deets.stationUrl}>
             <u>{expandedStationName[0]}</u>
             <span className="text-600">  /  </span>
             <u className="text-600">{expandedStationName[1]}</u>

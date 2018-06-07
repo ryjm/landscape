@@ -13,6 +13,6 @@
 /=  gas  /$  fuel:html
 ^-  manx
 ;div
-  ;div(urb-component "TopicCreatePage");
+  ;div(urb-component "TopicCreatePage", urb-ship "{(scow %p p.bem.gas)}");
   ;input(type "hidden", name "urb-header", value "collection", station "query");
 ==
