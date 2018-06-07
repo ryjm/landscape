@@ -14,6 +14,9 @@ export class TopicCreatePage extends Component {
     this.state = {
       topicContent: this.props.text ? this.props.text : ''
     };
+    this.pageShip= `~${getQueryParams().station.split("/")[0].substr(1)}`;
+    console.log('pageShip', this.pageShip);
+    //
   }
 
   titleExtract(s) {
@@ -48,7 +51,8 @@ export class TopicCreatePage extends Component {
           col: collId,
           top: this.props.top,
           tit: this.titleExtract(this.state.topicContent),
-          wat: this.state.topicContent
+          wat: this.state.topicContent,
+          hos: this.pageShip
         }
       }
     } else {
@@ -56,7 +60,8 @@ export class TopicCreatePage extends Component {
         submit: {
           col: collId,
           tit: this.titleExtract(this.state.topicContent),
-          wat: this.state.topicContent
+          wat: this.state.topicContent,
+          hos: this.pageShip
         }
       }
     };
