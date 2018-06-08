@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
-import { getQueryParams, getStationDetails } from '/lib/util';
+import { getQueryParams, getStationDetails, daToDate } from '/lib/util';
 import { Elapsed } from '/components/lib/elapsed';
 import { TRANSITION_LOADING } from '/lib/constants';
 import _ from 'lodash';
@@ -108,10 +108,20 @@ export class TopicCreatePage extends Component {
     // TODO:  Fill these out
     let date = new Date(1527184451038).toISOString();
     let id = "~2018.5.29..20.15.59..55ec/~2018.5.29..20.17.09..79a8";
-    let hostship;
+
+    let hostship, dateElem;
 
     if (this.isEdit()) {
       hostship = this.props.ship.substr(1);
+
+      let lastEditDate = daToDate(this.props.lastedit).toISOString();
+
+      dateElem = (
+        <div className="mb-5">
+          <Elapsed timestring={lastEditDate} classes="collection-date text-black mr-4" />
+          <span className="collection-date">{this.props.lastedit}</span>
+        </div>
+      );
     } else {
       let stationDetails = getStationDetails(getQueryParams().station);
       hostship = stationDetails.host;
@@ -120,11 +130,8 @@ export class TopicCreatePage extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-sm-offset-2 col-sm-10">
-            <div className="mb-5 mt-12">
-              <Elapsed timestring={date} classes="collection-date text-black mr-4" />
-              <span className="collection-date">{date}</span>
-            </div>
+          <div className="col-sm-offset-2 col-sm-10 pt-12">
+            {dateElem}
             <div className="collection-edit">
               <textarea
                 className="text-code collection-post-edit mb-4"
