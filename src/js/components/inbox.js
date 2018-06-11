@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Elapsed } from '/components/lib/elapsed';
 import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageContent } from '/lib/util';
 import { Icon } from '/components/lib/icon';
+import { CollectionPreview } from '/components/collectionPreview';
 import _ from 'lodash';
 import { Button } from '/components/lib/button';
 import { TRANSITION_LOADING } from '/lib/constants';
@@ -139,6 +140,8 @@ export class InboxPage extends Component {
             <a href={messageDetails.content}>{messageDetails.content}</a>
           )
         }
+    } else if (messageDetails.postUrl) {
+      return <CollectionPreview messageDetails={messageDetails}></CollectionPreview>
     } else {
       return messageDetails.content;
     }
