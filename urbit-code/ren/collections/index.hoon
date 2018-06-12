@@ -20,22 +20,6 @@
   ;div.row
     ;div.col-sm-10.col-sm-offset-2
       ;div.collection-index.mt-12
-        :: ;*  ?:  (authed:colls gas)
-        ::   ;=
-        ::     ;div.row
-        ::       ;a(href "/~~/pages/nutalk/collection/post?coll={(trip -.s.bem.gas)}")
-        ::         ;button.btn.btn-secondary
-        ::           ; Write →
-        ::         ==
-        ::       ==
-        ::       ;a.ml-4.mt-2.text-600(href "")
-        ::           ; Settings →
-        ::       ==
-        ::     ==
-        ::   ==
-        :: ;=
-        ::   ;div(urb-component "Subscribe", urb-circle "{(scow %p p.bem.gas)}/collection_~{(trip -:s.bem.gas)}");
-        :: ==
         ;ul
           ;*  %+  turn
                 %+  sort

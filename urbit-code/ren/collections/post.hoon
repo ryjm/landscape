@@ -17,7 +17,7 @@
       ;div.post.collection-post-page
         ;div.row.collection-date
           ;span.mr-2.text-black.text-500(urb-component "Elapsed", urb-timestring "{(esoo:colls mod.info.metawcom)}");
-          ;span: {(trip -:s.bem.gas)}
+          ;span: {<mod.info.metawcom>}
         ==
         ::
         ;div#show

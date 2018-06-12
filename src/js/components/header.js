@@ -52,7 +52,9 @@ export class Header extends Component {
     let btnLabel = (this.isSubscribed()) ? "Unsubscribe" : "Subscribe";
     let headerIcon, station, stationDetails, actionLink;
 
-    switch(this.props.data.type) {
+    let type = (this.props.data.type) ? this.props.data.type : "default";
+
+    switch(type) {
       case "stream":
         station = this.props.data.station;
         stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);

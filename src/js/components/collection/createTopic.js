@@ -105,14 +105,11 @@ export class TopicCreatePage extends Component {
   }
 
   render() {
-    // TODO:  Fill these out
-    let date = new Date(1527184451038).toISOString();
-    let id = "~2018.5.29..20.15.59..55ec/~2018.5.29..20.17.09..79a8";
-
-    let hostship, dateElem;
+    let hostship, dateElem, id;
 
     if (this.isEdit()) {
       hostship = this.props.ship.substr(1);
+      id = this.props.coll;
 
       let lastEditDate = daToDate(this.props.lastedit).toISOString();
 
@@ -125,6 +122,7 @@ export class TopicCreatePage extends Component {
     } else {
       let stationDetails = getStationDetails(getQueryParams().station);
       hostship = stationDetails.host;
+      id = getStationDetails.collId;
     }
 
     return (
