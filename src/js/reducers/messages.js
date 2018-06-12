@@ -64,9 +64,9 @@ export class MessagesReducer {
       .sort((a, b) => b.wen - a.wen)    // sort by date
       .slice(0, INBOX_MESSAGE_COUNT);   // grab the first 30 or so
 
-    for (let msg of ret) {
-      console.log(`msg ${msg.uid}: ${msg.wen}`);
-    }
+    // for (let msg of ret) {
+    //   console.log(`msg ${msg.uid}: ${msg.wen}`);
+    // }
 
     storeMessages.inboxMessages = ret;
   }
