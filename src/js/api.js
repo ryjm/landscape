@@ -10,7 +10,7 @@ class UrbitApi {
 
   // keep default bind to hall, since its bind procedure more complex for now AA
   bind(path, method, ship = this.authTokens.ship, appl = "hall") {
-    console.log('binding to ...', appl, ", path: ", path, ", as ship: ", ship);
+    console.log('binding to ...', appl, ", path: ", path, ", as ship: ", ship, ", by method: ", method);
     const params = {
       appl,
       mark: "json",

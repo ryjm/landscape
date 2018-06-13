@@ -125,6 +125,7 @@ export function getStationDetails(station, config = {}, usership) {
 
   let ret = {
     type: "none",
+    station: station,
     config: config,
     host: host,
     cir: station.split("/")[1],
@@ -177,7 +178,7 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
       ret.postUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}/${collParts.top}`;
-      ret.postID = collParts.top;
+      ret.postId = collParts.top;
       ret.postTitle = null;  // TODO: Should be able to determine this from the station metadata alone.
       break;
   }

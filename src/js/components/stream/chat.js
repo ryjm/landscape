@@ -36,15 +36,15 @@ export class ChatPage extends Component {
   }
 
   componentDidMount() {
-    let path = `/circle/inbox/${this.state.station}/grams/-20`;
+    let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
-    this.props.api.bind(path, "PUT");
+    this.props.api.bind(path, "PUT", this.state.host);
   }
 
   componentWillUnmount() {
-    let path = `/circle/inbox/${this.state.station}/grams/-20`;
+    let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
-    this.props.api.bind(path, "DELETE");
+    this.props.api.bind(path, "DELETE", this.state.host);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -65,9 +65,9 @@ export class ChatPage extends Component {
   requestChatBatch() {
     let newNumMessages = this.state.numMessages + 50;
 
-    let path = `/circle/inbox/${this.state.station}/grams/-${newNumMessages}/-${this.state.numMessages}`;
+    let path = `/circle/${this.state.circle}/grams/-${newNumMessages}/-${this.state.numMessages}`;
 
-    this.props.api.bind(path, "PUT");
+    this.props.api.bind(path, "PUT", this.state.host);
   }
 
   onScrollStop() {

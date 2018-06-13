@@ -57,6 +57,7 @@ export class Header extends Component {
     switch(type) {
       case "stream":
         station = this.props.data.station;
+        if (!station) return null;
         stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
         headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconStream />;
 
@@ -88,6 +89,7 @@ export class Header extends Component {
         break;
       case "collection":
         station = this.props.data.station;
+        if (!station) return null;
         stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
         let title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
         let authorization = collectionAuthorization(stationDetails, this.props.api.authTokens.ship);

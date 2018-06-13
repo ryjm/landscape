@@ -186,13 +186,13 @@ export class InboxPage extends Component {
   }
 
   // TODO:  This function is super bunk. Post circles should (probably) have post title in the post config.
-  findPostTitleFromMessage(postID) {
+  findPostTitleFromMessage(postId) {
     let inbox = this.props.store.messages.inboxMessages;
     let result = null;
 
     for (var i = 0; i < inbox.length; i++) {
       inbox[i].aud.forEach((aud) => {
-        if (aud.includes(postID)) {
+        if (aud.includes(postId)) {
           result = inbox[i].sep.fat.sep.lin.msg.split("|")[1];
         }
       })
@@ -214,7 +214,7 @@ export class InboxPage extends Component {
       let postDisplay = null;
 
       if (section.details.type === "text-topic") {
-        let postTitle = this.findPostTitleFromMessage(section.details.postID);
+        let postTitle = this.findPostTitleFromMessage(section.details.postId);
 
         postDisplay = (
           <span>
