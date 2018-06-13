@@ -241,3 +241,14 @@ export function getMessageContent(msg, stationDetails) {
 
   return ret;
 }
+
+// maybe do fancier stuff later
+export function isUrl(string) {
+  const r = /^http|^www|\.com$/.exec(string)
+  if (r) {
+    return true
+  }
+  else {
+    return false
+  }
+}

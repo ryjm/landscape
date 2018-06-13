@@ -10,6 +10,8 @@ export class CommentCreate extends Component {
     this.state = {
       comment: ''
     };
+    let loc = window.location.pathname;
+    this.pageShip = loc.includes("/==/web") ? loc.split('/')[2] : `~${this.props.api.authTokens.ship}`
   }
 
   createComment() {
@@ -18,7 +20,8 @@ export class CommentCreate extends Component {
         col: this.props.coll,
         top: this.props.top,
         com: '~',
-        wat: this.state.comment
+        wat: this.state.comment,
+        hos: this.pageShip
       }
     });
 
@@ -27,8 +30,11 @@ export class CommentCreate extends Component {
       data: TRANSITION_LOADING
     }]);
 
+    // I hate this 
+    this.setState({comment: ''});
+
     this.props.pushCallback("circle.gram", (rep) => {
-      this.props.transitionTo(`/~~/${this.props.ship}/==/web/collections/${this.props.coll}/${this.props.top}`);
+      this.props.transitionTo(this.pageShip == this.props.api.authTokens.ship ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/${this.pageShip}/==/web/collections/${this.props.coll}/${this.props.top}`)
     });
   }
 

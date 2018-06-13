@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { uuid } from '/lib/util';
+import { uuid, isUrl } from '/lib/util';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -94,23 +94,32 @@ export class ChatPage extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    let aud;
+    let aud, sep;
     let config = this.props.store.configs[this.state.station];
 
     if (config.cap === "dm") {
       aud = config.con.sis.map((mem) => `~${mem}/${this.state.circle}`);
     } else {
       aud = [this.state.station];
+
     }
 
-    let message = {
-      aud: aud,
-      ses: [{
+    if (isUrl(this.state.message)) {
+      sep = {
+        url: this.state.message
+      }
+    } else {
+      sep = {
         lin: {
           msg: this.state.message,
           pat: false
         }
-      }]
+      }
+    }
+
+    let message = {
+      aud: aud,
+      ses: [sep]
     };
 
     this.props.api.hall({
@@ -256,7 +265,7 @@ export class ChatPage extends Component {
             return (
               <div key={msg.uid} className={`row ${appClass}`}>
                 <div className="col-sm-2 text-mono">{autLabel}</div>
-                <div className="col-sm-8 url"><a href={msg.sep.url}>{msg.sep.url}</a></div>
+                <div className="col-sm-8 url"><a href={msg.sep.url} target="_blank">{msg.sep.url}</a></div>
               </div>
             )
           }
