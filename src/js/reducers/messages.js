@@ -17,6 +17,10 @@ export class MessagesReducer {
         case "circle.config.dif.remove":
           delete store.messages.stations[rep.data.cir];
           break;
+        case "circle.config.dif.source":
+          if (fromInbox && !rep.data.add) {
+            removeInboxMessages(rep.data.src, store);
+          }
       }
     });
   }
@@ -74,5 +78,9 @@ export class MessagesReducer {
     // }
 
     store.messages.inboxMessages = ret;
+  }
+
+  removeInboxMessages(station, store) {
+    store.messages.inboxMessages = store.messages.inboxMessages.filter((msg) => !msg.aud.includes(station))
   }
 }

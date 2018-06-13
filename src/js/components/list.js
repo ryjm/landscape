@@ -7,7 +7,7 @@ export class ListPage extends Component {
   }
 
   buildDMSection(dmStations) {
-    dmStations.map((stationDetails) => {
+    return dmStations.map((stationDetails) => {
       return (
         <div key={stationDetails.station} className="mt-3">
           <div className="text-mono"><a href={stationDetails.stationUrl}>
