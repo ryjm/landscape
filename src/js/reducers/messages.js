@@ -5,12 +5,14 @@ const INBOX_MESSAGE_COUNT = 30;
 export class MessagesReducer {
   reduce(reports, store) {
     reports.forEach((rep) => {
+      let fromInbox = rep.from && rep.from.path.includes("inbox");
+
       switch (rep.type) {
         case "circle.nes":
-          this.processMessages(rep.data, store);
+          this.processMessages(rep.data, store, fromInbox);
           break;
         case "circle.gram":
-          this.processMessages([rep.data], store);
+          this.processMessages([rep.data], store, fromInbox);
           break;
         case "circle.config.dif.remove":
           delete store.messages.stations[rep.data.cir];
@@ -19,9 +21,11 @@ export class MessagesReducer {
     });
   }
 
-  processMessages(messages, store) {
+  processMessages(messages, store, fromInbox) {
     this.storeStationMessages(messages, store);
-    this.storeInboxMessages(messages, store);
+    if (fromInbox) {
+      this.storeInboxMessages(messages, store);
+    }
   }
 
   storeStationMessages(messages, store) {
