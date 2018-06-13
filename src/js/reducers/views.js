@@ -1,9 +1,9 @@
 export class ViewsReducer {
-  reduce(reports, storeViews) {
+  reduce(reports, store) {
     reports.forEach((rep) => {
       switch (rep.type) {
         case "transition":
-          storeViews.transition = rep.data;
+          store.views.transition = rep.data;
           break;
       }
     });

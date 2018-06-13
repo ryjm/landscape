@@ -1,5 +1,5 @@
 export class ConfigsReducer {
-  reduce(reports, storeConfigs) {
+  reduce(reports, store) {
     reports.forEach((rep) => {
       let stationName;
       let stations = {};
@@ -8,36 +8,36 @@ export class ConfigsReducer {
         case "circle.cos.loc":
           stationName = `~${rep.from.ship}/${rep.from.path.split("/")[2]}`;
           stations[stationName] = rep.data;
-          this.storeConfigs(stations, storeConfigs);
+          this.addConfigs(stations, store.configs);
           break;
         case "circle.cos.rem":
-          this.storeConfigs(rep.data, storeConfigs);
+          this.addConfigs(rep.data, store.configs);
           break;
         case "circle.pes.loc":
           stationName = `~${rep.from.ship}/${rep.from.path.split("/")[2]}`;
-          this.updateConfig({pes: rep.data}, storeConfigs[stationName]);
+          this.updateConfig({pes: rep.data}, store.configs[stationName]);
           break;
         case "circle.config.dif.source":
           stationName = `~${rep.from.ship}/${rep.from.path.split("/")[2]}`;
-          this.updateConfig(rep.data, storeConfigs[stationName]);
+          this.updateConfig(rep.data, store.configs[stationName]);
           break;
         case "circle.config.dif.full":
           stationName = rep.data.src[0];  // TODO:  API weirdness; we have to get name of new station from new station config's src property. Should maybe return a dict.
           stations[stationName] = rep.data;
-          this.storeConfigs(stations, storeConfigs);
+          this.addConfigs(stations, store.configs);
           break;
         case "circle.config.dif.permit":  // TODO:  This is very wonky, should be fixed with API discussion
           stationName = rep.data.cir;
-          this.updateConfig(rep.data.dif.permit, storeConfigs[stationName]);
+          this.updateConfig(rep.data.dif.permit, store.configs[stationName]);
           break;
         case "circle.config.dif.remove":
-          delete storeConfigs[rep.data.cir];
+          delete store.configs[rep.data.cir];
           break;
       }
     });
   }
 
-  storeConfigs(configs, storeConfigs) {
+  addConfigs(configs, storeConfigs) {
     Object.keys(configs).forEach((cos) => {
       storeConfigs[cos] = storeConfigs[cos] || {};
       Object.assign(storeConfigs[cos], configs[cos]);

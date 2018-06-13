@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { calculateStations, isDMStation, getStationDetails } from '/lib/util';
+import { getSubscribedStations } from '/lib/util';
 
 export class ListPage extends Component {
   constructor(props) {
@@ -22,11 +22,15 @@ export class ListPage extends Component {
     return stations.map((stationDetails) => {
       return (
         <div key={stationDetails.station} className="mt-3">
-          <div className="text-mono"><a href={stationDetails.stationUrl}>
-            <u>{stationDetails.host}</u>
+          <div className="text-mono">
+            <a href={stationDetails.hostProfileUrl}>
+              <u>{stationDetails.host}</u>
+            </a>
             <span className="text-600">  /  </span>
-            <u className="text-600">{stationDetails.stationTitle}</u>
-          </a></div>
+            <a href={stationDetails.stationUrl}>
+              <u className="text-600">{stationDetails.stationTitle}</u>
+            </a>
+          </div>
           <div>{stationDetails.config.con.sis.length} Members</div>
         </div>
       );
@@ -34,19 +38,12 @@ export class ListPage extends Component {
   }
 
   render() {
-    let inbox = this.props.store.configs[`~${this.props.api.authTokens.ship}/inbox`];
-    if (!inbox) return null;
+    let stations = getSubscribedStations(this.props.api.authTokens.ship, this.props.store.configs);
+    if (!stations) return null;
 
-    let stationDetailList = inbox.src
-      .map((station) => {
-        if (!this.props.store.configs[station]) return null;
-        return getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship)
-      })
-      .filter((station) => station !== null);
-
-    const chatStations = this.buildSection(stationDetailList.filter((d) => d.type === "chat"));
-    const textStations = this.buildSection(stationDetailList.filter((d) => d.type === "text"));
-    const DMStations = this.buildDMSection(stationDetailList.filter((d) => d.type === "dm"));
+    const chatStations = this.buildSection(stations.chatStations);
+    const textStations = this.buildSection(stations.textStations);
+    const DMStations = this.buildDMSection(stations.dmStations);
 
     return (
       <div className="container">

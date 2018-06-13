@@ -242,6 +242,35 @@ export function getMessageContent(msg, stationDetails) {
   return ret;
 }
 
+export function getSubscribedStations(ship, storeConfigs) {
+  let inbox = storeConfigs[`~${ship}/inbox`];
+  if (!inbox) return null;
+
+  let stationDetailList = inbox.src
+    .map((station) => {
+      if (!storeConfigs[station]) return null;
+      return getStationDetails(station, storeConfigs[station], ship)
+    })
+    .filter((station) => station !== null);
+
+  let ret = {
+    chatStations: stationDetailList.filter((d) => d.type === "chat"),
+    textStations: stationDetailList.filter((d) => d.type === "text"),
+    dmStations: stationDetailList.filter((d) => d.type === "dm"),
+  };
+
+  let numSubs = ret.chatStations.length + ret.textStations.length;
+  let numDMs = ret.dmStations.length;
+
+  let numString = [];
+  if (numSubs > 0) numString.push(`${numSubs} subscriptions`);
+  if (numDMs > 0) numString.push(`${numDMs} DMs`);
+
+  ret.numString = numString.join(", ");
+
+  return ret;
+}
+
 // maybe do fancier stuff later
 export function isUrl(string) {
   const r = /^http|^www|\.com$/.exec(string)
