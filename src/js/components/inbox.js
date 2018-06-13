@@ -136,7 +136,7 @@ export class InboxPage extends Component {
         }
         else {
           return (
-            <a href={messageDetails.content}>{messageDetails.content}</a>
+            <a href={messageDetails.content} target="_blank">{messageDetails.content}</a>
           )
         }
     } else {
