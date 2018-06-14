@@ -11,10 +11,23 @@ export class TopicCreatePage extends Component {
 
     this.state = {
       topicContent: props.text ? props.text : '',
+      details: this.getDetails(props)
     };
 
     this.createTopic = this.createTopic.bind(this);
     this.valueChange = this.valueChange.bind(this);
+  }
+
+  componentDidMount() {
+    let path = `/circle/${this.state.details.cir}/config-l/grams/-10`;
+
+    this.props.api.bind(path, "PUT", this.state.details.hostship);
+  }
+
+  componentWillUnmount() {
+    let path = `/circle/${this.state.details.cir}/config-l/grams/-10`;
+
+    this.props.api.bind(path, "DELETE", this.state.details.hostship);
   }
 
   titleExtract(s) {
@@ -27,19 +40,23 @@ export class TopicCreatePage extends Component {
     return '';
   }
 
-  getDetails() {
+  getDetails(conProps) {
+    let props = this.props || conProps;
+
     let details = {};
-    details.isEdit = 'top' in this.props;
+    details.isEdit = 'top' in props;
 
     if (details.isEdit) {
-      details.collId = this.props.coll;
-      details.hostship = this.props.ship.substr(1);
-      details.lastedit = this.props.lastedit;
-      details.top = this.props.top;
+      details.collId = props.coll;
+      details.hostship = props.ship.substr(1);
+      details.cir = `~${details.hostship}/collection_~${details.collId}`;
+      details.lastedit = props.lastedit;
+      details.top = props.top;
     } else {
       let stationDetails = getStationDetails(getQueryParams().station);
       details.collId = stationDetails.collId;
       details.hostship = stationDetails.host;
+      details.cir = stationDetails.cir;
     }
 
     return details;
@@ -73,12 +90,12 @@ export class TopicCreatePage extends Component {
 
     this.props.api.coll(dat);
 
-    this.props.pushCallback("circles", (rep) => {
+    this.props.pushCallback("circle.config.dif.source", (rep) => {
       api.hall({
         source: {
           nom: 'inbox',
           sub: true,
-          srs: [`~${details.hostship}/${rep.data.cir}`]
+          srs: [rep.data.src]
         }
       })
     });
