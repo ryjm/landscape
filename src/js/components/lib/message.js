@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { getMessageContent } from '/lib/util';
+import { isDMStation, getMessageContent } from '/lib/util';
 import { Button } from '/components/lib/button';
+import { TRANSITION_LOADING } from '/lib/constants';
 
 export class Message extends Component {
   constructor(props) {

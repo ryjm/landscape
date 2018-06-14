@@ -63,7 +63,7 @@ export class InboxPage extends Component {
           {rowAuthor}
           <div className="row">
             <div className="col-sm-10 col-sm-offset-2">
-              <Message details={messageDetails}></Message>
+              <Message details={messageDetails} api={this.props.api} storeReports={this.props.storeReports} pushCallback={this.props.pushCallback} transitionTo={this.props.transitionTo}></Message>
             </div>
           </div>
         </div>
