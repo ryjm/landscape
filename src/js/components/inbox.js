@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Elapsed } from '/components/lib/elapsed';
+import { Message } from '/components/lib/message';
 import { prettyShip, foreignUrl, isDMStation, getStationDetails, getMessageContent } from '/lib/util';
 import { Icon } from '/components/lib/icon';
 import _ from 'lodash';
@@ -16,84 +17,6 @@ export class InboxPage extends Component {
       collections: {}
     };
 
-    this.acceptInvite = this.acceptInvite.bind(this);
-  }
-
-  createDMStation(station) {
-    let circle = station.split("/")[1];
-    let everyoneElse = circle.split(".").filter((ship) => ship !== this.props.api.authTokens.ship);
-
-    this.props.api.hall({
-      create: {
-        nom: circle,
-        des: "dm",
-        sec: "village"
-      }
-    });
-
-    this.props.pushCallback("circles", (rep) => {
-      api.hall({
-        source: {
-          nom: 'inbox',
-          sub: true,
-          srs: [`~${this.props.api.authTokens.ship}/${rep.data.cir}`]
-        }
-      })
-    });
-
-    this.props.storeReports([{
-      type: "transition",
-      data: TRANSITION_LOADING
-    }]);
-
-    this.props.pushCallback("circle.config.dif.full", (rep) => {
-      this.props.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
-    });
-
-    this.props.pushCallback("circle.config.dif.full", (rep) => {
-      api.permit(circle, everyoneElse, false);
-    });
-
-    this.props.pushCallback("circle.config.dif.full", (rep) => {
-      api.hall({
-        source: {
-          nom: circle,
-          sub: true,
-          srs: [station]
-        }
-      })
-    });
-  }
-
-  acceptInvite(actionData) {
-    if (actionData.response === "no") {
-      return;
-    }
-
-    if (isDMStation(actionData.station)) {
-      this.createDMStation(actionData.station);
-    } else {
-      this.subStation(actionData.station);
-    }
-  }
-
-  subStation(station) {
-    this.props.api.hall({
-      source: {
-        nom: "inbox",
-        sub: true,
-        srs: [station]
-      }
-    });
-
-    this.props.storeReports([{
-      type: "transition",
-      data: TRANSITION_LOADING
-    }]);
-
-    this.props.pushCallback("circle.config.dif.source", (rep) => {
-      this.props.transitionTo(`/~~/pages/nutalk/stream?station=${station}`);
-    });
   }
 
   buildPostTitle(messageDetails) {
@@ -106,41 +29,6 @@ export class InboxPage extends Component {
       )
     } else {
       return null;
-    }
-  }
-
-  buildMessageContent(messageDetails) {
-    if (messageDetails.type === "text") {
-      return this.buildPostTitle(messageDetails);
-    } else if (messageDetails.type === "inv") {
-      return (
-        <div className="invite">
-          {messageDetails.content}
-          <Button
-            classes="btn btn-primary accept"
-            action={this.acceptInvite}
-            actionData={{station: messageDetails.station, response: "yes"}}
-            pushCallback={this.props.pushCallback}
-            responseKey="circle.config.dif.full"
-            content="Yes"
-           />
-
-          <button className="btn btn-secondary decline">No</button>
-        </div>
-      )
-    } else if (messageDetails.type === "url") {
-        if (/(jpg|img|png|gif|tiff|jpeg|JPG|IMG|PNG|TIFF)$/.exec(messageDetails.content)) {
-          return (
-            <img src={messageDetails.content}></img>
-          )
-        }
-        else {
-          return (
-            <a href={messageDetails.content} target="_blank">{messageDetails.content}</a>
-          )
-        }
-    } else {
-      return messageDetails.content;
     }
   }
 
@@ -175,7 +63,7 @@ export class InboxPage extends Component {
           {rowAuthor}
           <div className="row">
             <div className="col-sm-10 col-sm-offset-2">
-              {this.buildMessageContent(messageDetails)}
+              <Message details={messageDetails}></Message>
             </div>
           </div>
         </div>
