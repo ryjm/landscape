@@ -95,7 +95,7 @@ export class Header extends Component {
         let authorization = collectionAuthorization(stationDetails, this.props.api.authTokens.ship);
         headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconBlog />;
 
-        if (authorization === "write") {
+        if (stationDetails.host === this.props.api.authTokens.ship || this.props.data.publ === "%.y") {
           actionLink = (this.props.data.postid) ?
             (<a href={`/~~/~${stationDetails.host}/==/web/collections/${stationDetails.collId}/${this.props.data.postid}.collections-edit`} className="header-link mr-6">Edit</a>) :
             (<a href={`/~~/pages/nutalk/collection/post?station=~${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)

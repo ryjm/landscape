@@ -9,14 +9,12 @@ export class TopicCreatePage extends Component {
   constructor(props) {
     super(props);
 
-    this.createTopic = this.createTopic.bind(this);
-    this.valueChange = this.valueChange.bind(this);
     this.state = {
       topicContent: props.text ? props.text : '',
     };
-    this.pageShip= `~${getQueryParams().station.split("/")[0].substr(1)}`;
-    console.log('pageShip', this.pageShip);
-    //
+
+    this.createTopic = this.createTopic.bind(this);
+    this.valueChange = this.valueChange.bind(this);
   }
 
   titleExtract(s) {
@@ -29,41 +27,46 @@ export class TopicCreatePage extends Component {
     return '';
   }
 
-  isEdit() {
-    return 'top' in this.props;
+  getDetails() {
+    let details = {};
+    details.isEdit = 'top' in this.props;
+
+    if (details.isEdit) {
+      details.collId = this.props.coll;
+      details.hostship = this.props.ship.substr(1);
+      details.lastedit = this.props.lastedit;
+      details.top = this.props.top;
+    } else {
+      let stationDetails = getStationDetails(getQueryParams().station);
+      details.collId = stationDetails.collId;
+      details.hostship = stationDetails.host;
+    }
+
+    return details;
   }
 
   createTopic() {
     let dat = {};
 
-    let collId, hostship;
+    let details = this.getDetails();
 
-    if (this.isEdit()) {
-      collId = this.props.coll;
-      hostship = this.props.ship.substr(1);
-    } else {
-      let stationDetails = getStationDetails(getQueryParams().station);
-      collId = stationDetails.collId;
-      hostship = stationDetails.host;
-    }
-
-    if (this.isEdit()) {
+    if (details.isEdit) {
       dat = {
         resubmit: {
-          col: collId,
-          top: this.props.top,
+          col: details.collId,
+          top: details.top,
           tit: this.titleExtract(this.state.topicContent),
           wat: this.state.topicContent,
-          hos: this.pageShip
+          hos: `~${details.hostship}`
         }
       }
     } else {
       dat = {
         submit: {
-          col: collId,
+          col: details.collId,
           tit: this.titleExtract(this.state.topicContent),
           wat: this.state.topicContent,
-          hos: this.pageShip
+          hos: `~${details.hostship}`
         }
       }
     };
@@ -75,7 +78,7 @@ export class TopicCreatePage extends Component {
         source: {
           nom: 'inbox',
           sub: true,
-          srs: [`~${hostship}/${rep.data.cir}`]
+          srs: [`~${details.hostship}/${rep.data.cir}`]
         }
       })
     });
@@ -91,7 +94,7 @@ export class TopicCreatePage extends Component {
       postId = postId ? postId.split("|")[0] : null;
 
       if (content && content === this.state.topicContent) {
-        this.props.transitionTo(`/~~/~${hostship}/==/web/collections/${collId}/${postId}`);
+        this.props.transitionTo(`/~~/~${details.hostship}/==/web/collections/${details.collId}/${postId}`);
         return true;
       }
 
@@ -112,22 +115,17 @@ export class TopicCreatePage extends Component {
   render() {
     let hostship, dateElem, id;
 
-    if (this.isEdit()) {
-      hostship = this.props.ship.substr(1);
-      id = this.props.coll;
+    let details = this.getDetails();
 
-      let lastEditDate = daToDate(this.props.lastedit).toISOString();
+    if (details.isEdit) {
+      let lastEditDate = daToDate(details.lastedit).toISOString();
 
       dateElem = (
         <div className="mb-5">
           <Elapsed timestring={lastEditDate} classes="collection-date text-black mr-4" />
-          <span className="collection-date">{this.props.lastedit}</span>
+          <span className="collection-date">{details.lastedit}</span>
         </div>
       );
-    } else {
-      let stationDetails = getStationDetails(getQueryParams().station);
-      hostship = stationDetails.host;
-      id = getStationDetails.collId;
     }
 
     return (
@@ -144,7 +142,7 @@ export class TopicCreatePage extends Component {
                 onChange={this.valueChange}
                 />
               <div className="collection-post-actions">
-                <a href={`/~~/~${hostship}/==/web/collections/${id}`} className="header-link mr-6">Cancel</a>
+                <a href={`/~~/~${details.hostship}/==/web/collections/${details.collId}`} className="header-link mr-6">Cancel</a>
                 <Button
                   content="Save"
                   classes="btn btn-sm btn-primary"

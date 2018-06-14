@@ -8,7 +8,8 @@ export class MenuPage extends Component {
   }
 
   render() {
-    let numStationsString = getSubscribedStations(this.props.api.authTokens.ship, this.props.store.configs).numString;
+    let subscribedStations = getSubscribedStations(this.props.api.authTokens.ship, this.props.store.configs);
+    let numStationsString = (subscribedStations) ? subscribedStations.numString : null;
 
     return (
       <div className="container menu-page">
