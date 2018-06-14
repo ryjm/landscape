@@ -273,7 +273,7 @@ export class ChatPage extends Component {
         return (
           <div key={msg.uid} className={`row ${appClass}`}>
             <div className="col-sm-2 text-mono">{autLabel}</div>
-            <div className="col-sm-8">{msg.sep.lin.msg}</div>
+            <div className="col-sm-8">{msg.sep.lin ? msg.sep.lin.msg : "~~Cannot display message~~"}</div>
           </div>
         );
       }
