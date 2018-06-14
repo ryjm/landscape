@@ -48,10 +48,12 @@ Clone this repo.
 git clone git@github.com:urbit/mockups
 ```
 
-To get it running, you'll need to install Gulp globally:
+To get it running, you'll need to install Gulp globally, as well as setting up submodules:
 ```
 npm install -g gulp-cli
 npm install
+git submodule init
+git submodule update
 ```
 
 Copy ".urbitrc-sample" to a new file named ".urbitrc", and fill it with any configuration details:
