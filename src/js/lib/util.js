@@ -204,6 +204,9 @@ export function getMessageContent(msg, stationDetails) {
         ret.type = "inv";
         ret.content = `invite to ${msg.sep.inv.cir}...`;
         ret.station = msg.sep.inv.cir;
+      } else {
+        ret.type = "null";
+        ret.content = "~~Cannot display message~~"
       }
       break;
     // do these need to be all separate?
@@ -212,7 +215,11 @@ export function getMessageContent(msg, stationDetails) {
         ret.type = "url";
         ret.content = msg.sep.url;
       } else {
-        ret.content = msg.sep.lin.msg;
+        try {
+          ret.content = msg.sep.lin.msg;
+        } catch(e) {
+          ret.content = "~~Cannot display message~~";
+        }
       }
       break;
     case "dm":
