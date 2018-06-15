@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { uuid, isUrl } from '/lib/util';
+import { Message } from '/components/lib/message';
+import { isUrl, uuid, getMessageContent } from '/lib/util';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -250,32 +251,21 @@ export class ChatPage extends Component {
     let chatMessages = chatRows.map((msg) => {
       let autLabel = msg.printship ? `~${msg.aut}` : null;
       let appClass = msg.app ? " chat-msg-app" : "";
+      let details = getMessageContent(msg, {type: "chat"});
+
+      console.log('details', details);
 
       if (msg.date) {
         return (
           <div className="chat-sep" key={msg.date}>{msg.date}</div>
         )
-      } else if (_.has(msg, 'sep.url')) {
-          if (/(jpg|img|png|tiff|gif|jpeg|JPG|IMG|PNG|TIFF)$/.exec(msg.sep.url)) {
-            return (
-              <img style={{width:"100%"}} src={msg.sep.url}></img>
-            )
-          }
-          else {
-            return (
-              <div key={msg.uid} className={`row ${appClass}`}>
-                <div className="col-sm-2 text-mono">{autLabel}</div>
-                <div className="col-sm-8 url"><a href={msg.sep.url} target="_blank">{msg.sep.url}</a></div>
-              </div>
-            )
-          }
       } else {
         return (
           <div key={msg.uid} className={`row ${appClass}`}>
             <div className="col-sm-2 text-mono">{autLabel}</div>
-            <div className="col-sm-8">{msg.sep.lin ? msg.sep.lin.msg : "~~Cannot display message~~"}</div>
+            <div className="col-sm-8"><Message details={details}></Message></div>
           </div>
-        );
+        )
       }
     });
 

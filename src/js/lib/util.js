@@ -189,10 +189,15 @@ export function getStationDetails(station, config = {}, usership) {
 export function getMessageContent(msg, stationDetails) {
   let ret = {};
 
+  //let stationDetails
+
   switch (stationDetails.type) {
-    case "inbox":
+    case "inbox": 
+    case "dm": 
+    case "chat":
       if (_.has(msg, 'sep.app.sep.fat')) {
         ret.type = "app";
+        // I imagine this causting problems someday
         ret.content = msg.sep.app.sep.fat.sep.lin.msg;
       } else if (_.has(msg, 'sep.url')) {
         ret.type = "url";
@@ -204,30 +209,18 @@ export function getMessageContent(msg, stationDetails) {
         ret.type = "inv";
         ret.content = `invite to ${msg.sep.inv.cir}...`;
         ret.station = msg.sep.inv.cir;
+      } else if (_.has(msg, "sep.exp")) {
+        ret.type = "exp";
+        ret.content = msg.sep.exp.exp;
+        ret.res = msg.sep.exp.res.join('\n');
       } else {
-        ret.type = "null";
-        ret.content = "~~Cannot display message~~"
-      }
-      break;
-    // do these need to be all separate?
-    case "chat":
-      if (_.has(msg, 'sep.url')) {
-        ret.type = "url";
-        ret.content = msg.sep.url;
-      } else {
+        ret.type = "lin";
         try {
           ret.content = msg.sep.lin.msg;
         } catch(e) {
+          // no idea what this is: punt
           ret.content = "~~Cannot display message~~";
         }
-      }
-      break;
-    case "dm":
-      if (_.has(msg, 'sep.url')) {
-        ret.type = "url";
-        ret.content = msg.sep.url;
-      } else {
-        ret.content = msg.sep.lin.msg;
       }
       break;
     case "text":
