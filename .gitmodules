@@ -1,3 +1,0 @@
-[submodule "avatars"]
-	path = src/vendor/avatars
-	url = git@github.com:urbit/avatars.git
