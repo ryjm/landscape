@@ -8,9 +8,21 @@ export class Root extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      menuOpen: false
+    };
+
     // Required to convert arbitrary HTML into React elements
     this.htmlParser = HtmlToReact.Parser();
     this.htmlParserNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
+
+    props.pushCallback("menu.open", () => {
+      this.setState({
+        menuOpen: !this.state.menuOpen
+      });
+
+      return false;
+    });
   }
 
   reactify() {
@@ -72,14 +84,24 @@ export class Root extends Component {
     )
   }
 
+  loadMenu() {
+    let hideClass = (this.state.menuOpen) ? "" : "hide";
+
+    return (
+      <h1 className={hideClass}>MENU IS OPEN NOW</h1>
+    )
+  }
+
   render() {
     let parser = new DOMParser();
     let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
     let header = this.loadHeader(tempDOM);
     let body = this.reactify();
+    let menu = this.loadMenu();
 
     return (
       <div>
+        {menu}
         {header}
         {body}
       </div>

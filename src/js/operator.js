@@ -50,12 +50,9 @@ export class UrbitOperator {
 
   bindShortcuts() {
     Mousetrap.bind(["command+k"], () => {
-      let menuActive = window.location.href.includes("menu");
-      if (menuActive) {
-        window.history.back();
-      } else {
-        router.transitionTo('/~~/pages/nutalk/menu');
-      }
+      warehouse.storeReports([{
+        type: "menu.open"
+      }]);
     });
   }
 

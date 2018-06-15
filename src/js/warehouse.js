@@ -16,7 +16,8 @@ const REPORT_KEYS = [
   'circle.config.dif.permit/circle.config',
   'circle.config.dif.remove/circle.config',
   'circles',
-  'transition'
+  'transition',
+  'menu.open'
 ]
 
 class UrbitWarehouse {
