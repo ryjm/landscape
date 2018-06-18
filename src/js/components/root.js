@@ -3,6 +3,7 @@ import { Header } from '/components/header';
 import HtmlToReact from 'html-to-react';
 import { ComponentMap } from '/lib/component-map';
 import { getQueryParams } from '/lib/util';
+import { CommandMenu } from '/components/command';
 
 export class Root extends Component {
   constructor(props) {
@@ -84,26 +85,25 @@ export class Root extends Component {
     )
   }
 
-  loadMenu() {
-    let hideClass = (this.state.menuOpen) ? "" : "hide";
-
-    return (
-      <h1 className={hideClass}>MENU IS OPEN NOW</h1>
-    )
-  }
-
   render() {
-    let parser = new DOMParser();
-    let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
-    let header = this.loadHeader(tempDOM);
-    let body = this.reactify();
-    let menu = this.loadMenu();
+    let content;
+
+    if (this.state.menuOpen) {
+      content = <CommandMenu />
+    } else {
+      let parser = new DOMParser();
+      let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
+      content = (
+        <div>
+          {this.loadHeader(tempDOM)}
+          {this.reactify()}
+        </div>
+      )
+    }
 
     return (
       <div>
-        {menu}
-        {header}
-        {body}
+        {content}
       </div>
     )
   }

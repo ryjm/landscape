@@ -427,3 +427,22 @@ div.mod
   background: white;
   display: inline-block;
 }
+
+/***
+  Command Menu
+***/
+
+input.command-menu-input {
+  background-color: #F6F6F6;
+  border: none;
+  outline: none;
+  height: 60px;
+  width: 100%;
+
+  font-size: 20px;
+  line-height: 60px;
+  font-weight: 500;
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+
+  padding: 0 10px;
+}
