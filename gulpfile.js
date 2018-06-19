@@ -40,7 +40,7 @@ gulp.task('bundle-js', function(cb) {
     format: "umd",
     plugins: [
       babel({
-        exclude: 'node_modules/**'
+        ignore: ['src/js/vendor/**', 'node_modules/**']
       }),
       commonjs({
         namedExports: {
