@@ -5,16 +5,22 @@ export class CollectionPreview extends Component {
     this.state = {
       snipHtml: ''
     }
-    console.log(props);
-    fetch(`${this.cleanSig(props.messageDetails.postUrl)}.collections-snip`).then(res => {
+    fetch(this.snipUrl(props.messageDetails.postUrl, props.api.authTokens.ship)).then(res => {
       return (res.text())
-      //setState({snipHtml: d});
     }).then(d => {
       this.setState({snipHtml: d});
     });
   }
   dangerousHtml(string) {
     return {__html: string};
+  }
+  snipUrl(url, ship) {
+    console.log('this', this);
+    if (!url.includes(`~${ship}`)) {
+      return `${this.cleanSig(url)}.x-collections-snip`
+    } else {
+      return `${this.cleanSig(url)}.collections-snip`
+    }
   }
   // HACK FOR TESTING
   cleanSig(url) {
