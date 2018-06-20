@@ -27,6 +27,10 @@
   float: right;
 }
 
+.inbox-page .collection-preview h1:nth-child(1) {
+  display: none;
+}
+
 /***
   Edit
 ***/
