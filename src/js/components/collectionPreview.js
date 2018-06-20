@@ -31,8 +31,14 @@ export class CollectionPreview extends Component {
   };
 
   render() {
-    return (
-      <div className="collection-preview" dangerouslySetInnerHTML={this.dangerousHtml(this.state.snipHtml)}/>
-    )
+    if (this.state.snipHtml) {
+      return (
+        <div className="collection-preview" dangerouslySetInnerHTML={this.dangerousHtml(this.state.snipHtml)}/>
+      )
+    } else {
+      return (
+        <div className="collection-preview">{this.props.messageDetails.content}</div>
+      )
+    }
   }
 }
