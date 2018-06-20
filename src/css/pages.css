@@ -446,3 +446,7 @@ input.command-menu-input {
 
   padding: 0 10px;
 }
+
+.command-help a {
+  display: block;
+}

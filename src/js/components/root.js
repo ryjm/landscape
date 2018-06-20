@@ -89,7 +89,15 @@ export class Root extends Component {
     let content;
 
     if (this.state.menuOpen) {
-      content = <CommandMenu />
+      content = (
+        <CommandMenu
+          api={this.props.api}
+          store={this.props.store}
+          storeReports={this.props.storeReports}
+          pushCallback={this.props.pushCallback}
+          transitionTo={this.props.transitionTo}
+        />
+      )
     } else {
       let parser = new DOMParser();
       let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");

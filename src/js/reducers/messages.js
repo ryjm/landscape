@@ -32,6 +32,7 @@ export class MessagesReducer {
     }
   }
 
+  // TODO:  Make this more like storeInboxMessages
   storeStationMessages(messages, store) {
     messages.forEach((message) => {
       let msg = message.gam;

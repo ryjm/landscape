@@ -8,40 +8,80 @@ export class CommandHelp extends Component {
   renderBlankHelp() {
     return (
       <div>
-
+        <h3>Help text!</h3>
       </div>
     )
   }
 
-  renderBlank() {
+  renderBlank(help) {
     return (
       <div>
-        <a className="mb-6" onClick={this.props.updateCommand('inbox')}><b>inbox</b></a>
-        <a className="mb-6" onClick={this.props.updateCommand('profile')}><b>profile</b></a>
-        <a className="mb-6" onClick={this.props.updateCommand('go')}><b>go</b> [~ship/stream]</a>
-        <a className="mb-6" onClick={this.props.updateCommand('go')}><b>go</b> [~ship/collection]</a>
-        <a className="mb-6" onClick={this.props.updateCommand('dm')}><b>dm</b> [~ship]</a>
-        <a className="mb-6" onClick={this.props.updateCommand('go')}><b>dm</b> [~ship-a, ~ship-b, ~ship-c]</a>
-        <a className="mb-6" onClick={this.props.updateCommand('new')}><b>new</b> [type]</a>
+        <div className="mb-6">
+          <a onClick={() => this.props.executeCommand('inbox')}><b>inbox</b></a>
+          {help &&
+            <div className="mt-2">Some help text</div>
+          }
+        </div>
+        <div className="mb-6">
+          <a onClick={() => this.props.executeCommand('profile')}><b>profile</b></a>
+          {help &&
+            <div className="mt-2">Some help text</div>
+          }
+        </div>
+        <div className="mb-6">
+          <a onClick={() => this.props.updateCommand('go')}><b>go</b> [~ship/stream]</a>
+          {help &&
+            <div className="mt-2">Some help text</div>
+          }
+        </div>
+        <div className="mb-6">
+          <a onClick={() => this.props.updateCommand('go')}><b>go</b> [~ship/collection]</a>
+          {help &&
+            <div className="mt-2">Some help text</div>
+          }
+        </div>
+        <div className="mb-6">
+          <a onClick={() => this.props.updateCommand('dm')}><b>dm</b> [~ship]</a>
+          {help &&
+            <div className="mt-2">Some help text</div>
+          }
+        </div>
+        <div className="mb-6">
+          <a onClick={() => this.props.updateCommand('go')}><b>dm</b> [~ship-a, ~ship-b, ~ship-c]</a>
+          {help &&
+            <div className="mt-2">Some help text</div>
+          }
+        </div>
+        <div className="mb-6">
+          <a onClick={() => this.props.updateCommand('new')}><b>new</b> [type]</a>
+          {help &&
+            <div className="mt-2">Some help text</div>
+          }
+        </div>
       </div>
     )
   }
 
-  render() {
+  buildHelpContent() {
     let content;
 
-    switch(this.props.input) {
+    switch(this.props.command) {
       case "?":
-        content = this.renderBlankHelp();
+        content = this.renderBlank(true);
         break;
       case "":
-        content = this.renderBlank();
+        content = this.renderBlank(false);
         break;
     }
 
+    return content;
+  }
+
+  render() {
+    let content = this.buildHelpContent();
 
     return (
-      <div>
+      <div className="command-help">
         {content}
       </div>
     )
