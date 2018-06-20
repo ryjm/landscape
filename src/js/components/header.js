@@ -52,9 +52,12 @@ export class Header extends Component {
     let btnLabel = (this.isSubscribed()) ? "Unsubscribe" : "Subscribe";
     let headerIcon, station, stationDetails, actionLink;
 
-    switch(this.props.data.type) {
+    let type = (this.props.data.type) ? this.props.data.type : "default";
+
+    switch(type) {
       case "stream":
         station = this.props.data.station;
+        if (!station) return null;
         stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
         headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconStream />;
 
@@ -86,12 +89,13 @@ export class Header extends Component {
         break;
       case "collection":
         station = this.props.data.station;
+        if (!station) return null;
         stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
         let title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
         let authorization = collectionAuthorization(stationDetails, this.props.api.authTokens.ship);
         headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconBlog />;
 
-        if (authorization === "write") {
+        if (stationDetails.host === this.props.api.authTokens.ship || this.props.data.publ === "%.y") {
           actionLink = (this.props.data.postid) ?
             (<a href={`/~~/~${stationDetails.host}/==/web/collections/${stationDetails.collId}/${this.props.data.postid}.collections-edit`} className="header-link mr-6">Edit</a>) :
             (<a href={`/~~/pages/nutalk/collection/post?station=~${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)

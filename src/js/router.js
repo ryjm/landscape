@@ -58,9 +58,6 @@ class UrbitRouter {
       case "foreign":
         path[0] += ".x-htm";
         break;
-      case "local":
-        path[0] += ".htm";
-        break;
     }
 
     return path.join("?");
@@ -81,13 +78,23 @@ class UrbitRouter {
       if (!noHistory) {
         window.history.pushState({}, null, targetUrl);
       }
-      this.scaffold = resText;
+
+      this.scaffold = this.extractBody(resText) || resText;
+
       warehouse.storeReports([{
         type: "transition",
         data: TRANSITION_READY
       }]);
+
       this.renderRoot();
     });
+  }
+
+  extractBody(scaffold) {
+    let parser = new DOMParser();
+    let tempDOM = parser.parseFromString(scaffold, "text/html");
+    let bodyQuery = tempDOM.querySelectorAll('#root')[0];
+    return bodyQuery && bodyQuery.innerHTML;
   }
 
   registerAnchorListeners() {

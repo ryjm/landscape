@@ -30,6 +30,9 @@ export class CommentCreate extends Component {
       data: TRANSITION_LOADING
     }]);
 
+    // I hate this 
+    this.setState({comment: ''});
+
     this.props.pushCallback("circle.gram", (rep) => {
       this.props.transitionTo(this.pageShip == this.props.api.authTokens.ship ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/${this.pageShip}/==/web/collections/${this.props.coll}/${this.props.top}`)
     });

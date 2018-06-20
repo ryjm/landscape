@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { uuid } from '/lib/util';
+import { Message } from '/components/lib/message';
+import { isUrl, uuid, getMessageContent } from '/lib/util';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -36,15 +37,15 @@ export class ChatPage extends Component {
   }
 
   componentDidMount() {
-    let path = `/circle/inbox/${this.state.station}/grams/-20`;
+    let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
-    this.props.api.bind(path, "PUT");
+    this.props.api.bind(path, "PUT", this.state.host);
   }
 
   componentWillUnmount() {
-    let path = `/circle/inbox/${this.state.station}/grams/-20`;
+    let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
-    this.props.api.bind(path, "DELETE");
+    this.props.api.bind(path, "DELETE", this.state.host);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -65,9 +66,9 @@ export class ChatPage extends Component {
   requestChatBatch() {
     let newNumMessages = this.state.numMessages + 50;
 
-    let path = `/circle/inbox/${this.state.station}/grams/-${newNumMessages}/-${this.state.numMessages}`;
+    let path = `/circle/${this.state.circle}/grams/-${newNumMessages}/-${this.state.numMessages}`;
 
-    this.props.api.bind(path, "PUT");
+    this.props.api.bind(path, "PUT", this.state.host);
   }
 
   onScrollStop() {
@@ -94,23 +95,32 @@ export class ChatPage extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    let aud;
+    let aud, sep;
     let config = this.props.store.configs[this.state.station];
 
     if (config.cap === "dm") {
       aud = config.con.sis.map((mem) => `~${mem}/${this.state.circle}`);
     } else {
       aud = [this.state.station];
+
     }
 
-    let message = {
-      aud: aud,
-      ses: [{
+    if (isUrl(this.state.message)) {
+      sep = {
+        url: this.state.message
+      }
+    } else {
+      sep = {
         lin: {
           msg: this.state.message,
           pat: false
         }
-      }]
+      }
+    }
+
+    let message = {
+      aud: aud,
+      ses: [sep]
     };
 
     this.props.api.hall({
@@ -241,32 +251,21 @@ export class ChatPage extends Component {
     let chatMessages = chatRows.map((msg) => {
       let autLabel = msg.printship ? `~${msg.aut}` : null;
       let appClass = msg.app ? " chat-msg-app" : "";
+      let details = getMessageContent(msg, {type: "chat"});
+
+      console.log('details', details);
 
       if (msg.date) {
         return (
           <div className="chat-sep" key={msg.date}>{msg.date}</div>
         )
-      } else if (_.has(msg, 'sep.url')) {
-          if (/(jpg|img|png|tiff|gif|jpeg|JPG|IMG|PNG|TIFF)$/.exec(msg.sep.url)) {
-            return (
-              <img style={{width:"100%"}} src={msg.sep.url}></img>
-            )
-          }
-          else {
-            return (
-              <div key={msg.uid} className={`row ${appClass}`}>
-                <div className="col-sm-2 text-mono">{autLabel}</div>
-                <div className="col-sm-8 url"><a href={msg.sep.url}>{msg.sep.url}</a></div>
-              </div>
-            )
-          }
       } else {
         return (
           <div key={msg.uid} className={`row ${appClass}`}>
             <div className="col-sm-2 text-mono">{autLabel}</div>
-            <div className="col-sm-8">{msg.sep.lin.msg}</div>
+            <div className="col-sm-8"><Message details={details}></Message></div>
           </div>
-        );
+        )
       }
     });
 

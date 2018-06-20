@@ -3,35 +3,43 @@ import _ from 'lodash';
 const INBOX_MESSAGE_COUNT = 30;
 
 export class MessagesReducer {
-  reduce(reports, storeMessages) {
+  reduce(reports, store) {
     reports.forEach((rep) => {
+      let fromInbox = rep.from && rep.from.path.includes("inbox");
+
       switch (rep.type) {
         case "circle.nes":
-          this.processMessages(rep.data, storeMessages);
+          this.processMessages(rep.data, store, fromInbox);
           break;
         case "circle.gram":
-          this.processMessages([rep.data], storeMessages);
+          this.processMessages([rep.data], store, fromInbox);
           break;
         case "circle.config.dif.remove":
-          delete storeMessages[rep.data.cir];
+          delete store.messages.stations[rep.data.cir];
           break;
+        case "circle.config.dif.source":
+          if (fromInbox && !rep.data.add) {
+            removeInboxMessages(rep.data.src, store);
+          }
       }
     });
   }
 
-  processMessages(messages, storeMessages) {
-    this.storeStationMessages(messages, storeMessages);
-    this.storeInboxMessages(messages, storeMessages);
+  processMessages(messages, store, fromInbox) {
+    this.storeStationMessages(messages, store);
+    if (fromInbox) {
+      this.storeInboxMessages(messages, store);
+    }
   }
 
-  storeStationMessages(messages, storeMessages) {
+  storeStationMessages(messages, store) {
     messages.forEach((message) => {
       let msg = message.gam;
       msg.aud.forEach((aud) => {
-        let station = storeMessages.stations[aud];
+        let station = store.messages.stations[aud];
 
         if (!station) {
-          storeMessages.stations[aud] = [msg];
+          store.messages.stations[aud] = [msg];
         } else if (station.findIndex(o => o.uid === msg.uid) === -1) {
           let newest = true;
 
@@ -54,20 +62,25 @@ export class MessagesReducer {
     });
   }
 
-  storeInboxMessages(messages, storeMessages) {
-    let msgGams = messages.map(m => m.gam)                  // grab the gam
+  storeInboxMessages(messages, store) {
+    let msgGams = messages
+      .map(m => m.gam)                  // grab the gam
 
-    let ret = storeMessages.inboxMessages
+    let ret = store.messages.inboxMessages
       .slice()                          // make a shallow copy
       .concat(msgGams)                  // add new messages
       .uniq('uid')                      // dedupe
       .sort((a, b) => b.wen - a.wen)    // sort by date
       .slice(0, INBOX_MESSAGE_COUNT);   // grab the first 30 or so
 
-    for (let msg of ret) {
-      console.log(`msg ${msg.uid}: ${msg.wen}`);
-    }
+    // for (let msg of ret) {
+    //   console.log(`msg ${msg.uid}: ${msg.wen}`);
+    // }
 
-    storeMessages.inboxMessages = ret;
+    store.messages.inboxMessages = ret;
+  }
+
+  removeInboxMessages(station, store) {
+    store.messages.inboxMessages = store.messages.inboxMessages.filter((msg) => !msg.aud.includes(station))
   }
 }

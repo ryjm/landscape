@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { calculateStations } from '/lib/util';
+import { getSubscribedStations } from '/lib/util';
 
 export class MenuPage extends Component {
   crossClick() {
@@ -8,7 +8,8 @@ export class MenuPage extends Component {
   }
 
   render() {
-    let numStationsString = calculateStations(this.props.store.configs);
+    let subscribedStations = getSubscribedStations(this.props.api.authTokens.ship, this.props.store.configs);
+    let numStationsString = (subscribedStations) ? subscribedStations.numString : null;
 
     return (
       <div className="container menu-page">

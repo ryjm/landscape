@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
-import { getQueryParams, getStationDetails } from '/lib/util';
+import { getQueryParams, getStationDetails, daToDate } from '/lib/util';
 import { Elapsed } from '/components/lib/elapsed';
 import { TRANSITION_LOADING } from '/lib/constants';
 import _ from 'lodash';
@@ -9,14 +9,25 @@ export class TopicCreatePage extends Component {
   constructor(props) {
     super(props);
 
-    this.createTopic = this.createTopic.bind(this);
-    this.valueChange = this.valueChange.bind(this);
     this.state = {
       topicContent: props.text ? props.text : '',
+      details: this.getDetails(props)
     };
-    this.pageShip= `~${getQueryParams().station.split("/")[0].substr(1)}`;
-    console.log('pageShip', this.pageShip);
-    //
+
+    this.createTopic = this.createTopic.bind(this);
+    this.valueChange = this.valueChange.bind(this);
+  }
+
+  componentDidMount() {
+    let path = `/circle/${this.state.details.cir}/config-l/grams/-10`;
+
+    this.props.api.bind(path, "PUT", this.state.details.hostship);
+  }
+
+  componentWillUnmount() {
+    let path = `/circle/${this.state.details.cir}/config-l/grams/-10`;
+
+    this.props.api.bind(path, "DELETE", this.state.details.hostship);
   }
 
   titleExtract(s) {
@@ -29,53 +40,62 @@ export class TopicCreatePage extends Component {
     return '';
   }
 
-  isEdit() {
-    return 'top' in this.props;
+  getDetails(conProps) {
+    let props = this.props || conProps;
+
+    let details = {};
+    details.isEdit = 'top' in props;
+
+    if (details.isEdit) {
+      details.collId = props.coll;
+      details.hostship = props.ship.substr(1);
+      details.cir = `~${details.hostship}/collection_~${details.collId}`;
+      details.lastedit = props.lastedit;
+      details.top = props.top;
+    } else {
+      let stationDetails = getStationDetails(getQueryParams().station);
+      details.collId = stationDetails.collId;
+      details.hostship = stationDetails.host;
+      details.cir = stationDetails.cir;
+    }
+
+    return details;
   }
 
   createTopic() {
     let dat = {};
 
-    let collId, hostship;
+    let details = this.getDetails();
 
-    if (this.isEdit()) {
-      collId = this.props.coll;
-      hostship = this.props.ship.substr(1);
-    } else {
-      let stationDetails = getStationDetails(getQueryParams().station);
-      collId = stationDetails.collId;
-      hostship = stationDetails.host;
-    }
-
-    if (this.isEdit()) {
+    if (details.isEdit) {
       dat = {
         resubmit: {
-          col: collId,
-          top: this.props.top,
+          col: details.collId,
+          top: details.top,
           tit: this.titleExtract(this.state.topicContent),
           wat: this.state.topicContent,
-          hos: this.pageShip
+          hos: `~${details.hostship}`
         }
       }
     } else {
       dat = {
         submit: {
-          col: collId,
+          col: details.collId,
           tit: this.titleExtract(this.state.topicContent),
           wat: this.state.topicContent,
-          hos: this.pageShip
+          hos: `~${details.hostship}`
         }
       }
     };
 
     this.props.api.coll(dat);
 
-    this.props.pushCallback("circles", (rep) => {
+    this.props.pushCallback("circle.config.dif.source", (rep) => {
       api.hall({
         source: {
           nom: 'inbox',
           sub: true,
-          srs: [`~${hostship}/${rep.data.cir}`]
+          srs: [rep.data.src]
         }
       })
     });
@@ -91,7 +111,7 @@ export class TopicCreatePage extends Component {
       postId = postId ? postId.split("|")[0] : null;
 
       if (content && content === this.state.topicContent) {
-        this.props.transitionTo(`/~~/~${hostship}/==/web/collections/${collId}/${postId}`);
+        this.props.transitionTo(`/~~/~${details.hostship}/==/web/collections/${details.collId}/${postId}`);
         return true;
       }
 
@@ -110,26 +130,26 @@ export class TopicCreatePage extends Component {
   }
 
   render() {
-    // TODO:  Fill these out
-    let date = new Date(1527184451038).toISOString();
-    let id = "~2018.5.29..20.15.59..55ec/~2018.5.29..20.17.09..79a8";
-    let hostship;
+    let hostship, dateElem, id;
 
-    if (this.isEdit()) {
-      hostship = this.props.ship.substr(1);
-    } else {
-      let stationDetails = getStationDetails(getQueryParams().station);
-      hostship = stationDetails.host;
+    let details = this.getDetails();
+
+    if (details.isEdit) {
+      let lastEditDate = daToDate(details.lastedit).toISOString();
+
+      dateElem = (
+        <div className="mb-5">
+          <Elapsed timestring={lastEditDate} classes="collection-date text-black mr-4" />
+          <span className="collection-date">{details.lastedit}</span>
+        </div>
+      );
     }
 
     return (
       <div className="container">
         <div className="row">
-          <div className="col-sm-offset-2 col-sm-10">
-            <div className="mb-5 mt-12">
-              <Elapsed timestring={date} classes="collection-date text-black mr-4" />
-              <span className="collection-date">{date}</span>
-            </div>
+          <div className="col-sm-offset-2 col-sm-10 pt-12">
+            {dateElem}
             <div className="collection-edit">
               <textarea
                 className="text-code collection-post-edit mb-4"
@@ -139,7 +159,7 @@ export class TopicCreatePage extends Component {
                 onChange={this.valueChange}
                 />
               <div className="collection-post-actions">
-                <a href={`/~~/~${hostship}/==/web/collections/${id}`} className="header-link mr-6">Cancel</a>
+                <a href={`/~~/~${details.hostship}/==/web/collections/${details.collId}`} className="header-link mr-6">Cancel</a>
                 <Button
                   content="Save"
                   classes="btn btn-sm btn-primary"

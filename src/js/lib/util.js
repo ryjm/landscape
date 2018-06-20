@@ -125,6 +125,7 @@ export function getStationDetails(station, config = {}, usership) {
 
   let ret = {
     type: "none",
+    station: station,
     config: config,
     host: host,
     cir: station.split("/")[1],
@@ -177,7 +178,7 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
       ret.stationTitle = config.cap;
       ret.postUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}/${collParts.top}`;
-      ret.postID = collParts.top;
+      ret.postId = collParts.top;
       ret.postTitle = null;  // TODO: Should be able to determine this from the station metadata alone.
       break;
   }
@@ -188,10 +189,15 @@ export function getStationDetails(station, config = {}, usership) {
 export function getMessageContent(msg, stationDetails) {
   let ret = {};
 
+  //let stationDetails
+
   switch (stationDetails.type) {
-    case "inbox":
+    case "inbox": 
+    case "dm": 
+    case "chat":
       if (_.has(msg, 'sep.app.sep.fat')) {
         ret.type = "app";
+        // I imagine this causting problems someday
         ret.content = msg.sep.app.sep.fat.sep.lin.msg;
       } else if (_.has(msg, 'sep.url')) {
         ret.type = "url";
@@ -203,23 +209,18 @@ export function getMessageContent(msg, stationDetails) {
         ret.type = "inv";
         ret.content = `invite to ${msg.sep.inv.cir}...`;
         ret.station = msg.sep.inv.cir;
-      }
-      break;
-    // do these need to be all separate?
-    case "chat":
-      if (_.has(msg, 'sep.url')) {
-        ret.type = "url";
-        ret.content = msg.sep.url;
+      } else if (_.has(msg, "sep.exp")) {
+        ret.type = "exp";
+        ret.content = msg.sep.exp.exp;
+        ret.res = msg.sep.exp.res.join('\n');
       } else {
-        ret.content = msg.sep.lin.msg;
-      }
-      break;
-    case "dm":
-      if (_.has(msg, 'sep.url')) {
-        ret.type = "url";
-        ret.content = msg.sep.url;
-      } else {
-        ret.content = msg.sep.lin.msg;
+        ret.type = "lin";
+        try {
+          ret.content = msg.sep.lin.msg;
+        } catch(e) {
+          // no idea what this is: punt
+          ret.content = "~~Cannot display message~~";
+        }
       }
       break;
     case "text":
@@ -239,4 +240,44 @@ export function getMessageContent(msg, stationDetails) {
   }
 
   return ret;
+}
+
+export function getSubscribedStations(ship, storeConfigs) {
+  let inbox = storeConfigs[`~${ship}/inbox`];
+  if (!inbox) return null;
+
+  let stationDetailList = inbox.src
+    .map((station) => {
+      if (!storeConfigs[station]) return null;
+      return getStationDetails(station, storeConfigs[station], ship)
+    })
+    .filter((station) => station !== null);
+
+  let ret = {
+    chatStations: stationDetailList.filter((d) => d.type === "chat"),
+    textStations: stationDetailList.filter((d) => d.type === "text"),
+    dmStations: stationDetailList.filter((d) => d.type === "dm"),
+  };
+
+  let numSubs = ret.chatStations.length + ret.textStations.length;
+  let numDMs = ret.dmStations.length;
+
+  let numString = [];
+  if (numSubs > 0) numString.push(`${numSubs} subscriptions`);
+  if (numDMs > 0) numString.push(`${numDMs} DMs`);
+
+  ret.numString = numString.join(", ");
+
+  return ret;
+}
+
+// maybe do fancier stuff later
+export function isUrl(string) {
+  const r = /^http|^www|\.com$/.exec(string)
+  if (r) {
+    return true
+  }
+  else {
+    return false
+  }
 }

@@ -47,9 +47,7 @@ export class Root extends Component {
     return this.htmlParser.parseWithInstructions(this.props.scaffold, () => true, instructions);
   }
 
-  render() {
-    let parser = new DOMParser();
-    let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
+  loadHeader(tempDOM) {
     let headerQuery = tempDOM.querySelectorAll('[name="urb-header"]');
     let headerData = {
       type: (headerQuery.length > 0) ? headerQuery[0].getAttribute('value') : "default",
@@ -57,23 +55,33 @@ export class Root extends Component {
       station: (headerQuery.length > 0) ? headerQuery[0].getAttribute('station') : null,
       postid: (headerQuery.length > 0) ? headerQuery[0].getAttribute('postid') : null,
       ship: (headerQuery.length > 0) ? headerQuery[0].getAttribute('ship') : null,
+      publ: (headerQuery.length > 0) ? headerQuery[0].getAttribute('publ') : null,
     }
 
     headerData.station = (headerData.station === "query") ? getQueryParams().station : headerData.station;
 
-    let children = this.reactify();
+    return (
+      <Header
+        data={headerData}
+        api={this.props.api}
+        store={this.props.store}
+        storeReports={this.props.storeReports}
+        pushCallback={this.props.pushCallback}
+        transitionTo={this.props.transitionTo}
+      />
+    )
+  }
+
+  render() {
+    let parser = new DOMParser();
+    let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
+    let header = this.loadHeader(tempDOM);
+    let body = this.reactify();
 
     return (
       <div>
-        <Header
-          data={headerData}
-          api={this.props.api}
-          store={this.props.store}
-          storeReports={this.props.storeReports}
-          pushCallback={this.props.pushCallback}
-          transitionTo={this.props.transitionTo}
-        />
-        {children}
+        {header}
+        {body}
       </div>
     )
   }

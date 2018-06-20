@@ -10,7 +10,6 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.34",
-    "@babel/plugin-external-helpers": "^7.0.0-beta.34",
     "@babel/plugin-transform-react-jsx": "^7.0.0-beta.34",
     "@babel/preset-env": "^7.0.0-beta.34",
     "gulp": "github:gulpjs/gulp#4.0",
