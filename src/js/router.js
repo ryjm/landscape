@@ -57,7 +57,7 @@ class UrbitRouter {
 
     switch (linkType) {
       case "edit-page":
-        if (linkType == "foreign") {
+        if (url.split("/")[2] != `~${api.authTokens.ship}`) {
           path[0] += ".x-htm";
         } else {
           path[0] += ".htm";
