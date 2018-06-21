@@ -17,9 +17,11 @@ export class Root extends Component {
     this.htmlParser = HtmlToReact.Parser();
     this.htmlParserNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
 
-    props.pushCallback("menu.open", () => {
+    props.pushCallback("menu.toggle", (rep) => {
+      let newStatus = (rep.data) ? rep.data.open : !this.state.menuOpen;
+
       this.setState({
-        menuOpen: !this.state.menuOpen
+        menuOpen: newStatus
       });
 
       return false;

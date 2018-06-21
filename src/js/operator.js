@@ -51,7 +51,7 @@ export class UrbitOperator {
   bindShortcuts() {
     Mousetrap.bind(["mod+k"], () => {
       warehouse.storeReports([{
-        type: "menu.open"
+        type: "menu.toggle"
       }]);
     });
   }

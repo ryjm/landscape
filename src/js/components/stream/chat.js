@@ -253,8 +253,6 @@ export class ChatPage extends Component {
       let appClass = msg.app ? " chat-msg-app" : "";
       let details = getMessageContent(msg, {type: "chat"});
 
-      console.log('details', details);
-
       if (msg.date) {
         return (
           <div className="chat-sep" key={msg.date}>{msg.date}</div>

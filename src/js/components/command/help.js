@@ -5,6 +5,16 @@ export class CommandHelp extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    Mousetrap.bind('down', () => {
+      console.log('down');
+    });
+  }
+
+  componentWillUnmount() {
+    Mousetrap.unbind('down');
+  }
+
   renderBlankHelp() {
     return (
       <div>
@@ -14,6 +24,12 @@ export class CommandHelp extends Component {
   }
 
   renderBlank(help) {
+    let items = [{
+
+    }]
+
+
+
     return (
       <div>
         <div className="mb-6">
@@ -83,6 +99,40 @@ export class CommandHelp extends Component {
     return (
       <div className="command-help">
         {content}
+      </div>
+    )
+  }
+}
+
+class CommandHelpItem extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    // this.props.actionType = "exec" or "update"
+    // this.props.actionName = "go" "dm" etc
+    // this.props.helpActivated = bool
+    // this.props.helpText = bool
+    // this.props.helpFormat = bool
+    // this.props.selected = bool
+
+    let action = () => {
+      if (this.props.actionType === 'exec') {
+        this.props.executeCommand(this.props.actionName)
+      } else if (this.props.actionType === 'update') {
+        this.props.updatecommand(this.props.actionName)
+      }
+    }
+
+    let selectedStar = (this.props.selected) ? "*" : "";
+
+    return (
+      <div className={`command-item ${this.props.selected && "command-item-selected"}`}>
+        <a onClick={action}>{selectedStar}<b>{this.props.actionName}</b> {this.props.helpFormat}</a>
+        {this.props.help &&
+          <div className="mt-2">{this.props.helpText}</div>
+        }
       </div>
     )
   }
