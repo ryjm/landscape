@@ -40,6 +40,57 @@ export class CommandMenu extends Component {
 
   }
 
+  getRootOptionList() {
+    return [{
+      name: "inbox",
+      helpText: "Go to the inbox",
+      action: () => {
+        this.props.transitionTo('/~~/pages/nutalk');
+      },
+    }, {
+      name: "profile",
+      helpText: "Go to your profile. Settings and log out are also here",
+      action: () => {
+        this.props.transitionTo(`/~~/~${this.props.api.authTokens.ship}/==/web/pages/nutalk/profile`);
+      },
+    }, {
+      name: "go",
+      action: "update",
+      helpFormat: "[~ship/stream]",
+      helpText: "Go to <stream> on <~ship>",
+    }, {
+      name: "go",
+      action: "update",
+      helpFormat: "[~ship/collection]",
+      helpText: "Go to <collection> on <~ship>",
+    }, {
+      name: "dm",
+      action: "update",
+      helpFormat: "[~ship]",
+      helpText: "Go to your dm with <~ship>, or start a new dm with <~ship>",
+    }, {
+      name: "go",
+      action: "update",
+      helpFormat: "[~ship-a, ~ship-b, ~ship-c]",
+      helpText: "Go to your dm with a group of <[~ship-a, ~ship-b, ~ship-c]>, or start a new dm with <[~ship-a, ~ship-b, ~ship-c]>",
+    }];
+  }
+
+  getAdditionalOptions(cmd) {
+    if (cmd.startsWith("go ~")) {
+
+    }
+  }
+
+  getOptionList() {
+    let cmd = this.state.command;
+
+    let rootOptions = this.getRootOptionList();
+    let additionalOptions = this.getAdditionalOptions(cmd);
+
+    let options = rootOptions.concat(additionalOptions);
+  }
+
   executeCommand(cmd, arg) {
     switch (cmd) {
       case "inbox":

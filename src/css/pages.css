@@ -447,6 +447,14 @@ input.command-menu-input {
   padding: 0 10px;
 }
 
+.command-item {
+  padding: 3rem 0;
+}
+
+.command-item-selected {
+  background-color: #F6F6F6;
+}
+
 .command-help a {
   display: block;
 }

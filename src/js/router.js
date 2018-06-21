@@ -84,6 +84,9 @@ class UrbitRouter {
       warehouse.storeReports([{
         type: "transition",
         data: TRANSITION_READY
+      }, {
+        type: "menu.toggle",
+        data: {open: false}
       }]);
 
       this.renderRoot();
