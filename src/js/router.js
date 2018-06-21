@@ -41,9 +41,10 @@ class UrbitRouter {
   }
 
   linkType(path) {
-    if (path.endsWith(".collections-edit")) {
-      return "renderer";
-    } else if (path.split("/")[2][0] == "~") {
+    if (path.endsWith("?edit=true")) {
+      // special casing this because it's cleaner than how it exists now
+      return "edit-page";
+    } else if (path.split("/")[2] != `~${api.authTokens.ship}`) {
       return "foreign";
     } else {
       return "local";
@@ -52,9 +53,16 @@ class UrbitRouter {
 
   filterUrl(url) {
     let path = url.split("?");
-    let linkType = this.linkType(path[0]);
+    let linkType = this.linkType(url);
 
     switch (linkType) {
+      case "edit-page":
+        if (linkType == "foreign") {
+          path[0] += ".x-htm";
+        } else {
+          path[0] += ".htm";
+        }
+        break;
       case "foreign":
         path[0] += ".x-htm";
         break;

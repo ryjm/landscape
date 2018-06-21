@@ -97,8 +97,43 @@ export class Header extends Component {
 
         if (stationDetails.host === this.props.api.authTokens.ship || this.props.data.publ === "%.y") {
           actionLink = (this.props.data.postid) ?
-            (<a href={`/~~/~${stationDetails.host}/==/web/collections/${stationDetails.collId}/${this.props.data.postid}.collections-edit`} className="header-link mr-6">Edit</a>) :
+            (<a href={`/~~/~${stationDetails.host}/==/web/collections/${stationDetails.collId}/${this.props.data.postid}?edit=true`} className="header-link mr-6">Edit</a>) :
             (<a href={`/~~/pages/nutalk/collection/post?station=~${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)
+        }
+
+        return (
+          <div className="flex space-between">
+            <div className="flex align-center">
+              <a href="/~~/pages/nutalk/menu" className="mr-22">
+                <div className="panini"></div>
+              </a>
+              <div className="mr-8">{headerIcon}</div>
+              <h3><a href={stationDetails.stationUrl}>{title}</a></h3>
+            </div>
+            <div className="flex align-center">
+              {actionLink}
+              <Button
+                classes={`btn btn-sm${btnClass}`}
+                action={this.toggleSubscribe}
+                content={btnLabel}
+                pushCallback={this.props.pushCallback}
+                responseKey="circle.config.dif.source"
+                 />
+            </div>
+          </div>
+        )
+        break;
+      // just duplicated collections logic here because we might want more controls for edit mode later
+      case "edit":
+        station = this.props.data.station;
+        if (!station) return null;
+        stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
+        title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
+        authorization = collectionAuthorization(stationDetails, this.props.api.authTokens.ship);
+        headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconBlog />;
+
+        if (stationDetails.host === this.props.api.authTokens.ship || this.props.data.publ === "%.y") {
+          actionLink = (<a href={`/~~/~${stationDetails.host}/==/web/collections/${stationDetails.collId}/${this.props.data.postid}`} className="header-link mr-6">Cancel</a>);
         }
 
         return (
