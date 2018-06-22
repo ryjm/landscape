@@ -71,7 +71,7 @@ export class CommandMenu extends Component {
             this.props.transitionTo(details.stationUrl);
           },
           displayText: displayText,
-          helpText: "Go to <circle> on <~ship>",
+          helpText: `Go to ${station} on ~${ship}`,
         });
       });
     });
