@@ -16,7 +16,7 @@ export class NamesReducer {
           break;
 
         case "circle.cos.rem":
-          Object.arrayify(rep.data).forEach((key: station, value: config) => {
+          Object.arrayify(rep.data).forEach(({key: station, value: config}) => {
             let details = getStationDetails(station, config);
 
             if (ships[details.host]) {
@@ -75,13 +75,11 @@ export class NamesReducer {
       ships[msg.aut] = ships[msg.aut] || [];
     });
 
-    console.log("messagesNames = ", ships);
-
     this.storeNames(ships, storeNames);
   }
 
   storeNames(ships, storeNames) {
-    Object.arrayify(ships).forEach((key: ship, value: stations) => {
+    Object.arrayify(ships).forEach(({key: ship, value: stations}) => {
       if (!storeNames[ship]) {
         storeNames[ship] = stations;
       } else {
