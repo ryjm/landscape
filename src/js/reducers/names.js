@@ -16,9 +16,7 @@ export class NamesReducer {
           break;
 
         case "circle.cos.rem":
-          Object.arrayify(rep.data).forEach((pair) => {
-            let station = pair.key;
-            let config = pair.value;
+          Object.arrayify(rep.data).forEach((key: station, value: config) => {
             let details = getStationDetails(station, config);
 
             if (ships[details.host]) {
@@ -83,11 +81,11 @@ export class NamesReducer {
   }
 
   storeNames(ships, storeNames) {
-    Object.arrayify(ships).forEach((ship) => {
-      if (!storeNames[ship.key]) {
-        storeNames[ship.key] = ship.value;
+    Object.arrayify(ships).forEach((key: ship, value: stations) => {
+      if (!storeNames[ship]) {
+        storeNames[ship] = stations;
       } else {
-        storeNames[ship.key] = _.uniq(ship.value.concat(storeNames[ship.key]))
+        storeNames[ship] = _.uniq(stations.concat(storeNames[ship]))
       }
     });
   }
