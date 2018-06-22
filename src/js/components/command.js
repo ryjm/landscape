@@ -9,7 +9,8 @@ export class CommandMenu extends Component {
 
     this.state = {
       command: "",
-      helpActivated: false
+      options: [],
+      selectedOption: null
     };
 
     this.onCommandChange = this.onCommandChange.bind(this);
@@ -18,19 +19,61 @@ export class CommandMenu extends Component {
   }
 
   componentDidMount() {
-    Mousetrap.bind('down', () => {
-      console.log('down');
+    if (this.state.options.length === 0) {
+      this.setState({
+        options: this.getOptionList(this.state.command)
+      });
+    }
+
+    Mousetrap.bind('down', (e) => {
+      let option;
+      if (e.preventDefault) e.preventDefault();
+
+      if (this.state.selectedOption === null) {
+        option = 0
+      } else if (this.state.selectedOption === (this.state.options.length - 1)) {
+        option = (this.state.options.length - 1);
+      } else {
+        option = this.state.selectedOption + 1;
+      }
+
+      this.setState({
+        selectedOption: option
+      });
     });
+
+    Mousetrap.bind('up', (e) => {
+      let option;
+      if (e.preventDefault) e.preventDefault();
+
+      if (this.state.selectedOption === null || this.state.selectedOption === 0) {
+        option = 0;
+      } else {
+        option = this.state.selectedOption - 1;
+      }
+
+      this.setState({
+        selectedOption: option
+      });
+    });
+
+    Mousetrap.bind('enter', (e) => {
+      if (this.state.selectedOption !== null) {
+        this.processCommand(this.state.options[this.state.selectedOption]);
+      }
+    })
   }
 
   componentWillUnmount() {
     Mousetrap.unbind('down');
+    Mousetrap.unbind('up');
   }
 
   onCommandChange(e) {
     this.setState({
       command: e.target.value,
-      helpActivated: this.hasHelpToken(e.target.value)
+      options: this.getOptionList(e.target.value),
+      selectedOption: 0
     });
   }
 
@@ -39,8 +82,8 @@ export class CommandMenu extends Component {
   }
 
   processCommand(option) {
-    if (option.action === "update") {
-      this.setState({command: option.name});
+    if (typeof option.action === "string") {
+      this.onCommandChange({target: { value: option.action}});
     } else if (typeof option.action === "function") {
       option.action();
     }
@@ -101,14 +144,14 @@ export class CommandMenu extends Component {
     return [{
       name: "new collection",
       action: () => {
-        console.log('creating new collection!');
+        this.props.transitionTo("/~~/pages/nutalk/collection/create");
       },
       displayText: "new collection",
       helpText: "Create a new collection of markdown files"
     }, {
       name: "new chat",
       action: () => {
-        console.log('creating new chatroom!');
+        this.props.transitionTo("/~~/pages/nutalk/stream/create");
       },
       displayText: "new chat",
       helpText: "Create a chatroom"
@@ -132,27 +175,27 @@ export class CommandMenu extends Component {
       helpText: "Go to your profile. Settings and log out are also here",
     }, {
       name: "go",
-      action: "update",
+      action: "go ~",
       displayText: "go [~ship/stream]",
       helpText: "Go to <stream> on <~ship>",
     }, {
       name: "go",
-      action: "update",
+      action: "go ~",
       displayText: "go [~ship/collection]",
       helpText: "Go to <collection> on <~ship>",
     }, {
       name: "dm",
-      action: "update",
+      action: "dm ~",
       displayText: "dm [~ship]",
       helpText: "Go to your dm with <~ship>, or start a new dm with <~ship>",
     }, {
       name: "dm",
-      action: "update",
+      action: "dm ~",
       displayText: "dm [~ship-a, ~ship-b, ~ship-c]",
       helpText: "Go to your dm with a group of <[~ship-a, ~ship-b, ~ship-c]>, or start a new dm with <[~ship-a, ~ship-b, ~ship-c]>",
     }, {
       name: "new",
-      action: "update",
+      action: "new",
       displayText: "new [type]",
       helpText: "Create a new blog, forum, or chat",
     }];
@@ -174,9 +217,8 @@ export class CommandMenu extends Component {
     return null;
   }
 
-  getOptionList() {
+  getOptionList(cmd) {
     let options;
-    let cmd = this.state.command;
 
     let directiveOptions = this.getDirectiveOptionsList();
     let directive = this.getDirective(cmd, directiveOptions);
@@ -188,8 +230,6 @@ export class CommandMenu extends Component {
     }
 
     options = options.filter(opt => opt.name.includes(this.trimCmd(cmd)));
-
-    console.log('options = ', options);
 
     return options;
   }
@@ -205,22 +245,23 @@ export class CommandMenu extends Component {
   }
 
   buildOptions(optionList) {
-    return optionList.map(option => {
+    return optionList.map((option, index) => {
+      let selected = index === this.state.selectedOption;
+      let helpActivated = this.hasHelpToken(this.state.command);
+
       return (
         <CommandHelpItem
           option={option}
+          selected={selected}
           processCommand={this.processCommand.bind(this)}
-          helpActivated={this.state.helpActivated}
+          helpActivated={helpActivated}
         />
       );
     });
   }
 
   render() {
-    let optionList = this.getOptionList();
-    let optionElems = this.buildOptions(optionList);
-
-    console.log("optionElems = ", optionElems);
+    let optionElems = this.buildOptions(this.state.options);
 
     if (this.commandInputRef.current) this.commandInputRef.current.focus();
 
