@@ -123,6 +123,10 @@
   max-width: 43rem;
 }
 
+a.shipname {
+  text-decoration: none;
+}
+
 .chat-input-field[type="text"] {
   border: none;
   padding: 0;
