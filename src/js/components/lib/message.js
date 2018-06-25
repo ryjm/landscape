@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { isDMStation, getMessageContent } from '/lib/util';
 import { Button } from '/components/lib/button';
+import { CollectionPreview } from '/components/collectionPreview';
 import { TRANSITION_LOADING } from '/lib/constants';
 
 export class Message extends Component {
@@ -142,6 +143,8 @@ export class Message extends Component {
           <pre className="text-mono mt-0">{this.props.details.res}</pre>
         </div>
       )
+    } else if (this.props.details.postUrl) {
+      return <CollectionPreview messageDetails={this.props.details} api={this.props.api}></CollectionPreview>
     } else {
       return this.props.details.content;
     }

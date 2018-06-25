@@ -50,7 +50,7 @@ export class InboxPage extends Component {
             </div>
             <div className="col-sm-10">
               <span>{topicLink}</span>
-              <span className="text-mono">~{msg.aut}</span>
+              <span className="text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a></span>
             </div>
           </div>
         );

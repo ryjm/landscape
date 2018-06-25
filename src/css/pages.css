@@ -27,6 +27,10 @@
   float: right;
 }
 
+.inbox-page .collection-preview h1:nth-child(1) {
+  display: none;
+}
+
 /***
   Edit
 ***/
@@ -117,6 +121,10 @@
 .chat-container .col-sm-2 {
   flex-basis: 43rem;
   max-width: 43rem;
+}
+
+a.shipname {
+  text-decoration: none;
 }
 
 .chat-input-field[type="text"] {

@@ -94,7 +94,7 @@ export function foreignUrl(shipName, own, urlFrag) {
 // shorten comet names
 export function prettyShip(ship) {
   const sp = ship.split('-');
-  return sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship;
+  return [sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship, ship[0] === '~' ? `/~~/${ship}/==/web/pages/nutalk/profile` : `/~~/~${ship}/==/web/pages/nutalk/profile`];
 }
 
 export function isDMStation(station) {

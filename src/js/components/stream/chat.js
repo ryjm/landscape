@@ -3,7 +3,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
-import { isUrl, uuid, getMessageContent } from '/lib/util';
+import { prettyShip, isUrl, uuid, getMessageContent } from '/lib/util';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -195,7 +195,7 @@ export class ChatPage extends Component {
       return (
         <div key={ship}>
           <span className={`cir-status mr-4 ${statusCir}`}></span>
-          <span className="chat-member-name">{ship}</span>
+          <span className="chat-member-name"><a className="shipname" href={prettyShip(ship)[1]}>{prettyShip(ship)[0]}</a></span>
         </div>
       )
     });
@@ -249,7 +249,7 @@ export class ChatPage extends Component {
     let chatMembers = this.assembleMembers(this.state.station);
 
     let chatMessages = chatRows.map((msg) => {
-      let autLabel = msg.printship ? `~${msg.aut}` : null;
+      let autLabel = msg.printship ? prettyShip(`~${msg.aut}`)[0] : null;
       let appClass = msg.app ? " chat-msg-app" : "";
       let details = getMessageContent(msg, {type: "chat"});
 
@@ -260,7 +260,7 @@ export class ChatPage extends Component {
       } else {
         return (
           <div key={msg.uid} className={`row ${appClass}`}>
-            <div className="col-sm-2 text-mono">{autLabel}</div>
+            <div className="col-sm-2 text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{autLabel}</a></div>
             <div className="col-sm-8"><Message details={details}></Message></div>
           </div>
         )
@@ -283,7 +283,7 @@ export class ChatPage extends Component {
             </Scrollbars>
             <div className="chat-input row mt-6">
               <div className="col-sm-2 text-700">
-                ~{this.props.api.authTokens.ship}
+                {prettyShip(`~${this.props.api.authTokens.ship}`)[0]}
               </div>
               <div className="col-sm-8">
                 <form onSubmit={this.messageSubmit}>
