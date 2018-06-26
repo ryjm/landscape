@@ -93,6 +93,7 @@ export class CommandFormCollectionCreate extends Component {
               storeReports={this.props.storeReports}
               transitionTo={this.props.transitionTo}
               form={form}
+              cancel={this.props.cancel}
             />);
 
   }

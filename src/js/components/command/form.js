@@ -123,6 +123,8 @@ export class CommandForm extends Component {
 
     return (
       <div className="mb-3 form-mve">
+        <div className="mt-2 ml-3">Note: All circles are public on the testnet while permissions are built</div>
+
         {fieldElems}
 
         <Button
