@@ -3,3 +3,12 @@
 .collection-create .input-group.input-group-focused textarea {
   background-color: #F6F6F6;
 }
+
+.collection-create .btn-text {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+.collection-create .btn-text:focus span:nth-child(1) {
+  text-decoration: underline;
+}

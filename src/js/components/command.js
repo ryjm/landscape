@@ -13,13 +13,12 @@ export class CommandMenu extends Component {
     this.state = {
       view: "command",
       command: "",
-      // view: "collection-create",
-      // command: "new collection",
       options: [],
       selectedOption: null
     };
 
     this.onCommandChange = this.onCommandChange.bind(this);
+    this.cancelView = this.cancelView.bind(this);
 
     this.commandInputRef = React.createRef();
   }
@@ -71,7 +70,7 @@ export class CommandMenu extends Component {
       Mousetrap.trigger('tab');
     });
 
-    Mousetrap.bind('tab', (e) => {
+    Mousetrap(this.commandInputRef.current).bind('tab', (e) => {
       if (e.preventDefault) e.preventDefault();
       let placeholder = this.getPlaceholder();
 
@@ -297,18 +296,26 @@ export class CommandMenu extends Component {
     }
   }
 
+  cancelView() {
+    this.onCommandChange({target: { value: ""}});
+    this.setState({
+      view: "command"
+    });
+  }
+
   render() {
     let view, disabled, placeholder;
 
     if (this.state.view === "command") {
       placeholder = this.getPlaceholder();
       view = this.buildOptions(this.state.options);
-      if (this.commandInputRef.current) this.commandInputRef.current.focus();
     } else if (this.state.view === "collection-create") {
       disabled = true;
       view = (<CollectionCreate
                api={this.props.api}
                store={this.props.store}
+               cancel={this.cancelView}
+               pushCallback={this.props.pushCallback}
              />);
     }
 
@@ -323,6 +330,7 @@ export class CommandMenu extends Component {
               <input type="text"
                      name="command-input"
                      className="command-menu-input"
+                     autoFocus
                      disabled={disabled}
                      onChange={this.onCommandChange}
                      onSubmit={this.onCommandSubmit}

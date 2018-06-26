@@ -9,10 +9,12 @@ export class Button extends Component {
       status: STATUS_READY
     };
 
-    this.buttonClick = this.buttonClick.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  buttonClick() {
+  onSubmit(e) {
+    if (e.preventDefault) e.preventDefault();
+
     this.setState({ status: STATUS_LOADING });
 
     this.props.action(this.props.actionData);
@@ -26,10 +28,15 @@ export class Button extends Component {
     let spinnerClass = (this.state.status !== STATUS_LOADING) ? "hide" : "btn-spinner";
 
     return (
-      <button type="button" className={this.props.classes} onClick={this.buttonClick}>
-        <span>{this.props.content}</span>
-        <span className={spinnerClass}>◠</span>
-      </button>
+      <form onSubmit={this.onSubmit} style={{display: 'inline-block'}}>
+        <button type="submit"
+          className={this.props.classes}
+          onFocus={this.props.onFocus}
+          tabIndex="0">
+            <span>{this.props.content}</span>
+            <span className={spinnerClass}>◠</span>
+        </button>
+      </form>
     )
   }
 }
