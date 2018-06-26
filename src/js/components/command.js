@@ -69,7 +69,7 @@ export class CommandMenu extends Component {
       if (e.preventDefault) e.preventDefault();
       let placeholder = this.getPlaceholder();
 
-      if (placeholder !== DEFAULT_PLACEHOLDER) {
+      if (placeholder !== DEFAULT_PLACEHOLDER && placeholder !== "") {
         this.onCommandChange({target: { value: placeholder}});
       }
     });
@@ -274,10 +274,14 @@ export class CommandMenu extends Component {
   }
 
   getPlaceholder() {
+    let currentOption = this.state.options[this.state.selectedOption];
+
     if (this.state.command === "") {
       return DEFAULT_PLACEHOLDER;
-    } else if (this.state.options[this.state.selectedOption]) {
-      return this.state.options[this.state.selectedOption].name
+    } else if (this.state.command.includes("?")) {
+      return "";
+    } else if (currentOption && currentOption.name.startsWith(this.state.command)) {
+      return currentOption.name
     }
   }
 
