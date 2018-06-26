@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
 import { getStationDetails } from '/lib/util';
-import { CollectionCreate } from '/components/command/collection-create';
+import { CommandFormCollectionCreate } from '/components/command/create-collection';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
 
@@ -296,6 +296,7 @@ export class CommandMenu extends Component {
         <CommandHelpItem
           option={option}
           selected={selected}
+          key={option.displayText}
           processCommand={this.processCommand.bind(this)}
           helpActivated={helpActivated}
         />
@@ -330,7 +331,7 @@ export class CommandMenu extends Component {
       view = this.buildOptions(this.state.options);
     } else if (this.state.view === "collection-create") {
       disabled = true;
-      view = (<CollectionCreate
+      view = (<CommandFormCollectionCreate
                api={this.props.api}
                store={this.props.store}
                cancel={this.cancelView}
@@ -338,6 +339,8 @@ export class CommandMenu extends Component {
                storeReports={this.props.storeReports}
                transitionTo={this.props.transitionTo}
              />);
+    } else if (this.state.view === "collection-create") {
+      disabled = true;
     }
 
     return (

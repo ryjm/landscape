@@ -30,14 +30,17 @@ export class Button extends Component {
     let spinnerClass = (this.state.status !== STATUS_LOADING) ? "hide" : "btn-spinner";
 
     return (
-      <form onSubmit={this.onSubmit} style={{display: 'inline-block'}}>
+      <form
+        style={{display: 'inline-block'}}
+        onSubmit={this.onSubmit}>
+
         <button type="submit"
           className={this.props.classes}
-          onFocus={this.props.onFocus}
           disabled={this.props.disabled}
-          tabIndex="0">
-            <span>{this.props.content}</span>
-            <span className={spinnerClass}>◠</span>
+          onFocusIn={this.props.focusChange}>
+
+          <span>{this.props.content}</span>
+          <span className={spinnerClass}>◠</span>
         </button>
       </form>
     )

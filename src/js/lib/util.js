@@ -1,5 +1,9 @@
 import _ from 'lodash';
 
+export function capitalize(str) {
+  return `${str[0].toUpperCase()}${str.substr(1)}`;
+}
+
 export function getQueryParams() {
   if (window.location.search !== "") {
     return JSON.parse('{"' + decodeURI(window.location.search.substr(1).replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}');
@@ -192,8 +196,8 @@ export function getMessageContent(msg, stationDetails) {
   //let stationDetails
 
   switch (stationDetails.type) {
-    case "inbox": 
-    case "dm": 
+    case "inbox":
+    case "dm":
     case "chat":
       if (_.has(msg, 'sep.app.sep.fat')) {
         ret.type = "app";
