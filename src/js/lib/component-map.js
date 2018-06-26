@@ -1,6 +1,5 @@
 import { InboxPage } from '/components/inbox';
 import { ListPage } from '/components/list';
-import { MenuPage } from '/components/menu';
 import { ChatPage } from '/components/stream/chat';
 import { StreamCreatePage } from '/components/stream/create';
 import { CollectionCreatePage } from '/components/collection/create';
@@ -36,9 +35,6 @@ export var ComponentMap = {
   },
   "ListPage": {
     comp: ListPage
-  },
-  "MenuPage": {
-    comp: MenuPage
   },
   "Elapsed": {
     comp: Elapsed

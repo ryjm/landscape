@@ -1,0 +1,92 @@
+/* TODO: This is probably bad */
+.chat-container .col-sm-2 {
+  flex-basis: 43rem;
+  max-width: 43rem;
+}
+
+a.shipname {
+  text-decoration: none;
+}
+
+.chat-input-field[type="text"] {
+  border: none;
+  padding: 0;
+  line-height: 6rem;
+}
+
+.chat-input-field:placeholder {
+  color: #B0B0B0;
+}
+
+.chat-sep {
+  text-align: center;
+  font-weight: 600;
+  margin: 4rem;
+}
+
+.chat-msg-app, .chat-msg-app * {
+  color: #9B9B9B;
+}
+
+.cir-status {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100%;
+
+  display: inline-block;
+  position: relative;
+  bottom: 1px;
+}
+
+.cir-green {
+  background-color: #8EEE9C;
+}
+
+.cir-grey {
+  background-color: #B0B0B0;
+}
+
+.cir-black {
+  background-color: #B0B0B0;
+}
+
+.cir-red {
+  background-color: #FF4444;
+}
+
+.chat-scrollpane-view {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-end; */
+}
+
+.chat-scrollpane img {
+  width: 100%;
+}
+
+.chat-scrollpane-view > * {
+  flex-shrink: 0;
+}
+
+.chat-scrollpane-view > :first-child {
+    margin-top: auto !important;
+    /* use !important to prevent breakage from child margin settings */
+}
+
+.scrollpane {
+  height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: flex-end; */
+}
+
+.scrollpane > * {
+  flex-shrink: 0;
+}
+
+.scrollpane > :first-child {
+    margin-top: auto !important;
+    /* use !important to prevent breakage from child margin settings */
+}

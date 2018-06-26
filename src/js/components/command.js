@@ -128,6 +128,8 @@ export class CommandMenu extends Component {
           name: `go ${details.station}`,
           action: () => {
             console.log('this? = ', this);
+
+            let targetUrl = (details.type === "text-topic") ? details.postUrl : details.stationUrl
             this.props.transitionTo(details.stationUrl);
           },
           displayText: displayText,
@@ -309,7 +311,7 @@ export class CommandMenu extends Component {
     }
 
     return (
-      <div className="container menu-page">
+      <div className="container command-page">
         <div className="row">
           <div className="col-sm-1">
             <div className="cross" onClick={this.crossClick}></div>

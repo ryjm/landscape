@@ -29,63 +29,6 @@ body {
   top: 48rem;
 }
 
-.menu-main {
-  display: flex;
-  /* position: absolute; */
-
-  /* margin-top: 12rem; */
-  /* margin-left: 9rem; */
-}
-
-.menu-main .panini {
-  margin-right: 11rem;
-}
-
-.menu-main .panini
-.menu-main .liang {
-  cursor: pointer;
-}
-
-.nav-main {
-  position: fixed;
-  display: flex;
-  bottom: 4rem;
-
-  width: 960px;
-  justify-content: center;
-
-  list-style-type: none;
-}
-
-.nav-main li {
-  margin: 0 2rem;
-}
-
-.header-main {
-  display: flex;
-  align-items: center;
-}
-
-.header-page {
-  text-decoration: underline;
-  color: #9B9B9B;
-  display: inline;
-}
-
-.header-subpage {
-  display: flex;
-  align-items: center;
-}
-
-.header-sep {
-  margin: 0 12rem;
-  display: inline;
-}
-
-.header-settings {
-  margin-left: 30rem;
-}
-
 .timestamp {
   font-size: 9px;
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;

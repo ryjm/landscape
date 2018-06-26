@@ -1,0 +1,177 @@
+.page-notes-edit textarea {
+  border: none;
+  height: 800px;
+}
+
+.page-notes-index h1 {
+  margin-top: 0;
+}
+
+.notes-actions .btn-secondary {
+  margin-right: 10rem;
+}
+
+.note-timestamp {
+  position: absolute;
+  left: -16rem;
+  top: 3rem;
+}
+
+.notes-blurbs {
+  margin-top: 8rem;
+}
+
+.notes-blurbs li {
+  display: flex;
+  position: relative;
+  margin: 4rem 0;
+}
+
+textarea.collection-post-edit
+{
+  height: 80%;
+  border: 1px solid #D0D0D0;
+  background: white;
+  resize: none;
+  padding: 13rem 21rem;
+}
+
+textarea.comment-edit
+{
+  border: none;
+  resize: none;
+  padding: 0;
+}
+
+.create-comment button.disabled
+{
+  display: none;
+}
+
+.create-comment .usership
+{
+  color: #000;
+}
+
+div.coll-title
+{
+  font-size: 6rem;
+}
+div.mod
+{
+  font-size: 6rem;
+}
+
+.collection-index li.forum .meta-cont > div
+{
+  float: left;
+}
+
+.collection-index li.notes .da {
+  position: absolute;
+  margin-left: -12rem;
+  margin-top: 1rem;
+}
+
+.collection-index .note-uuid {
+  font-weight: inherit;
+}
+
+.collection-index img {
+  width: 100%;
+}
+
+.collection-index ul {
+  list-style-type: none;
+}
+
+.post img {
+  width: 100%;
+}
+
+.post #edit
+{
+  display: none;
+}
+
+/**/
+
+.collection-date {
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+  font-weight: 300;
+  font-size: 3rem;
+  line-height: 3rem;
+}
+
+.collection-title {
+  position: relative;
+}
+
+.collection-post::before, .collection-title::before, .collection-edit::before {
+  content: "";
+  background-color: #0A7960;
+  border-radius: 1px;
+
+  width: 2rem;
+  height: 2rem;
+
+  position: absolute;
+}
+
+.collection-post::before {
+  margin-top: 30px;
+  margin-left: -11rem;
+}
+
+.collection-title::before {
+  margin-top: 22px;
+  margin-left: -10rem;
+}
+
+.collection-edit::before {
+  margin-left: -11rem;
+}
+
+.collection-post h3 {
+  font-weight: 500;
+  margin: 1rem 0 3rem;
+}
+
+.collection-text, .snippet p {
+  font-size: 14px;
+  line-height: 24px;
+
+  font-family: "San Francisco Text", arial;
+}
+
+.collection-post-page {
+  padding-top: 12rem;
+}
+
+.collection-comment {
+  margin-bottom: 11rem;
+  position: relative;
+}
+
+.collection-comment-avatar {
+  position: absolute;
+
+  left: -12rem;
+  top: 7px;
+
+  width: 32px;
+  height: 32px;
+}
+
+.collection-comment-author {
+  font-size: 14px;
+  line-height: 24px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.collection-post-actions {
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+}
