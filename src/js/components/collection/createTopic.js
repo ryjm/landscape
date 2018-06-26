@@ -53,6 +53,7 @@ export class TopicCreatePage extends Component {
       details.lastedit = props.lastedit;
       details.top = props.top;
     } else {
+      if (!getQueryParams().station) return {}; // TODO: Find source of this bug. Transitioning before render gets done.
       let stationDetails = getStationDetails(getQueryParams().station);
       details.collId = stationDetails.collId;
       details.hostship = stationDetails.host;
