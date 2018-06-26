@@ -1,7 +1,19 @@
-.collection-create .input-group.input-group-focused,
-.collection-create .input-group.input-group-focused input,
-.collection-create .input-group.input-group-focused textarea {
+.collection-create .input-group-focused,
+.collection-create .input-group-focused input,
+.collection-create .input-group-focused textarea {
   background-color: #F6F6F6;
+}
+
+.collection-create .input-group-error-message {
+  display: none;
+}
+
+.collection-create .input-group-error * {
+  color: #EE3124;
+}
+
+.collection-create .input-group-error .input-group-error-message {
+  display: block;
 }
 
 .collection-create .btn-text {

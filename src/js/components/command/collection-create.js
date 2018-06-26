@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
+import classNames from 'classnames';
+import _ from 'lodash';
+import urbitOb from 'urbit-ob';
 
 export class CollectionCreate extends Component {
   constructor(props) {
@@ -7,13 +10,15 @@ export class CollectionCreate extends Component {
 
     this.state = {
       name: "",
-      invites: [],
+      invites: "",
       visible: "",
-      focused: ""
+      focused: "",
+      errorList: []
     };
 
     this.valueChange = this.valueChange.bind(this);
     this.focusChange = this.focusChange.bind(this);
+    this.validateField = this.validateField.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
     this.collectionNameRef = React.createRef();
@@ -22,7 +27,7 @@ export class CollectionCreate extends Component {
   valueChange(e) {
     let obj = {};
 
-    obj[e.target.name] = obj[e.target.value]
+    obj[e.target.name] = e.target.value;
 
     this.setState(obj);
   }
@@ -33,6 +38,38 @@ export class CollectionCreate extends Component {
     });
   }
 
+  validateField(e) {
+    let validated;
+
+    switch (e.target.name) {
+      case "name":
+        validated = true;
+        break;
+      case "invites":
+        validated = this.validateInvites(this.state.invites)
+        break;
+      case "visible":
+        validated = this.validateVisible(this.state.visible)
+        break;
+    }
+
+    this.setState({
+      errorList: (validated) ?
+                   _.without(this.state.errorList, e.target.name)
+                 : [...this.state.errorList, e.target.name]
+    });
+  }
+
+  validateInvites(invites) {
+    if (invites === "") return true;
+    let tokens = invites.trim().split("\n").map(t => t.trim());
+    return _.reduce(tokens, (valid, s) => valid && urbitOb.isShip(s), true);
+  }
+
+  validateVisible(visible) {
+    return visible === "yes" || visible === "no" || visible === "";
+  }
+
   onSubmit() {
     console.log('submitting!')
   }
@@ -40,7 +77,11 @@ export class CollectionCreate extends Component {
   render() {
     return (
       <div className="mb-3 collection-create">
-        <div className={`input-group ${this.state.focused === "name" && 'input-group-focused'}`}>
+        <div className={classNames({
+          'input-group': true,
+          'input-group-focused': this.state.focused === "name",
+          'input-group-error': this.state.errorList.includes("name")
+        })}>
           <label>Name</label>
           <input type="text"
             name="name"
@@ -49,28 +90,41 @@ export class CollectionCreate extends Component {
             ref={this.collectionNameRef}
             onChange={this.valueChange}
             onFocus={this.focusChange}
+            onBlur={this.validateField}
             value={this.state.name}
             placeholder="Deep Thoughts" />
         </div>
-        <div className={`input-group ${this.state.focused === "invites" && 'input-group-focused'}`}>
+        <div className={classNames({
+          'input-group': true,
+          'input-group-focused': this.state.focused === "invites",
+          'input-group-error': this.state.errorList.includes("invites")
+        })}>
           <label>Invites</label>
           <textarea type="text"
             name="invites"
             tabIndex="0"
             onChange={this.valueChange}
             onFocus={this.focusChange}
+            onBlur={this.validateField}
             value={this.state.invites}
             placeholder={`~ship-name\n~ship-name`} />
+          <div className="input-group-error-message">Invites must be of form ~ship-name \n ~ship-name</div>
         </div>
-        <div className={`input-group ${this.state.focused === "visible" && 'input-group-focused'}`}>
+        <div className={classNames({
+          'input-group': true,
+          'input-group-focused': this.state.focused === "visible",
+          'input-group-error': this.state.errorList.includes("visible")
+        })}>
           <label>Show in Profile?</label>
           <input type="text"
             name="visible"
             tabIndex="0"
             onChange={this.valueChange}
             onFocus={this.focusChange}
+            onBlur={this.validateField}
             value={this.state.visible}
             placeholder="'yes' or 'no'" />
+          <div className="input-group-error-message">Visibility must be either 'yes' or 'no'</div>
         </div>
         <Button
           classes={`btn btn-sm btn-text btn-block mt-3`}
