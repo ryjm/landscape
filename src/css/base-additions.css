@@ -197,14 +197,18 @@ button.disabled {
   Forms
 ***/
 
-input, label {
+input[type="text"], textarea, label {
   font-size: 14px;
   line-height: 24px;
 
   border: none;
-  padding-top: 3rem;
+  padding: 0;
 
   font-family: "San Francisco Text", arial;
+}
+
+label {
+  margin-bottom: 2rem;
 }
 
 input[disabled], label[disabled], select[disabled], textarea[disabled], .select-dropdown[disabled] {

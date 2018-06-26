@@ -13,6 +13,8 @@ export class CommandMenu extends Component {
     this.state = {
       view: "command",
       command: "",
+      // view: "collection-create",
+      // command: "new collection",
       options: [],
       selectedOption: null
     };
@@ -328,7 +330,7 @@ export class CommandMenu extends Component {
                      ref={this.commandInputRef}/>
             </div>
 
-            <div className="mt-12">
+            <div className="mt-6">
               {view}
             </div>
           </div>

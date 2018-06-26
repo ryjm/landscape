@@ -1,0 +1,5 @@
+.collection-create .input-group.input-group-focused,
+.collection-create .input-group.input-group-focused input,
+.collection-create .input-group.input-group-focused textarea {
+  background-color: #F6F6F6;
+}
