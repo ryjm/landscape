@@ -170,7 +170,7 @@ export class CommandMenu extends Component {
         name: `dm ~${name}`,
         action: () => {
           // TODO: This should check for existing DM circles & redirect to that
-          this.props.transitionTo(`/~~/pages/nutalk/stream/create?dm=~${name}`);
+          alert('not implement yet, sorry');
         },
         displayText: `dm ~${name}`,
         helpText: `Send a direct message to ~${name}`
