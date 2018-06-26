@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { CommandForm } from '/components/command/form';
 import { getStationDetails } from '/lib/util';
+import { TRANSITION_LOADING } from '/lib/constants';
 import _ from 'lodash';
 import urbitOb from 'urbit-ob';
 
 export class CommandFormCollectionCreate extends Component {
-  getCommandCreateForm() {
+  getCollectionCreateForm() {
     return {
       fields: [{
         name: "name",
@@ -30,7 +31,7 @@ export class CommandFormCollectionCreate extends Component {
         errorMsg: "Visibility must be either 'yes' or 'no'",
         validate: (value) => value === "yes" || value === "no"
       }],
-      submit: () => {
+      submit: function() {
         this.props.storeReports([{
           type: "transition",
           data: TRANSITION_LOADING
@@ -59,7 +60,7 @@ export class CommandFormCollectionCreate extends Component {
             }
           });
 
-          if (this.state.invites.length > 0) {
+          if (this.state.formData.invites.length > 0) {
             let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim());
             let audInboxes = inviteArray.map((aud) => `${aud}/inbox`);
             let inviteMessage = {
@@ -84,7 +85,7 @@ export class CommandFormCollectionCreate extends Component {
   }
 
   render() {
-    let form = this.getCommandCreateForm();
+    let form = this.getCollectionCreateForm();
 
     return (<CommandForm
               api={this.props.api}

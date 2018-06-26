@@ -76,9 +76,8 @@ export class CommandForm extends Component {
     return true;
   }
 
-  onSubmit(e) {
-    if (e.preventDefault) e.preventDefault();
-    this.props.form.submit.bind(this)();
+  onSubmit() {
+    this.props.form.submit.call(this);
   }
 
   buildFieldElements(field, first) {

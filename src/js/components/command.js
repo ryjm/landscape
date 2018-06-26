@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
 import { getStationDetails } from '/lib/util';
-import { CommandFormCollectionCreate } from '/components/command/create-collection';
+import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
+import { CommandFormStreamCreate } from '/components/command/form/stream-create';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
 
@@ -339,8 +340,16 @@ export class CommandMenu extends Component {
                storeReports={this.props.storeReports}
                transitionTo={this.props.transitionTo}
              />);
-    } else if (this.state.view === "collection-create") {
+    } else if (this.state.view === "stream-create") {
       disabled = true;
+      view = (<CommandFormStreamCreate
+               api={this.props.api}
+               store={this.props.store}
+               cancel={this.cancelView}
+               pushCallback={this.props.pushCallback}
+               storeReports={this.props.storeReports}
+               transitionTo={this.props.transitionTo}
+             />);
     }
 
     return (

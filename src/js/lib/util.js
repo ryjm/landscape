@@ -51,6 +51,11 @@ export function parseCollCircle(st) {
   return r;
 }
 
+export function isPatTa(str) {
+  const r = /^[a-z,0-9,\-,\.,_,~]+$/.exec(str)
+  return !!r;
+}
+
 export function daToDate(st) {
   var dub = function(n) {
     return parseInt(n) < 10 ? "0" + parseInt(n) : n.toString();
