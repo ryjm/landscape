@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
 import { getStationDetails } from '/lib/util';
+import { CollectionCreate } from '/components/command/collection-create';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
 
@@ -10,6 +11,7 @@ export class CommandMenu extends Component {
     super(props);
 
     this.state = {
+      view: "command",
       command: "",
       options: [],
       selectedOption: null
@@ -63,6 +65,8 @@ export class CommandMenu extends Component {
       if (this.state.selectedOption !== null) {
         this.processCommand(this.state.options[this.state.selectedOption]);
       }
+
+      Mousetrap.trigger('tab');
     });
 
     Mousetrap.bind('tab', (e) => {
@@ -157,14 +161,18 @@ export class CommandMenu extends Component {
     return [{
       name: "new collection",
       action: () => {
-        this.props.transitionTo("/~~/pages/nutalk/collection/create");
+        this.setState({
+          view: "collection-create"
+        });
       },
       displayText: "new collection",
       helpText: "Create a new collection of markdown files"
     }, {
       name: "new chat",
       action: () => {
-        this.props.transitionTo("/~~/pages/nutalk/stream/create");
+        this.setState({
+          view: "stream-create"
+        });
       },
       displayText: "new chat",
       helpText: "Create a chatroom"
@@ -286,11 +294,19 @@ export class CommandMenu extends Component {
   }
 
   render() {
-    let optionElems = this.buildOptions(this.state.options);
+    let view, disabled, placeholder;
 
-    if (this.commandInputRef.current) this.commandInputRef.current.focus();
-
-    let placeholder = this.getPlaceholder();
+    if (this.state.view === "command") {
+      placeholder = this.getPlaceholder();
+      view = this.buildOptions(this.state.options);
+      if (this.commandInputRef.current) this.commandInputRef.current.focus();
+    } else if (this.state.view === "collection-create") {
+      disabled = true;
+      view = (<CollectionCreate
+               api={this.props.api}
+               store={this.props.store}
+             />);
+    }
 
     return (
       <div className="container menu-page">
@@ -299,10 +315,11 @@ export class CommandMenu extends Component {
             <div className="cross" onClick={this.crossClick}></div>
           </div>
           <div className="col-sm-11">
-            <div className="command-input-placeholder-wrapper" data-placeholder={placeholder}>
+            <div className="command-input-placeholder-wrapper" data-placeholder={placeholder} disabled={disabled}>
               <input type="text"
                      name="command-input"
                      className="command-menu-input"
+                     disabled={disabled}
                      onChange={this.onCommandChange}
                      onSubmit={this.onCommandSubmit}
                      value={this.state.command}
@@ -310,11 +327,11 @@ export class CommandMenu extends Component {
             </div>
 
             <div className="mt-12">
-              {optionElems}
+              {view}
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

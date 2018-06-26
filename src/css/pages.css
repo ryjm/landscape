@@ -441,6 +441,7 @@ div.mod
 ***/
 
 input.command-menu-input, .command-input-placeholder-wrapper {
+  position: relative;
   border: none;
   outline: none;
   height: 60px;
@@ -449,8 +450,6 @@ input.command-menu-input, .command-input-placeholder-wrapper {
   font-size: 20px;
   line-height: 60px;
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
-
-  position: relative;
 }
 
 input.command-menu-input {
@@ -460,8 +459,16 @@ input.command-menu-input {
   font-weight: 500;
 }
 
+input.command-menu-input[disabled] {
+  opacity: 1;
+}
+
 .command-input-placeholder-wrapper {
   background-color: #F6F6F6;
+}
+
+.command-input-placeholder-wrapper[disabled] {
+  background-color: transparent;
 }
 
 .command-input-placeholder-wrapper::after {
