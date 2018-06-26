@@ -2,7 +2,6 @@ import { InboxPage } from '/components/inbox';
 import { ListPage } from '/components/list';
 import { ChatPage } from '/components/stream/chat';
 import { StreamCreatePage } from '/components/stream/create';
-import { CollectionCreatePage } from '/components/collection/create';
 import { TopicCreatePage } from '/components/collection/createTopic';
 import { CommentCreate } from '/components/collection/comment';
 import { Elapsed } from '/components/lib/elapsed';
@@ -20,9 +19,6 @@ export var ComponentMap = {
   },
   "StreamCreatePage": {
     comp: StreamCreatePage
-  },
-  "CollectionCreatePage": {
-    comp: CollectionCreatePage
   },
   "TopicCreatePage": {
     comp: TopicCreatePage

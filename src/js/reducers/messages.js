@@ -19,7 +19,7 @@ export class MessagesReducer {
           break;
         case "circle.config.dif.source":
           if (fromInbox && !rep.data.add) {
-            removeInboxMessages(rep.data.src, store);
+            this.removeInboxMessages(rep.data.src, store);
           }
       }
     });
