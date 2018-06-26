@@ -68,20 +68,23 @@ export class CommandMenu extends Component {
 
     Mousetrap.bind('enter', (e) => {
       if (this.state.selectedOption !== null) {
+        this.autoComplete();
         this.processCommand(this.state.options[this.state.selectedOption]);
       }
-
-      Mousetrap.trigger('tab');
     });
 
     Mousetrap(this.commandInputRef.current).bind('tab', (e) => {
       if (e.preventDefault) e.preventDefault();
-      let placeholder = this.getPlaceholder();
-
-      if (placeholder !== DEFAULT_PLACEHOLDER && placeholder !== "") {
-        this.onCommandChange({target: { value: placeholder}});
-      }
+      this.autoComplete();
     });
+  }
+
+  autoComplete() {
+    let placeholder = this.getPlaceholder();
+
+    if (placeholder !== DEFAULT_PLACEHOLDER && placeholder !== "") {
+      this.onCommandChange({target: { value: placeholder}});
+    }
   }
 
   componentWillUnmount() {
