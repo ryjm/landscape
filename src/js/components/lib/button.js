@@ -19,9 +19,11 @@ export class Button extends Component {
 
     this.props.action(this.props.actionData);
 
-    this.props.pushCallback(this.props.responseKey, (rep) => {
-      this.setState({ status: STATUS_READY });
-    });
+    if (this.props.responseKey) {
+      this.props.pushCallback(this.props.responseKey, (rep) => {
+        this.setState({ status: STATUS_READY });
+      });
+    }
   }
 
   render() {

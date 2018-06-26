@@ -23,6 +23,10 @@ export class CommandMenu extends Component {
     this.commandInputRef = React.createRef();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.commandInputRef.current) this.commandInputRef.current.focus();
+  }
+
   componentDidMount() {
     if (this.state.options.length === 0) {
       this.setState({
@@ -332,7 +336,6 @@ export class CommandMenu extends Component {
               <input type="text"
                      name="command-input"
                      className="command-menu-input"
-                     autoFocus
                      disabled={disabled}
                      onChange={this.onCommandChange}
                      onSubmit={this.onCommandSubmit}
