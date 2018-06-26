@@ -137,13 +137,6 @@ div.mod
   margin: 1rem 0 3rem;
 }
 
-.collection-text, .snippet p {
-  font-size: 14px;
-  line-height: 24px;
-
-  font-family: "San Francisco Text", arial;
-}
-
 .collection-post-page {
   padding-top: 12rem;
 }

@@ -15,17 +15,6 @@ ul li {
   padding: 0;
 }
 
-input[disabled], label[disabled], select[disabled], textarea[disabled], .select-dropdown[disabled] {
-  opacity: .4;
-  border-color: #aaa;
-}
-
-input.input-sm {
-  font-size: 3rem;
-  padding: 6px;
-  border-width: 1px;
-}
-
 /***
   Shapes
 ***/
@@ -202,4 +191,38 @@ button.disabled {
 
 .no-underline {
   text-decoration: none;
+}
+
+/***
+  Forms
+***/
+
+input, label {
+  font-size: 14px;
+  line-height: 24px;
+
+  border: none;
+  padding-top: 3rem;
+
+  font-family: "San Francisco Text", arial;
+}
+
+input[disabled], label[disabled], select[disabled], textarea[disabled], .select-dropdown[disabled] {
+  opacity: .4;
+  border-color: #aaa;
+}
+
+input.input-sm {
+  font-size: 3rem;
+  padding: 6px;
+  border-width: 1px;
+}
+
+.input-group {
+  padding: 10px;
+}
+
+.input-group label {
+  font-size: 14px;
+  font-weight: 600;
 }
