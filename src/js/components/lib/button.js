@@ -32,6 +32,7 @@ export class Button extends Component {
         <button type="submit"
           className={this.props.classes}
           onFocus={this.props.onFocus}
+          disabled={this.props.disabled}
           tabIndex="0">
             <span>{this.props.content}</span>
             <span className={spinnerClass}>◠</span>

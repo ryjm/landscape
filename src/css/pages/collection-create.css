@@ -12,6 +12,10 @@
   color: #EE3124;
 }
 
+.input-group-error input::placeholder {
+  color: #EE3124;
+}
+
 .collection-create .input-group-error .input-group-error-message {
   display: block;
 }

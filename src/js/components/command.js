@@ -316,6 +316,8 @@ export class CommandMenu extends Component {
                store={this.props.store}
                cancel={this.cancelView}
                pushCallback={this.props.pushCallback}
+               storeReports={this.props.storeReports}
+               transitionTo={this.props.transitionTo}
              />);
     }
 
