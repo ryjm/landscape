@@ -440,8 +440,7 @@ div.mod
   Command Menu
 ***/
 
-input.command-menu-input {
-  background-color: #F6F6F6;
+input.command-menu-input, .command-input-placeholder-wrapper {
   border: none;
   outline: none;
   height: 60px;
@@ -449,10 +448,32 @@ input.command-menu-input {
 
   font-size: 20px;
   line-height: 60px;
-  font-weight: 500;
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
 
+  position: relative;
+}
+
+input.command-menu-input {
+  background-color: transparent;
+  z-index: 2;
   padding: 0 3rem;
+  font-weight: 500;
+}
+
+.command-input-placeholder-wrapper {
+  background-color: #F6F6F6;
+}
+
+.command-input-placeholder-wrapper::after {
+  content: attr(data-placeholder);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  padding: 0 3rem;
+  color: #9B9B9B;
+  font-weight: 400;
 }
 
 .command-item {

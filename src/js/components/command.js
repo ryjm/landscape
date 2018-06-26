@@ -3,6 +3,8 @@ import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
 import { getStationDetails } from '/lib/util';
 
+const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
+
 export class CommandMenu extends Component {
   constructor(props) {
     super(props);
@@ -61,12 +63,23 @@ export class CommandMenu extends Component {
       if (this.state.selectedOption !== null) {
         this.processCommand(this.state.options[this.state.selectedOption]);
       }
-    })
+    });
+
+    Mousetrap.bind('tab', (e) => {
+      if (e.preventDefault) e.preventDefault();
+      let placeholder = this.getPlaceholder();
+
+      if (placeholder !== DEFAULT_PLACEHOLDER) {
+        this.onCommandChange({target: { value: placeholder}});
+      }
+    });
   }
 
   componentWillUnmount() {
     Mousetrap.unbind('down');
     Mousetrap.unbind('up');
+    Mousetrap.unbind('enter');
+    Mousetrap.unbind('tab');
   }
 
   onCommandChange(e) {
@@ -260,10 +273,20 @@ export class CommandMenu extends Component {
     });
   }
 
+  getPlaceholder() {
+    if (this.state.command === "") {
+      return DEFAULT_PLACEHOLDER;
+    } else if (this.state.options[this.state.selectedOption]) {
+      return this.state.options[this.state.selectedOption].name
+    }
+  }
+
   render() {
     let optionElems = this.buildOptions(this.state.options);
 
     if (this.commandInputRef.current) this.commandInputRef.current.focus();
+
+    let placeholder = this.getPlaceholder();
 
     return (
       <div className="container menu-page">
@@ -272,14 +295,15 @@ export class CommandMenu extends Component {
             <div className="cross" onClick={this.crossClick}></div>
           </div>
           <div className="col-sm-11">
-            <input type="text"
-                   name="command-input"
-                   className="command-menu-input"
-                   placeholder="type a command, page or ? for help"
-                   onChange={this.onCommandChange}
-                   onSubmit={this.onCommandSubmit}
-                   value={this.state.command}
-                   ref={this.commandInputRef}/>
+            <div className="command-input-placeholder-wrapper" data-placeholder={placeholder}>
+              <input type="text"
+                     name="command-input"
+                     className="command-menu-input"
+                     onChange={this.onCommandChange}
+                     onSubmit={this.onCommandSubmit}
+                     value={this.state.command}
+                     ref={this.commandInputRef}/>
+            </div>
 
             <div className="mt-12">
               {optionElems}
