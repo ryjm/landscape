@@ -11,7 +11,7 @@ export class CommentCreate extends Component {
       comment: ''
     };
     let loc = window.location.pathname;
-    this.pageShip = loc.includes("/==/web") ? loc.split('/')[2] : `~${this.props.api.authTokens.ship}`
+    this.pageShip = loc.includes("/==/web") ? loc.split('/')[2] : `~${props.api.authTokens.ship}`
   }
 
   createComment() {
@@ -30,7 +30,7 @@ export class CommentCreate extends Component {
       data: TRANSITION_LOADING
     }]);
 
-    // I hate this 
+    // I hate this
     this.setState({comment: ''});
 
     this.props.pushCallback("circle.gram", (rep) => {
