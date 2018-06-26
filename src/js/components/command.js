@@ -73,6 +73,17 @@ export class CommandMenu extends Component {
       }
     });
 
+    Mousetrap.bind('esc', (e) => {
+      if (this.state.view !== "command") {
+        this.cancelView();
+      } else {
+        this.props.storeReports([{
+          type: "menu.toggle",
+          data: {open: false}
+        }]);
+      }
+    });
+
     Mousetrap(this.commandInputRef.current).bind('tab', (e) => {
       if (e.preventDefault) e.preventDefault();
       this.autoComplete();
@@ -92,6 +103,7 @@ export class CommandMenu extends Component {
     Mousetrap.unbind('up');
     Mousetrap.unbind('enter');
     Mousetrap.unbind('tab');
+    Mousetrap.unbind('esc');
   }
 
   onCommandChange(e) {
