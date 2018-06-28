@@ -9,7 +9,6 @@ export class Message extends Component {
     super(props);
 
     this.acceptInvite = this.acceptInvite.bind(this);
-
   }
 
   buildPostTitle(messageDetails) {
@@ -102,10 +101,6 @@ export class Message extends Component {
     }
   }
 
-
-  //render() {
-  //  return (<div>A MESSAGE</div>)
-  //}
   render() {
     if (this.props.details.type === "text") {
       return this.buildPostTitle(this.props.details);

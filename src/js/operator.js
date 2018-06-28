@@ -43,9 +43,16 @@ export class UrbitOperator {
       this.runPoll();
       this.bindInbox();
       this.bindShortcuts();
+      this.bindOperations();
     } else {
       console.error("~~~ ERROR: Must set api.authTokens before operation ~~~");
     }
+  }
+
+  bindOperations() {
+    // warehouse.pushCallback('circle.gram', (rep) => {
+    //   let msg = rep.data.gam;
+    // })
   }
 
   bindShortcuts() {

@@ -3,6 +3,7 @@ import { MessagesReducer } from '/reducers/messages';
 import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
 import { NamesReducer } from '/reducers/names';
+import { DmsReducer } from '/reducers/dms';
 import { router } from '/router';
 
 const REPORT_KEYS = [
@@ -32,6 +33,10 @@ class UrbitWarehouse {
       views: {
         transition: ""
       },
+      dms: {
+        stored: "",
+        stations: []
+      },
       names: {}
     };
 
@@ -41,6 +46,7 @@ class UrbitWarehouse {
     this.configsReducer = new ConfigsReducer();
     this.viewsReducer = new ViewsReducer();
     this.namesReducer = new NamesReducer();
+    this.dmsReducer = new DmsReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
     this.storeReports = this.storeReports.bind(this);
@@ -100,6 +106,7 @@ class UrbitWarehouse {
     this.configsReducer.reduce(newReports, this.store);
     this.viewsReducer.reduce(newReports, this.store);
     this.namesReducer.reduce(newReports, this.store);
+    this.dmsReducer.reduce(newReports, this.store);
 
     console.log('full store = ', this.store);
 
