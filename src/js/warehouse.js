@@ -3,6 +3,7 @@ import { MessagesReducer } from '/reducers/messages';
 import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
 import { NamesReducer } from '/reducers/names';
+import { PublicReducer } from '/reducers/public';
 import { router } from '/router';
 
 const REPORT_KEYS = [
@@ -18,6 +19,7 @@ const REPORT_KEYS = [
   'circle.config.dif.remove/circle.config',
   'circles',
   'transition',
+  'public',
   'menu.toggle'
 ]
 
@@ -32,7 +34,8 @@ class UrbitWarehouse {
       views: {
         transition: ""
       },
-      names: {}
+      names: {},
+      public: {}
     };
 
     this.reports = this.buildReports();
@@ -41,6 +44,7 @@ class UrbitWarehouse {
     this.configsReducer = new ConfigsReducer();
     this.viewsReducer = new ViewsReducer();
     this.namesReducer = new NamesReducer();
+    this.publicReducer = new PublicReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
     this.storeReports = this.storeReports.bind(this);
@@ -100,6 +104,7 @@ class UrbitWarehouse {
     this.configsReducer.reduce(newReports, this.store);
     this.viewsReducer.reduce(newReports, this.store);
     this.namesReducer.reduce(newReports, this.store);
+    this.publicReducer.reduce(newReports, this.store);
 
     console.log('full store = ', this.store);
 
