@@ -195,58 +195,56 @@ export function getStationDetails(station, config = {}, usership) {
   return ret;
 }
 
-export function getMessageContent(msg, stationDetails) {
-  let ret = {};
+export function getMessageContent(msg) {
+  let ret;
 
-  //let stationDetails
+  const MESSAGE_TYPES = {
+    'sep.app.sep.fat.sep.lin.msg': 'app',
+    'sep.app.sep.lin.msg': 'app',
+    'sep.fat.sep.lin.msg': (msg) => {
+      let station = msg.aud[0];
+      let stationDetails = getStationDetails(station);
 
-  switch (stationDetails.type) {
-    case "inbox":
-    case "dm":
-    case "chat":
-      if (_.has(msg, 'sep.app.sep.fat')) {
-        ret.type = "app";
-        // I imagine this causting problems someday
-        ret.content = msg.sep.app.sep.fat.sep.lin.msg;
-      } else if (_.has(msg, 'sep.url')) {
-        ret.type = "url";
-        ret.content = msg.sep.url;
-      } else if (_.has(msg, 'sep.app.sep.lin')) {
-        ret.type = "app";
-        ret.content = msg.sep.app.sep.lin.msg;
-      } else if (_.has(msg, 'sep.inv')) {
-        ret.type = "inv";
-        ret.content = `invite to ${msg.sep.inv.cir}...`;
-        ret.station = msg.sep.inv.cir;
-      } else if (_.has(msg, "sep.exp")) {
-        ret.type = "exp";
-        ret.content = msg.sep.exp.exp;
-        ret.res = msg.sep.exp.res.join('\n');
-      } else {
-        ret.type = "lin";
-        try {
-          ret.content = msg.sep.lin.msg;
-        } catch(e) {
-          // no idea what this is: punt
-          ret.content = "~~Cannot display message~~";
-        }
+      let metadata = msg.sep.fat.sep.lin.msg.split("|");
+      let content = msg.sep.fat.tac.text.substr(0, 500);
+      let postId = metadata[0];
+      let postTitle = metadata[1] || content.substr(0, 20);
+      let postUrl = `${stationDetails.stationUrl}/${metadata[0]}`;
+
+      return {
+        type: 'newpost',
+        content,
+        postId,
+        postTitle,
+        postUrl
       }
-      break;
-    case "text":
-      if (_.has(msg, 'sep.lin.msg')) {
-        ret.content = msg.sep.lin.msg
-      } else if (_.has(msg, 'sep.fat.sep.lin.msg')) {
-        let metadata = msg.sep.fat.sep.lin.msg.split("|");
-        ret.content = msg.sep.fat.tac.text.substr(0, 500);
-        ret.postId = metadata[0];
-        ret.postTitle = metadata[1] || ret.content.substr(0, 20);
-        ret.postUrl = `${stationDetails.stationUrl}/${metadata[0]}`;
+    },
+    'sep.fat.tac.text': 'comment',
+    'sep.inv.cir': 'inv',
+    'sep.lin.msg': 'lin',
+    'sep.url': 'url',
+    'sep.exp': (msg) => {
+      return {
+        type: "exp",
+        content: msg.sep.exp.exp,
+        res: msg.sep.exp.res.join('\n')
       }
-      break;
-    case "text-topic":
-      ret.content = msg.sep.fat.tac.text;
-      break;
+    },
   }
+
+  Object.arrayify(MESSAGE_TYPES).some(({key, value}) => {
+    if (_.has(msg, key)) {
+      if (typeof value === "string") {
+        ret = {
+          type: value,
+          content: _.get(msg, key)
+        }
+      } else if (typeof value === "function") {
+        ret = value(msg);
+      }
+      return true;
+    }
+  });
 
   return ret;
 }

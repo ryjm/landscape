@@ -36,7 +36,7 @@ export class InboxPage extends Component {
     let lastAut = "";
 
     let messageRows = section.msgs.map((msg, i) => {
-      let messageDetails = getMessageContent(msg, section.details);
+      let messageDetails = getMessageContent(msg);
       let rowAuthor = null;
 
       if (lastAut !== msg.aut) {
