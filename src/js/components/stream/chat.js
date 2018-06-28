@@ -251,7 +251,7 @@ export class ChatPage extends Component {
     let chatMessages = chatRows.map((msg) => {
       let autLabel = msg.printship ? prettyShip(`~${msg.aut}`)[0] : null;
       let appClass = msg.app ? " chat-msg-app" : "";
-      let details = getMessageContent(msg, {type: "chat"});
+      let details = getMessageContent(msg);
 
       if (msg.date) {
         return (

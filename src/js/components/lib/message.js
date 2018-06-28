@@ -107,11 +107,11 @@ export class Message extends Component {
     } else if (this.props.details.type === "inv") {
       return (
         <div className="invite">
-          {this.props.details.content}
+          invite to {this.props.details.content}...
           <Button
             classes="btn btn-primary accept"
             action={this.acceptInvite}
-            actionData={{station: this.props.details.station, response: "yes"}}
+            actionData={{station: this.props.details.content, response: "yes"}}
             pushCallback={this.props.pushCallback}
             responseKey="circle.config.dif.full"
             content="Yes"
