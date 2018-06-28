@@ -148,8 +148,6 @@ export class CommandMenu extends Component {
         options.push({
           name: `go ${details.station}`,
           action: () => {
-            console.log('this? = ', this);
-
             let targetUrl = (details.type === "text-topic") ? details.postUrl : details.stationUrl
             this.props.transitionTo(details.stationUrl);
           },

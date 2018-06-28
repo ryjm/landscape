@@ -47,8 +47,6 @@ export class CommandForm extends Component {
   }
 
   focusChange(e) {
-    console.log("focus! ", e.target.name)
-
     this.setState({
       focused: e.target.name
     });
@@ -56,8 +54,6 @@ export class CommandForm extends Component {
 
   onBlur(e) {
     let valid = this.validateField(e.target.name, e.target.value);
-
-    console.log("valid? ", valid);
 
     this.setState({
       errorList: (valid) ?
