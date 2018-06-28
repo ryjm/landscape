@@ -15,7 +15,6 @@ export class CollectionPreview extends Component {
     return {__html: string};
   }
   snipUrl(url, ship) {
-    console.log('this', this);
     if (!url.includes(`~${ship}`)) {
       return `${this.cleanSig(url)}.x-collections-snip`
     } else {

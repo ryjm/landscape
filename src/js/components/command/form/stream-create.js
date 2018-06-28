@@ -34,7 +34,6 @@ export class CommandFormStreamCreate extends Component {
         validate: (value) => value === "yes" || value === "no"
       }],
       submit: function() {
-        debugger
         this.props.storeReports([{
           type: "transition",
           data: TRANSITION_LOADING
