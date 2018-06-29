@@ -167,8 +167,11 @@ export class CommandMenu extends Component {
       options.push({
         name: `dm ~${name}`,
         action: () => {
-          // TODO: This should check for existing DM circles & redirect to that
-          alert('not implement yet, sorry');
+          let members = [this.props.api.authTokens.ship, name]
+          let station = `${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
+          let stationDetails = getStationDetails(station);
+
+          this.props.transitionTo(stationDetails.stationUrl);
         },
         displayText: `dm ~${name}`,
         helpText: `Send a direct message to ~${name}`

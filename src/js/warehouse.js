@@ -33,10 +33,7 @@ class UrbitWarehouse {
       views: {
         transition: ""
       },
-      dms: {
-        stored: "",
-        stations: []
-      },
+      dmStations: [],
       names: {}
     };
 

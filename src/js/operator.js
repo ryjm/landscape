@@ -3,6 +3,7 @@ import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 import { warehouse } from '/warehouse';
 import { router } from '/router';
+import { getMessageContent, isDMStation } from '/lib/util';
 
 /**
   Response format
@@ -50,9 +51,30 @@ export class UrbitOperator {
   }
 
   bindOperations() {
-    // warehouse.pushCallback('circle.gram', (rep) => {
-    //   let msg = rep.data.gam;
-    // })
+    warehouse.pushCallback('circles', rep => {
+      console.log('circles -- call made!');
+
+      warehouse.pushCallback('circle.gram', (rep) => {
+        let msg = rep.data.gam;
+        let details = getMessageContent(msg);
+
+        console.log('circles -- circle.gram!', details);
+
+        if (details.type === "inv" && isDMStation(details.content)) {
+          console.log('circles -- invite!');
+          let circle = details.content.split("/")[1];
+          let ownStation = `${api.authTokens.ship}/${circle}`
+
+          if (!warehouse.store.dmStations.includes(ownStation)) {
+            console.log('circles -- creating station!');
+            this.createDMStation(ownStation);
+            // TODO: Mark invite as accepted
+          }
+        }
+      })
+
+      return true;
+    });
   }
 
   bindShortcuts() {
@@ -84,6 +106,43 @@ export class UrbitOperator {
 
     // delete subscriptions when you're done with them, like...
     // this.bind("/circle/inbox/grams/0", "DELETE");
+  }
+
+  createDMStation(station) {
+    let circle = station.split("/")[1];
+    let everyoneElse = circle.split(".").filter((ship) => ship !== api.authTokens.ship);
+
+    api.hall({
+      create: {
+        nom: circle,
+        des: "dm",
+        sec: "village"
+      }
+    });
+
+    warehouse.pushCallback("circles", (rep) => {
+      api.hall({
+        source: {
+          nom: 'inbox',
+          sub: true,
+          srs: [`~${api.authTokens.ship}/${rep.data.cir}`]
+        }
+      })
+    });
+
+    warehouse.pushCallback("circle.config.dif.full", (rep) => {
+      api.permit(circle, everyoneElse, false);
+    });
+
+    warehouse.pushCallback("circle.config.dif.full", (rep) => {
+      api.hall({
+        source: {
+          nom: circle,
+          sub: true,
+          srs: [station]
+        }
+      })
+    });
   }
 
   runPoll() {
