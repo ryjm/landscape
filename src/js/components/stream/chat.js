@@ -3,7 +3,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
-import { prettyShip, isUrl, uuid, getMessageContent } from '/lib/util';
+import { prettyShip, isUrl, uuid, getMessageContent, isDMStation } from '/lib/util';
 import { createDMStation } from '/services';
 
 export class ChatPage extends Component {
@@ -111,11 +111,14 @@ export class ChatPage extends Component {
     let aud, sep;
     let config = this.props.store.configs[this.state.station];
 
-    if (config.cap === "dm") {
-      aud = config.con.sis.map((mem) => `~${mem}/${this.state.circle}`);
+    if (isDMStation(this.state.station)) {
+      aud = this.state.station
+        .split("/")[1]
+        .split(".")
+        .map((mem) => `~${mem}/${this.state.circle}`);
+
     } else {
       aud = [this.state.station];
-
     }
 
     if (isUrl(this.state.message)) {

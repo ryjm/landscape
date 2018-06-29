@@ -11,6 +11,7 @@ export class Header extends Component {
     super(props);
 
     this.toggleSubscribe = this.toggleSubscribe.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
   }
 
   isSubscribed() {
@@ -31,12 +32,19 @@ export class Header extends Component {
     });
   }
 
+  toggleMenu() {
+    this.props.storeReports([{
+      type: "menu.toggle",
+      data: {open: true}
+    }]);
+  }
+
   defaultHeader() {
     let headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <div style={{width: "24px", height: "24px"}}></div>;
     return (
       <div className="flex">
         <div className="flex align-center">
-          <a href="/~~/pages/nutalk/menu" className="mr-22">
+          <a onClick={this.toggleMenu} className="mr-22">
             <div className="panini"></div>
           </a>
           <div className="mr-8">{headerIcon}</div>
@@ -68,7 +76,7 @@ export class Header extends Component {
         return (
           <div className="flex space-between">
             <div className="flex align-center">
-              <a href="/~~/pages/nutalk/menu" className="mr-22">
+              <a onClick={this.toggleMenu} className="mr-22">
                 <div className="panini"></div>
               </a>
               <div className="mr-8">{headerIcon}</div>
@@ -104,7 +112,7 @@ export class Header extends Component {
         return (
           <div className="flex space-between">
             <div className="flex align-center">
-              <a href="/~~/pages/nutalk/menu" className="mr-22">
+              <a onClick={this.toggleMenu} className="mr-22">
                 <div className="panini"></div>
               </a>
               <div className="mr-8">{headerIcon}</div>
@@ -139,7 +147,7 @@ export class Header extends Component {
         return (
           <div className="flex space-between">
             <div className="flex align-center">
-              <a href="/~~/pages/nutalk/menu" className="mr-22">
+              <a onClick={this.toggleMenu} className="mr-22">
                 <div className="panini"></div>
               </a>
               <div className="mr-8">{headerIcon}</div>
@@ -162,7 +170,7 @@ export class Header extends Component {
         return (
           <div className="flex">
             <div className="flex align-center">
-              <a href="/~~/pages/nutalk/menu" className="mr-22">
+              <a onClick={this.toggleMenu} className="mr-22">
                 <div className="panini"></div>
               </a>
               <div className="mr-8">{headerIcon}</div>

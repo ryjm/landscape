@@ -20,6 +20,7 @@ export class CommandMenu extends Component {
 
     this.onCommandChange = this.onCommandChange.bind(this);
     this.cancelView = this.cancelView.bind(this);
+    this.closeMenu = this.closeMenu.bind(this);
 
     this.commandInputRef = React.createRef();
   }
@@ -89,6 +90,13 @@ export class CommandMenu extends Component {
       if (e.preventDefault) e.preventDefault();
       this.autoComplete();
     });
+  }
+
+  closeMenu() {
+    this.props.storeReports([{
+      type: "menu.toggle",
+      data: {open: false}
+    }]);
   }
 
   autoComplete() {
@@ -357,7 +365,7 @@ export class CommandMenu extends Component {
       <div className="container command-page">
         <div className="row">
           <div className="col-sm-1">
-            <div className="cross" onClick={this.crossClick}></div>
+            <div className="cross" onClick={this.closeMenu}></div>
           </div>
           <div className="col-sm-11">
             <div className="command-input-placeholder-wrapper" data-placeholder={placeholder} disabled={disabled}>
