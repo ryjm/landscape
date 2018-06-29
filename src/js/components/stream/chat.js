@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
 import { prettyShip, isUrl, uuid, getMessageContent } from '/lib/util';
+import { createDMStation } from '/services';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -22,7 +23,8 @@ export class ChatPage extends Component {
       message: "",
       invitee: "",
       numMessages: 0,
-      scrollLocked: true
+      scrollLocked: true,
+      dmStationCreated: false
     };
 
     this.messageChange = this.messageChange.bind(this);
@@ -49,6 +51,17 @@ export class ChatPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.store.dms.stored === true &&
+        !this.props.store.dms.stations.includes(this.state.station.split("/")[1]) &&
+        !this.state.dmStationCreated)
+    {
+      createDMStation(this.state.station, false);
+
+      this.setState({
+        dmStationCreated: true
+      });
+    }
+
     let station = prevProps.store.messages.stations[this.state.station] || [];
     let numMessages = station.length;
 
