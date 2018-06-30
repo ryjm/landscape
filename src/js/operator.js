@@ -70,7 +70,7 @@ export class UrbitOperator {
     // this.bind("/client", "PUT");
 
     // public membership
-    // this.bind("/public", "PUT");
+    api.bind("/public", "PUT");
 
     // bind to collections
     // this.bind("/", "PUT", "collections");

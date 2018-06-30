@@ -10,7 +10,6 @@
   visi.conf.coll
 --
 ^-  manx
-
 ;div.profile-page
   ;input(type "hidden", name "urb-header", value "profile", ship "{(scow %p p.bem.gas)}");
   ;div.profile-banner
@@ -29,24 +28,24 @@
   ;div.container
     ;div.row
       ;div.col-sm-offset-2.col-sm-10
-        ;div.text-700.mt-8: Blogs, Forum and Notes
-        ;ul
-          ;div;
-          ;*  %+  turn
-                %+  sort
-                  %+  skim
-                    ~(tap by all-colls)
-                  is-pro
-                |=  [a=(pair knot *) b=(pair knot *)]
-                (gth (unt:chrono:userlib (slav %da p.a)) (unt:chrono:userlib (slav %da p.b)))
-              |=  [t=knot col=collection:collections]
-              ;div.mt-2.text-500
-                ;a(href "/~~/{(scow %p p.bem.gas)}/==/web/collections/{(trip t)}")
-                  ; {(trip desc.conf.col)}
-                ==
-              ==
-        ==
-        ;div.text-700.mt-8: Chats
+        ::;div.text-700.mt-8: Blogs, Forum and Notes
+        ::;ul
+        ::  ;div;
+        ::  ;*  %+  turn
+        ::        %+  sort
+        ::          %+  skim
+        ::            ~(tap by all-colls)
+        ::          is-pro
+        ::        |=  [a=(pair knot *) b=(pair knot *)]
+        ::        (gth (unt:chrono:userlib (slav %da p.a)) (unt:chrono:userlib (slav %da p.b)))
+        ::      |=  [t=knot col=collection:collections]
+        ::      ;div.mt-2.text-500
+        ::        ;a(href "/~~/{(scow %p p.bem.gas)}/==/web/collections/{(trip t)}")
+        ::          ; {(trip desc.conf.col)}
+        ::        ==
+        ::      ==
+        ::==
+        ::;div.text-700.mt-8: Chats
         ;div(urb-component "ChatList", urb-hostship "{(scow %p p.bem.gas)}");
         ;div.text-700.mt-8: Meta
         ;div.mt-2.text-500.row
