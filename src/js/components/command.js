@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
-import { getStationDetails } from '/lib/util';
+import { getStationDetails, isDMStation } from '/lib/util';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
 import urbitOb from 'urbit-ob';
@@ -148,6 +148,8 @@ export class CommandMenu extends Component {
     let options = [];
 
     Object.arrayify(this.props.store.names).forEach(({key: ship, value: stations}) => {
+      stations = stations.filter(s => !isDMStation(`~${ship}/${s}`));
+
       stations.forEach(station => {
         let stationName = `~${ship}/${station}`;
         let details = getStationDetails(stationName, this.props.store.configs[stationName], this.props.api.authTokens.ship);
