@@ -4,6 +4,7 @@ import { api } from '/api';
 import { warehouse } from '/warehouse';
 import { router } from '/router';
 import { operator } from "/operator";
+import * as util from '/lib/util';
 
 console.log('app running');
 
@@ -24,3 +25,5 @@ fetch('/~/auth.json',{credentials: "same-origin"}).then((res) => {
   router.start();
   operator.start();
 });
+
+window.util = util;

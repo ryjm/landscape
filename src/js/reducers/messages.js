@@ -80,9 +80,11 @@ export class MessagesReducer {
         let msgDetails = getMessageContent(m);
         let typeApp = msgDetails.type === "app";
         let typeInv = msgDetails.type === "inv";
+        let isDmInvite = typeInv && isDMStation(msgDetails.content);
         let hasResponded = msgDetails.content === "~zod/null";
 
         if (typeApp) return false;
+        if (isDmInvite) return false;
         if (typeInv && hasResponded) return false;
 
         return true;
@@ -90,9 +92,9 @@ export class MessagesReducer {
       .slice(0, INBOX_MESSAGE_COUNT)    // grab the first 30 or so
       .value();                         // unwrap lodash chain
 
-    // for (let msg of ret) {
-    //   console.log(`msg ${msg.uid}: ${msg.wen}`);
-    // }
+    for (let msg of ret) {
+      console.log(`msg ${msg.uid}: ${msg.wen}`);
+    }
 
     store.messages.inboxMessages = ret;
   }

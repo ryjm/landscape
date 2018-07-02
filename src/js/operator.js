@@ -64,21 +64,22 @@ export class UrbitOperator {
 
         if (!warehouse.store.dms.stations.includes(circle)) {
           createDMStation(xenoStation, true);
-
-          let newSep = {
-            sep: {
-              inv: {
-                inv: true,
-                cir: "~zod/null"
-              }
-            }
-          };
-
-          api.hall({convey: [{
-            ...msg,
-            ...newSep
-          }]});
         }
+
+        let newSep = {
+          sep: {
+            inv: {
+              inv: true,
+              cir: "~zod/null"
+            }
+          },
+          wen: (new Date()).getTime()
+        };
+
+        api.hall({convey: [{
+          ...msg,
+          ...newSep
+        }]});
       }
     })
   }

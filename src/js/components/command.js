@@ -277,23 +277,39 @@ export class CommandMenu extends Component {
     return null;
   }
 
+  addTentativeOption(cmd, directive) {
+    let option;
+
+    if (directive === "dm") {
+      let name = cmd.split(" ")[1].substr(1)
+      option = this.buildDmOption(name);
+    }
+
+    return option;
+  }
+
   getOptionList(cmd) {
     let options;
 
+    let trimmedCmd = this.trimCmd(cmd);
+
     let directiveOptions = this.getDirectiveOptionsList();
-    let directive = this.getDirective(cmd, directiveOptions);
+    let directive = this.getDirective(trimmedCmd, directiveOptions);
 
     if (directive) {
       options = directiveOptions[directive];
-      if (directive === "dm" && options.every(o => o.name !== cmd)) {
-        let name = cmd.split(" ")[1].substr(1)
-        options.push(this.buildDmOption(name));
+
+      // if there are no options with the exact name of the current command,
+      // create an extra option with the current command
+      if (options.every(o => o.name !== trimmedCmd)) {
+        let extraOption = this.addTentativeOption(trimmedCmd, directive);
+        if (extraOption) options.push(extraOption);
       }
     } else {
       options = this.getRootOptionList();
     }
 
-    options = options.filter(opt => opt.name.includes(this.trimCmd(cmd)));
+    options = options.filter(opt => opt.name.includes(trimmedCmd));
 
     return options;
   }
