@@ -4,6 +4,7 @@ import { CommandHelpItem } from '/components/command/help-item';
 import { getStationDetails } from '/lib/util';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
+import urbitOb from 'urbit-ob';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
 
@@ -172,21 +173,27 @@ export class CommandMenu extends Component {
     let options = [];
 
     Object.keys(this.props.store.names).forEach(name => {
-      options.push({
-        name: `dm ~${name}`,
-        action: () => {
-          let members = [this.props.api.authTokens.ship, name]
-          let station = `${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
-          let stationDetails = getStationDetails(station);
-
-          this.props.transitionTo(stationDetails.stationUrl);
-        },
-        displayText: `dm ~${name}`,
-        helpText: `Send a direct message to ~${name}`
-      });
+      options.push(this.buildDmOption(name));
     });
 
     return options;
+  }
+
+  buildDmOption(name) {
+    return {
+      name: `dm ~${name}`,
+      action: () => {
+        if (urbitOb.isShip(name)) {
+          let members = [this.props.api.authTokens.ship, name]
+          let station = `~${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
+          let stationDetails = getStationDetails(station);
+
+          this.props.transitionTo(stationDetails.stationUrl);
+        }
+      },
+      displayText: `dm ~${name}`,
+      helpText: `Send a direct message to ~${name}`
+    }
   }
 
   getNewOptionList() {
@@ -278,6 +285,10 @@ export class CommandMenu extends Component {
 
     if (directive) {
       options = directiveOptions[directive];
+      if (directive === "dm" && options.every(o => o.name !== cmd)) {
+        let name = cmd.split(" ")[1].substr(1)
+        options.push(this.buildDmOption(name));
+      }
     } else {
       options = this.getRootOptionList();
     }

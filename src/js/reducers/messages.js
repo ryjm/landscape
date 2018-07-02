@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { getMessageContent, isDMStation } from '/lib/util';
 
 const INBOX_MESSAGE_COUNT = 30;
 
@@ -70,8 +71,22 @@ export class MessagesReducer {
     let ret = _(store.messages.inboxMessages)
       .slice()                          // make a shallow copy
       .concat(msgGams)                  // add new messages
-      .uniqBy('uid')                    // dedupe
       .sort((a, b) => b.wen - a.wen)    // sort by date
+      // sort must come before uniqBy! if uniqBy detects a dupe, it takes
+      // earlier element in the array. since we want later timestamps to
+      // override, sort first
+      .uniqBy('uid')                    // dedupe
+      .filter(m => {
+        let msgDetails = getMessageContent(m);
+        let typeApp = msgDetails.type === "app";
+        let typeInv = msgDetails.type === "inv";
+        let hasResponded = msgDetails.content === "~zod/null";
+
+        if (typeApp) return false;
+        if (typeInv && hasResponded) return false;
+
+        return true;
+      })                                // filter out messages
       .slice(0, INBOX_MESSAGE_COUNT)    // grab the first 30 or so
       .value();                         // unwrap lodash chain
 

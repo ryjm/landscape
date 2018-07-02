@@ -95,7 +95,8 @@ export class Message extends Component {
     }
 
     if (isDMStation(actionData.station)) {
-      this.createDMStation(actionData.station);
+      // this.createDMStation(actionData.station);
+      console.log('~~~ ERROR: dm station invites should be automatically accepted ~~~');
     } else {
       this.subStation(actionData.station);
     }

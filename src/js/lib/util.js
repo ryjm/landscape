@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import urbitOb from 'urbit-ob';
 
 export function capitalize(str) {
   return `${str[0].toUpperCase()}${str.substr(1)}`;
@@ -54,6 +55,14 @@ export function parseCollCircle(st) {
 export function isPatTa(str) {
   const r = /^[a-z,0-9,\-,\.,_,~]+$/.exec(str)
   return !!r;
+}
+
+export function isValidStation(st) {
+  let tokens = st.split("/")
+
+  if (tokens.length !== 2) return false;
+
+  return urbitOb.isShip(tokens[0]) && isPatTa(tokens[1]);
 }
 
 export function daToDate(st) {
