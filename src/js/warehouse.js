@@ -4,6 +4,7 @@ import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
 import { NamesReducer } from '/reducers/names';
 import { PublicReducer } from '/reducers/public';
+import { DmsReducer } from '/reducers/dms';
 import { router } from '/router';
 
 const REPORT_KEYS = [
@@ -35,7 +36,11 @@ class UrbitWarehouse {
         transition: ""
       },
       names: {},
-      public: {}
+      public: {},
+      dms: {
+        stored: false,
+        stations: []
+      },
     };
 
     this.reports = this.buildReports();
@@ -45,6 +50,7 @@ class UrbitWarehouse {
     this.viewsReducer = new ViewsReducer();
     this.namesReducer = new NamesReducer();
     this.publicReducer = new PublicReducer();
+    this.dmsReducer = new DmsReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
     this.storeReports = this.storeReports.bind(this);
@@ -104,6 +110,7 @@ class UrbitWarehouse {
     this.configsReducer.reduce(newReports, this.store);
     this.viewsReducer.reduce(newReports, this.store);
     this.namesReducer.reduce(newReports, this.store);
+    this.dmsReducer.reduce(newReports, this.store);
     this.publicReducer.reduce(newReports, this.store);
 
     console.log('full store = ', this.store);

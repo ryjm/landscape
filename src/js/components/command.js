@@ -4,6 +4,7 @@ import { CommandHelpItem } from '/components/command/help-item';
 import { getStationDetails } from '/lib/util';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
+import urbitOb from 'urbit-ob';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
 
@@ -20,6 +21,7 @@ export class CommandMenu extends Component {
 
     this.onCommandChange = this.onCommandChange.bind(this);
     this.cancelView = this.cancelView.bind(this);
+    this.closeMenu = this.closeMenu.bind(this);
 
     this.commandInputRef = React.createRef();
   }
@@ -89,6 +91,13 @@ export class CommandMenu extends Component {
       if (e.preventDefault) e.preventDefault();
       this.autoComplete();
     });
+  }
+
+  closeMenu() {
+    this.props.storeReports([{
+      type: "menu.toggle",
+      data: {open: false}
+    }]);
   }
 
   autoComplete() {
@@ -164,18 +173,27 @@ export class CommandMenu extends Component {
     let options = [];
 
     Object.keys(this.props.store.names).forEach(name => {
-      options.push({
-        name: `dm ~${name}`,
-        action: () => {
-          // TODO: This should check for existing DM circles & redirect to that
-          alert('not implement yet, sorry');
-        },
-        displayText: `dm ~${name}`,
-        helpText: `Send a direct message to ~${name}`
-      });
+      options.push(this.buildDmOption(name));
     });
 
     return options;
+  }
+
+  buildDmOption(name) {
+    return {
+      name: `dm ~${name}`,
+      action: () => {
+        if (urbitOb.isShip(name)) {
+          let members = [this.props.api.authTokens.ship, name]
+          let station = `~${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
+          let stationDetails = getStationDetails(station);
+
+          this.props.transitionTo(stationDetails.stationUrl);
+        }
+      },
+      displayText: `dm ~${name}`,
+      helpText: `Send a direct message to ~${name}`
+    }
   }
 
   getNewOptionList() {
@@ -259,19 +277,39 @@ export class CommandMenu extends Component {
     return null;
   }
 
+  addTentativeOption(cmd, directive) {
+    let option;
+
+    if (directive === "dm") {
+      let name = cmd.split(" ")[1].substr(1)
+      option = this.buildDmOption(name);
+    }
+
+    return option;
+  }
+
   getOptionList(cmd) {
     let options;
 
+    let trimmedCmd = this.trimCmd(cmd);
+
     let directiveOptions = this.getDirectiveOptionsList();
-    let directive = this.getDirective(cmd, directiveOptions);
+    let directive = this.getDirective(trimmedCmd, directiveOptions);
 
     if (directive) {
       options = directiveOptions[directive];
+
+      // if there are no options with the exact name of the current command,
+      // create an extra option with the current command
+      if (options.every(o => o.name !== trimmedCmd)) {
+        let extraOption = this.addTentativeOption(trimmedCmd, directive);
+        if (extraOption) options.push(extraOption);
+      }
     } else {
       options = this.getRootOptionList();
     }
 
-    options = options.filter(opt => opt.name.includes(this.trimCmd(cmd)));
+    options = options.filter(opt => opt.name.includes(trimmedCmd));
 
     return options;
   }
@@ -354,7 +392,7 @@ export class CommandMenu extends Component {
       <div className="container command-page">
         <div className="row">
           <div className="col-sm-1">
-            <div className="cross" onClick={this.crossClick}></div>
+            <div className="cross" onClick={this.closeMenu}></div>
           </div>
           <div className="col-sm-11">
             <div className="command-input-placeholder-wrapper" data-placeholder={placeholder} disabled={disabled}>

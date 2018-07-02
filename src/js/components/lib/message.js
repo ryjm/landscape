@@ -9,7 +9,6 @@ export class Message extends Component {
     super(props);
 
     this.acceptInvite = this.acceptInvite.bind(this);
-
   }
 
   buildPostTitle(messageDetails) {
@@ -96,16 +95,13 @@ export class Message extends Component {
     }
 
     if (isDMStation(actionData.station)) {
-      this.createDMStation(actionData.station);
+      // this.createDMStation(actionData.station);
+      console.log('~~~ ERROR: dm station invites should be automatically accepted ~~~');
     } else {
       this.subStation(actionData.station);
     }
   }
 
-
-  //render() {
-  //  return (<div>A MESSAGE</div>)
-  //}
   render() {
     if (this.props.details.type === "text") {
       return this.buildPostTitle(this.props.details);
