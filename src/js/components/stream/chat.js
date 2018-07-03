@@ -17,9 +17,9 @@ export class ChatPage extends Component {
     let host = station.split("/")[0].substr(1);
 
     this.state = {
-      station: station,
-      circle: circle,
-      host: host,
+      station,
+      circle,
+      host,
       message: "",
       invitee: "",
       numMessages: 0,
@@ -51,7 +51,13 @@ export class ChatPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    this.createDMStationIfNeeded();
+    this.updateNumMessagesLoaded(prevProps, prevState);
+  }
+
+  createDMStationIfNeeded() {
     if (this.props.store.dms.stored === true &&
+        isDMStation(this.state.station) &&
         !this.props.store.dms.stations.includes(this.state.station.split("/")[1]) &&
         !this.state.dmStationCreated)
     {
@@ -61,7 +67,9 @@ export class ChatPage extends Component {
         dmStationCreated: true
       });
     }
+  }
 
+  updateNumMessagesLoaded(prevProps, prevState) {
     let station = prevProps.store.messages.stations[this.state.station] || [];
     let numMessages = station.length;
 

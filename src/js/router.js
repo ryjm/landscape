@@ -33,7 +33,6 @@ class UrbitRouter {
         storeReports={warehouse.storeReports}
         pushCallback={warehouse.pushCallback}
         transitionTo={this.transitionTo}
-        queryParams={getQueryParams()}
         scaffold={this.scaffold} />
     )
 
@@ -72,8 +71,6 @@ class UrbitRouter {
   }
 
   transitionTo(targetUrl, noHistory) {
-    console.log("Transition to: ", this.filterUrl(targetUrl));
-
     warehouse.storeReports([{
       type: "transition",
       data: TRANSITION_LOADING
@@ -96,8 +93,6 @@ class UrbitRouter {
         type: "menu.toggle",
         data: {open: false}
       }]);
-
-      this.renderRoot();
     });
   }
 

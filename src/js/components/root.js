@@ -51,7 +51,7 @@ export class Root extends Component {
           storeReports: this.props.storeReports,
           pushCallback: this.props.pushCallback,
           transitionTo: this.props.transitionTo,
-          queryParams: this.props.queryParams,
+          queryParams: getQueryParams(),
         }, propsObj));
       }
     }, {
