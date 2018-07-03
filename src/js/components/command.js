@@ -71,8 +71,8 @@ export class CommandMenu extends Component {
 
     Mousetrap.bind('enter', (e) => {
       if (this.state.selectedOption !== null) {
-        this.autoComplete();
         this.processCommand(this.state.options[this.state.selectedOption]);
+        this.autoComplete();
       }
     });
 
