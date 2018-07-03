@@ -12,7 +12,9 @@ export class ChatPage extends Component {
 
     this.presence = false;
 
-    let station = props.queryParams.station;
+    // // TODO: This is bad. Issue is that queryParams aren't being loaded properly
+    let station = props.queryParams.station || "~zod/null";
+
     let circle = station.split("/")[1];
     let host = station.split("/")[0].substr(1);
 
@@ -265,6 +267,9 @@ export class ChatPage extends Component {
   }
 
   render() {
+    // TODO: This is bad. Issue is that props aren't being loaded properly
+    if (this.state.station === "~zod/null") return null;
+
     let station = this.props.store.messages.stations[this.state.station] || [];
 
     this.setPresence(this.state.station);
