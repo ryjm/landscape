@@ -92,9 +92,9 @@ export class MessagesReducer {
       .slice(0, INBOX_MESSAGE_COUNT)    // grab the first 30 or so
       .value();                         // unwrap lodash chain
 
-    for (let msg of ret) {
-      console.log(`msg ${msg.uid}: ${msg.wen}`);
-    }
+    // for (let msg of ret) {
+    //   console.log(`msg ${msg.uid}: ${msg.wen}`);
+    // }
 
     store.messages.inboxMessages = ret;
   }
