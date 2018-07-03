@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { IconBlog } from '/components/lib/icons/icon-blog';
 import { IconStream } from '/components/lib/icons/icon-stream';
-import { getQueryParams, getStationDetails, collectionAuthorization } from '/lib/util';
+import { getQueryParams, getStationDetails, collectionAuthorization, profileUrl } from '/lib/util';
 import { Button } from '/components/lib/button';
 import { TRANSITION_LOADING } from '/lib/constants';
 import _ from 'lodash';
@@ -174,7 +174,7 @@ export class Header extends Component {
                 <div className="panini"></div>
               </a>
               <div className="mr-8">{headerIcon}</div>
-              <h3><a href={`/~~/${this.props.data.ship}/==/web/pages/nutalk/profile`}>Profile</a></h3>
+              <h3><a href={profileUrl(this.props.data.ship)}>Profile</a></h3>
             </div>
           </div>
         )

@@ -115,6 +115,10 @@ export function prettyShip(ship) {
   return [sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship, ship[0] === '~' ? `/~~/${ship}/==/web/pages/nutalk/profile` : `/~~/~${ship}/==/web/pages/nutalk/profile`];
 }
 
+export function profileUrl(ship) {
+  return `/~~/~${ship}/==/web/pages/nutalk/profile`;
+}
+
 export function isDMStation(station) {
   let host = station.split('/')[0].substr(1);
   let circle = station.split('/')[1];
@@ -147,7 +151,7 @@ export function getStationDetails(station, config = {}, usership) {
     config: config,
     host: host,
     cir: station.split("/")[1],
-    hostProfileUrl: `/~~/~${host}/==/web/pages/nutalk/profile`
+    hostProfileUrl: profileUrl(host)
   };
 
   let collParts = parseCollCircle(station);

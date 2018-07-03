@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
-import { getStationDetails, isDMStation } from '/lib/util';
+import { getStationDetails, isDMStation, isValidStation, profileUrl } from '/lib/util';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
 import urbitOb from 'urbit-ob';
@@ -148,34 +148,52 @@ export class CommandMenu extends Component {
     let options = [];
 
     Object.arrayify(this.props.store.names).forEach(({key: ship, value: stations}) => {
-      stations = stations.filter(s => !isDMStation(`~${ship}/${s}`));
-
       stations.forEach(station => {
         let stationName = `~${ship}/${station}`;
-        let details = getStationDetails(stationName, this.props.store.configs[stationName], this.props.api.authTokens.ship);
-
-        let displayText = details.station.split("/").join("  /  ");
-
-        options.push({
-          name: `go ${details.station}`,
-          action: () => {
-            let targetUrl = (details.type === "text-topic") ? details.postUrl : details.stationUrl
-            this.props.transitionTo(details.stationUrl);
-          },
-          displayText: displayText,
-          helpText: `Go to ${station} on ~${ship}`,
-        });
+        if (isDMStation(stationName) || stationName.includes('inbox')) return;
+        options.push(this.buildGoOption(stationName));
       });
+
+      options.push(this.buildGoOption(`~${ship}`));
     });
 
     return options;
+  }
+
+  // term can be '~marzod' or '~marzod/testnet-meta'
+  buildGoOption(term) {
+    let isShip = urbitOb.isShip(term.substr(1));
+    let isStation = isValidStation(term);
+    let details = isStation && getStationDetails(term);
+    let displayTextTerm = isStation ? details.station.split("/").join("  /  ") : term;
+
+    let displayText = `go ${displayTextTerm}`;
+    let helpText = isStation ?
+      `Go to ${details.cir} on ~${details.host}` :
+      `Go to the profile of ${term}`
+
+    return {
+      name: `go ${term}`,
+      action: () => {
+        let targetUrl;
+        if (isShip) {
+          targetUrl = profileUrl(term.substr(1))
+          this.props.transitionTo(targetUrl);
+        } else if (isStation) {
+          targetUrl = (details.type === "text-topic") ? details.postUrl : details.stationUrl
+          this.props.transitionTo(targetUrl);
+        }
+      },
+      displayText,
+      helpText
+    };
   }
 
   getDmOptionList() {
     let options = [];
 
     Object.keys(this.props.store.names).forEach(name => {
-      options.push(this.buildDmOption(name));
+      options.push(this.buildDmOption(`~${name}`));
     });
 
     return options;
@@ -183,18 +201,18 @@ export class CommandMenu extends Component {
 
   buildDmOption(name) {
     return {
-      name: `dm ~${name}`,
+      name: `dm ${name}`,
       action: () => {
-        if (urbitOb.isShip(name)) {
-          let members = [this.props.api.authTokens.ship, name]
+        if (urbitOb.isShip(name.substr(1))) {
+          let members = [this.props.api.authTokens.ship, name.substr(1)]
           let station = `~${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
           let stationDetails = getStationDetails(station);
 
           this.props.transitionTo(stationDetails.stationUrl);
         }
       },
-      displayText: `dm ~${name}`,
-      helpText: `Send a direct message to ~${name}`
+      displayText: `dm ${name}`,
+      helpText: `Send a direct message to ${name}`
     }
   }
 
@@ -231,7 +249,7 @@ export class CommandMenu extends Component {
     }, {
       name: "profile",
       action: () => {
-        this.props.transitionTo(`/~~/~${this.props.api.authTokens.ship}/==/web/pages/nutalk/profile`);
+        this.props.transitionTo(profileUrl(this.props.api.authTokens.ship));
       },
       displayText: "profile",
       helpText: "Go to your profile. Settings and log out are also here",
@@ -283,8 +301,11 @@ export class CommandMenu extends Component {
     let option;
 
     if (directive === "dm") {
-      let name = cmd.split(" ")[1].substr(1)
+      let name = cmd.split(" ")[1];
       option = this.buildDmOption(name);
+    } else if (directive === "go") {
+      let name = cmd.split(" ")[1];
+      option = this.buildGoOption(name);
     }
 
     return option;
