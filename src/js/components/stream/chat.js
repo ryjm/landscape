@@ -44,6 +44,10 @@ export class ChatPage extends Component {
     let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
     this.props.api.bind(path, "PUT", this.state.host);
+
+    if (this.state.scrollLocked && this.scrollbarRef.current) {
+      this.scrollbarRef.current.scrollToBottom();
+    }
   }
 
   componentWillUnmount() {
