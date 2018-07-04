@@ -3,7 +3,6 @@ import _ from 'lodash';
 export class PublicReducer {
   reduce(reports, store) {
     reports.forEach((rep) => {
-      console.log('public reducer', rep);
       if (rep.type == "public") {
         if (_.isArray(rep.data)) {
           rep.data.forEach((c) => {
