@@ -19,7 +19,6 @@ export class CommandMenu extends Component {
       selectedOption: null
     };
 
-    this.onCommandChange = this.onCommandChange.bind(this);
     this.cancelView = this.cancelView.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
 
@@ -104,7 +103,7 @@ export class CommandMenu extends Component {
     let placeholder = this.getPlaceholder();
 
     if (placeholder !== DEFAULT_PLACEHOLDER && placeholder !== "") {
-      this.onCommandChange({target: { value: placeholder}});
+      this.updateCommand(placeholder, false);
     }
   }
 
@@ -116,12 +115,15 @@ export class CommandMenu extends Component {
     Mousetrap.unbind('esc');
   }
 
-  onCommandChange(e) {
-    this.setState({
-      command: e.target.value,
-      options: this.getOptionList(e.target.value),
-      selectedOption: 0
-    });
+  updateCommand(cmd, reselect) {
+    let newState = {
+      command: cmd,
+      options: this.getOptionList(cmd)
+    }
+
+    if (reselect) newState.selectedOption = 0;
+
+    this.setState(newState);
   }
 
   hasHelpToken(cmd) {
@@ -130,7 +132,7 @@ export class CommandMenu extends Component {
 
   processCommand(option) {
     if (typeof option.action === "string") {
-      this.onCommandChange({target: { value: option.action}});
+      this.updateCommand(option.action, true)
     } else if (typeof option.action === "function") {
       option.action();
     }
@@ -377,7 +379,7 @@ export class CommandMenu extends Component {
   }
 
   cancelView() {
-    this.onCommandChange({target: { value: ""}});
+    this.updateCommand("", true);
     this.setState({
       view: "command"
     });
@@ -423,7 +425,7 @@ export class CommandMenu extends Component {
                      name="command-input"
                      className="command-menu-input"
                      disabled={disabled}
-                     onChange={this.onCommandChange}
+                     onChange={(e) => this.updateCommand(e.target.value, true)}
                      onSubmit={this.onCommandSubmit}
                      value={this.state.command}
                      ref={this.commandInputRef}/>
