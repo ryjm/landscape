@@ -5,6 +5,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
 import { prettyShip, isUrl, uuid, getMessageContent, isDMStation } from '/lib/util';
 import { createDMStation } from '/services';
+import classNames from 'classnames';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -26,6 +27,7 @@ export class ChatPage extends Component {
       invitee: "",
       numMessages: 0,
       scrollLocked: true,
+      pendingMessages: [],
       dmStationCreated: false
     };
 
@@ -40,14 +42,32 @@ export class ChatPage extends Component {
     this.scrollbarRef = React.createRef();
   }
 
+  static getDerivedStateFromProps(props, state) {
+    let messages = props.store.messages.stations[state.station] || [];
+    let clearIndexes = [];
+
+    messages.forEach(msg => {
+      state.pendingMessages.forEach((pend, i) => {
+        if (msg.uid === pend.uid) {
+          clearIndexes.push(i);
+        }
+      })
+    });
+
+    _.pullAt(state.pendingMessages, clearIndexes);
+
+    return {
+      ...state,
+      pendingMessages: state.pendingMessages
+    }
+  }
+
   componentDidMount() {
     let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
     this.props.api.bind(path, "PUT", this.state.host);
 
-    if (this.state.scrollLocked && this.scrollbarRef.current) {
-      this.scrollbarRef.current.scrollToBottom();
-    }
+    this.scrollIfLocked();
   }
 
   componentWillUnmount() {
@@ -83,10 +103,14 @@ export class ChatPage extends Component {
       this.setState({
         numMessages: numMessages
       });
+    }
 
-      if (this.state.scrollLocked) {
-        this.scrollbarRef.current.scrollToBottom();
-      }
+    this.scrollIfLocked();
+  }
+
+  scrollIfLocked() {
+    if (this.state.scrollLocked && this.scrollbarRef.current) {
+      this.scrollbarRef.current.scrollToBottom();
     }
   }
 
@@ -123,6 +147,10 @@ export class ChatPage extends Component {
     event.stopPropagation();
 
     let aud, sep;
+    let wen = Date.now();
+    let uid = uuid();
+    let aut = this.props.api.authTokens.ship;
+
     let config = this.props.store.configs[this.state.station];
 
     if (isDMStation(this.state.station)) {
@@ -149,16 +177,20 @@ export class ChatPage extends Component {
     }
 
     let message = {
-      aud: aud,
-      ses: [sep]
+      uid,
+      aut,
+      wen,
+      aud,
+      sep,
     };
 
     this.props.api.hall({
-      phrase: message
+      convey: [message]
     });
 
     this.setState({
-      message: ""
+      message: "",
+      pendingMessages: this.state.pendingMessages.concat({...message, pending: true})
     });
   }
 
@@ -270,35 +302,55 @@ export class ChatPage extends Component {
     }
   }
 
+  buildMessage(msg) {
+    let details = getMessageContent(msg);
+    let autLabel = msg.printship ? prettyShip(`~${msg.aut}`)[0] : null;
+    let appClass = classNames({
+      'row': true,
+      'chat-msg-app': msg.app,
+      'chat-msg-pending': msg.pending
+    });
+
+    if (msg.date) {
+      return (
+        <div className="chat-sep" key={msg.date}>{msg.date}</div>
+      )
+    } else {
+      return (
+        <div key={msg.uid} className={appClass}>
+          <div className="col-sm-2 text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{autLabel}</a></div>
+          <div className="col-sm-8"><Message details={details}></Message></div>
+        </div>
+      )
+    }
+  }
+
+  addPendingMessages(messages) {
+    let msgs = [...messages];
+
+    if (this.state.pendingMessages.length > 0) {
+      this.state.pendingMessages.forEach(pMsg => {
+        let lastIndex = msgs.length - 1;
+        let printship = lastIndex === -1 ? true : msgs[lastIndex] !== this.state.pendingMessages.aut;
+        msgs.push({...pMsg, printship});
+      })
+    }
+
+    return msgs;
+  }
+
   render() {
     // TODO: This is bad. Issue is that props aren't being loaded properly
     if (this.state.station === "~zod/null") return null;
 
-    let station = this.props.store.messages.stations[this.state.station] || [];
+    let messages = this.props.store.messages.stations[this.state.station] || [];
+    messages = this.addPendingMessages(messages);
 
     this.setPresence(this.state.station);
 
-    let chatRows = this.assembleChatRows(station);
+    let chatRows = this.assembleChatRows(messages);
     let chatMembers = this.assembleMembers(this.state.station);
-
-    let chatMessages = chatRows.map((msg) => {
-      let autLabel = msg.printship ? prettyShip(`~${msg.aut}`)[0] : null;
-      let appClass = msg.app ? " chat-msg-app" : "";
-      let details = getMessageContent(msg);
-
-      if (msg.date) {
-        return (
-          <div className="chat-sep" key={msg.date}>{msg.date}</div>
-        )
-      } else {
-        return (
-          <div key={msg.uid} className={`row ${appClass}`}>
-            <div className="col-sm-2 text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{autLabel}</a></div>
-            <div className="col-sm-8"><Message details={details}></Message></div>
-          </div>
-        )
-      }
-    });
+    let chatMessages = chatRows.map(this.buildMessage);
 
     return (
       <div className="container">

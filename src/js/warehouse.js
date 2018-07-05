@@ -29,6 +29,7 @@ class UrbitWarehouse {
     this.store = {
       messages: {
         inboxMessages: [],
+        inboxSrc: [],
         stations: {}
       },
       configs: {},
@@ -138,7 +139,13 @@ class UrbitWarehouse {
   }
 
   pushCallback(key, callback) {
-    this.reports[key].callbacks.push(callback);
+    if (typeof key === "string") {
+      this.reports[key].callbacks.push(callback);
+    } else if (_.isArray(key)) {
+      key.forEach(k => {
+        this.reports[k].callbacks.push(callback);
+      })
+    }
   }
 }
 
