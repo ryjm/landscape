@@ -41,6 +41,9 @@ export class ConfigsReducer {
     Object.keys(configs).forEach((cos) => {
       storeConfigs[cos] = storeConfigs[cos] || {};
       Object.assign(storeConfigs[cos], configs[cos]);
+      if (cos.includes('inbox')) {
+        storeConfigs["inbox"] = configs[cos];
+      }
     });
   }
 

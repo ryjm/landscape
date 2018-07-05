@@ -5,6 +5,7 @@ import { warehouse } from '/warehouse';
 import { router } from '/router';
 import { operator } from "/operator";
 import * as util from '/lib/util';
+import _ from 'lodash';
 
 console.log('app running');
 
@@ -27,3 +28,4 @@ fetch('/~/auth.json',{credentials: "same-origin"}).then((res) => {
 });
 
 window.util = util;
+window._ = _;

@@ -9,7 +9,7 @@ export class CommandForm extends Component {
   constructor(props) {
     super(props);
 
-    let formData = _.reduce(props.form.fields, (obj, field) => {
+    let formData = props.form.fields.reduce((obj, field) => {
       obj[field.name] = "";
       return obj;
     }, {});

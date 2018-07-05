@@ -24,7 +24,7 @@ export class CommandFormStreamCreate extends Component {
         validate: (value) => {
           if (value === "") return true;
           let tokens = value.trim().split("\n").map(t => t.trim());
-          return _.reduce(tokens, (valid, s) => valid && urbitOb.isShip(s) && s.includes("~"), true);
+          return tokens.reduce((valid, s) => valid && urbitOb.isShip(s) && s.includes("~"), true);
         }
       }, {
         name: "visible",

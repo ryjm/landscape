@@ -130,18 +130,6 @@ export class InboxPage extends Component {
     })
   }
 
-  trimAudiences(aud) {
-    if (aud.length === 1) {
-      return aud[0];
-    } else if (isDMStation(aud[0])) {
-      let circle = aud[0].split("/")[1];
-      return `~${this.props.api.authTokens.ship}/${circle}`;
-    } else {
-      console.log("~~~ Error : Multiple audiences, probably inbox ~~~");
-      return aud[0];
-    }
-  }
-
   // Group inbox messages by time-chunked stations, strictly ordered by message time.
   // TODO:  Inbox does not handle messages with multiple audiences very well
   getSectionData() {
@@ -153,7 +141,7 @@ export class InboxPage extends Component {
 
     for (var i = 0; i < inbox.length; i++) {
       let msg = inbox[i];
-      let aud = this.trimAudiences(msg.aud);
+      let aud = msg.aud[0];
 
       if (!_.isEqual(aud, lastStationName)) {
         sections.push({
