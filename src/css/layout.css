@@ -1,0 +1,45 @@
+body {
+  padding-bottom: 40px;
+}
+
+.header-container {
+  padding-top: 1rem;
+}
+
+.header-container h3 a {
+  text-decoration: none;
+}
+
+.header-link {
+  font-size: 3rem;
+  line-height: 3rem;
+
+  font-weight: 500;
+  text-decoration: none;
+
+  text-transform: capitalize;
+}
+
+.sidebar {
+  position: absolute;
+  right: 24rem;
+  top: 48rem;
+}
+
+/*
+  Grid?
+
+  We're kind of using this as a grid. More explanation later.
+*/
+
+.header-icon-menu {
+  flex-basis: 98px;
+}
+
+.header-icon-page {
+  flex-basis: 44px;
+}
+
+.header-title {
+  flex-grow: 1;
+}

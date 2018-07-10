@@ -236,6 +236,7 @@ export function getStationDetails(station, config = {}, usership) {
       break;
     case "chat":
       ret.stationUrl = `/~~/pages/nutalk/stream?station=${station}`;
+      ret.stationDetailsUrl = `/~~/pages/nutalk/stream/details?station=${station}`;
       ret.stationTitle = ret.cir;
       break;
     case "dm":

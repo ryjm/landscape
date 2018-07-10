@@ -26,8 +26,8 @@ form {
 .panini {
   border-top: 5px solid black;
   border-bottom: 5px solid black;
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
 }
 
 .liang {
@@ -70,6 +70,16 @@ form {
   transform: rotate(-45deg);
 
   content: "";
+}
+
+.circle {
+  padding: 0;
+  border-width: 8px;
+  height: 30px;
+  width: 30px;
+
+  position: relative;
+  top: 3px;
 }
 
 .icon-text {
@@ -126,40 +136,10 @@ form {
   color: #EE3124;
 }
 
-/***
-  Form elements
-***/
-
-input, textarea {
-  outline: none;
-}
-
-button.disabled {
-  color: white;
-  cursor: inherit;
-}
-
-.btn {
-  margin-bottom: 0;
-}
-
-.btn-spinner {
-  animation: spin linear 1s infinite;
-  position: relative;
-  left: 5px;
-
-  display: inline-block;
-}
-
-.btn-spinner-lg {
-  font-size: 32px;
-  font-weight: bold;
-  color: #4330FC;
-}
-
-.btn-text {
-  padding: 0;
-  background-color: inherit;
+.timestamp {
+  font-size: 9px;
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+  font-weight: 300;
 }
 
 /***
@@ -215,13 +195,10 @@ input[type="text"], textarea, label {
   line-height: 24px;
 
   border: none;
+  outline: none;
   padding: 0;
 
   font-family: "San Francisco Text", arial;
-}
-
-label {
-  margin-bottom: 2rem;
 }
 
 input[disabled], label[disabled], select[disabled], textarea[disabled], .select-dropdown[disabled] {
@@ -235,6 +212,10 @@ input.input-sm {
   border-width: 1px;
 }
 
+label {
+  margin-bottom: 2rem;
+}
+
 .input-group {
   padding: 10px;
 }
@@ -243,3 +224,37 @@ input.input-sm {
   font-size: 14px;
   font-weight: 600;
 }
+
+button.disabled {
+  color: white;
+  cursor: inherit;
+}
+
+.btn {
+  margin-bottom: 0;
+}
+
+.btn-spinner {
+  animation: spin linear 1s infinite;
+  position: relative;
+  left: 5px;
+
+  display: inline-block;
+}
+
+.btn-spinner-lg {
+  font-size: 32px;
+  font-weight: bold;
+  color: #4330FC;
+}
+
+.btn-text {
+  padding: 0;
+  background-color: inherit;
+}
+
+/**
+  Keyframes
+**/
+
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
