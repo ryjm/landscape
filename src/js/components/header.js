@@ -38,22 +38,6 @@ export class Header extends Component {
       data: {open: true}
     }]);
   }
-  //
-  // defaultHeader() {
-  //   let headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : ;
-  //   return (
-  //     <div className="flex">
-  //       <div className="flex align-center">
-  //         <a onClick={this.toggleMenu} className="mr-22">
-  //           <div className="panini"></div>
-  //         </a>
-  //         <div className="mr-8">{headerIcon}</div>
-  //         <h3><a href={`/~~/pages/nutalk`}>Inbox</a></h3>
-  //         <span className="ml-16"><i>Try using "cmd+k" to open the menu.</i></span>
-  //       </div>
-  //     </div>
-  //   );
-  // }
 
   getHeaderData(type) {
     let headerData = {};
@@ -101,7 +85,7 @@ export class Header extends Component {
   }
 
   buildHeaderContent(headerData) {
-    let actions, subscribeClass, subscribeLabel, iconElem;
+    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem;
 
     if (headerData.station) {
       subscribeClass = (this.isSubscribed(headerData.station)) ? "btn-secondary" : "btn-primary";
@@ -114,10 +98,27 @@ export class Header extends Component {
       })
     }
 
+    if (headerData.breadcrumbs) {
+      breadcrumbsElem = headerData.breadcrumbs.map(({display, href}, i) => {
+        return (
+          <React.Fragment>
+            <a className="header-link header-link-breadcrumb" key={display} href={href}>{display}</a>
+            <span className="header-link header-link-breadcrumb ml-2 mr-2">/</span>
+          </React.Fragment>
+        )
+      })
+    }
+
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
 
     return (
-      <div className="flex align-center">
+      <div>
+        <div className="row">
+          <div className="col-sm-offset-2 col-sm-10">
+            {breadcrumbsElem}
+          </div>
+        </div>
+        <div className="flex align-center">
           <a onClick={this.toggleMenu} className="header-icon-menu">
             <div className="panini"></div>
           </a>
@@ -133,6 +134,7 @@ export class Header extends Component {
               responseKey="circle.config.dif.source"
                />
           }
+        </div>
       </div>
     )
   }
@@ -144,39 +146,6 @@ export class Header extends Component {
   //
   //   let type = (this.props.data.type) ? this.props.data.type : "default";
   //
-  //   switch(type) {
-  //     case "stream":
-  //       station = this.props.data.station;
-  //       if (!station) return null;
-  //       stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
-  //       headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconStream />;
-  //
-  //       if (stationDetails.host === this.props.api.authTokens.ship) {
-  //         actionLink = (<a href={`/~~/pages/nutalk/stream/edit?station=${station}`} className="header-link mr-6">Edit</a>);
-  //       }
-  //
-  //       return (
-  //         <div className="flex space-between">
-  //           <div className="flex align-center">
-  //             <a onClick={this.toggleMenu} className="mr-22">
-  //               <div className="panini"></div>
-  //             </a>
-  //             <div className="mr-8">{headerIcon}</div>
-  //             <h3><a href={stationDetails.stationUrl}>{stationDetails.cir}</a></h3>
-  //           </div>
-  //           <div className="flex align-center">
-  //             {actionLink}
-  //             <Button
-  //               classes={`btn btn-sm${btnClass}`}
-  //               action={this.toggleSubscribe}
-  //               content={btnLabel}
-  //               pushCallback={this.props.pushCallback}
-  //               responseKey="circle.config.dif.source"
-  //                />
-  //           </div>
-  //         </div>
-  //       )
-  //       break;
   //     case "collection":
   //       station = this.props.data.station;
   //       if (!station) return null;
