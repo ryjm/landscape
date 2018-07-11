@@ -14,6 +14,14 @@ export class Header extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.data.type !== this.props.data.type) {
+      return true;
+    }
+
+    return false;
+  }
+
   isSubscribed(station) {
     let inbox = this.props.store.configs[`~${this.props.api.authTokens.ship}/inbox`];
     if (!inbox) return false;
@@ -44,13 +52,14 @@ export class Header extends Component {
 
     switch (type) {
       case "stream":
-        let station = getQueryParams().station;
+        let station = this.props.data.station;
         let stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
 
         headerData = {
           title: {
             display: stationDetails.stationTitle,
-            href: stationDetails.stationUrl
+            href: stationDetails.stationUrl,
+            style: "mono"
           },
           actions: {
             details: stationDetails.stationDetailsUrl,
@@ -65,11 +74,9 @@ export class Header extends Component {
         break;
 
       case "dm":
-        break;
-
       case "collection":
-        break;
-
+      case "edit":
+      case "profile":
       case "default":
       default:
         headerData = {
@@ -85,7 +92,7 @@ export class Header extends Component {
   }
 
   buildHeaderContent(headerData) {
-    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem;
+    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem, headerClass;
 
     if (headerData.station) {
       subscribeClass = (this.isSubscribed(headerData.station)) ? "btn-secondary" : "btn-primary";
@@ -111,10 +118,14 @@ export class Header extends Component {
 
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
 
+    if (headerData.title) {
+      headerClass = headerData.title.style === "mono" ? "header-title header-title-mono" : "header-title";
+    }
+
     return (
       <div>
         <div className="row">
-          <div className="col-sm-offset-2 col-sm-10">
+          <div className="col-sm-offset-2 col-sm-10 mb-0">
             {breadcrumbsElem}
           </div>
         </div>
@@ -123,7 +134,7 @@ export class Header extends Component {
             <div className="panini"></div>
           </a>
           <div className="header-icon-page">{iconElem}</div>
-          <h3 className="header-title"><a href={headerData.title.href}>{headerData.title.display}</a></h3>
+          <h3 className={headerClass}><a href={headerData.title.href}>{headerData.title.display}</a></h3>
           {actions}
           {headerData.station &&
             <Button
