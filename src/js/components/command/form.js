@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
 import { getStationDetails, capitalize } from '/lib/util';
-import { TRANSITION_LOADING } from '/lib/constants';
+import { TRANSITION_LOADING, STATUS_LOADING, STATUS_READY } from '/lib/constants';
 import classNames from 'classnames';
 import _ from 'lodash';
 
@@ -17,7 +17,8 @@ export class CommandForm extends Component {
     this.state = {
       formData: formData,
       errorList: [],
-      focused: ""
+      focused: "",
+      status: STATUS_READY
     }
 
     this.valueChange = this.valueChange.bind(this);
@@ -74,6 +75,13 @@ export class CommandForm extends Component {
 
   onSubmit() {
     this.props.form.submit.call(this);
+    this.setState({
+      status: STATUS_LOADING
+    });
+
+    this.props.pushCallback("circles", (rep) => {
+      this.setState({ status: STATUS_READY });
+    });
   }
 
   buildFieldElements(field, first) {
@@ -91,6 +99,7 @@ export class CommandForm extends Component {
       onFocus: this.focusChange,
       onBlur: this.onBlur,
       value: this.state.formData[name],
+      disabled: this.state.status === STATUS_LOADING,
       placeholder: field.placeholder
     }
 
@@ -127,7 +136,7 @@ export class CommandForm extends Component {
           classes={`btn btn-sm btn-text btn-block mt-3`}
           focusChange={this.focusChange}
           action={this.onSubmit}
-          disabled={this.state.errorList.length > 0}
+          disabled={this.state.errorList.length > 0 || this.state.status === STATUS_LOADING}
           content="Create →"
           pushCallback={this.props.pushCallback}
           responseKey="circles"
@@ -136,6 +145,7 @@ export class CommandForm extends Component {
           classes={`btn btn-sm btn-text btn-block red`}
           action={this.props.cancel}
           focusChange={this.focusChange}
+          disabled={this.state.status === STATUS_LOADING}
           content="Cancel"
           pushCallback={this.props.pushCallback}
         />
