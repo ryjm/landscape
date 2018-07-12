@@ -47,36 +47,95 @@ export class Header extends Component {
     }]);
   }
 
+  getStationHeaderData(station) {
+    let stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
+
+    return {
+      title: {
+        display: stationDetails.stationTitle,
+        href: stationDetails.stationUrl,
+        style: "mono"
+      },
+      breadcrumbs: [{
+        display: `~${stationDetails.host}`,
+        href: stationDetails.hostProfileUrl
+      }],
+      station,
+      stationDetails
+    }
+  }
+
   getHeaderData(type) {
     let headerData = {};
+    let defaultData;
 
     switch (type) {
       case "stream":
-        let station = this.props.data.station;
-        let stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
-
+        defaultData = this.getStationHeaderData(this.props.data.station);
         headerData = {
+          ...defaultData,
+          icon: IconStream,
+          actions: {
+            details: defaultData.stationDetails.stationDetailsUrl,
+          },
+        }
+        break;
+
+      case "collection":
+        defaultData = this.getStationHeaderData(this.props.data.station);
+        headerData = {
+          ...defaultData,
+          icon: IconBlog,
           title: {
-            display: stationDetails.stationTitle,
-            href: stationDetails.stationUrl,
-            style: "mono"
+            ...defaultData.title,
+            display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
           },
           actions: {
-            details: stationDetails.stationDetailsUrl,
+            details: defaultData.stationDetails.stationDetailsUrl,
+            write: `/~~/pages/nutalk/collection/post?station=~${defaultData.stationDetails.host}/collection_~${defaultData.stationDetails.collId}`
+          }
+        }
+        break;
+
+      case "collection-item":
+        defaultData = this.getStationHeaderData(this.props.data.station);
+        headerData = {
+          ...defaultData,
+          icon: IconBlog,
+          title: {
+            ...defaultData.title,
+            display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
           },
-          breadcrumbs: [{
-            display: `~${stationDetails.host}`,
-            href: stationDetails.hostProfileUrl
-          }],
-          station: station,
-          icon: IconStream
+          actions: {
+            edit: `/~~/~${defaultData.stationDetails.host}/==/web/collections/${defaultData.stationDetails.collId}/${this.props.data.postid}?edit=true`
+          }
+        }
+        break;
+
+      case "collection-edit":
+        defaultData = this.getStationHeaderData(this.props.data.station);
+        headerData = {
+          ...defaultData,
+          icon: IconBlog,
+          title: {
+            ...defaultData.title,
+            display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
+          },
+          actions: {}
+        }
+        break;
+
+      case "profile":
+        headerData = {
+          title: {
+            display: "Profile",
+            href: profileUrl(this.props.data.ship)
+          }
         }
         break;
 
       case "dm":
-      case "collection":
       case "edit":
-      case "profile":
       case "default":
       default:
         headerData = {
@@ -150,107 +209,15 @@ export class Header extends Component {
     )
   }
 
-  // getContent() {
-  //   let btnClass = (this.isSubscribed()) ? " btn-secondary" : " btn-primary";
-  //   let btnLabel = (this.isSubscribed()) ? "Unsubscribe" : "Subscribe";
-  //   let headerIcon, station, stationDetails, actionLink;
-  //
-  //   let type = (this.props.data.type) ? this.props.data.type : "default";
-  //
-  //     case "collection":
-  //       station = this.props.data.station;
-  //       if (!station) return null;
-  //       stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
-  //       let title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
-  //       let authorization = collectionAuthorization(stationDetails, this.props.api.authTokens.ship);
-  //       headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconBlog />;
-  //
-  //       if (stationDetails.host === this.props.api.authTokens.ship || this.props.data.publ === "%.y") {
-  //         actionLink = (this.props.data.postid) ?
-  //           (<a href={`/~~/~${stationDetails.host}/==/web/collections/${stationDetails.collId}/${this.props.data.postid}?edit=true`} className="header-link mr-6">Edit</a>) :
-  //           (<a href={`/~~/pages/nutalk/collection/post?station=~${stationDetails.host}/collection_~${stationDetails.collId}`} className="header-link mr-6">Write</a>)
-  //       }
-  //
-  //       return (
-  //         <div className="flex space-between">
-  //           <div className="flex align-center">
-  //             <a onClick={this.toggleMenu} className="mr-22">
-  //               <div className="panini"></div>
-  //             </a>
-  //             <div className="mr-8">{headerIcon}</div>
-  //             <h3><a href={stationDetails.stationUrl}>{title}</a></h3>
-  //           </div>
-  //           <div className="flex align-center">
-  //             {actionLink}
-  //             <Button
-  //               classes={`btn btn-sm${btnClass}`}
-  //               action={this.toggleSubscribe}
-  //               content={btnLabel}
-  //               pushCallback={this.props.pushCallback}
-  //               responseKey="circle.config.dif.source"
-  //                />
-  //           </div>
-  //         </div>
-  //       )
-  //       break;
-  //     // just duplicated collections logic here because we might want more controls for edit mode later
-  //     case "edit":
-  //       station = this.props.data.station;
-  //       if (!station) return null;
-  //       stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
-  //       title = (this.props.data.title) ? this.props.data.title : stationDetails.stationTitle;
-  //       authorization = collectionAuthorization(stationDetails, this.props.api.authTokens.ship);
-  //       headerIcon = (this.props.store.views.transition === TRANSITION_LOADING) ? <div className="btn-spinner btn-spinner-lg">◠</div> : <IconBlog />;
-  //
-  //       if (stationDetails.host === this.props.api.authTokens.ship || this.props.data.publ === "%.y") {
-  //         actionLink = (<a href={`/~~/~${stationDetails.host}/==/web/collections/${stationDetails.collId}/${this.props.data.postid}`} className="header-link mr-6">Cancel</a>);
-  //       }
-  //
-  //       return (
-  //         <div className="flex space-between">
-  //           <div className="flex align-center">
-  //             <a onClick={this.toggleMenu} className="mr-22">
-  //               <div className="panini"></div>
-  //             </a>
-  //             <div className="mr-8">{headerIcon}</div>
-  //             <h3><a href={stationDetails.stationUrl}>{title}</a></h3>
-  //           </div>
-  //           <div className="flex align-center">
-  //             {actionLink}
-  //             <Button
-  //               classes={`btn btn-sm${btnClass}`}
-  //               action={this.toggleSubscribe}
-  //               content={btnLabel}
-  //               pushCallback={this.props.pushCallback}
-  //               responseKey="circle.config.dif.source"
-  //                />
-  //           </div>
-  //         </div>
-  //       )
-  //       break;
-  //     case "profile":
-  //       return (
-  //         <div className="flex">
-  //           <div className="flex align-center">
-  //             <a onClick={this.toggleMenu} className="mr-22">
-  //               <div className="panini"></div>
-  //             </a>
-  //             <div className="mr-8">{headerIcon}</div>
-  //             <h3><a href={profileUrl(this.props.data.ship)}>Profile</a></h3>
-  //           </div>
-  //         </div>
-  //       )
-  //       break;
-  //     default:
-  //       return this.defaultHeader();
-  //       break;
-  //   }
-  // }
-
   render() {
     let type = (this.props.data.type) ? this.props.data.type : "default";
 
     console.log('header type = ', type);
+
+    // TODO: This is an ugly hack until we fix queryParams
+    if (["stream", "dm"].includes(type) && !getQueryParams().station) {
+      return null;
+    }
 
     let headerData = this.getHeaderData(type);
     let headerContent = this.buildHeaderContent(headerData);
