@@ -14,14 +14,6 @@ export class Header extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.data.type !== this.props.data.type) {
-      return true;
-    }
-
-    return false;
-  }
-
   isSubscribed(station) {
     let inbox = this.props.store.configs[`~${this.props.api.authTokens.ship}/inbox`];
     if (!inbox) return false;
