@@ -100,7 +100,11 @@ export class CommandForm extends Component {
       onBlur: this.onBlur,
       value: this.state.formData[name],
       disabled: this.state.status === STATUS_LOADING,
-      placeholder: field.placeholder
+      placeholder: field.placeholder,
+      autocomplete: "off",
+      autocorrect: "off",
+      autocapitalize: "off",
+      spellcheck: "false"
     }
 
     if (first) inputProps.ref = this.firstInputRef;
