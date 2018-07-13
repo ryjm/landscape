@@ -118,15 +118,14 @@ class UrbitRouter {
     window.document.addEventListener('click', (e) => {
       // If meta isn't currnetly held down, resolve clicks normally
       if (!this.metaPressed) {
-        e.preventDefault();
-
         // Walk the event target's parents to find 'a' tags up the chain
         let el = e.target;
         while (el && el.tagName != 'A') {
           el = el.parentNode;
         }
         // If you find an "a" tag in the clicked element's parents, it's a link
-        if (el && el.hostname === "localhost") {
+        if (el && el.hostname === "localhost" && !el.attributes.disabled) {
+          e.preventDefault();
           this.transitionTo(el.pathname + el.search);
         }
       }
