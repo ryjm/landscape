@@ -428,7 +428,7 @@ export class CommandMenu extends Component {
                    ref={this.commandInputRef}/>
           </div>
         </div>
-        <div className="mt-6 ml-19">
+        <div className="command-options">
           {view}
         </div>
       </div>

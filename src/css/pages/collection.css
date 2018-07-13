@@ -119,7 +119,7 @@ div.mod
 }
 
 .collection-post::before {
-  margin-top: 30px;
+  margin-top: 35px;
   margin-left: -11rem;
 }
 
@@ -134,7 +134,7 @@ div.mod
 
 .collection-post h3 {
   font-weight: 500;
-  margin: 1rem 0 3rem;
+  line-height: 9rem;
 }
 
 .collection-post-page {

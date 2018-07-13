@@ -30,18 +30,18 @@
               ;*  ?:  comm.config
                     ;*  ?:  xeno.config
                       ;li.collection-post.mt-6
-                        ;div.collection-date
+                        ;div.collection-date.text-300
+                          ;span.da.mr-4.text-mono(urb-component "Elapsed", urb-timestring "{(esoo:colls mod.info.top.topi)}");
                           ; {(trip t)}
                         ==
-                        ;h3
+                        ;h3.text-500
                           ;a(href "{(trip -.s.bem.gas)}/{(trip t)}"): {(trip tit.info.top.topi)}
                         ==
-                        ;div.who.text-mono.text-600
+                        ;div.who.text-mono.text-500
                           ; {(trip (scot %p who.info.top.topi))}
                         ==
                         ;div.meta-cont
-                          ;div.da.text-mono(urb-component "Elapsed", urb-timestring "{(esoo:colls mod.info.top.topi)}");
-                          ;div.com-count.ml-12
+                          ;div.com-count.text-500
                             ; {(trip (scot %ud (lent ~(tap by coms.top.topi))))} comments
                           ==
                         ==

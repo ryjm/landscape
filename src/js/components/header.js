@@ -176,7 +176,7 @@ export class Header extends Component {
     return (
       <div>
         <div className="row">
-          <div className="col-sm-offset-2 col-sm-10 mb-0">
+          <div className="col-sm-offset-2 col-sm-10 header-breadcrumbs">
             {breadcrumbsElem}
           </div>
         </div>

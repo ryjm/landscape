@@ -40,6 +40,11 @@ body {
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
 }
 
+.header-breadcrumbs {
+  height: 24px;
+  margin-bottom: 0;
+}
+
 .sidebar {
   position: absolute;
   right: 24rem;
