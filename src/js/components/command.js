@@ -415,26 +415,21 @@ export class CommandMenu extends Component {
 
     return (
       <div className="container command-page">
-        <div className="row">
-          <div className="col-sm-1">
-            <div className="cross" onClick={this.closeMenu}></div>
+        <div className="command-row">
+          <div className="cross" onClick={this.closeMenu}></div>
+          <div className="command-input-placeholder-wrapper" data-placeholder={placeholder} disabled={disabled}>
+            <input type="text"
+                   name="command-input"
+                   className="command-menu-input"
+                   disabled={disabled}
+                   onChange={(e) => this.updateCommand(e.target.value, true)}
+                   onSubmit={this.onCommandSubmit}
+                   value={this.state.command}
+                   ref={this.commandInputRef}/>
           </div>
-          <div className="col-sm-11">
-            <div className="command-input-placeholder-wrapper" data-placeholder={placeholder} disabled={disabled}>
-              <input type="text"
-                     name="command-input"
-                     className="command-menu-input"
-                     disabled={disabled}
-                     onChange={(e) => this.updateCommand(e.target.value, true)}
-                     onSubmit={this.onCommandSubmit}
-                     value={this.state.command}
-                     ref={this.commandInputRef}/>
-            </div>
-
-            <div className="mt-6">
-              {view}
-            </div>
-          </div>
+        </div>
+        <div className="mt-6 ml-19">
+          {view}
         </div>
       </div>
     );

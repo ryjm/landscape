@@ -1,3 +1,7 @@
+body {
+  overflow: overlay; /* Prevents scroll bar from affecting width on Webkit/Blink browsers */
+}
+
 body, .body-text, p {
   font-size: 14px;
   line-height: 24px;
@@ -24,8 +28,8 @@ form {
 ***/
 
 .panini {
-  border-top: 5px solid black;
-  border-bottom: 5px solid black;
+  border-top: 4px solid black;
+  border-bottom: 4px solid black;
   height: 18px;
   width: 18px;
 }
@@ -40,36 +44,30 @@ form {
 .cross {
   position: relative;
   display: inline-block;
-  width: 35px;
-  height: 35px;
+  width: 18px;
+  height: 18px;
+}
+
+.cross:before, .cross:after {
+  position: absolute;
+  top: 5px;
+  width: 20px;
+  height: 20px;
+
+  border-top: 4px solid black;
+  border-color: inherit;
+
+  content: "";
 }
 
 .cross:before {
-  position: absolute;
-  top: 7px;
-  left: -12px;
-
-  width: 35px;
-  height: 35px;
-  border-top: 10px solid black;
-  border-color: inherit;
+  left: -8px;
   transform: rotate(45deg);
-
-  content: "";
 }
 
 .cross:after {
-  position: absolute;
-  top: 7px;
-  left: 13px;
-
-  width: 35px;
-  height: 35px;
-  border-top: 10px solid black;
-  border-color: inherit;
+  left: 6px;
   transform: rotate(-45deg);
-
-  content: "";
 }
 
 .circle {
