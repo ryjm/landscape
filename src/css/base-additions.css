@@ -199,7 +199,7 @@ input[type="text"], textarea, label {
   font-family: "San Francisco Text", arial;
 }
 
-input[disabled], label[disabled], select[disabled], textarea[disabled], .select-dropdown[disabled] {
+input[disabled], label[disabled], select[disabled], textarea[disabled], button[disabled], .select-dropdown[disabled] {
   opacity: .4;
   border-color: #aaa;
 }
