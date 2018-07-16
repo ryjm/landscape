@@ -16,7 +16,7 @@
 =,  old-zuse
 
 ;div.container
-  ;input(type "hidden", name "urb-header", value "collection", title "{(trip desc.config)}", station "{(scow %p p.bem.gas)}/collection_~{(trip -.s.bem.gas)}", publ "{<publ.config>}");
+  ;input(type "hidden", name "urb-header", value "collection-index", title "{(trip desc.config)}", station "{(scow %p p.bem.gas)}/collection_~{(trip -.s.bem.gas)}", publ "{<publ.config>}");
   ;div.row
     ;div.col-sm-10.col-sm-offset-2
       ;div.collection-index.mt-12

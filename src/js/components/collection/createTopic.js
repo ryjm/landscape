@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
 import { getQueryParams, getStationDetails, daToDate } from '/lib/util';
 import { Elapsed } from '/components/lib/elapsed';
-import { TRANSITION_LOADING } from '/lib/constants';
+import { TRANSITION_LOADING, STATUS_READY, STATUS_LOADING } from '/lib/constants';
 import _ from 'lodash';
 
 export class TopicCreatePage extends Component {
@@ -11,7 +11,8 @@ export class TopicCreatePage extends Component {
 
     this.state = {
       topicContent: props.text ? props.text : '',
-      details: this.getDetails(props)
+      details: this.getDetails(props),
+      status: STATUS_READY
     };
 
     this.createTopic = this.createTopic.bind(this);
@@ -64,6 +65,8 @@ export class TopicCreatePage extends Component {
   }
 
   createTopic() {
+    this.setState({ status: STATUS_LOADING });
+
     let dat = {};
 
     let details = this.getDetails();
@@ -107,6 +110,8 @@ export class TopicCreatePage extends Component {
     }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
+      this.setState({ status: STATUS_READY });
+
       let content = _.get(rep.data, "gam.sep.fat.tac.text", null);
       let postId = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
       postId = postId ? postId.split("|")[0] : null;
@@ -156,13 +161,17 @@ export class TopicCreatePage extends Component {
                 className="text-code collection-post-edit mb-4"
                 name="topicContent"
                 placeholder="New post"
+                disabled={this.state.status === STATUS_LOADING}
                 value={this.state.topicContent}
                 onChange={this.valueChange}
                 />
               <div className="collection-post-actions">
-                <a href={`/~~/~${details.hostship}/==/web/collections/${details.collId}`} className="header-link mr-6">Cancel</a>
+                <a href={`/~~/~${details.hostship}/==/web/collections/${details.collId}`}
+                  className="header-link mr-6"
+                  disabled={this.state.status === STATUS_LOADING}>Cancel</a>
                 <Button
                   content="Save"
+                  disabled={this.state.status === STATUS_LOADING}
                   classes="btn btn-sm btn-primary"
                   action={this.createTopic}
                   responseKey="circle.config.dif.full"

@@ -73,7 +73,7 @@ export class Header extends Component {
         }
         break;
 
-      case "collection":
+      case "collection-index":
         defaultData = this.getStationHeaderData(this.props.data.station);
         headerData = {
           ...defaultData,
@@ -104,6 +104,7 @@ export class Header extends Component {
         }
         break;
 
+      case "collection-write":
       case "collection-edit":
         defaultData = this.getStationHeaderData(this.props.data.station);
         headerData = {
@@ -207,7 +208,7 @@ export class Header extends Component {
     console.log('header type = ', type);
 
     // TODO: This is an ugly hack until we fix queryParams
-    if (["stream", "dm"].includes(type) && !getQueryParams().station) {
+    if (["stream", "dm", "collection-write"].includes(type) && !getQueryParams().station) {
       return null;
     }
 
