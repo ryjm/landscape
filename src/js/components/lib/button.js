@@ -40,7 +40,7 @@ export class Button extends Component {
           onFocusIn={this.props.focusChange}>
 
           <span>{this.props.content}</span>
-          <span className={spinnerClass}>◠</span>
+          <span className={spinnerClass}></span>
         </button>
       </form>
     )

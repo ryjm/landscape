@@ -228,11 +228,21 @@ label {
 }
 
 .btn-spinner {
-  animation: spin linear 1s infinite;
   position: relative;
-  left: 5px;
-
   display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+
+.btn-spinner::after {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  bottom: 0;
+  content: "◠";
+  animation: a linear 1s infinite;
+  font-size: 10px;
+  line-height: 10px;
 }
 
 .btn-spinner-lg {
@@ -245,9 +255,3 @@ label {
   padding: 0;
   background-color: inherit;
 }
-
-/**
-  Keyframes
-**/
-
-@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
