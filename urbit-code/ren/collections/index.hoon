@@ -20,7 +20,7 @@
   ;div.row
     ;div.col-sm-10.col-sm-offset-2
       ;div.collection-index.mt-12
-        ;ul
+        ;ul.vanilla
           ;*  %+  turn
                 %+  sort
                   ~(tap by tops)

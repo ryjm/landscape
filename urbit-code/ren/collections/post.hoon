@@ -39,7 +39,7 @@
                     ;span(urb-component "IconComment");
                     ;span: {<~(wyt by coms.metawcom)>}
                   ==
-                  ;ul
+                  ;ul.vanilla
                     ;*  %+  turn
                           %+  sort
                             ~(tap by coms.metawcom)
