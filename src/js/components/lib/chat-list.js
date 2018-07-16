@@ -25,7 +25,7 @@ export class ChatList extends Component {
           )
         } else if (deets.type == "text-topic") {
           return null;
-        }       
+        }
       });
       return text;
     } else {
@@ -59,13 +59,9 @@ export class ChatList extends Component {
     return (
       <div>
         <div className="text-700 mt-8">Blogs, Fora and Notes</div>
-        <ul>
-          {text}
-        </ul>
+        {text}
         <div className="text-700 mt-8">Chats</div>
-        <ul>
-          {chats}
-        </ul>
+        {chats}
       </div>
     );
   }

@@ -9,13 +9,13 @@ body, .body-text, p {
   font-family: "San Francisco Text", arial;
 }
 
-ul {
+ul.vanilla {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-ul li {
+ul.vanilla li {
   padding: 0;
 }
 
