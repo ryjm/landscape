@@ -144,7 +144,7 @@ export class Header extends Component {
   }
 
   buildHeaderContent(headerData) {
-    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem, headerClass;
+    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem, headerClass, loadingClass;
 
     if (headerData.station) {
       subscribeClass = (this.isSubscribed(headerData.station)) ? "btn-secondary" : "btn-primary";
@@ -169,10 +169,12 @@ export class Header extends Component {
     }
 
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
+    loadingClass = this.props.store.views.transition === TRANSITION_LOADING ? 'header-loading' : 'hide';
 
     if (headerData.title) {
       headerClass = headerData.title.style === "mono" ? "header-title header-title-mono" : "header-title";
     }
+
 
     return (
       <div>
@@ -181,7 +183,8 @@ export class Header extends Component {
             {breadcrumbsElem}
           </div>
         </div>
-        <div className="flex align-center">
+        <div className="flex align-center header-mainrow">
+          <div className={loadingClass}></div>
           <a onClick={this.toggleMenu} className="header-icon-menu">
             <div className="panini"></div>
           </a>

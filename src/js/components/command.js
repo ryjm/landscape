@@ -4,6 +4,7 @@ import { CommandHelpItem } from '/components/command/help-item';
 import { getStationDetails, isDMStation, isValidStation, profileUrl } from '/lib/util';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
+import { TRANSITION_LOADING, STATUS_READY } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
@@ -16,6 +17,7 @@ export class CommandMenu extends Component {
       view: "command",
       command: "",
       options: [],
+      status: STATUS_READY,
       selectedOption: null
     };
 
@@ -37,6 +39,8 @@ export class CommandMenu extends Component {
     }
 
     Mousetrap.bind('down', (e) => {
+      if (this.commandInputDisabled()) return;
+
       let option;
       if (e.preventDefault) e.preventDefault();
 
@@ -54,6 +58,8 @@ export class CommandMenu extends Component {
     });
 
     Mousetrap.bind('up', (e) => {
+      if (this.commandInputDisabled()) return;
+
       let option;
       if (e.preventDefault) e.preventDefault();
 
@@ -69,6 +75,7 @@ export class CommandMenu extends Component {
     });
 
     Mousetrap.bind('enter', (e) => {
+      if (this.commandInputDisabled()) return;
       if (this.state.selectedOption !== null) {
         this.processCommand(this.state.options[this.state.selectedOption]);
         this.autoComplete();
@@ -76,6 +83,7 @@ export class CommandMenu extends Component {
     });
 
     Mousetrap.bind('esc', (e) => {
+      if (this.commandInputDisabled()) return;
       if (this.state.view !== "command") {
         this.cancelView();
       } else {
@@ -87,6 +95,8 @@ export class CommandMenu extends Component {
     });
 
     Mousetrap(this.commandInputRef.current).bind('tab', (e) => {
+      if (this.commandInputDisabled()) return;
+
       if (e.preventDefault) e.preventDefault();
       this.autoComplete();
     });
@@ -385,14 +395,22 @@ export class CommandMenu extends Component {
     });
   }
 
+  commandInputDisabled() {
+    return (
+      this.state.view === "collection-create" ||
+      this.state.view === "stream-create" ||
+      this.props.store.views.transition === TRANSITION_LOADING ||
+      this.state.status !== STATUS_READY
+    )
+  }
+
   render() {
-    let view, disabled, placeholder;
+    let view, placeholder, loadingClass, commandInputDisabled;
 
     if (this.state.view === "command") {
       placeholder = this.getPlaceholder();
       view = this.buildOptions(this.state.options);
     } else if (this.state.view === "collection-create") {
-      disabled = true;
       view = (<CommandFormCollectionCreate
                api={this.props.api}
                store={this.props.store}
@@ -402,7 +420,6 @@ export class CommandMenu extends Component {
                transitionTo={this.props.transitionTo}
              />);
     } else if (this.state.view === "stream-create") {
-      disabled = true;
       view = (<CommandFormStreamCreate
                api={this.props.api}
                store={this.props.store}
@@ -413,15 +430,21 @@ export class CommandMenu extends Component {
              />);
     }
 
+    commandInputDisabled = this.commandInputDisabled();
+    loadingClass = this.props.store.views.transition === TRANSITION_LOADING ? 'header-loading' : 'hide';
+
     return (
       <div className="container command-page">
         <div className="command-row">
+          <div className={loadingClass}></div>
           <div className="cross" onClick={this.closeMenu}></div>
-          <div className="command-input-placeholder-wrapper" data-placeholder={placeholder} disabled={disabled}>
+          <div className="command-input-placeholder-wrapper"
+               data-placeholder={placeholder}
+               disabled={commandInputDisabled}>
             <input type="text"
                    name="command-input"
                    className="command-menu-input"
-                   disabled={disabled}
+                   disabled={commandInputDisabled}
                    onChange={(e) => this.updateCommand(e.target.value, true)}
                    onSubmit={this.onCommandSubmit}
                    value={this.state.command}
