@@ -43,11 +43,6 @@ textarea.comment-edit
   padding: 0;
 }
 
-.create-comment button.disabled
-{
-  display: none;
-}
-
 .create-comment .usership
 {
   color: #000;

@@ -63,7 +63,8 @@ export class CommentCreate extends Component {
           placeholder="Post a comment">
         </textarea>
         <Button
-          classes={this.state.comment.length > 0 ? "btn btn-tetiary" : "btn disabled"}
+          classes="btn btn-tetiary"
+          disabled={this.state.comment.length === 0}
           action={this.createComment}
           responseKey="circle.gram"
           pushCallback={this.props.pushCallback}

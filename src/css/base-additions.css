@@ -223,11 +223,6 @@ label {
   font-weight: 600;
 }
 
-button.disabled {
-  color: white;
-  cursor: inherit;
-}
-
 .btn {
   margin-bottom: 0;
 }
