@@ -52,7 +52,12 @@ input.command-menu-input[disabled] {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 1;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
 
   padding: 0 3rem;
   color: #9B9B9B;
