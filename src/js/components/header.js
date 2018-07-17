@@ -4,6 +4,7 @@ import { IconStream } from '/components/lib/icons/icon-stream';
 import { getQueryParams, getStationDetails, collectionAuthorization, profileUrl } from '/lib/util';
 import { Button } from '/components/lib/button';
 import { TRANSITION_LOADING } from '/lib/constants';
+import classNames from 'classnames';
 import _ from 'lodash';
 
 export class Header extends Component {
@@ -170,11 +171,11 @@ export class Header extends Component {
 
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
     loadingClass = this.props.store.views.transition === TRANSITION_LOADING ? 'header-loading' : 'hide';
-
-    if (headerData.title) {
-      headerClass = headerData.title.style === "mono" ? "header-title header-title-mono" : "header-title";
-    }
-
+    headerClass = classNames({
+      'flex-3rd': true,
+      'header-title': true,
+      'header-title-mono': headerData.title && headerData.title.style === "mono"
+    })
 
     return (
       <div>
@@ -185,10 +186,10 @@ export class Header extends Component {
         </div>
         <div className="flex align-center header-mainrow">
           <div className={loadingClass}></div>
-          <a onClick={this.toggleMenu} className="header-icon-menu">
+          <a onClick={this.toggleMenu} className="flex-1st">
             <div className="panini"></div>
           </a>
-          <div className="header-icon-page">{iconElem}</div>
+          <div className="flex-2nd">{iconElem}</div>
           <h3 className={headerClass}><a href={headerData.title.href}>{headerData.title.display}</a></h3>
           {actions}
           {headerData.station &&

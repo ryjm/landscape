@@ -85,20 +85,15 @@ body {
   We're kind of using this as a grid. More explanation later.
 */
 
-.header-icon-menu {
+.flex-1st {
   flex-basis: 106px;
-  /** Design calls for
-    flex-basis: 98px;
-  **/
 }
 
-.header-icon-page {
+.flex-2nd {
   flex-basis: 52px;
-  /** Design calls for
-    flex-basis: 44px;
-  **/
 }
 
-.header-title {
+.flex-3rd {
+  flex-basis: 0;
   flex-grow: 1;
 }

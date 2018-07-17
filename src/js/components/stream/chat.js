@@ -5,6 +5,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
 import { prettyShip, isUrl, uuid, getMessageContent, isDMStation } from '/lib/util';
 import { createDMStation } from '/services';
+import { sealDict } from '/components/lib/seal-dict';
 import classNames from 'classnames';
 
 export class ChatPage extends Component {
@@ -23,6 +24,7 @@ export class ChatPage extends Component {
       station,
       circle,
       host,
+      placeholder: `Send a message to /${circle}`,
       message: "",
       invitee: "",
       numMessages: 0,
@@ -58,7 +60,7 @@ export class ChatPage extends Component {
 
     return {
       ...state,
-      pendingMessages: state.pendingMessages
+      pendingMessages: state.pendingMessages,
     }
   }
 
@@ -210,20 +212,15 @@ export class ChatPage extends Component {
     let prevDay = 0;
     let prevName = "";
 
-    // add date markers & group messages by author
+    // group messages by author
     for (var i = 0; i < messages.length; i++) {
-      let date = moment(messages[i].wen);
-      if (messages[i].wen > prevDay) {
+      if (prevName !== messages[i].aut) {
         chatRows.push({
-          date: date.format("dddd, MMM Do")
+          printship: true,
+          aut: messages[i].aut,
+          wen: messages[i].wen
         });
 
-        prevDay = date.endOf('day').format('x');
-        prevName = "";
-      }
-
-      if (prevName !== messages[i].aut) {
-        messages[i].printship = true;
         prevName = messages[i].aut;
       }
 
@@ -231,62 +228,6 @@ export class ChatPage extends Component {
     }
 
     return chatRows;
-  }
-
-  assembleMembers(station) {
-    let cos = this.props.store.configs[station] || {pes: {}, con: {sis: []}};
-    let statusCir = "";
-
-    if (!cos.pes) {
-      return;
-    }
-
-    let presMems = Object.keys(cos.pes).map(ship => {
-      switch (cos.pes[ship].pec) {
-        case "idle":
-          statusCir = "cir-green"
-          break;
-        case "talk":
-          statusCir = "cir-red"
-          break;
-        case "gone":
-          statusCir = "cir-black"
-          break;
-      }
-
-      return (
-        <div key={ship}>
-          <span className={`cir-status mr-4 ${statusCir}`}></span>
-          <span className="chat-member-name"><a className="shipname" href={prettyShip(ship)[1]}>{prettyShip(ship)[0]}</a></span>
-        </div>
-      )
-    });
-
-    let invMems = cos.con.sis.map(inv => {
-      // If user is in whitelist but not in presence list
-      if (Object.keys(cos.pes).indexOf(`~${inv}`) === -1) {
-        return (
-          <div key={`${inv}`}>
-            <span className={`cir-status mr-4 cir-grey`}></span>
-            <span className="chat-member-name">{`~${inv}`}</span>
-          </div>
-        )
-      }
-    });
-
-    return (
-      <div>
-        {presMems}
-        <h5 className="mt-8">Invited:</h5>
-        {invMems}
-        <form onSubmit={this.inviteSubmit}>
-          <input type="text" className="w-30 input-sm"
-            value={this.state.invitee}
-            onChange={this.inviteChange}
-            placeholder="Ship..." />
-        </form>
-      </div>
-    )
   }
 
   setPresence(station) {
@@ -304,39 +245,35 @@ export class ChatPage extends Component {
 
   buildMessage(msg) {
     let details = getMessageContent(msg);
-    let autLabel = msg.printship ? prettyShip(`~${msg.aut}`)[0] : null;
     let appClass = classNames({
-      'row': true,
+      'flex': true,
+      'align-center': true,
       'chat-msg-app': msg.app,
-      'chat-msg-pending': msg.pending
+      'chat-msg-pending': msg.pending,
+      'mt-6': msg.printship
     });
 
-    if (msg.date) {
-      return (
-        <div className="chat-sep" key={msg.date}>{msg.date}</div>
-      )
-    } else {
-      return (
-        <div key={msg.uid} className={appClass}>
-          <div className="col-sm-2 text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{autLabel}</a></div>
-          <div className="col-sm-8"><Message details={details}></Message></div>
+    return (
+      <div key={msg.uid} className={appClass}>
+        <div className="flex-1st"></div>
+        <div className="flex-2nd">
+          {msg.printship &&
+            <a className="vanilla" href={prettyShip(msg.aut)[1]}>
+              {sealDict.getSeal(msg.aut, 18)}
+            </a>
+          }
         </div>
-      )
-    }
-  }
+        <div className="flex-3rd">
+          {msg.printship &&
+            <a className="vanilla text-700 text-mono" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
+          }
 
-  addPendingMessages(messages) {
-    let msgs = [...messages];
-
-    if (this.state.pendingMessages.length > 0) {
-      this.state.pendingMessages.forEach(pMsg => {
-        let lastIndex = msgs.length - 1;
-        let printship = lastIndex === -1 ? true : msgs[lastIndex] !== this.state.pendingMessages.aut;
-        msgs.push({...pMsg, printship});
-      })
-    }
-
-    return msgs;
+          {!msg.printship &&
+            <Message details={details}></Message>
+          }
+        </div>
+      </div>
+    )
   }
 
   render() {
@@ -344,42 +281,37 @@ export class ChatPage extends Component {
     if (this.state.station === "~zod/null") return null;
 
     let messages = this.props.store.messages.stations[this.state.station] || [];
-    messages = this.addPendingMessages(messages);
+    messages = [...messages, ...this.state.pendingMessages];
 
     this.setPresence(this.state.station);
 
     let chatRows = this.assembleChatRows(messages);
-    let chatMembers = this.assembleMembers(this.state.station);
     let chatMessages = chatRows.map(this.buildMessage);
 
     return (
       <div className="container">
-        <div className="row">
-          <div className="col-sm-10 col-sm-offset-2">
-            <Scrollbars
-              ref={this.scrollbarRef}
-              renderTrackHorizontal={props => <div style={{display: "none"}}/>}
-              style={{height: 650}}
-              onScrollStop={this.onScrollStop}
-              renderView={props => <div {...props} className="chat-scrollpane-view"/>}
-              autoHide
-              className="chat-scrollpane">
-              {chatMessages}
-            </Scrollbars>
-            <div className="chat-input row mt-6">
-              <div className="col-sm-2 text-700">
-                {prettyShip(`~${this.props.api.authTokens.ship}`)[0]}
-              </div>
-              <div className="col-sm-8">
-                <form onSubmit={this.messageSubmit}>
-                  <input className="chat-input-field" type="text" placeholder="Say something" value={this.state.message} onChange={this.messageChange}/>
-                </form>
-              </div>
-            </div>
-            <div className="sidebar">
-              {chatMembers}
-            </div>
+        <Scrollbars
+          ref={this.scrollbarRef}
+          renderTrackHorizontal={props => <div style={{display: "none"}}/>}
+          style={{height: 650}}
+          onScrollStop={this.onScrollStop}
+          renderView={props => <div {...props} className="chat-scrollpane-view"/>}
+          autoHide
+          className="chat-scrollpane">
+          {chatMessages}
+        </Scrollbars>
+        <div className="flex align-center mt-6">
+          <div className="flex-1st"></div>
+          <div className="flex-3rd">
+            <form onSubmit={this.messageSubmit}>
+              <input className="chat-input-field"
+                     type="text"
+                     placeholder={this.state.placeholder}
+                     value={this.state.message}
+                     onChange={this.messageChange} />
+            </form>
           </div>
+          <a onClick={this.messageSubmit} className="text-700">Send</a>
         </div>
       </div>
     )

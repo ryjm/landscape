@@ -30,11 +30,3 @@
 .inbox-page .collection-preview h1:nth-child(1) {
   display: none;
 }
-
-/***
-  List
-***/
-
-.list-page a {
-  text-decoration: none;
-}

@@ -10,9 +10,11 @@ export class ListPage extends Component {
     return dmStations.map((stationDetails) => {
       return (
         <div key={stationDetails.station} className="mt-3">
-          <div className="text-mono"><a href={stationDetails.stationUrl}>
-            <u className="text-600">{stationDetails.stationTitle}</u>
-          </a></div>
+          <div className="text-mono">
+            <a className="vanilla" href={stationDetails.stationUrl}>
+              <u className="text-600">{stationDetails.stationTitle}</u>
+            </a>
+          </div>
         </div>
       );
     });
@@ -23,11 +25,11 @@ export class ListPage extends Component {
       return (
         <div key={stationDetails.station} className="mt-3">
           <div className="text-mono">
-            <a href={stationDetails.hostProfileUrl}>
+            <a className="vanilla" href={stationDetails.hostProfileUrl}>
               <u>{stationDetails.host}</u>
             </a>
             <span className="text-600">  /  </span>
-            <a href={stationDetails.stationUrl}>
+            <a className="vanilla" href={stationDetails.stationUrl}>
               <u className="text-600">{stationDetails.stationTitle}</u>
             </a>
           </div>

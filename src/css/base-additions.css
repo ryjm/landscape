@@ -19,6 +19,10 @@ ul.vanilla li {
   padding: 0;
 }
 
+a.vanilla {
+  text-decoration: none;
+}
+
 form {
   margin: 0;
 }
@@ -178,10 +182,6 @@ form {
 
 .block {
   display: block;
-}
-
-.no-underline {
-  text-decoration: none;
 }
 
 /***
