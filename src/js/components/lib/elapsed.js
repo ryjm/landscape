@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import { secToString } from '/lib/util';
 // display elapsed time by converting galactic time to client time
 
+/*
+  Goes from:
+    1531938314116       // "javascript unix time"
+  To:
+    4m                  // "elapsed timestring from current time"
+*/
+
 export class Elapsed extends Component {
   constructor(props) {
     super(props);

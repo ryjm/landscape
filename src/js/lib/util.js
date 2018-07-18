@@ -13,6 +13,13 @@ export function getQueryParams() {
   }
 }
 
+/*
+  Goes from:
+    1531943107869               // "javascript unix time"
+  To:
+    "48711y 2w 5d 11m 9s"       // "stringified time increments"
+*/
+
 export function secToString(secs) {
   if (secs <= 0) {
     return 'Completed';
@@ -126,6 +133,13 @@ export function isValidStation(st) {
   return urbitOb.isShip(tokens[0]) && isPatTa(tokens[1]);
 }
 
+
+/*
+  Goes from:
+    ~2018.7.17..23.15.09..5be5    // urbit @da
+  To:
+    (javascript Date object)
+*/
 export function daToDate(st) {
   var dub = function(n) {
     return parseInt(n) < 10 ? "0" + parseInt(n) : n.toString();
