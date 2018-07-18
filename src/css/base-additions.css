@@ -19,6 +19,11 @@ ul.vanilla li {
   padding: 0;
 }
 
+/* If <a> elements don't have hrefs, there's no pointer */
+a {
+  cursor: pointer;
+}
+
 a.vanilla {
   text-decoration: none;
 }

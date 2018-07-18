@@ -4,7 +4,7 @@ import { IconStream } from '/components/lib/icons/icon-stream';
 import { getQueryParams, getStationDetails, collectionAuthorization, profileUrl } from '/lib/util';
 import { Button } from '/components/lib/button';
 import { TRANSITION_LOADING } from '/lib/constants';
-import classNames from 'classnames';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 export class Header extends Component {
@@ -171,7 +171,7 @@ export class Header extends Component {
 
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
     loadingClass = this.props.store.views.transition === TRANSITION_LOADING ? 'header-loading' : 'hide';
-    headerClass = classNames({
+    headerClass = classnames({
       'flex-3rd': true,
       'header-title': true,
       'header-title-mono': headerData.title && headerData.title.style === "mono"

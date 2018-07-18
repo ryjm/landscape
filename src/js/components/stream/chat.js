@@ -7,7 +7,7 @@ import { prettyShip, isUrl, uuid, getMessageContent, isDMStation, dateToDa } fro
 import { createDMStation } from '/services';
 import { sealDict } from '/components/lib/seal-dict';
 import { Elapsed } from '/components/lib/elapsed';
-import classNames from 'classnames';
+import classnames from 'classnames';
 
 export class ChatPage extends Component {
   constructor(props) {
@@ -275,7 +275,7 @@ export class ChatPage extends Component {
     let contentElem;
 
     let details = getMessageContent(msg);
-    let appClass = classNames({
+    let appClass = classnames({
       'flex': true,
       'align-center': true,
       'chat-msg-app': msg.app,

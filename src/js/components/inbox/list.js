@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { getSubscribedStations } from '/lib/util';
 
-export class ListPage extends Component {
+export class InboxListPage extends Component {
   constructor(props) {
     super(props);
   }

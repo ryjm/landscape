@@ -1,5 +1,4 @@
 import { InboxPage } from '/components/inbox';
-import { ListPage } from '/components/list';
 import { ChatPage } from '/components/stream/chat';
 import { TopicCreatePage } from '/components/collection/createTopic';
 import { CommentCreate } from '/components/collection/comment';
@@ -16,7 +15,6 @@ export var ComponentMap = {
   "TopicCreatePage": TopicCreatePage,
   "CommentCreate": CommentCreate,
   "InboxPage": InboxPage,
-  "ListPage": ListPage,
   "Elapsed": Elapsed,
   "IconComment": IconComment,
   "AvatarSample1": AvatarSample1,

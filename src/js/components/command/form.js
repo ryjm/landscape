@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
 import { getStationDetails, capitalize } from '/lib/util';
 import { TRANSITION_LOADING, STATUS_LOADING, STATUS_READY } from '/lib/constants';
-import classNames from 'classnames';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 export class CommandForm extends Component {
@@ -87,7 +87,7 @@ export class CommandForm extends Component {
   buildFieldElements(field, first) {
     let input;
 
-    let classes = classNames({
+    let classes = classnames({
       'input-group': true,
       'input-group-focused': this.state.focused === field.name,
       'input-group-error': this.state.errorList.includes(field.name)
