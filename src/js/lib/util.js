@@ -151,6 +151,28 @@ export function daToDate(st) {
   return new Date(ds);
 }
 
+/*
+  Goes from:
+    (javascript Date object)
+  To:
+    ~2018.7.17..23.15.09..5be5    // urbit @da
+*/
+
+export function dateToDa(d, mil) {
+  var fil = function(n) {
+    return n >= 10 ? n : "0" + n;
+  };
+  return (
+    `~${d.getUTCFullYear()}.` +
+    `${(d.getUTCMonth() + 1)}.` +
+    `${fil(d.getUTCDate())}..` +
+    `${fil(d.getUTCHours())}.` +
+    `${fil(d.getUTCMinutes())}.` +
+    `${fil(d.getUTCSeconds())}` +
+    `${mil ? "..0000" : ""}`
+  );
+}
+
   // ascending for clarity
 export function sortSrc(circleArray, topic=false){
   let sc = circleArray.map((c) => util.parseCollCircle(c)).filter((pc) => typeof pc != 'undefined' && typeof pc.top == 'undefined');
