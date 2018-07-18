@@ -11,37 +11,15 @@ import { ChatList } from '/components/lib/chat-list';
 import { ProfileMsgBtn } from '/components/lib/profile-msg-btn';
 
 export var ComponentMap = {
-  "ChatPage": {
-    comp: ChatPage
-  },
-  "ChatList": {
-    comp: ChatList
-  },
-  "TopicCreatePage": {
-    comp: TopicCreatePage
-  },
-  "CommentCreate": {
-    comp: CommentCreate
-  },
-  "InboxPage": {
-    comp: InboxPage
-  },
-  "ListPage": {
-    comp: ListPage
-  },
-  "Elapsed": {
-    comp: Elapsed
-  },
-  "IconComment": {
-    comp: IconComment
-  },
-  "AvatarSample1": {
-    comp: AvatarSample1
-  },
-  "AvatarLg": {
-    comp: AvatarLg
-  },
-  "ProfileMsgBtn": {
-    comp: ProfileMsgBtn
-  }
+  "ChatPage": ChatPage,
+  "ChatList": ChatList,
+  "TopicCreatePage": TopicCreatePage,
+  "CommentCreate": CommentCreate,
+  "InboxPage": InboxPage,
+  "ListPage": ListPage,
+  "Elapsed": Elapsed,
+  "IconComment": IconComment,
+  "AvatarSample1": AvatarSample1,
+  "AvatarLg": AvatarLg,
+  "ProfileMsgBtn": ProfileMsgBtn,
 };

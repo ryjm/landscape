@@ -45,7 +45,7 @@ export class Root extends Component {
             propsObj[keyName] = node.attribs[key];
           });
 
-        return React.createElement(ComponentMap[componentName].comp, Object.assign({
+        return React.createElement(ComponentMap[componentName], Object.assign({
           api: this.props.api,
           store: this.props.store,
           storeReports: this.props.storeReports,
