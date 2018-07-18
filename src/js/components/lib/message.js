@@ -139,7 +139,7 @@ export class Message extends Component {
           <pre className="text-mono mt-0">{this.props.details.res}</pre>
         </div>
       )
-    } else if (this.props.details.postUrl) {
+    } else if (this.props.details.type === "newpost") {
       return <CollectionPreview messageDetails={this.props.details} api={this.props.api}></CollectionPreview>
     } else {
       return this.props.details.content;

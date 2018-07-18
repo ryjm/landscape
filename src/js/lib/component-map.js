@@ -8,6 +8,7 @@ import { IconComment } from '/components/lib/icons/icon-comment';
 import { AvatarSample1 } from '/components/lib/icons/avatar-sample-1';
 import { AvatarLg } from '/components/lib/icons/avatar-lg';
 import { ChatList } from '/components/lib/chat-list';
+import { ProfileMsgBtn } from '/components/lib/profile-msg-btn';
 
 export var ComponentMap = {
   "ChatPage": {
@@ -39,5 +40,8 @@ export var ComponentMap = {
   },
   "AvatarLg": {
     comp: AvatarLg
+  },
+  "ProfileMsgBtn": {
+    comp: ProfileMsgBtn
   }
 };
