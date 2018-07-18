@@ -202,6 +202,12 @@ export class ChatPage extends Component {
       message: "",
       pendingMessages: this.state.pendingMessages.concat({...message, pending: true})
     });
+
+    // TODO:  Push to end of event queue to let pendingMessages render before scrolling
+    //        There's probably a better way to do this
+    setTimeout(() => {
+      if (this.scrollbarRef.current) this.scrollbarRef.current.scrollToBottom();
+    })
   }
 
   inviteSubmit(event) {
