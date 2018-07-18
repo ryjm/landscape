@@ -3,9 +3,10 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
-import { prettyShip, isUrl, uuid, getMessageContent, isDMStation } from '/lib/util';
+import { prettyShip, isUrl, uuid, getMessageContent, isDMStation, dateToDa } from '/lib/util';
 import { createDMStation } from '/services';
 import { sealDict } from '/components/lib/seal-dict';
+import { Elapsed } from '/components/lib/elapsed';
 import classNames from 'classnames';
 
 export class ChatPage extends Component {
@@ -30,7 +31,11 @@ export class ChatPage extends Component {
       numMessages: 0,
       scrollLocked: true,
       pendingMessages: [],
-      dmStationCreated: false
+      dmStationCreated: false,
+      activatedMsg: {
+        dateGroup: null,  // TODO: What's a good "0" value for Dates?
+        date: null
+      }
     };
 
     this.messageChange = this.messageChange.bind(this);
@@ -40,6 +45,9 @@ export class ChatPage extends Component {
     this.inviteSubmit = this.inviteSubmit.bind(this);
 
     this.onScrollStop = this.onScrollStop.bind(this);
+    this.activateMessageGroup = this.activateMessageGroup.bind(this);
+
+    this.buildMessage = this.buildMessage.bind(this);
 
     this.scrollbarRef = React.createRef();
   }
@@ -105,9 +113,9 @@ export class ChatPage extends Component {
       this.setState({
         numMessages: numMessages
       });
-    }
 
-    this.scrollIfLocked();
+      this.scrollIfLocked();
+    }
   }
 
   scrollIfLocked() {
@@ -211,20 +219,23 @@ export class ChatPage extends Component {
     let chatRows = [];
     let prevDay = 0;
     let prevName = "";
+    let dateGroup;
 
     // group messages by author
     for (var i = 0; i < messages.length; i++) {
       if (prevName !== messages[i].aut) {
+        dateGroup = messages[i].wen;
+
         chatRows.push({
           printship: true,
           aut: messages[i].aut,
-          wen: messages[i].wen
+          dateGroup
         });
 
         prevName = messages[i].aut;
       }
 
-      chatRows.push(messages[i]);
+      chatRows.push({...messages[i], dateGroup});
     }
 
     return chatRows;
@@ -243,7 +254,20 @@ export class ChatPage extends Component {
     }
   }
 
+  activateMessageGroup(e) {
+    if (e.currentTarget.dataset.date) {
+      this.setState({
+        activatedMsg: {
+          dateGroup: e.currentTarget.dataset.dateGroup,
+          date: e.currentTarget.dataset.date
+        }
+      });
+    }
+  }
+
   buildMessage(msg) {
+    let contentElem;
+
     let details = getMessageContent(msg);
     let appClass = classNames({
       'flex': true,
@@ -253,8 +277,28 @@ export class ChatPage extends Component {
       'mt-6': msg.printship
     });
 
+    if (msg.printship) {
+      contentElem = (
+        <React.Fragment>
+          <a className="vanilla text-700 text-mono" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
+          {msg.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
+            <React.Fragment>
+              <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-5 mr-2 text-mono" />
+              <span className="text-mono text-gray">{dateToDa(new Date(parseInt(this.state.activatedMsg.date, 10)))}</span>
+            </React.Fragment>
+          }
+        </React.Fragment>
+      )
+    } else {
+      contentElem = <Message details={details}></Message>
+    }
+
     return (
-      <div key={msg.uid} className={appClass}>
+      <div key={msg.uid}
+           className={appClass}
+           data-date={msg.wen}
+           data-date-group={msg.dateGroup}
+           onMouseEnter={this.activateMessageGroup}>
         <div className="flex-1st"></div>
         <div className="flex-2nd">
           {msg.printship &&
@@ -264,13 +308,7 @@ export class ChatPage extends Component {
           }
         </div>
         <div className="flex-3rd">
-          {msg.printship &&
-            <a className="vanilla text-700 text-mono" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
-          }
-
-          {!msg.printship &&
-            <Message details={details}></Message>
-          }
+          {contentElem}
         </div>
       </div>
     )
@@ -302,6 +340,7 @@ export class ChatPage extends Component {
         </Scrollbars>
         <div className="flex align-center mt-6">
           <div className="flex-1st"></div>
+          <div className="flex-2nd"></div>
           <div className="flex-3rd">
             <form onSubmit={this.messageSubmit}>
               <input className="chat-input-field"
