@@ -162,7 +162,7 @@ export class CommandMenu extends Component {
     Object.arrayify(this.props.store.names).forEach(({key: ship, value: stations}) => {
       stations.forEach(station => {
         let stationName = `~${ship}/${station}`;
-        if (isDMStation(stationName) || stationName.includes('inbox')) return;
+        if (isDMStation(stationName) || stationName.includes('inbox') || getStationDetails(stationName).type === 'text-topic') return;
         options.push(this.buildGoOption(stationName));
       });
 
@@ -176,8 +176,9 @@ export class CommandMenu extends Component {
   buildGoOption(term) {
     let isShip = urbitOb.isShip(term.substr(1));
     let isStation = isValidStation(term);
-    let details = isStation && getStationDetails(term);
-    let displayTextTerm = isStation ? details.station.split("/").join("  /  ") : term;
+    let details = isStation && getStationDetails(term, this.props.store.configs[term]);
+    // use collection description if it's a collection
+    let displayTextTerm = isStation ? details.type == 'text' ? `${details.station.split("/")[0]} / ${details.stationTitle}` : details.station.split("/").join("  /  ") : term;
 
     let displayText = `go ${displayTextTerm}`;
     let helpText = isStation ?
