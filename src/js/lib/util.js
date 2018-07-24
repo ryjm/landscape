@@ -357,6 +357,11 @@ export function getMessageContent(msg) {
     }
   });
 
+  if (typeof ret === "undefined") {
+    ret = {type: "unknown"};
+    console.log("ASSERT: unknown message type on ", msg)
+  }
+
   return ret;
 }
 

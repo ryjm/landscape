@@ -274,7 +274,7 @@ export class ChatPage extends Component {
   buildMessage(msg) {
     let contentElem;
 
-    let details = getMessageContent(msg);
+    let details = msg.printship ? null : getMessageContent(msg);
     let appClass = classnames({
       'flex': true,
       'align-center': true,
