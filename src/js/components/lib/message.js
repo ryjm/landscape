@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { isDMStation, getMessageContent } from '/lib/util';
 import { Button } from '/components/lib/button';
 import { CollectionPreview } from '/components/collectionPreview';
-import { TRANSITION_LOADING } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING } from '/lib/constants';
 
 export class Message extends Component {
   constructor(props) {
@@ -35,7 +35,7 @@ export class Message extends Component {
 
     this.props.storeReports([{
       type: "transition",
-      data: TRANSITION_LOADING
+      data: PAGE_STATUS_TRANSITIONING
     }]);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
@@ -67,7 +67,7 @@ export class Message extends Component {
 
     this.props.storeReports([{
       type: "transition",
-      data: TRANSITION_LOADING
+      data: PAGE_STATUS_TRANSITIONING
     }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {

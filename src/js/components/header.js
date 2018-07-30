@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { IconBlog } from '/components/lib/icons/icon-blog';
 import { IconStream } from '/components/lib/icons/icon-stream';
-import { getQueryParams, getStationDetails, collectionAuthorization, profileUrl } from '/lib/util';
+import { getQueryParams, getStationDetails, collectionAuthorization, profileUrl, getLoadingClass } from '/lib/util';
 import { Button } from '/components/lib/button';
-import { TRANSITION_LOADING } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -170,7 +170,7 @@ export class Header extends Component {
     }
 
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
-    loadingClass = this.props.store.views.transition === TRANSITION_LOADING ? 'header-loading' : 'hide';
+    loadingClass = getLoadingClass(this.props.store.views.transition);
     headerClass = classnames({
       'flex-3rd': true,
       'header-title': true,

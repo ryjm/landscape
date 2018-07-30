@@ -58,12 +58,12 @@ body {
   height: 18px;
   width: 18px;
 
-  background-color: #4330FC;
+  background-color: #999;
 }
 
 .header-loading::after {
   content: "";
-  background-color: #a197fd;
+  background-color: #ccc;
   width: 18px;
   height: 18px;
   position: absolute;
@@ -71,6 +71,22 @@ body {
   clip: rect(0, 18px, 18px, 9px);
 
   animation: spin 2s linear infinite;
+}
+
+.header-loading-primary {
+  background-color: #4330FC;
+}
+
+.header-loading-primary::after {
+  background-color: #a197fd;
+}
+
+.header-loading-secondary {
+  background-color: #6FDC74;
+}
+
+.header-loading-secondary::after {
+  background-color: #56A959;
 }
 
 .sidebar {

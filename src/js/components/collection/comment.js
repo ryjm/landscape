@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TRANSITION_LOADING, STATUS_READY, STATUS_LOADING } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, STATUS_READY, STATUS_LOADING } from '/lib/constants';
 import { Button } from '/components/lib/button';
 
 export class CommentCreate extends Component {
@@ -30,7 +30,7 @@ export class CommentCreate extends Component {
 
     this.props.storeReports([{
       type: "transition",
-      data: TRANSITION_LOADING
+      data: PAGE_STATUS_TRANSITIONING
     }]);
 
     this.props.pushCallback("circle.gram", (rep) => {

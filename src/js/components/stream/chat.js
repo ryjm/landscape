@@ -7,6 +7,7 @@ import { prettyShip, isUrl, uuid, getMessageContent, isDMStation, dateToDa } fro
 import { createDMStation } from '/services';
 import { sealDict } from '/components/lib/seal-dict';
 import { Elapsed } from '/components/lib/elapsed';
+import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY } from '/lib/constants';
 import classnames from 'classnames';
 
 export class ChatPage extends Component {
@@ -127,9 +128,29 @@ export class ChatPage extends Component {
   requestChatBatch() {
     let newNumMessages = this.state.numMessages + 50;
 
+    this.props.storeReports([{
+      type: "transition",
+      data: PAGE_STATUS_PROCESSING
+    }])
+
     let path = `/circle/${this.state.circle}/grams/-${newNumMessages}/-${this.state.numMessages}`;
 
-    this.props.api.bind(path, "PUT", this.state.host);
+    this.props.api.bind(path, "PUT", this.state.host)
+      .then((res) => {
+        if (res.status === 500) {
+          this.props.storeReports([{
+            type: "transition",
+            data: PAGE_STATUS_READY
+          }])
+        }
+      });
+
+    this.props.pushCallback('circle.nes', rep => {
+      this.props.storeReports([{
+        type: "transition",
+        data: PAGE_STATUS_READY
+      }])
+    })
   }
 
   onScrollStop() {

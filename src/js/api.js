@@ -20,7 +20,7 @@ class UrbitApi {
       wire: path
     };
 
-    fetch(`/~/is/~${ship}/${appl}${path}.json?${method}`, {
+    return fetch(`/~/is/~${ship}/${appl}${path}.json?${method}`, {
       credentials: "same-origin",
       method: "POST",
       body: JSON.stringify(params)

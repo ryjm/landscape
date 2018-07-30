@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
-import { getStationDetails, isDMStation, isValidStation, profileUrl } from '/lib/util';
+import { getStationDetails, isDMStation, isValidStation, profileUrl, getLoadingClass } from '/lib/util';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
-import { TRANSITION_LOADING, STATUS_READY } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, STATUS_READY } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
@@ -400,7 +400,7 @@ export class CommandMenu extends Component {
     return (
       this.state.view === "collection-create" ||
       this.state.view === "stream-create" ||
-      this.props.store.views.transition === TRANSITION_LOADING ||
+      this.props.store.views.transition === PAGE_STATUS_TRANSITIONING ||
       this.state.status !== STATUS_READY
     )
   }
@@ -432,7 +432,7 @@ export class CommandMenu extends Component {
     }
 
     commandInputDisabled = this.commandInputDisabled();
-    loadingClass = this.props.store.views.transition === TRANSITION_LOADING ? 'header-loading' : 'hide';
+    loadingClass = getLoadingClass(this.props.store.views.transition);
 
     return (
       <div className="container command-page">
