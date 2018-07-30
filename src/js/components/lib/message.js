@@ -141,8 +141,10 @@ export class Message extends Component {
       )
     } else if (this.props.details.type === "newpost") {
       return <CollectionPreview messageDetails={this.props.details} api={this.props.api}></CollectionPreview>
-    } else {
+    } else if (this.props.details.type === "lin") {
       return this.props.details.content;
     }
+
+    return "<unknown message type>";
   }
 }
