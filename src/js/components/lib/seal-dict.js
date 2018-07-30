@@ -1,4 +1,4 @@
-import Seals from '/vendor/seals-0.1';
+import Seals from '/vendor/seals-0.1.1';
 
 export class SealDict {
   constructor() {
