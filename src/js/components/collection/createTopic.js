@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
 import { getQueryParams, getStationDetails, daToDate } from '/lib/util';
 import { Elapsed } from '/components/lib/elapsed';
-import { PAGE_STATUS_TRANSITIONING, STATUS_READY, STATUS_LOADING } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, STATUS_READY, STATUS_LOADING, REPORT_PAGE_STATUS } from '/lib/constants';
 import _ from 'lodash';
 
 export class TopicCreatePage extends Component {
@@ -105,7 +105,7 @@ export class TopicCreatePage extends Component {
     });
 
     this.props.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 

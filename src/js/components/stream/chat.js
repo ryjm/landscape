@@ -7,7 +7,7 @@ import { prettyShip, isUrl, uuid, getMessageContent, isDMStation, dateToDa } fro
 import { createDMStation } from '/services';
 import { sealDict } from '/components/lib/seal-dict';
 import { Elapsed } from '/components/lib/elapsed';
-import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY } from '/lib/constants';
+import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
 import classnames from 'classnames';
 
 export class ChatPage extends Component {
@@ -129,7 +129,7 @@ export class ChatPage extends Component {
     let newNumMessages = this.state.numMessages + 50;
 
     this.props.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_PROCESSING
     }])
 
@@ -139,7 +139,7 @@ export class ChatPage extends Component {
       .then((res) => {
         if (res.status === 500) {
           this.props.storeReports([{
-            type: "transition",
+            type: REPORT_PAGE_STATUS,
             data: PAGE_STATUS_READY
           }])
         }
@@ -147,7 +147,7 @@ export class ChatPage extends Component {
 
     this.props.pushCallback('circle.nes', rep => {
       this.props.storeReports([{
-        type: "transition",
+        type: REPORT_PAGE_STATUS,
         data: PAGE_STATUS_READY
       }])
     })

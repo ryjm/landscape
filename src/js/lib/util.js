@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import urbitOb from 'urbit-ob';
 import classnames from 'classnames';
-import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING } from '/lib/constants';
+import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_DISCONNECTED } from '/lib/constants';
 
 export function capitalize(str) {
   return `${str[0].toUpperCase()}${str.substr(1)}`;
@@ -18,9 +18,10 @@ export function getQueryParams() {
 export function getLoadingClass(storeTransition) {
   return classnames({
     'hide': storeTransition === PAGE_STATUS_READY,
-    'header-loading': storeTransition !== PAGE_STATUS_READY,
-    'header-loading-primary': storeTransition === PAGE_STATUS_TRANSITIONING,
-    'header-loading-secondary': storeTransition === PAGE_STATUS_PROCESSING,
+    'page-status': storeTransition !== PAGE_STATUS_READY,
+    'page-status-primary': storeTransition === PAGE_STATUS_TRANSITIONING,
+    'page-status-secondary': storeTransition === PAGE_STATUS_PROCESSING,
+    'page-status-tertiary': storeTransition === PAGE_STATUS_DISCONNECTED,
   })
 }
 

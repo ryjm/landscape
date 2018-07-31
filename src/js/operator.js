@@ -5,6 +5,10 @@ import { warehouse } from '/warehouse';
 import { router } from '/router';
 import { getMessageContent, isDMStation } from '/lib/util';
 import { createDMStation } from '/services';
+import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY } from '/lib/constants';
+
+const LONGPOLL_TIMEOUT = 10000;
+const LONGPOLL_TRYAGAIN = 30000;
 
 /**
   Response format
@@ -140,11 +144,34 @@ export class UrbitOperator {
 
   runPoll() {
     console.log('fetching... ', this.seqn);
-    fetch(`/~/of/${api.authTokens.ixor}?poll=${this.seqn}`, {credentials: "same-origin"})
-      .then((res) => {
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+      warehouse.storeReports([{
+        type: REPORT_PAGE_STATUS,
+        data: PAGE_STATUS_DISCONNECTED
+      }]);
+      this.runPoll();
+    }, LONGPOLL_TIMEOUT);
+
+    fetch(`/~/of/${api.authTokens.ixor}?poll=${this.seqn}`, {
+      credentials: "same-origin",
+      signal: controller.signal
+    })
+      .then(res => {
         return res.json();
       })
-      .then((data) => {
+      .then(data => {
+        warehouse.storeReports([{
+          type: REPORT_PAGE_STATUS,
+          data: PAGE_STATUS_READY
+        }]);
+
+        clearTimeout(timeout);
+
         if (data.beat) {
           console.log('beat');
           this.runPoll();
@@ -158,7 +185,20 @@ export class UrbitOperator {
           this.seqn++;
           this.runPoll();
         }
-    });
+      })
+      .catch(error => {
+        console.error('error = ', error);
+        warehouse.storeReports([{
+          type: REPORT_PAGE_STATUS,
+          data: PAGE_STATUS_DISCONNECTED
+        }]);
+
+        clearTimeout(timeout);
+
+        setTimeout(() => {
+          this.runPoll();
+        }, LONGPOLL_TRYAGAIN);
+      });
   }
 }
 

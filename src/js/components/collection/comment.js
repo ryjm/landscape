@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PAGE_STATUS_TRANSITIONING, STATUS_READY, STATUS_LOADING } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, STATUS_READY, STATUS_LOADING, REPORT_PAGE_STATUS } from '/lib/constants';
 import { Button } from '/components/lib/button';
 
 export class CommentCreate extends Component {
@@ -29,7 +29,7 @@ export class CommentCreate extends Component {
     });
 
     this.props.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 

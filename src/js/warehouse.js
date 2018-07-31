@@ -6,7 +6,7 @@ import { NamesReducer } from '/reducers/names';
 import { PublicReducer } from '/reducers/public';
 import { DmsReducer } from '/reducers/dms';
 import { router } from '/router';
-import { PAGE_STATUS_READY } from '/lib/constants';
+import { PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
 
 const REPORT_KEYS = [
   'circle.gram',
@@ -20,7 +20,7 @@ const REPORT_KEYS = [
   'circle.config.dif.permit/circle.config',
   'circle.config.dif.remove/circle.config',
   'circles',
-  'transition',
+  REPORT_PAGE_STATUS,
   'public',
   'menu.toggle'
 ]

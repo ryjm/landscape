@@ -5,7 +5,7 @@ import { UrbitOperator } from '/operator';
 import { getQueryParams } from '/lib/util';
 import { api } from '/api';
 import { Root } from '/components/root';
-import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
 
 class UrbitRouter {
   constructor() {
@@ -72,7 +72,7 @@ class UrbitRouter {
 
   transitionTo(targetUrl, noHistory) {
     warehouse.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 
@@ -87,7 +87,7 @@ class UrbitRouter {
       this.scaffold = this.extractBody(resText) || resText;
 
       warehouse.storeReports([{
-        type: "transition",
+        type: REPORT_PAGE_STATUS,
         data: PAGE_STATUS_READY
       }, {
         type: "menu.toggle",

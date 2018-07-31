@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { isDMStation, getMessageContent } from '/lib/util';
 import { Button } from '/components/lib/button';
 import { CollectionPreview } from '/components/collectionPreview';
-import { PAGE_STATUS_TRANSITIONING } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, REPORT_PAGE_STATUS } from '/lib/constants';
 
 export class Message extends Component {
   constructor(props) {
@@ -34,7 +34,7 @@ export class Message extends Component {
     });
 
     this.props.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 
@@ -66,7 +66,7 @@ export class Message extends Component {
     });
 
     this.props.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 

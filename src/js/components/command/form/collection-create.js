@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { CommandForm } from '/components/command/form';
 import { getStationDetails } from '/lib/util';
-import { PAGE_STATUS_TRANSITIONING } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, REPORT_PAGE_STATUS } from '/lib/constants';
 import _ from 'lodash';
 import urbitOb from 'urbit-ob';
 
@@ -33,7 +33,7 @@ export class CommandFormCollectionCreate extends Component {
       }],
       submit: function() {
         this.props.storeReports([{
-          type: "transition",
+          type: REPORT_PAGE_STATUS,
           data: PAGE_STATUS_TRANSITIONING
         }]);
 
