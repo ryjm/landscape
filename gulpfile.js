@@ -28,7 +28,7 @@ gulp.task('bundle-css', function() {
     .src('src/index.css')
     .pipe(cssimport())
     .pipe(cssnano())
-    .pipe(gulp.dest('./urbit-code/web/pages/nutalk/css'));
+    .pipe(gulp.dest('./urbit-code/web/landscape/css'));
 });
 
 var cache;
@@ -65,7 +65,7 @@ gulp.task('bundle-js', function(cb) {
       cb();
     })
     .pipe(source('index.js'))
-    .pipe(gulp.dest('./urbit-code/web/pages/nutalk/js/'))
+    .pipe(gulp.dest('./urbit-code/web/landscape/js/'))
     .on('end', cb);
 });
 

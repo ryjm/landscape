@@ -1,13 +1,12 @@
-/-  collections
-/+  colls
+/+  collections, colls
 /=  gas  /$  fuel:html
-/=  all-colls  /:  /===/web/collections
-            /^  (map knot collection:collections)  /_  /collections-collection/
+::/=  all-colls  /:  /===/web/collections
+::               /collection-web-item/
 |%
   :: is this collection on the profile?
   ++  is-pro
-  |=  {a/knot coll/collection:collections}
-  visi.conf.coll
+  |=  col=collection:collections
+  visible.meta.col
 --
 ^-  manx
 ;div.profile-page
