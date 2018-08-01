@@ -15,11 +15,11 @@ export class CollectionPreview extends Component {
     return {__html: string};
   }
   snipUrl(url, ship) {
-    if (!url.includes(`~${ship}`)) {
+//    if (!url.includes(`~${ship}`)) {
       return `${this.cleanSig(url)}.x-collections-snip`
-    } else {
-      return `${this.cleanSig(url)}.collections-snip`
-    }
+//    } else {
+//      return `${this.cleanSig(url)}.collections-snip`
+//    }
   }
   // HACK FOR TESTING
   cleanSig(url) {
