@@ -56,11 +56,11 @@ class UrbitRouter {
 
     switch (linkType) {
       case "edit-page":
-        if (url.split("/")[2] != `~${api.authTokens.ship}`) {
+//        if (url.split("/")[2] != `~${api.authTokens.ship}`) {
           path[0] += ".x-htm";
-        } else {
-          path[0] += ".htm";
-        }
+//        } else {
+//          path[0] += ".htm";
+//        }
         break;
       case "foreign":
         path[0] += ".x-htm";

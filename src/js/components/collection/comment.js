@@ -12,17 +12,20 @@ export class CommentCreate extends Component {
       status: STATUS_READY
     };
     let loc = window.location.pathname;
+    
+    let locList = loc.split('/').slice(1);
 
-    //  This gets '=='  ??
-    this.pageShip = loc.includes("/==/web") ? loc.split('/')[2] : `~${props.api.authTokens.ship}`
+    if (locList[0] == '~~') { 
+      locList.shift(); 
+    } 
 
-    this.pageShip2 = loc.includes("/==/web") ? 
-      loc.split('/')[1].slice(1) : 
-      `~${props.api.authTokens.ship}`.slice(1)
+    this.pageShip = (locList[1] == '==') ? 
+      locList[0].slice(1) : 
+      `${props.api.authTokens.ship}`
 
     this.clayPath = loc.includes("/==/web") ? 
-      '/' + loc.split('/').slice(3).join('/') : 
-      '/web/' + loc.split('/').slice(2).join('/');
+      '/' + locList.slice(2).join('/') : 
+      '/web/' + locList.join('/');
 
   }
 
@@ -30,7 +33,7 @@ export class CommentCreate extends Component {
     this.setState({ status: STATUS_LOADING });
 
     this.props.api.coll({
-        ship: this.pageShip2,
+        ship: this.pageShip,
         desk: 'home',
         acts: [{
           comment: {
