@@ -126,12 +126,13 @@ export class TopicCreatePage extends Component {
     this.props.pushCallback("circle.gram", (rep) => {
       this.setState({ status: STATUS_READY });
 
-      let content = _.get(rep.data, "gam.sep.fat.tac.text", null);
-      let postId = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
-      postId = postId ? postId.split("|")[0] : null;
+      let type = _.get(rep.data, "gam.sep.fat.tac.text", null);
 
-      if (content && content === this.state.topicContent) {
-        this.props.transitionTo(`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`);
+      if (type && (type === 'new item' || type === 'edited item')) {
+        let content = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
+        content = JSON.parse(content);
+
+        this.props.transitionTo(`/~~/~${details.hostship}/==/${content.path.join('/')}`);
         return true;
       }
 
