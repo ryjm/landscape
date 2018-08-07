@@ -37,21 +37,24 @@ export class CommandFormCollectionCreate extends Component {
           data: PAGE_STATUS_TRANSITIONING
         }]);
 
-        this.props.api.coll({
-          create: {
-            desc: this.state.formData.name,
-            publ: true,
-            visi: this.state.formData.visible === "yes",
-            comm: true,
-            xeno: true,
-            ses: ""
-          }
-        });
-
+        let dat = {
+          ship: this.props.api.authTokens.ship, 
+          desk: 'home',
+          acts: [{ 
+            collection: {
+              path: '/web/collections',
+              name: this.state.formData.name,
+              desc: this.state.formData.name,
+              visible: this.state.formData.visible === "yes",
+              comments: true,
+              type: "blog",
+            }
+          }]
+        }
+        this.props.api.coll(dat);
         this.props.pushCallback("circles", (rep) => {
           let station = `~${this.props.api.authTokens.ship}/${rep.data.cir}`;
           let details = getStationDetails(station);
-
           this.props.api.hall({
             source: {
               nom: 'inbox',

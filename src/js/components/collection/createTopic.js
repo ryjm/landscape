@@ -105,7 +105,6 @@ export class TopicCreatePage extends Component {
       }
 
     };
-
     this.props.api.coll(dat);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
@@ -124,11 +123,13 @@ export class TopicCreatePage extends Component {
     }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
+      console.log('ydsdifsdfsjf');
       this.setState({ status: STATUS_READY });
 
       let type = _.get(rep.data, "gam.sep.fat.tac.text", null);
 
       if (type && (type === 'new item' || type === 'edited item')) {
+      
         let content = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
         content = JSON.parse(content);
 
