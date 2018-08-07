@@ -319,7 +319,9 @@ export function getMessageContent(msg) {
       let station = msg.aud[0];
       let stationDetails = getStationDetails(station);
       let jason = JSON.parse(msg.sep.fat.sep.lin.msg); 
-      let content = (type.includes('collection')) ? null : jason.content; 
+      let content = (type.includes('collection')) ? null : jason.content;
+
+      let par = jason.path.slice(0, -1);
 
       return {
         type: msg.sep.fat.tac.text,
@@ -329,7 +331,9 @@ export function getMessageContent(msg) {
         date: jason.date,
         path: jason.path,
         postTitle: jason.name,
-        postUrl: stationDetails.stationUrl,
+        postUrl: `/~~/${jason.owner}/==/${jason.path.join('/')}`,
+        parentTitle: jason.path.slice(-2, -1),
+        parentUrl: `/~~/${jason.owner}/==/${jason.path.slice(0, -1).join('/')}`,
       }
     },
     'sep.inv.cir': 'inv',

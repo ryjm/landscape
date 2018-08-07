@@ -139,8 +139,7 @@ export class Message extends Component {
           <pre className="text-mono mt-0">{this.props.details.res}</pre>
         </div>
       )
-    } else if (this.props.details.type.includes('collection') ||
-               this.props.details.type.includes('item')) {
+    } else if (this.props.details.type === 'new item') {
 
       return <CollectionPreview messageDetails={this.props.details} api={this.props.api}></CollectionPreview>
     } else if (this.props.details.type === "lin") {
