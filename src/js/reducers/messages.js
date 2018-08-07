@@ -7,7 +7,6 @@ export class MessagesReducer {
   reduce(reports, store) {
     reports.forEach((rep) => {
       let fromInbox = rep.from && rep.from.path.includes("inbox");
-
       switch (rep.type) {
         case "circle.nes":
           this.processMessages(rep.data, store);
@@ -82,6 +81,7 @@ export class MessagesReducer {
       return msgs.concat(msgGroup.filter(this.filterInboxMessages));  // filter out app & accepted invite msgs
     }, []);
 
+
     let ret = _(messages)
       .sort((a, b) => b.wen - a.wen)    // sort by date
       // sort must come before uniqBy! if uniqBy detects a dupe, it takes
@@ -90,7 +90,7 @@ export class MessagesReducer {
       .uniqBy('uid')                    // dedupe
       .slice(0, INBOX_MESSAGE_COUNT)    // grab the first 30 or so
       .value();                         // unwrap lodash chain
-
+        console.log('a2');
     // for (let msg of ret) {
     //   console.log(`msg ${msg.uid}: ${msg.wen}`);
     // }
@@ -103,6 +103,7 @@ export class MessagesReducer {
   //   - accepted invites
   //   - all DM invites (should automatically accept)
   filterInboxMessages(msg) {
+
     let msgDetails = getMessageContent(msg);
     let typeApp = msgDetails.type === "app";
     let typeInv = msgDetails.type === "inv";

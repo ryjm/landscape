@@ -99,9 +99,9 @@ export class InboxRecentPage extends Component {
 
       let postDisplay = null;
 
-      if (section.details.type === "text-topic") {
-        let postTitle = this.findPostTitleFromMessage(section.details.postId);
-
+      if (section.details.type === "collection") {
+//        let postTitle = this.findPostTitleFromMessage(section.details.postId);
+        let postTitle = "dsflksdjlkfsjdlkf";
         postDisplay = (
           <span>
             <span className="ml-2 mr-2">/</span>

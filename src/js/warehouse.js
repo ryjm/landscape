@@ -107,7 +107,6 @@ class UrbitWarehouse {
 
   storeReports(newReports) {
     newReports.forEach((rep) => console.log('new report: ', rep));
-
     this.messagesReducer.reduce(newReports, this.store);
     this.configsReducer.reduce(newReports, this.store);
     this.viewsReducer.reduce(newReports, this.store);

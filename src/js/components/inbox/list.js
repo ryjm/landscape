@@ -44,7 +44,7 @@ export class InboxListPage extends Component {
     if (!stations) return null;
 
     const chatStations = this.buildSection(stations.chatStations);
-    const textStations = this.buildSection(stations.textStations);
+    const collStations = this.buildSection(stations.collStations);
     const DMStations = this.buildDMSection(stations.dmStations);
 
     return (
@@ -57,7 +57,7 @@ export class InboxListPage extends Component {
             </div>
             <div className="mt-9">
               <div className="text-700">Blogs, Forum and Notes</div>
-              {textStations}
+              {collStations}
             </div>
             <div className="mt-9">
               <div className="text-700">Direct Messages</div>

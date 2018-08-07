@@ -135,7 +135,7 @@ export class Header extends Component {
         headerData = {
           title: {
             display: "Inbox",
-            href: "/~~/pages/nutalk"
+            href: "/~~/landscape"
           }
         }
         break;
