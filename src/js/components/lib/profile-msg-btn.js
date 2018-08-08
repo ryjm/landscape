@@ -6,7 +6,7 @@ export class ProfileMsgBtn extends Component {
 
     let members = [this.props.api.authTokens.ship, this.props.ship.substr(1)];
     let dmStation = `~${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
-    let dmLink = `/~~/pages/nutalk/stream?station=${dmStation}`;
+    let dmLink = `/~~/landscape/stream?station=${dmStation}`;
 
     return (
       <a className="vanilla mb-6 btn btn-sm btn-secondary" href={dmLink}>Message</a>

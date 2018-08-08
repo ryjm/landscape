@@ -39,7 +39,7 @@ export class Message extends Component {
     }]);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
-      this.props.transitionTo(`/~~/pages/nutalk/stream?station=${station}`);
+      this.props.transitionTo(`/~~/landscape/stream?station=${station}`);
     });
   }
 
@@ -71,7 +71,7 @@ export class Message extends Component {
     }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
-      this.props.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
+      this.props.transitionTo(`/~~/landscape/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
     });
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {

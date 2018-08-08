@@ -61,6 +61,7 @@ export class Header extends Component {
   getHeaderData(type) {
     let headerData = {};
     let defaultData;
+    let actions = {};
 
     switch (type) {
       case "stream":
@@ -74,8 +75,20 @@ export class Header extends Component {
         }
         break;
 
-      case "collection-index":
+      case "collection":
         defaultData = this.getStationHeaderData(this.props.data.station);
+        
+        if (this.props.data.show === 'default') {
+          actions = {
+            details: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=details`,
+            write: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=post`, 
+          }
+        } else if (this.props.data.show === 'details') {
+          actions = {
+            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`, 
+          }
+        }
+
         headerData = {
           ...defaultData,
           icon: IconBlog,
@@ -83,15 +96,25 @@ export class Header extends Component {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
           },
-          actions: {
-            details: defaultData.stationDetails.stationDetailsUrl,
-            write: `/~~/pages/nutalk/collection/post?station=~${defaultData.stationDetails.host}/collection_~${defaultData.stationDetails.collId}`
-          }
+          actions: actions
         }
         break;
 
-      case "collection-item":
+      case "raw":
+      case "both":
         defaultData = this.getStationHeaderData(this.props.data.station);
+
+        if (this.props.data.show === 'default') {
+          actions = {
+            details: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=details`,
+            edit: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=edit`, 
+          }
+        } else if (this.props.data.show === 'details') {
+          actions = {
+            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`, 
+          }
+        }
+
         headerData = {
           ...defaultData,
           icon: IconBlog,
@@ -99,25 +122,10 @@ export class Header extends Component {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
           },
-          actions: {
-            edit: `/~~/~${defaultData.stationDetails.host}/==/web/collections/${defaultData.stationDetails.collId}/${this.props.data.postid}?edit=true`
-          }
+          actions: actions,
         }
         break;
 
-      case "collection-write":
-      case "collection-edit":
-        defaultData = this.getStationHeaderData(this.props.data.station);
-        headerData = {
-          ...defaultData,
-          icon: IconBlog,
-          title: {
-            ...defaultData.title,
-            display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
-          },
-          actions: {}
-        }
-        break;
 
       case "profile":
         headerData = {
