@@ -39,8 +39,8 @@ form {
 .panini {
   border-top: 4px solid black;
   border-bottom: 4px solid black;
-  height: 18px;
-  width: 18px;
+  height: 16px;
+  width: 20px;
 }
 
 .liang {
@@ -91,10 +91,9 @@ form {
 
 .icon-text {
   position: relative;
-  width: 15px;
-  height: 15px;
-  clip-path: polygon(50% 2.4%, 0% 38.8%, 19.1% 97.6%, 80.9% 97.6%, 100% 38.8%);
-  background-color: #FFBF21;
+  width: 16px;
+  height: 16px;
+  border: 5px #FFBF21 solid;
 }
 
 .icon-text-topic {
@@ -114,10 +113,11 @@ form {
 }
 
 .icon-chat {
-  width: 15px;
-  height: 12px;
-  border-radius: 12px;
-  background-color: #CC0FEE;
+  width: 16px;
+  height: 16px;
+  border-radius: 16px;
+  border: 5px #4330FC solid;
+
 }
 
 .icon-inbox {
