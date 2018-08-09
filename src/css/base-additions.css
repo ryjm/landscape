@@ -28,6 +28,10 @@ a.vanilla {
   text-decoration: none;
 }
 
+a.hoverline:hover {
+  text-decoration: underline;
+}
+
 form {
   margin: 0;
 }

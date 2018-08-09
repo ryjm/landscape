@@ -46,8 +46,7 @@ export class Header extends Component {
     return {
       title: {
         display: stationDetails.stationTitle,
-        href: stationDetails.stationUrl,
-        style: "mono"
+        href: stationDetails.stationUrl
       },
       breadcrumbs: [{
         display: `~${stationDetails.host}`,
@@ -69,6 +68,10 @@ export class Header extends Component {
         headerData = {
           ...defaultData,
           icon: IconStream,
+          title: {
+            ...defaultData.title,
+            style: "mono"
+          },
           actions: {
             details: defaultData.stationDetails.stationDetailsUrl,
           },
@@ -77,15 +80,15 @@ export class Header extends Component {
 
       case "collection":
         defaultData = this.getStationHeaderData(this.props.data.station);
-        
+
         if (this.props.data.show === 'default') {
           actions = {
             details: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=details`,
-            write: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=post`, 
+            write: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=post`,
           }
         } else if (this.props.data.show === 'details') {
           actions = {
-            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`, 
+            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`,
           }
         }
 
@@ -107,11 +110,11 @@ export class Header extends Component {
         if (this.props.data.show === 'default') {
           actions = {
             details: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=details`,
-            edit: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=edit`, 
+            edit: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=edit`,
           }
         } else if (this.props.data.show === 'details') {
           actions = {
-            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`, 
+            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`,
           }
         }
 
