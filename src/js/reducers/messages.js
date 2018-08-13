@@ -81,14 +81,12 @@ export class MessagesReducer {
       return msgs.concat(msgGroup.filter(this.filterInboxMessages));  // filter out app & accepted invite msgs
     }, []);
 
-
     let ret = _(messages)
       .sort((a, b) => b.wen - a.wen)    // sort by date
       // sort must come before uniqBy! if uniqBy detects a dupe, it takes
       // earlier element in the array. since we want later timestamps to
       // override, sort first
       .uniqBy('uid')                    // dedupe
-      .uniqBy('sep.fat.sep.lin.msg')
       .slice(0, INBOX_MESSAGE_COUNT)    // grab the first 30 or so
       .value();                         // unwrap lodash chain
     // for (let msg of ret) {
@@ -103,9 +101,7 @@ export class MessagesReducer {
   //   - accepted invites
   //   - all DM invites (should automatically accept)
   filterInboxMessages(msg) {
-
     let msgDetails = getMessageContent(msg);
-    let newItem = msgDetails.type === "new item";
     let typeApp = msgDetails.type === "app";
     let typeInv = msgDetails.type === "inv";
     let isDmInvite = typeInv && isDMStation(msgDetails.content);
@@ -114,7 +110,6 @@ export class MessagesReducer {
     if (typeApp) return false;
     if (isDmInvite) return false;
     if (hasResponded) return false;
-    if (!newItem) return false;
 
     return true;
   }
