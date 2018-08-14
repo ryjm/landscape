@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { warehouse } from '/warehouse';
-import { UrbitOperator } from '/operator';
+import { operator } from '/operator';
 import { getQueryParams } from '/lib/util';
 import { api } from '/api';
 import { Root } from '/components/root';
@@ -33,6 +33,7 @@ class UrbitRouter {
         storeReports={warehouse.storeReports}
         pushCallback={warehouse.pushCallback}
         transitionTo={this.transitionTo}
+        runPoll={operator.runPoll.bind(operator)}
         scaffold={this.scaffold} />
     )
 

@@ -76,35 +76,35 @@ console.log(headerType);
         headerType === "raw"){
 
       headerData = {
-        type: headerType, 
-        path: (headerQuery.length > 0) ? 
+        type: headerType,
+        path: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('path') : null,
-        station: `${headerQuery[0].getAttribute('ship')}/c-${headerQuery[0].getAttribute('path').split('/').slice(3).join('-')}`, 
-        
-        postid: (headerQuery.length > 0) ? 
+        station: `${headerQuery[0].getAttribute('ship')}/c-${headerQuery[0].getAttribute('path').split('/').slice(3).join('-')}`,
+
+        postid: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('postid') : null,
-        ship: (headerQuery.length > 0) ? 
+        ship: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('ship') : null,
-        show: (headerQuery.length > 0) ? 
+        show: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('show') : null,
       }
 
     } else {
       headerData = {
-        type: headerType, 
-        title: (headerQuery.length > 0) ? 
+        type: headerType,
+        title: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('title') : null,
-        station: (headerQuery.length > 0) ? 
+        station: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('station') : null,
-        postid: (headerQuery.length > 0) ? 
+        postid: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('postid') : null,
-        ship: (headerQuery.length > 0) ? 
+        ship: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('ship') : null,
-        publ: (headerQuery.length > 0) ? 
+        publ: (headerQuery.length > 0) ?
           headerQuery[0].getAttribute('publ') : null,
       }
     }
-    
+
     headerData.station = (headerData.station === "query") ? getQueryParams().station : headerData.station;
 
     return (
@@ -115,6 +115,7 @@ console.log(headerType);
         storeReports={this.props.storeReports}
         pushCallback={this.props.pushCallback}
         transitionTo={this.props.transitionTo}
+        runPoll={this.props.runPoll}
       />
     )
   }

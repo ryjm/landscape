@@ -148,7 +148,7 @@ export class UrbitOperator {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    const timeout = setTimeout(() => {
+    const disconnectedTimeout = setTimeout(() => {
       controller.abort();
       warehouse.storeReports([{
         type: REPORT_PAGE_STATUS,
@@ -170,7 +170,7 @@ export class UrbitOperator {
           data: PAGE_STATUS_READY
         }]);
 
-        clearTimeout(timeout);
+        clearTimeout(disconnectedTimeout);
 
         if (data.beat) {
           console.log('beat');
@@ -193,11 +193,12 @@ export class UrbitOperator {
           data: PAGE_STATUS_DISCONNECTED
         }]);
 
-        clearTimeout(timeout);
+        clearTimeout(disconnectedTimeout);
 
-        setTimeout(() => {
-          this.runPoll();
-        }, LONGPOLL_TRYAGAIN);
+        // TODO: Make this reconnect automatically
+        // setTimeout(() => {
+        //   this.runPoll();
+        // }, LONGPOLL_TRYAGAIN);
       });
   }
 }

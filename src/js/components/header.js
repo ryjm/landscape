@@ -197,7 +197,7 @@ export class Header extends Component {
           </div>
         </div>
         <div className="flex align-center header-mainrow">
-          <div className={loadingClass}></div>
+          <div onClick={() => this.props.runPoll()} className={loadingClass}></div>
           <a onClick={this.toggleMenu} className="flex-1st">
             <div className="panini"></div>
           </a>

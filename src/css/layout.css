@@ -62,6 +62,16 @@ body {
   background-color: #999;
 }
 
+.page-status::before {
+  position: absolute;
+  top: 24px;
+  color: red;
+  content: "retry";
+  font-family: "Source Code Pro";
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .page-status::after {
   content: "";
   background-color: #ccc;
@@ -92,10 +102,12 @@ body {
 
 .page-status-tertiary {
   background-color: #EE3124;
+  cursor: pointer;
 }
 
 .page-status-tertiary::after {
   background-color: #FBD5D3;
+  cursor: pointer;
 }
 
 .sidebar {
