@@ -133,8 +133,9 @@ export class Header extends Component {
       case "profile":
         headerData = {
           title: {
-            display: "Profile",
-            href: profileUrl(this.props.data.ship)
+            display: this.props.data.ship,
+            href: profileUrl(this.props.data.ship.substr(1)),
+            style: "mono"
           }
         }
         break;
