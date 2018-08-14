@@ -1,16 +1,14 @@
-body {
-  overflow: overlay; /* Prevents scroll bar from affecting width on Webkit/Blink browsers */
-
+body, p, .text-body {
   font-size: 14px;
   line-height: 24px;
+}
 
+body {
+  overflow: overlay; /* Prevents scroll bar from affecting width on Webkit/Blink browsers */
   font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-p, .body-text {
-  font-size: 14px;
-  line-height: 24px;
-
+p, .text-body {
   font-family: "San Francisco Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
