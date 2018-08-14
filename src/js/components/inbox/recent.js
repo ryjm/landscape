@@ -19,12 +19,23 @@ export class InboxRecentPage extends Component {
 
   buildPostTitle(messageDetails) {
     if (messageDetails.postUrl) {
-      return (
-        <a className="pr-12 text-600 underline"
-          href={messageDetails.postUrl}>
-          {messageDetails.postTitle}
-        </a>
-      )
+      if (messageDetails.contentType === "comments") {
+        
+        return (
+          <a className="pr-12 text-600 underline"
+            href={messageDetails.parentUrl}>
+            {messageDetails.parentTitle}  /  comment
+          </a>
+        )
+
+      } else {
+        return (
+          <a className="pr-12 text-600 underline"
+            href={messageDetails.postUrl}>
+            {messageDetails.postTitle}
+          </a>
+        )
+      }
     } else {
       return null;
     }
@@ -99,9 +110,8 @@ export class InboxRecentPage extends Component {
 
       let postDisplay = null;
 
-      if (section.details.type === "text-topic") {
-        let postTitle = this.findPostTitleFromMessage(section.details.postId);
-
+      if (section.details.type === "collection") {
+        let postTitle = section.details.stationTitle;
         postDisplay = (
           <span>
             <span className="ml-2 mr-2">/</span>
@@ -119,7 +129,6 @@ export class InboxRecentPage extends Component {
             <div className="col-sm-10">
               {hostDisplay}
               <a href={section.details.stationUrl} className="text-700 underline">{section.details.stationTitle}</a>
-              {postDisplay}
             </div>
           </div>
           {sectionContent}

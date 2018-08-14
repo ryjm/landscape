@@ -12,20 +12,35 @@ export class CommentCreate extends Component {
       status: STATUS_READY
     };
     let loc = window.location.pathname;
-    this.pageShip = loc.includes("/==/web") ? loc.split('/')[2] : `~${props.api.authTokens.ship}`
+    
+    let locList = loc.split('/').slice(1);
+
+    if (locList[0] == '~~') { 
+      locList.shift(); 
+    } 
+
+    this.pageShip = (locList[1] == '==') ? 
+      locList[0].slice(1) : 
+      `${props.api.authTokens.ship}`
+
+    this.clayPath = loc.includes("/==/web") ? 
+      '/' + locList.slice(2).join('/') : 
+      '/web/' + locList.join('/');
+
   }
 
   createComment() {
     this.setState({ status: STATUS_LOADING });
 
     this.props.api.coll({
-      comment: {
-        col: this.props.coll,
-        top: this.props.top,
-        com: '~',
-        wat: this.state.comment,
-        hos: this.pageShip
-      }
+        ship: this.pageShip,
+        desk: 'home',
+        acts: [{
+          comment: {
+            path: this.clayPath,
+            content: this.state.comment,
+          }
+        }]
     });
 
     this.props.storeReports([{
@@ -34,9 +49,12 @@ export class CommentCreate extends Component {
     }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
-      this.setState({ comment: '', status: STATUS_READY});
+    this.setState({ comment: '', status: STATUS_READY});
 
-      this.props.transitionTo(this.pageShip == this.props.api.authTokens.ship ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/${this.pageShip}/==/web/collections/${this.props.coll}/${this.props.top}`)
+   //   this.props.transitionTo(this.pageShip == this.props.api.authTokens.ship ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/${this.pageShip}/==/web/collections/${this.props.coll}/${this.props.top}`)
+    
+    this.props.transitionTo(window.location.pathname); // any reason we shouldnt do this?
+    
     });
   }
 

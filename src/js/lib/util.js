@@ -119,15 +119,15 @@ export function uuid() {
 }
 
 export function parseCollCircle(st) {
-  let collMeta = /(.*)\/collection_~(~[a-z,\.,0-9]*)(:?_~)?(:?~.*)?/.exec(st);
-  let r;
-  // console.log('regex', collMeta);
-  if (collMeta) {
-    r = {
-      ship: collMeta[1],
-      coll: collMeta[2],
-      top: collMeta[4]
-    }
+  let sp = st.split('/');
+  let pax = sp[1].split('-');
+  pax.shift();
+  pax = ['web', 'collections'].concat(pax);
+  
+  let  r = {
+      ship: sp[0],
+      path: pax,
+      name: pax[pax.length-1]
   }
   return r;
 }
@@ -221,11 +221,11 @@ export function foreignUrl(shipName, own, urlFrag) {
 // shorten comet names
 export function prettyShip(ship) {
   const sp = ship.split('-');
-  return [sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship, ship[0] === '~' ? `/~~/${ship}/==/web/pages/nutalk/profile` : `/~~/~${ship}/==/web/pages/nutalk/profile`];
+  return [sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship, ship[0] === '~' ? `/~~/${ship}/==/web/landscape/profile` : `/~~/~${ship}/==/web/landscape/profile`];
 }
 
 export function profileUrl(ship) {
-  return `/~~/~${ship}/==/web/pages/nutalk/profile`;
+  return `/~~/~${ship}/==/web/landscape/profile`;
 }
 
 export function isDMStation(station) {
@@ -269,22 +269,20 @@ export function getStationDetails(station, config = {}, usership) {
     ret.type = "inbox";
   } else if (isDMStation(station)) {
     ret.type = "dm";
-  } else if ((station.includes("collection") && collParts.top)) {
-    ret.type = "text-topic";
-  } else if ((station.includes("collection") && !collParts.top)) {
-    ret.type = "text";
+  } else if (station.includes("/c")) {
+    ret.type = "collection";
   } else {
     ret.type = "chat";
   }
 
   switch (ret.type) {
     case "inbox":
-      ret.stationUrl = "/~~/pages/nutalk";
+      ret.stationUrl = "/~~/landscape";
       ret.stationTitle = ret.cir;
       break;
     case "chat":
-      ret.stationUrl = `/~~/pages/nutalk/stream?station=${station}`;
-      ret.stationDetailsUrl = `/~~/pages/nutalk/stream/details?station=${station}`;
+      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
+      ret.stationDetailsUrl = `/~~/landscape/stream/details?station=${station}`;
       ret.stationTitle = ret.cir;
       break;
     case "dm":
@@ -298,20 +296,12 @@ export function getStationDetails(station, config = {}, usership) {
         ret.stationTitle = "unknown";
       }
 
-      ret.stationUrl = `/~~/pages/nutalk/stream?station=${station}`;
+      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
       break;
-    case "text":
-      ret.collId = collParts.coll;
-      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
-      ret.stationTitle = config.cap;
-      break;
-    case "text-topic":
-      ret.collId = collParts.coll;
-      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}`;
-      ret.stationTitle = config.cap;
-      ret.postUrl = `/~~/~${ret.host}/==/web/collections/${collParts.coll}/${collParts.top}`;
-      ret.postId = collParts.top;
-      ret.postTitle = null;  // TODO: Should be able to determine this from the station metadata alone.
+    case "collection":
+      ret.path = collParts.path;
+      ret.stationUrl = `/~~/~${ret.host}/==/${collParts.path.join('/')}`;
+      ret.stationTitle = collParts.name;
       break;
   }
 
@@ -324,25 +314,29 @@ export function getMessageContent(msg) {
   const MESSAGE_TYPES = {
     'sep.app.sep.fat.sep.lin.msg': 'app',
     'sep.app.sep.lin.msg': 'app',
-    'sep.fat.sep.lin.msg': (msg) => {
+    'sep.fat': (msg) => {
+
+      let type =  msg.sep.fat.tac.text;
       let station = msg.aud[0];
       let stationDetails = getStationDetails(station);
+      let jason = JSON.parse(msg.sep.fat.sep.lin.msg); 
+      let content = (type.includes('collection')) ? null : jason.content;
 
-      let metadata = msg.sep.fat.sep.lin.msg.split("|");
-      let content = msg.sep.fat.tac.text.substr(0, 500);
-      let postId = metadata[0];
-      let postTitle = metadata[1] || content.substr(0, 20);
-      let postUrl = `${stationDetails.stationUrl}/${metadata[0]}`;
+      let par = jason.path.slice(0, -1);
 
       return {
-        type: 'newpost',
-        content,
-        postId,
-        postTitle,
-        postUrl
+        type: msg.sep.fat.tac.text,
+        contentType: jason.type,
+        content: content,
+        owner: jason.owner,
+        date: jason.date,
+        path: jason.path,
+        postTitle: jason.name,
+        postUrl: `/~~/${jason.owner}/==/${jason.path.join('/')}`,
+        parentTitle: jason.path.slice(-2, -1),
+        parentUrl: `/~~/${jason.owner}/==/${jason.path.slice(0, -1).join('/')}`,
       }
     },
-    'sep.fat.tac.text': 'comment',
     'sep.inv.cir': 'inv',
     'sep.lin.msg': 'lin',
     'sep.url': 'url',
@@ -390,11 +384,11 @@ export function getSubscribedStations(ship, storeConfigs) {
 
   let ret = {
     chatStations: stationDetailList.filter((d) => d.type === "chat"),
-    textStations: stationDetailList.filter((d) => d.type === "text"),
+    collStations: stationDetailList.filter((d) => d.type === "collection"),
     dmStations: stationDetailList.filter((d) => d.type === "dm"),
   };
 
-  let numSubs = ret.chatStations.length + ret.textStations.length;
+  let numSubs = ret.chatStations.length + ret.collStations.length;
   let numDMs = ret.dmStations.length;
 
   let numString = [];

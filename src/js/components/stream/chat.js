@@ -46,7 +46,8 @@ export class ChatPage extends Component {
     this.inviteSubmit = this.inviteSubmit.bind(this);
 
     this.onScrollStop = this.onScrollStop.bind(this);
-    this.activateMessageGroup = this.activateMessageGroup.bind(this);
+    this.mouseenterActivate = this.mouseenterActivate.bind(this);
+    this.mouseleaveActivate = this.mouseleaveActivate.bind(this);
 
     this.buildMessage = this.buildMessage.bind(this);
 
@@ -281,15 +282,23 @@ export class ChatPage extends Component {
     }
   }
 
-  activateMessageGroup(e) {
+  mouseenterActivate(e) {
     if (e.currentTarget.dataset.date) {
-      this.setState({
-        activatedMsg: {
-          dateGroup: e.currentTarget.dataset.dateGroup,
-          date: e.currentTarget.dataset.date
-        }
-      });
+      this.activateMessageGroup(e.currentTarget.dataset.dateGroup, e.currentTarget.dataset.date);
     }
+  }
+
+  mouseleaveActivate(e) {
+    this.activateMessageGroup(null, null);
+  }
+
+  activateMessageGroup(dateGroup, date) {
+    this.setState({
+      activatedMsg: {
+        dateGroup: dateGroup,
+        date: date
+      }
+    });
   }
 
   buildMessage(msg) {
@@ -307,7 +316,7 @@ export class ChatPage extends Component {
     if (msg.printship) {
       contentElem = (
         <React.Fragment>
-          <a className="vanilla text-700 text-mono" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
+          <a className="vanilla hoverline text-700 text-mono" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
           {msg.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
             <React.Fragment>
               <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-5 mr-2 text-mono" />
@@ -325,7 +334,8 @@ export class ChatPage extends Component {
            className={appClass}
            data-date={msg.wen}
            data-date-group={msg.dateGroup}
-           onMouseEnter={this.activateMessageGroup}>
+           onMouseEnter={this.mouseenterActivate}
+           onMouseLeave={this.mouseleaveActivate}>
         <div className="flex-1st"></div>
         <div className="flex-2nd">
           {msg.printship &&

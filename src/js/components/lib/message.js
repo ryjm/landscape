@@ -39,7 +39,7 @@ export class Message extends Component {
     }]);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
-      this.props.transitionTo(`/~~/pages/nutalk/stream?station=${station}`);
+      this.props.transitionTo(`/~~/landscape/stream?station=${station}`);
     });
   }
 
@@ -71,7 +71,7 @@ export class Message extends Component {
     }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
-      this.props.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
+      this.props.transitionTo(`/~~/landscape/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
     });
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
@@ -139,7 +139,8 @@ export class Message extends Component {
           <pre className="text-mono mt-0">{this.props.details.res}</pre>
         </div>
       )
-    } else if (this.props.details.type === "newpost") {
+    } else if (this.props.details.type === 'new item') {
+
       return <CollectionPreview messageDetails={this.props.details} api={this.props.api}></CollectionPreview>
     } else if (this.props.details.type === "lin") {
       return this.props.details.content;

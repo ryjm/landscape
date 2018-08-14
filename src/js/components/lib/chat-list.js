@@ -40,7 +40,7 @@ export class ChatList extends Component {
         if (deets.type == "chat") {
           return (
             <div className="mt-2 text-500">
-              <a href={`/~~/pages/nutalk/stream?station=${cir}`}>{cir}</a>
+              <a href={`/~~/landscape/stream?station=${cir}`}>{cir}</a>
             </div>
           )
         } else {

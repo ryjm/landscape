@@ -10,7 +10,7 @@ export class TopicCreatePage extends Component {
     super(props);
 
     this.state = {
-      topicContent: props.text ? props.text : '',
+      topicContent: props.content ? props.content : '',
       details: this.getDetails(props),
       status: STATUS_READY
     };
@@ -20,13 +20,13 @@ export class TopicCreatePage extends Component {
   }
 
   componentDidMount() {
-    let path = `/circle/${this.state.details.cir}/config-l/grams/-10`;
+    let path = `/circle/${this.state.details.circle}/config-l/grams/-10`;
 
     this.props.api.bind(path, "PUT", this.state.details.hostship);
   }
 
   componentWillUnmount() {
-    let path = `/circle/${this.state.details.cir}/config-l/grams/-10`;
+    let path = `/circle/${this.state.details.circle}/config-l/grams/-10`;
 
     this.props.api.bind(path, "DELETE", this.state.details.hostship);
   }
@@ -43,22 +43,25 @@ export class TopicCreatePage extends Component {
 
   getDetails(conProps) {
     let props = this.props || conProps;
-
     let details = {};
-    details.isEdit = 'top' in props;
+    details.isEdit = (props.show == 'edit');
 
     if (details.isEdit) {
-      details.collId = props.coll;
+      details.clayPath = props.claypath.split('/').slice(1);
       details.hostship = props.ship.substr(1);
-      details.cir = `~${details.hostship}/collection_~${details.collId}`;
+      details.circle = `~${details.hostship}/c${[''].concat(details.clayPath.slice(2, -1)).join('-')}`;
       details.lastedit = props.lastedit;
-      details.top = props.top;
+      details.title = details.clayPath.slice(-1)[0];
+      details.body = props.content;
     } else {
-      if (!getQueryParams().station) return {}; // TODO: Find source of this bug. Transitioning before render gets done.
-      let stationDetails = getStationDetails(getQueryParams().station);
-      details.collId = stationDetails.collId;
-      details.hostship = stationDetails.host;
-      details.cir = stationDetails.cir;
+//      if (!getQueryParams().station) return {}; // TODO: Find source of this bug. Transitioning before render gets done.
+//      let stationDetails = getStationDetails(getQueryParams().station);
+//      details.collId = stationDetails.collId;
+//      details.hostship = stationDetails.host;
+//      details.cir = stationDetails.cir;
+      details.clayPath = props.claypath.split('/').slice(1);
+      details.hostship = props.ship.substr(1);
+      details.circle = `~${details.hostship}/c${[''].concat(details.clayPath.slice(2)).join('-')}`;
     }
 
     return details;
@@ -73,25 +76,35 @@ export class TopicCreatePage extends Component {
 
     if (details.isEdit) {
       dat = {
-        resubmit: {
-          col: details.collId,
-          top: details.top,
-          tit: this.titleExtract(this.state.topicContent),
-          wat: this.state.topicContent,
-          hos: `~${details.hostship}`
-        }
+        ship: details.hostship,
+        desk: 'home',
+        acts: [
+          { post: {
+              path: '/' + details.clayPath.slice(0, -1).join('/'),
+              name: details.title,
+              comments: true,  // XX TODO Get this value from user or parent
+              type: 'blog',
+              content: this.state.topicContent, 
+          }}
+        ]
       }
     } else {
-      dat = {
-        submit: {
-          col: details.collId,
-          tit: this.titleExtract(this.state.topicContent),
-          wat: this.state.topicContent,
-          hos: `~${details.hostship}`
-        }
-      }
-    };
 
+      dat = {
+        ship: details.hostship,
+        desk: 'home',
+        acts: [
+          { post: {
+              path: '/' + details.clayPath.join('/'),
+              name: this.titleExtract(this.state.topicContent),
+              comments: true,  // XX TODO Get this value from user or parent
+              type: 'blog',
+              content: this.state.topicContent, 
+          }}
+        ]
+      }
+
+    };
     this.props.api.coll(dat);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
@@ -110,14 +123,17 @@ export class TopicCreatePage extends Component {
     }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
+      console.log('ydsdifsdfsjf');
       this.setState({ status: STATUS_READY });
 
-      let content = _.get(rep.data, "gam.sep.fat.tac.text", null);
-      let postId = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
-      postId = postId ? postId.split("|")[0] : null;
+      let type = _.get(rep.data, "gam.sep.fat.tac.text", null);
 
-      if (content && content === this.state.topicContent) {
-        this.props.transitionTo(`/~~/~${details.hostship}/==/web/collections/${details.collId}/${postId}`);
+      if (type && (type === 'new item' || type === 'edited item')) {
+      
+        let content = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
+        content = JSON.parse(content);
+
+        this.props.transitionTo(`/~~/~${details.hostship}/==/${content.path.join('/')}`);
         return true;
       }
 
@@ -141,7 +157,9 @@ export class TopicCreatePage extends Component {
     let details = this.getDetails();
 
     if (details.isEdit) {
-      let lastEditDate = daToDate(details.lastedit).toISOString();
+      let lastEditDate = (details.lastedit == 'missing-date') ?
+        '' :
+        daToDate(details.lastedit).toISOString();
 
       dateElem = (
         <div className="mb-5">
@@ -154,7 +172,7 @@ export class TopicCreatePage extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-sm-offset-2 col-sm-10 pt-12">
+          <div className="col-sm-12 pt-12">
             {dateElem}
             <div className="collection-edit">
               <textarea
@@ -166,7 +184,7 @@ export class TopicCreatePage extends Component {
                 onChange={this.valueChange}
                 />
               <div className="collection-post-actions">
-                <a href={`/~~/~${details.hostship}/==/web/collections/${details.collId}`}
+                <a href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
                   className="header-link mr-6"
                   disabled={this.state.status === STATUS_LOADING}>Cancel</a>
                 <Button
