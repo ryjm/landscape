@@ -58,9 +58,9 @@ export class ChatList extends Component {
     const text = this.renderText();
     return (
       <div>
-        <div className="text-700 mt-8">Blogs, Fora and Notes</div>
+        <div className="text-600 mt-8">Blogs, Fora and Notes</div>
         {text}
-        <div className="text-700 mt-8">Chats</div>
+        <div className="text-600 mt-8">Chats</div>
         {chats}
       </div>
     );

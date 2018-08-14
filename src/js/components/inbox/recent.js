@@ -103,7 +103,7 @@ export class InboxRecentPage extends Component {
       let sectionContent = this.buildSectionContent(section);
       let hostDisplay = (section.details.type === "dm") ? null : (
         <span>
-          <a href={section.details.hostProfileUrl} className="text-700 text-mono underline">~{section.details.host}</a>
+          <a href={section.details.hostProfileUrl} className="text-600 text-mono underline">~{section.details.host}</a>
           <span className="ml-2 mr-2">/</span>
         </span>
       );
@@ -115,7 +115,7 @@ export class InboxRecentPage extends Component {
         postDisplay = (
           <span>
             <span className="ml-2 mr-2">/</span>
-            <a href={section.details.postUrl} className="text-700 underline">{postTitle}</a>
+            <a href={section.details.postUrl} className="text-600 underline">{postTitle}</a>
           </span>
         )
       }
@@ -128,7 +128,7 @@ export class InboxRecentPage extends Component {
             </div>
             <div className="col-sm-10">
               {hostDisplay}
-              <a href={section.details.stationUrl} className="text-700 underline">{section.details.stationTitle}</a>
+              <a href={section.details.stationUrl} className="text-600 underline">{section.details.stationTitle}</a>
             </div>
           </div>
           {sectionContent}

@@ -1,12 +1,17 @@
 body {
   overflow: overlay; /* Prevents scroll bar from affecting width on Webkit/Blink browsers */
-}
 
-body, .body-text, p {
   font-size: 14px;
   line-height: 24px;
 
-  font-family: "San Francisco Text", arial;
+  font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+p, .body-text {
+  font-size: 14px;
+  line-height: 24px;
+
+  font-family: "San Francisco Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 ul.vanilla {
@@ -34,6 +39,10 @@ a.hoverline:hover {
 
 form {
   margin: 0;
+}
+
+b {
+  font-weight: 600;
 }
 
 /***

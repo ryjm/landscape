@@ -316,7 +316,7 @@ export class ChatPage extends Component {
     if (msg.printship) {
       contentElem = (
         <React.Fragment>
-          <a className="vanilla hoverline text-700 text-mono" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
+          <a className="vanilla hoverline text-600 text-mono" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
           {msg.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
             <React.Fragment>
               <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-5 mr-2 text-mono" />
@@ -387,7 +387,7 @@ export class ChatPage extends Component {
                      onChange={this.messageChange} />
             </form>
           </div>
-          <a onClick={this.messageSubmit} className="text-700">Send</a>
+          <a onClick={this.messageSubmit} className="text-600">Send</a>
         </div>
       </div>
     )
