@@ -3,7 +3,7 @@ import { IconBlog } from '/components/lib/icons/icon-blog';
 import { IconStream } from '/components/lib/icons/icon-stream';
 import { getQueryParams, getStationDetails, collectionAuthorization, profileUrl, getLoadingClass } from '/lib/util';
 import { Button } from '/components/lib/button';
-import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING } from '/lib/constants';
+import { REPORT_PAGE_STATUS, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -13,6 +13,7 @@ export class Header extends Component {
 
     this.toggleSubscribe = this.toggleSubscribe.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.reconnectPolling = this.reconnectPolling.bind(this);
   }
 
   isSubscribed(station) {
@@ -38,6 +39,14 @@ export class Header extends Component {
       type: "menu.toggle",
       data: {open: true}
     }]);
+  }
+
+  reconnectPolling() {
+    this.props.storeReports([{
+      type: REPORT_PAGE_STATUS,
+      data: PAGE_STATUS_RECONNECTING
+    }]);
+    this.props.runPoll();
   }
 
   getStationHeaderData(station) {
@@ -197,7 +206,7 @@ export class Header extends Component {
           </div>
         </div>
         <div className="flex align-center header-mainrow">
-          <div onClick={() => this.props.runPoll()} className={loadingClass}></div>
+          <div onClick={this.reconnectPolling} className={loadingClass}></div>
           <a onClick={this.toggleMenu} className="flex-1st">
             <div className="panini"></div>
           </a>

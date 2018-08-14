@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import urbitOb from 'urbit-ob';
 import classnames from 'classnames';
-import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_DISCONNECTED } from '/lib/constants';
+import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_RECONNECTING } from '/lib/constants';
 
 export function capitalize(str) {
   return `${str[0].toUpperCase()}${str.substr(1)}`;
@@ -22,6 +22,7 @@ export function getLoadingClass(storeTransition) {
     'page-status-primary': storeTransition === PAGE_STATUS_TRANSITIONING,
     'page-status-secondary': storeTransition === PAGE_STATUS_PROCESSING,
     'page-status-tertiary': storeTransition === PAGE_STATUS_DISCONNECTED,
+    'page-status-quaternary': storeTransition === PAGE_STATUS_RECONNECTING,
   })
 }
 
@@ -123,7 +124,7 @@ export function parseCollCircle(st) {
   let pax = sp[1].split('-');
   pax.shift();
   pax = ['web', 'collections'].concat(pax);
-  
+
   let  r = {
       ship: sp[0],
       path: pax,
@@ -319,7 +320,7 @@ export function getMessageContent(msg) {
       let type =  msg.sep.fat.tac.text;
       let station = msg.aud[0];
       let stationDetails = getStationDetails(station);
-      let jason = JSON.parse(msg.sep.fat.sep.lin.msg); 
+      let jason = JSON.parse(msg.sep.fat.sep.lin.msg);
       let content = (type.includes('collection')) ? null : jason.content;
 
       let par = jason.path.slice(0, -1);

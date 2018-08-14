@@ -62,16 +62,6 @@ body {
   background-color: #999;
 }
 
-.page-status::before {
-  position: absolute;
-  top: 24px;
-  color: red;
-  content: "retry";
-  font-family: "Source Code Pro";
-  text-decoration: underline;
-  cursor: pointer;
-}
-
 .page-status::after {
   content: "";
   background-color: #ccc;
@@ -108,6 +98,24 @@ body {
 .page-status-tertiary::after {
   background-color: #FBD5D3;
   cursor: pointer;
+}
+
+.page-status-tertiary::before {
+  position: absolute;
+  top: 24px;
+  color: red;
+  content: "retry";
+  font-family: "Source Code Pro";
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.page-status-quaternary {
+  background-color: #FD7A31;
+}
+
+.page-status-quaternary::after {
+  background-color: #FEBC98;
 }
 
 .sidebar {
