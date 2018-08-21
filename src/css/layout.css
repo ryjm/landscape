@@ -2,18 +2,34 @@ body {
   padding-bottom: 40px;
 }
 
+/* Typography */
+h1 {
+  font-size: 6rem; /* 24px */
+  line-height: 8rem; /*32px */
+}
+h2 {
+  font-size: 5rem; /* 20px */
+  line-height: 6rem; /* 24px */
+}
+h3 {
+  font-size: 4rem; /* 16px */
+  line-height: 5rem; /* 20px */
+}
+h4 {
+  font-size: 3rem; /* 12px */
+  line-height: 4rem; /* 16px */
+}
+
 .header-container {
   padding-top: 3rem;
   padding-bottom: 2rem;
 }
 
+
 .header-title, .header-title * {
   text-decoration: none;
   font-weight: 600;
-
   margin: 0;
-  font-size: 24px;
-  line-height: 48px;
 }
 
 .header-title-mono, .header-title-mono * {
