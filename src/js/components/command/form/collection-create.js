@@ -11,7 +11,7 @@ export class CommandFormCollectionCreate extends Component {
       fields: [{
         name: "name",
         type: "text",
-        placeholder: "Deep Thoughts",
+        placeholder: "Collection name...",
         errorMsg: "Name can't be blank",
         validate: (value) => value !== ""
       }, {
@@ -38,9 +38,9 @@ export class CommandFormCollectionCreate extends Component {
         }]);
 
         let dat = {
-          ship: this.props.api.authTokens.ship, 
+          ship: this.props.api.authTokens.ship,
           desk: 'home',
-          acts: [{ 
+          acts: [{
             collection: {
               path: '/web/collections',
               name: this.state.formData.name,
