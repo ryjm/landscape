@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { warehouse } from '/warehouse';
-import { UrbitOperator } from '/operator';
+import { operator } from '/operator';
 import { getQueryParams } from '/lib/util';
 import { api } from '/api';
 import { Root } from '/components/root';
-import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
 
 class UrbitRouter {
   constructor() {
@@ -33,6 +33,7 @@ class UrbitRouter {
         storeReports={warehouse.storeReports}
         pushCallback={warehouse.pushCallback}
         transitionTo={this.transitionTo}
+        runPoll={operator.runPoll.bind(operator)}
         scaffold={this.scaffold} />
     )
 
@@ -56,11 +57,11 @@ class UrbitRouter {
 
     switch (linkType) {
       case "edit-page":
-        if (url.split("/")[2] != `~${api.authTokens.ship}`) {
+//        if (url.split("/")[2] != `~${api.authTokens.ship}`) {
           path[0] += ".x-htm";
-        } else {
-          path[0] += ".htm";
-        }
+//        } else {
+//          path[0] += ".htm";
+//        }
         break;
       case "foreign":
         path[0] += ".x-htm";
@@ -72,7 +73,7 @@ class UrbitRouter {
 
   transitionTo(targetUrl, noHistory) {
     warehouse.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 
@@ -87,7 +88,7 @@ class UrbitRouter {
       this.scaffold = this.extractBody(resText) || resText;
 
       warehouse.storeReports([{
-        type: "transition",
+        type: REPORT_PAGE_STATUS,
         data: PAGE_STATUS_READY
       }, {
         type: "menu.toggle",

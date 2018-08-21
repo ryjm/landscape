@@ -1,12 +1,15 @@
-body {
-  overflow: overlay; /* Prevents scroll bar from affecting width on Webkit/Blink browsers */
-}
-
-body, .body-text, p {
+body, p, .text-body {
   font-size: 14px;
   line-height: 24px;
+}
 
-  font-family: "San Francisco Text", arial;
+body {
+  overflow: overlay; /* Prevents scroll bar from affecting width on Webkit/Blink browsers */
+  font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+p, .text-body {
+  font-family: "San Francisco Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 /* Typography */
 h1 {
@@ -40,8 +43,16 @@ a.vanilla {
   text-decoration: none;
 }
 
+a.hoverline:hover {
+  text-decoration: underline;
+}
+
 form {
   margin: 0;
+}
+
+b {
+  font-weight: 600;
 }
 
 /***

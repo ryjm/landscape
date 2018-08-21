@@ -40,7 +40,7 @@ export class ChatList extends Component {
         if (deets.type == "chat") {
           return (
             <div className="mt-2 text-500">
-              <a href={`/~~/pages/nutalk/stream?station=${cir}`}>{cir}</a>
+              <a href={`/~~/landscape/stream?station=${cir}`}>{cir}</a>
             </div>
           )
         } else {
@@ -58,9 +58,9 @@ export class ChatList extends Component {
     const text = this.renderText();
     return (
       <div>
-        <div className="text-700 mt-8">Blogs, Fora and Notes</div>
+        <div className="text-600 mt-8">Blogs, Fora and Notes</div>
         {text}
-        <div className="text-700 mt-8">Chats</div>
+        <div className="text-600 mt-8">Chats</div>
         {chats}
       </div>
     );

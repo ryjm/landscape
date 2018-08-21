@@ -3,7 +3,7 @@ import { IconBlog } from '/components/lib/icons/icon-blog';
 import { IconStream } from '/components/lib/icons/icon-stream';
 import { getQueryParams, getStationDetails, collectionAuthorization, profileUrl, getLoadingClass } from '/lib/util';
 import { Button } from '/components/lib/button';
-import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING } from '/lib/constants';
+import { REPORT_PAGE_STATUS, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -13,6 +13,7 @@ export class Header extends Component {
 
     this.toggleSubscribe = this.toggleSubscribe.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
+    this.reconnectPolling = this.reconnectPolling.bind(this);
   }
 
   isSubscribed(station) {
@@ -40,14 +41,21 @@ export class Header extends Component {
     }]);
   }
 
+  reconnectPolling() {
+    this.props.storeReports([{
+      type: REPORT_PAGE_STATUS,
+      data: PAGE_STATUS_RECONNECTING
+    }]);
+    this.props.runPoll();
+  }
+
   getStationHeaderData(station) {
     let stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
 
     return {
       title: {
         display: stationDetails.stationTitle,
-        href: stationDetails.stationUrl,
-        style: "mono"
+        href: stationDetails.stationUrl
       },
       breadcrumbs: [{
         display: `~${stationDetails.host}`,
@@ -61,6 +69,7 @@ export class Header extends Component {
   getHeaderData(type) {
     let headerData = {};
     let defaultData;
+    let actions = {};
 
     switch (type) {
       case "stream":
@@ -68,14 +77,30 @@ export class Header extends Component {
         headerData = {
           ...defaultData,
           icon: IconStream,
+          title: {
+            ...defaultData.title,
+            style: "mono"
+          },
           actions: {
             details: defaultData.stationDetails.stationDetailsUrl,
           },
         }
         break;
 
-      case "collection-index":
+      case "collection":
         defaultData = this.getStationHeaderData(this.props.data.station);
+
+        if (this.props.data.show === 'default') {
+          actions = {
+            details: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=details`,
+            write: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=post`,
+          }
+        } else if (this.props.data.show === 'details') {
+          actions = {
+            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`,
+          }
+        }
+
         headerData = {
           ...defaultData,
           icon: IconBlog,
@@ -83,15 +108,25 @@ export class Header extends Component {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
           },
-          actions: {
-            details: defaultData.stationDetails.stationDetailsUrl,
-            write: `/~~/pages/nutalk/collection/post?station=~${defaultData.stationDetails.host}/collection_~${defaultData.stationDetails.collId}`
-          }
+          actions: actions
         }
         break;
 
-      case "collection-item":
+      case "raw":
+      case "both":
         defaultData = this.getStationHeaderData(this.props.data.station);
+
+        if (this.props.data.show === 'default') {
+          actions = {
+            details: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=details`,
+            edit: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=edit`,
+          }
+        } else if (this.props.data.show === 'details') {
+          actions = {
+            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`,
+          }
+        }
+
         headerData = {
           ...defaultData,
           icon: IconBlog,
@@ -99,31 +134,17 @@ export class Header extends Component {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
           },
-          actions: {
-            edit: `/~~/~${defaultData.stationDetails.host}/==/web/collections/${defaultData.stationDetails.collId}/${this.props.data.postid}?edit=true`
-          }
+          actions: actions,
         }
         break;
 
-      case "collection-write":
-      case "collection-edit":
-        defaultData = this.getStationHeaderData(this.props.data.station);
-        headerData = {
-          ...defaultData,
-          icon: IconBlog,
-          title: {
-            ...defaultData.title,
-            display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
-          },
-          actions: {}
-        }
-        break;
 
       case "profile":
         headerData = {
           title: {
-            display: "Profile",
-            href: profileUrl(this.props.data.ship)
+            display: this.props.data.ship,
+            href: profileUrl(this.props.data.ship.substr(1)),
+            style: "mono"
           }
         }
         break;
@@ -135,7 +156,7 @@ export class Header extends Component {
         headerData = {
           title: {
             display: "Inbox",
-            href: "/~~/pages/nutalk"
+            href: "/~~/landscape"
           }
         }
         break;
@@ -185,7 +206,7 @@ export class Header extends Component {
           </div>
         </div>
         <div className="flex align-center header-mainrow">
-          <div className={loadingClass}></div>
+          <div onClick={this.reconnectPolling} className={loadingClass}></div>
           <a onClick={this.toggleMenu} className="flex-1st">
             <div className="panini"></div>
           </a>

@@ -1,3 +1,31 @@
+/*
+  Data structure:
+    common: {
+      host: zod,
+      hostProfileUrl: (...)/~zod/profile,
+
+      cir: [@ta/dmjoin]
+
+      station: [host]/[circle]
+      stationUrl: [streamUrl/collIndexUrl]
+
+      subcircle: @ta
+      subcircleUrl: (...)collIndexUrl/subcircle
+
+      type: {"dm", "chat", "fora"}
+    }
+
+    Breadcrumb display:
+      [host] [circle* /coll@ta [*]/dmjoin *] [...subcollection]
+
+      case "dm":
+        <span mono *>[dmjoin]</span>
+
+    dm:
+
+*/
+
+
 import React, { Component } from 'react';
 import { Elapsed } from '/components/lib/elapsed';
 import { Message } from '/components/lib/message';
@@ -19,12 +47,23 @@ export class InboxRecentPage extends Component {
 
   buildPostTitle(messageDetails) {
     if (messageDetails.postUrl) {
-      return (
-        <a className="pr-12 text-600 underline"
-          href={messageDetails.postUrl}>
-          {messageDetails.postTitle}
-        </a>
-      )
+      if (messageDetails.contentType === "comments") {
+
+        return (
+          <a className="pr-12 text-600 underline"
+            href={messageDetails.parentUrl}>
+            {messageDetails.parentTitle}  /  comment
+          </a>
+        )
+
+      } else {
+        return (
+          <a className="pr-12 text-600 underline"
+            href={messageDetails.postUrl}>
+            {messageDetails.postTitle}
+          </a>
+        )
+      }
     } else {
       return null;
     }
@@ -92,20 +131,19 @@ export class InboxRecentPage extends Component {
       let sectionContent = this.buildSectionContent(section);
       let hostDisplay = (section.details.type === "dm") ? null : (
         <span>
-          <a href={section.details.hostProfileUrl} className="text-700 text-mono underline">~{section.details.host}</a>
+          <a href={section.details.hostProfileUrl} className="text-600 text-mono underline">~{section.details.host}</a>
           <span className="ml-2 mr-2">/</span>
         </span>
       );
 
       let postDisplay = null;
 
-      if (section.details.type === "text-topic") {
-        let postTitle = this.findPostTitleFromMessage(section.details.postId);
-
+      if (section.details.type === "collection") {
+        let postTitle = section.details.stationTitle;
         postDisplay = (
           <span>
             <span className="ml-2 mr-2">/</span>
-            <a href={section.details.postUrl} className="text-700 underline">{postTitle}</a>
+            <a href={section.details.postUrl} className="text-600 underline">{postTitle}</a>
           </span>
         )
       }
@@ -118,8 +156,7 @@ export class InboxRecentPage extends Component {
             </div>
             <div className="col-sm-10">
               {hostDisplay}
-              <a href={section.details.stationUrl} className="text-700 underline">{section.details.stationTitle}</a>
-              {postDisplay}
+              <a href={section.details.stationUrl} className="text-600 underline">{section.details.stationTitle}</a>
             </div>
           </div>
           {sectionContent}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { isDMStation, getMessageContent } from '/lib/util';
 import { Button } from '/components/lib/button';
 import { CollectionPreview } from '/components/collectionPreview';
-import { PAGE_STATUS_TRANSITIONING } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, REPORT_PAGE_STATUS } from '/lib/constants';
 
 export class Message extends Component {
   constructor(props) {
@@ -34,12 +34,12 @@ export class Message extends Component {
     });
 
     this.props.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
-      this.props.transitionTo(`/~~/pages/nutalk/stream?station=${station}`);
+      this.props.transitionTo(`/~~/landscape/stream?station=${station}`);
     });
   }
 
@@ -66,12 +66,12 @@ export class Message extends Component {
     });
 
     this.props.storeReports([{
-      type: "transition",
+      type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
-      this.props.transitionTo(`/~~/pages/nutalk/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
+      this.props.transitionTo(`/~~/landscape/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
     });
 
     this.props.pushCallback("circle.config.dif.full", (rep) => {
@@ -108,7 +108,7 @@ export class Message extends Component {
     } else if (this.props.details.type === "inv") {
       return (
         <div className="invite">
-          invite to {this.props.details.content}...
+          <span className="text-body">invite to {this.props.details.content}...</span>
           <Button
             classes="btn btn-primary accept"
             action={this.acceptInvite}
@@ -134,17 +134,17 @@ export class Message extends Component {
         }
     } else if (this.props.details.type === "exp") {
       return (
-        <div>
+        <div className="text-body">
           <div className="text-mono">{this.props.details.content}</div>
           <pre className="text-mono mt-0">{this.props.details.res}</pre>
         </div>
       )
-    } else if (this.props.details.type === "newpost") {
+    } else if (this.props.details.type === 'new item') {
       return <CollectionPreview messageDetails={this.props.details} api={this.props.api}></CollectionPreview>
     } else if (this.props.details.type === "lin") {
-      return this.props.details.content;
+      return <span className="text-body">{this.props.details.content}</span>
     }
 
-    return "<unknown message type>";
+    return <span className="text-mono">{'<unknown message type>'}</span>;
   }
 }

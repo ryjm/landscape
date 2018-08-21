@@ -7,7 +7,6 @@ export class MessagesReducer {
   reduce(reports, store) {
     reports.forEach((rep) => {
       let fromInbox = rep.from && rep.from.path.includes("inbox");
-
       switch (rep.type) {
         case "circle.nes":
           this.processMessages(rep.data, store);
@@ -90,7 +89,6 @@ export class MessagesReducer {
       .uniqBy('uid')                    // dedupe
       .slice(0, INBOX_MESSAGE_COUNT)    // grab the first 30 or so
       .value();                         // unwrap lodash chain
-
     // for (let msg of ret) {
     //   console.log(`msg ${msg.uid}: ${msg.wen}`);
     // }

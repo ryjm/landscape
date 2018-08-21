@@ -26,6 +26,7 @@ body {
   line-height: 3rem;
 
   font-weight: 500;
+  font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-decoration: none;
 
   text-transform: capitalize;
@@ -49,7 +50,7 @@ body {
   position: relative;
 }
 
-.header-loading {
+.page-status {
   position: absolute;
   left: 0;
   top: 94px;
@@ -61,7 +62,7 @@ body {
   background-color: #999;
 }
 
-.header-loading::after {
+.page-status::after {
   content: "";
   background-color: #ccc;
   width: 18px;
@@ -73,20 +74,48 @@ body {
   animation: spin 2s linear infinite;
 }
 
-.header-loading-primary {
+.page-status-primary {
   background-color: #4330FC;
 }
 
-.header-loading-primary::after {
-  background-color: #a197fd;
+.page-status-primary::after {
+  background-color: #d8d5fe;
 }
 
-.header-loading-secondary {
-  background-color: #6FDC74;
+.page-status-secondary {
+  background-color: #6fdc74;
 }
 
-.header-loading-secondary::after {
-  background-color: #56A959;
+.page-status-secondary::after {
+  background-color: #e2f8e3;
+}
+
+.page-status-tertiary {
+  background-color: #EE3124;
+  cursor: pointer;
+}
+
+.page-status-tertiary::after {
+  background-color: #FBD5D3;
+  cursor: pointer;
+}
+
+.page-status-tertiary::before {
+  position: absolute;
+  top: 24px;
+  color: red;
+  content: "retry";
+  font-family: "Source Code Pro";
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.page-status-quaternary {
+  background-color: #FD7A31;
+}
+
+.page-status-quaternary::after {
+  background-color: #FEBC98;
 }
 
 .sidebar {
