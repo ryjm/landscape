@@ -1,3 +1,31 @@
+/*
+  Data structure:
+    common: {
+      host: zod,
+      hostProfileUrl: (...)/~zod/profile,
+
+      cir: [@ta/dmjoin]
+
+      station: [host]/[circle]
+      stationUrl: [streamUrl/collIndexUrl]
+
+      subcircle: @ta
+      subcircleUrl: (...)collIndexUrl/subcircle
+
+      type: {"dm", "chat", "fora"}
+    }
+
+    Breadcrumb display:
+      [host] [circle* /coll@ta [*]/dmjoin *] [...subcollection]
+
+      case "dm":
+        <span mono *>[dmjoin]</span>
+
+    dm:
+
+*/
+
+
 import React, { Component } from 'react';
 import { Elapsed } from '/components/lib/elapsed';
 import { Message } from '/components/lib/message';
@@ -20,7 +48,7 @@ export class InboxRecentPage extends Component {
   buildPostTitle(messageDetails) {
     if (messageDetails.postUrl) {
       if (messageDetails.contentType === "comments") {
-        
+
         return (
           <a className="pr-12 text-600 underline"
             href={messageDetails.parentUrl}>
