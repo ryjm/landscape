@@ -6,12 +6,15 @@ export class ViewsReducer {
       switch (rep.type) {
         case REPORT_PAGE_STATUS:
           // Don't let any state other than "READY" or "RECONNECTNG" override the disconnected state
-          let isDisconnected = store.views.transition === PAGE_STATUS_DISCONNECTED;
-          let readyOrReconnecting = rep.data === PAGE_STATUS_READY || rep.data === PAGE_STATUS_RECONNECTING;
+          // let isDisconnected = store.views.transition === PAGE_STATUS_DISCONNECTED;
+          // let readyOrReconnecting = rep.data === PAGE_STATUS_READY || rep.data === PAGE_STATUS_RECONNECTING;
+          //
+          // if (!isDisconnected || readyOrReconnecting) {
+          //   store.views.transition = rep.data;
+          // }
 
-          if (!isDisconnected || readyOrReconnecting) {
-            store.views.transition = rep.data;
-          }
+          store.views.transition = rep.data;
+
           break;
       }
     });

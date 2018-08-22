@@ -145,32 +145,32 @@ export class UrbitOperator {
   runPoll() {
     console.log('fetching... ', this.seqn);
 
-    const controller = new AbortController();
-    const signal = controller.signal;
+    // const controller = new AbortController();
+    // const signal = controller.signal;
 
-    const disconnectedTimeout = setTimeout(() => {
-      controller.abort();
-      warehouse.storeReports([{
-        type: REPORT_PAGE_STATUS,
-        data: PAGE_STATUS_DISCONNECTED
-      }]);
-      this.runPoll();
-    }, LONGPOLL_TIMEOUT);
+    // const disconnectedTimeout = setTimeout(() => {
+    //   controller.abort();
+    //   warehouse.storeReports([{
+    //     type: REPORT_PAGE_STATUS,
+    //     data: PAGE_STATUS_DISCONNECTED
+    //   }]);
+    //   this.runPoll();
+    // }, LONGPOLL_TIMEOUT);
 
     fetch(`/~/of/${api.authTokens.ixor}?poll=${this.seqn}`, {
       credentials: "same-origin",
-      signal: controller.signal
+      // signal: controller.signal
     })
       .then(res => {
         return res.json();
       })
       .then(data => {
-        warehouse.storeReports([{
-          type: REPORT_PAGE_STATUS,
-          data: PAGE_STATUS_READY
-        }]);
+        // warehouse.storeReports([{
+        //   type: REPORT_PAGE_STATUS,
+        //   data: PAGE_STATUS_READY
+        // }]);
 
-        clearTimeout(disconnectedTimeout);
+        // clearTimeout(disconnectedTimeout);
 
         if (data.beat) {
           console.log('beat');
@@ -188,12 +188,12 @@ export class UrbitOperator {
       })
       .catch(error => {
         console.error('error = ', error);
-        warehouse.storeReports([{
-          type: REPORT_PAGE_STATUS,
-          data: PAGE_STATUS_DISCONNECTED
-        }]);
-
-        clearTimeout(disconnectedTimeout);
+        // warehouse.storeReports([{
+        //   type: REPORT_PAGE_STATUS,
+        //   data: PAGE_STATUS_DISCONNECTED
+        // }]);
+        //
+        // clearTimeout(disconnectedTimeout);
 
         // TODO: Make this reconnect automatically
         // setTimeout(() => {
