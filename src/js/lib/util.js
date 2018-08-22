@@ -119,7 +119,10 @@ export function uuid() {
   return str.slice(0,-1);
 }
 
-export function parseCollCircle(st) {
+export function parseCollCircle(station) {
+  let collTa = station.split('/')[1].split('-')[1];
+  let collPath = ['web', 'collections'].concat(pax).join()
+
   let sp = st.split('/');
   let pax = sp[1].split('-');
   pax.shift();
@@ -187,10 +190,10 @@ export function dateToDa(d, mil) {
 }
 
   // ascending for clarity
-export function sortSrc(circleArray, topic=false){
-  let sc = circleArray.map((c) => util.parseCollCircle(c)).filter((pc) => typeof pc != 'undefined' && typeof pc.top == 'undefined');
-  return sc.map((src) => src.coll).sort((a, b) => util.daToDate(a) - util.daToDate(b));
-}
+// export function sortSrc(circleArray, topic=false){
+//   let sc = circleArray.map((c) => util.parseCollCircle(c)).filter((pc) => typeof pc != 'undefined' && typeof pc.top == 'undefined');
+//   return sc.map((src) => src.coll).sort((a, b) => util.daToDate(a) - util.daToDate(b));
+// }
 
 export function arrayEqual(a, b) {
   if (a === b) return true;
@@ -264,15 +267,18 @@ export function getStationDetails(station, config = {}, usership) {
     hostProfileUrl: profileUrl(host)
   };
 
-  let collParts = parseCollCircle(station);
+  let circleParts = ret.cir.split("-");
 
   if (station.includes("inbox")){
     ret.type = "inbox";
   } else if (isDMStation(station)) {
     ret.type = "dm";
-  } else if (station.includes("/c")) {
+  } else if (ret.cir.includes("c-") && circleParts.length > 2) {
+    ret.type = "collection-post";
+  } else if (ret.cir.includes("c-")) {
     ret.type = "collection";
-  } else {
+  }
+  else {
     ret.type = "chat";
   }
 
@@ -300,6 +306,13 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationUrl = `/~~/landscape/stream?station=${station}`;
       break;
     case "collection":
+      let collTa = ret.cir.split('-')[1];
+
+
+
+      let collPath = ['web', 'collections'].concat(pax).join()
+
+
       ret.path = collParts.path;
       ret.stationUrl = `/~~/~${ret.host}/==/${collParts.path.join('/')}`;
       ret.stationTitle = collParts.name;
