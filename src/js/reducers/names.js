@@ -80,10 +80,12 @@ export class NamesReducer {
 
   storeNames(ships, storeNames) {
     Object.arrayify(ships).forEach(({key: ship, value: stations}) => {
+      let sttns = stations.filter(s => s !== "c");
+
       if (!storeNames[ship]) {
-        storeNames[ship] = stations;
+        storeNames[ship] = sttns;
       } else {
-        storeNames[ship] = _.uniq(stations.concat(storeNames[ship]))
+        storeNames[ship] = _.uniq(sttns.concat(storeNames[ship]))
       }
     });
   }

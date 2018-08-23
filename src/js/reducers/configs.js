@@ -1,3 +1,5 @@
+import { isRootCollection } from '/lib/util';
+
 export class ConfigsReducer {
   reduce(reports, store) {
     reports.forEach((rep) => {
@@ -39,6 +41,8 @@ export class ConfigsReducer {
 
   addConfigs(configs, storeConfigs) {
     Object.keys(configs).forEach((cos) => {
+      if (isRootCollection(cos)) return;
+      
       storeConfigs[cos] = storeConfigs[cos] || {};
       Object.assign(storeConfigs[cos], configs[cos]);
       if (cos.includes('inbox')) {

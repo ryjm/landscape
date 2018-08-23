@@ -119,22 +119,22 @@ export function uuid() {
   return str.slice(0,-1);
 }
 
-export function parseCollCircle(station) {
-  let collTa = station.split('/')[1].split('-')[1];
-  let collPath = ['web', 'collections'].concat(pax).join()
-
-  let sp = st.split('/');
-  let pax = sp[1].split('-');
-  pax.shift();
-  pax = ['web', 'collections'].concat(pax);
-
-  let  r = {
-      ship: sp[0],
-      path: pax,
-      name: pax[pax.length-1]
-  }
-  return r;
-}
+// export function parseCollCircle(station) {
+//   let collTa = station.split('/')[1].split('-')[1];
+//   let collPath = ['web', 'collections'].concat(pax).join()
+//
+//   let sp = st.split('/');
+//   let pax = sp[1].split('-');
+//   pax.shift();
+//   pax = ['web', 'collections'].concat(pax);
+//
+//   let  r = {
+//       ship: sp[0],
+//       path: pax,
+//       name: pax[pax.length-1]
+//   }
+//   return r;
+// }
 
 export function isPatTa(str) {
   const r = /^[a-z,0-9,\-,\.,_,~]+$/.exec(str)
@@ -255,6 +255,10 @@ export function calculateStations(configs) {
   return numString;
 }
 
+export function isRootCollection(station) {
+  return station.split("/")[1] === "c";
+}
+
 export function getStationDetails(station, config = {}, usership) {
   let host = station.split("/")[0].substr(1);
 
@@ -276,9 +280,8 @@ export function getStationDetails(station, config = {}, usership) {
   } else if (ret.cir.includes("c-") && circleParts.length > 2) {
     ret.type = "collection-post";
   } else if (ret.cir.includes("c-")) {
-    ret.type = "collection";
-  }
-  else {
+    ret.type = "collection-index";
+  } else {
     ret.type = "chat";
   }
 
@@ -305,17 +308,19 @@ export function getStationDetails(station, config = {}, usership) {
 
       ret.stationUrl = `/~~/landscape/stream?station=${station}`;
       break;
-    case "collection":
-      let collTa = ret.cir.split('-')[1];
-
-
-
-      let collPath = ['web', 'collections'].concat(pax).join()
-
-
-      ret.path = collParts.path;
-      ret.stationUrl = `/~~/~${ret.host}/==/${collParts.path.join('/')}`;
-      ret.stationTitle = collParts.name;
+    case "collection-index":
+      // let collTa = ret.cir.split('-')[1];
+      // let collPath = ['web', 'collections'].concat(pax).join()
+      // ret.path = collParts.path;
+      ret.stationUrl = "TBD";
+      ret.stationTitle = "TBD";
+      break;
+    case "collection-post":
+      // let collTa = ret.cir.split('-')[1];
+      // let collPath = ['web', 'collections'].concat(pax).join()
+      // ret.path = collParts.path;
+      ret.stationUrl = "TBD";
+      ret.stationTitle = "TBD";
       break;
   }
 

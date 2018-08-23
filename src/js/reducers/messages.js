@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getMessageContent, isDMStation } from '/lib/util';
+import { getMessageContent, isDMStation, isRootCollection } from '/lib/util';
 
 const INBOX_MESSAGE_COUNT = 30;
 
@@ -19,12 +19,12 @@ export class MessagesReducer {
           break;
         case "circle.cos.loc":
           if (fromInbox) {
-            store.messages.inboxSrc = rep.data.src
+            store.messages.inboxSrc = rep.data.src.filter(s => !isRootCollection(s));
             this.storeInboxMessages(store);
           }
           break;
         case "circle.config.dif.source":
-          if (fromInbox) {
+          if (fromInbox && !isRootCollection(rep.data.src)) {
             if (rep.data.add) {
               store.messages.inboxSrc = [...store.messages.inboxSrc, rep.data.src];
             } else {
@@ -38,7 +38,10 @@ export class MessagesReducer {
   }
 
   processMessages(messages, store) {
-    this.storeStationMessages(messages, store);
+    let msgs = messages.filter(m => {
+      return !m.gam.aud.some(st => isRootCollection(st));
+    });
+    this.storeStationMessages(msgs, store);
     this.storeInboxMessages(store);
   }
 
