@@ -309,17 +309,16 @@ export function getStationDetails(station, config = {}, usership) {
       ret.stationUrl = `/~~/landscape/stream?station=${station}`;
       break;
     case "collection-index":
-      // let collTa = ret.cir.split('-')[1];
-      // let collPath = ['web', 'collections'].concat(pax).join()
-      // ret.path = collParts.path;
-      ret.stationUrl = "TBD";
+      ret.collId = circleParts[1];
+
+      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
       ret.stationTitle = "TBD";
       break;
     case "collection-post":
-      // let collTa = ret.cir.split('-')[1];
-      // let collPath = ['web', 'collections'].concat(pax).join()
-      // ret.path = collParts.path;
-      ret.stationUrl = "TBD";
+      ret.collId = circleParts[1];
+      ret.postId = circleParts[2];
+
+      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
       ret.stationTitle = "TBD";
       break;
   }
