@@ -49,7 +49,7 @@ export class UrbitOperator {
       this.runPoll();
       this.bindInbox();
       this.bindShortcuts();
-      this.bindOperations();
+      this.bindQuietDmInvites();
     } else {
       console.error("~~~ ERROR: Must set api.authTokens before operation ~~~");
     }
@@ -88,7 +88,7 @@ export class UrbitOperator {
     })
   }
 
-  bindOperations() {
+  bindQuietDmInvites() {
     // Automatically accept DM invite messages
     warehouse.pushCallback('circles', rep => {
       warehouse.pushCallback('circle.gram', (rep) => {
@@ -122,6 +122,9 @@ export class UrbitOperator {
     warehouse.pushCallback('circles', rep => {
       // inbox local + remote configs, remote presences
       api.bind("/circle/inbox/config/group-r/0", "PUT");
+
+      // grab the config for the root collection circle
+      api.bind("/circle/c/config/group-r/0", "PUT");
 
       // inbox messages
       api.bind("/circle/inbox/grams/-50", "PUT");

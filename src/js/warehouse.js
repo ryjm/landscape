@@ -29,8 +29,11 @@ class UrbitWarehouse {
   constructor() {
     this.store = {
       messages: {
-        inboxMessages: [],
-        inboxSrc: [],
+        inbox: {
+          src: [],
+          messages: [],
+          config: {}
+        },
         stations: {}
       },
       configs: {},

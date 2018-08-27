@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import urbitOb from 'urbit-ob';
 import classnames from 'classnames';
-import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_RECONNECTING } from '/lib/constants';
+import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_RECONNECTING, AGGREGATOR_NAMES } from '/lib/constants';
 
 export function capitalize(str) {
   return `${str[0].toUpperCase()}${str.substr(1)}`;
@@ -14,6 +14,18 @@ export function getQueryParams() {
     return {};
   }
 }
+
+export function isAggregator(station) {
+  let cir = station.split("/")[1]
+  return AGGREGATOR_NAMES.includes(cir);
+}
+
+// export function isCollection(station) {
+//   let circle = station.split("/")[1];
+//   let collParts = circle.split("-");
+//   if (circle.includes("c-"))
+// }
+
 
 export function getLoadingClass(storeTransition) {
   return classnames({
@@ -259,73 +271,6 @@ export function isRootCollection(station) {
   return station.split("/")[1] === "c";
 }
 
-export function getStationDetails(station, config = {}, usership) {
-  let host = station.split("/")[0].substr(1);
-
-  let ret = {
-    type: "none",
-    station: station,
-    config: config,
-    host: host,
-    cir: station.split("/")[1],
-    hostProfileUrl: profileUrl(host)
-  };
-
-  let circleParts = ret.cir.split("-");
-
-  if (station.includes("inbox")){
-    ret.type = "inbox";
-  } else if (isDMStation(station)) {
-    ret.type = "dm";
-  } else if (ret.cir.includes("c-") && circleParts.length > 2) {
-    ret.type = "collection-post";
-  } else if (ret.cir.includes("c-")) {
-    ret.type = "collection-index";
-  } else {
-    ret.type = "chat";
-  }
-
-  switch (ret.type) {
-    case "inbox":
-      ret.stationUrl = "/~~/landscape";
-      ret.stationTitle = ret.cir;
-      break;
-    case "chat":
-      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
-      ret.stationDetailsUrl = `/~~/landscape/stream/details?station=${station}`;
-      ret.stationTitle = ret.cir;
-      break;
-    case "dm":
-      if (config.con) {
-        ret.stationTitle = ret.cir
-          .split(".")
-          .filter((mem) => mem !== usership)
-          .map((mem) => `~${mem}`)
-          .join(", ");;
-      } else {
-        ret.stationTitle = "unknown";
-      }
-
-      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
-      break;
-    case "collection-index":
-      ret.collId = circleParts[1];
-
-      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
-      ret.stationTitle = "TBD";
-      break;
-    case "collection-post":
-      ret.collId = circleParts[1];
-      ret.postId = circleParts[2];
-
-      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
-      ret.stationTitle = "TBD";
-      break;
-  }
-
-  return ret;
-}
-
 export function getMessageContent(msg) {
   let ret;
 
@@ -384,6 +329,73 @@ export function getMessageContent(msg) {
   if (typeof ret === "undefined") {
     ret = {type: "unknown"};
     console.log("ASSERT: unknown message type on ", msg)
+  }
+
+  return ret;
+}
+
+export function getStationDetails(station) {
+  let host = station.split("/")[0].substr(1);
+  let config = warehoues.store.configs[station];
+
+  let ret = {
+    type: "none",
+    station: station,
+    host: host,
+    cir: station.split("/")[1],
+    hostProfileUrl: profileUrl(host)
+  };
+
+  let circleParts = ret.cir.split("-");
+
+  if (station.includes("inbox")){
+    ret.type = "inbox";
+  } else if (isDMStation(station)) {
+    ret.type = "dm";
+  } else if (ret.cir.includes("c-") && circleParts.length > 2) {
+    ret.type = "collection-post";
+  } else if (ret.cir.includes("c-")) {
+    ret.type = "collection-index";
+  } else {
+    ret.type = "chat";
+  }
+
+  switch (ret.type) {
+    case "inbox":
+      ret.stationUrl = "/~~/landscape";
+      ret.stationTitle = ret.cir;
+      break;
+    case "chat":
+      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
+      ret.stationDetailsUrl = `/~~/landscape/stream/details?station=${station}`;
+      ret.stationTitle = ret.cir;
+      break;
+    case "dm":
+      if (config.con) {
+        ret.stationTitle = ret.cir
+          .split(".")
+          .filter((mem) => mem !== api.authTokens.ship)
+          .map((mem) => `~${mem}`)
+          .join(", ");;
+      } else {
+        ret.stationTitle = "unknown";
+      }
+
+      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
+      break;
+    case "collection-index":
+      ret.collId = circleParts[1];
+
+      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
+      ret.stationTitle = "TBD";
+      break;
+    case "collection-post":
+      ret.collId = circleParts[1];
+      ret.postId = circleParts[2];
+
+      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
+      ret.stationTitle = "TBD";
+      break;
   }
 
   return ret;

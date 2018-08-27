@@ -1,12 +1,16 @@
 import _ from 'lodash';
 import { getMessageContent, isDMStation, isRootCollection } from '/lib/util';
+import { AGGREGATOR_NAMES } from '/lib/constants';
 
 const INBOX_MESSAGE_COUNT = 30;
 
 export class MessagesReducer {
   reduce(reports, store) {
     reports.forEach((rep) => {
-      let fromInbox = rep.from && rep.from.path.includes("inbox");
+      // let fromInbox = rep.from && rep.from.path.includes("inbox");
+      let circle = rep.from.path.split("/")[2];
+      let fromAggregator = AGGREGATOR_NAMES.includes(circle);
+
       switch (rep.type) {
         case "circle.nes":
           this.processMessages(rep.data, store);
@@ -18,17 +22,17 @@ export class MessagesReducer {
           delete store.messages.stations[rep.data.cir];
           break;
         case "circle.cos.loc":
-          if (fromInbox) {
-            store.messages.inboxSrc = rep.data.src.filter(s => !isRootCollection(s));
+          if (fromAggregator) {
+            store.messages.inbox.src = _.union(store.messages.inbox.src, rep.data.src);
             this.storeInboxMessages(store);
           }
           break;
         case "circle.config.dif.source":
-          if (fromInbox && !isRootCollection(rep.data.src)) {
+          if (fromAggregator) {
             if (rep.data.add) {
-              store.messages.inboxSrc = [...store.messages.inboxSrc, rep.data.src];
+              store.messages.inbox.src = [...store.messages.inbox.src, rep.data.src];
             } else {
-              store.messages.inboxSrc = store.messages.inboxSrc.filter(src => src !== rep.data.src)
+              store.messages.inbox.src = store.messages.inbox.src.filter(src => src !== rep.data.src);
             }
             this.storeInboxMessages(store);
           }
@@ -78,7 +82,7 @@ export class MessagesReducer {
   }
 
   storeInboxMessages(store) {
-    let messages = store.messages.inboxSrc.reduce((msgs, src) => {
+    let messages = store.messages.inbox.src.reduce((msgs, src) => {
       let msgGroup = store.messages.stations[src];
       if (!msgGroup) return msgs;
       return msgs.concat(msgGroup.filter(this.filterInboxMessages));  // filter out app & accepted invite msgs
@@ -96,7 +100,7 @@ export class MessagesReducer {
     //   console.log(`msg ${msg.uid}: ${msg.wen}`);
     // }
 
-    store.messages.inboxMessages = ret;
+    store.messages.inbox.messages = ret;
   }
 
   // Filter out of inbox:

@@ -112,7 +112,7 @@ export class InboxRecentPage extends Component {
 
   // TODO:  This function is super bunk. Post circles should (probably) have post title in the post config.
   findPostTitleFromMessage(postId) {
-    let inbox = this.props.store.messages.inboxMessages;
+    let inbox = this.props.store.messages.inbox.messages;
     let result = null;
 
     for (var i = 0; i < inbox.length; i++) {
@@ -168,7 +168,7 @@ export class InboxRecentPage extends Component {
   // Group inbox messages by time-chunked stations, strictly ordered by message time.
   // TODO:  Inbox does not handle messages with multiple audiences very well
   getSectionData() {
-    let inbox = this.props.store.messages.inboxMessages;
+    let inbox = this.props.store.messages.inbox.messages;
 
     let lastStationName = [];
     let sections = [];

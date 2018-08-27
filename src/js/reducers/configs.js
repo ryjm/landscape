@@ -1,8 +1,8 @@
-import { isRootCollection } from '/lib/util';
+import { isAggregator } from '/lib/util';
 
 export class ConfigsReducer {
   reduce(reports, store) {
-    reports.forEach((rep) => {
+    reports.forEach(rep => {
       let stationName;
       let stations = {};
 
@@ -40,15 +40,12 @@ export class ConfigsReducer {
   }
 
   addConfigs(configs, storeConfigs) {
-    Object.keys(configs).forEach((cos) => {
-      if (isRootCollection(cos)) return;
-      
-      storeConfigs[cos] = storeConfigs[cos] || {};
-      Object.assign(storeConfigs[cos], configs[cos]);
-      if (cos.includes('inbox')) {
-        storeConfigs["inbox"] = configs[cos];
-      }
-    });
+    Object.keys(configs)
+      .filter(c => !isAggregator(c))
+      .forEach((cos) => {
+        storeConfigs[cos] = storeConfigs[cos] || {};
+        Object.assign(storeConfigs[cos], configs[cos]);
+      });
   }
 
   updateConfig(data, station) {
