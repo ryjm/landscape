@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
 import { prettyShip, isUrl, uuid, getMessageContent, isDMStation, dateToDa } from '/lib/util';
-import { createDMStation } from '/services';
+// import { createDMStation } from '/services';
 import { sealDict } from '/components/lib/seal-dict';
 import { Elapsed } from '/components/lib/elapsed';
 import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
@@ -99,7 +99,7 @@ export class ChatPage extends Component {
         !this.props.store.dms.stations.includes(this.state.station.split("/")[1]) &&
         !this.state.dmStationCreated)
     {
-      createDMStation(this.state.station, false);
+      // createDMStation(this.state.station, false);
 
       this.setState({
         dmStationCreated: true

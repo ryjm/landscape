@@ -84,7 +84,7 @@ export class TopicCreatePage extends Component {
               name: details.title,
               comments: true,  // XX TODO Get this value from user or parent
               type: 'blog',
-              content: this.state.topicContent, 
+              content: this.state.topicContent,
           }}
         ]
       }
@@ -99,7 +99,7 @@ export class TopicCreatePage extends Component {
               name: this.titleExtract(this.state.topicContent),
               comments: true,  // XX TODO Get this value from user or parent
               type: 'blog',
-              content: this.state.topicContent, 
+              content: this.state.topicContent,
           }}
         ]
       }
@@ -107,15 +107,15 @@ export class TopicCreatePage extends Component {
     };
     this.props.api.coll(dat);
 
-    this.props.pushCallback("circle.config.dif.source", (rep) => {
-      api.hall({
-        source: {
-          nom: 'inbox',
-          sub: true,
-          srs: [rep.data.src]
-        }
-      })
-    });
+    // this.props.pushCallback("circle.config.dif.source", (rep) => {
+      // api.hall({
+      //   source: {
+      //     nom: 'inbox',
+      //     sub: true,
+      //     srs: [rep.data.src]
+      //   }
+      // })
+    // });
 
     this.props.storeReports([{
       type: REPORT_PAGE_STATUS,
@@ -123,13 +123,12 @@ export class TopicCreatePage extends Component {
     }]);
 
     this.props.pushCallback("circle.gram", (rep) => {
-      console.log('ydsdifsdfsjf');
       this.setState({ status: STATUS_READY });
 
       let type = _.get(rep.data, "gam.sep.fat.tac.text", null);
 
       if (type && (type === 'new item' || type === 'edited item')) {
-      
+
         let content = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
         content = JSON.parse(content);
 

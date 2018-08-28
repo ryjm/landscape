@@ -38,9 +38,9 @@ export class CommandFormCollectionCreate extends Component {
         }]);
 
         let dat = {
-          ship: this.props.api.authTokens.ship, 
+          ship: this.props.api.authTokens.ship,
           desk: 'home',
-          acts: [{ 
+          acts: [{
             collection: {
               path: '/web/collections',
               name: this.state.formData.name,
@@ -55,13 +55,6 @@ export class CommandFormCollectionCreate extends Component {
         this.props.pushCallback("circles", (rep) => {
           let station = `~${this.props.api.authTokens.ship}/${rep.data.cir}`;
           let details = getStationDetails(station);
-          this.props.api.hall({
-            source: {
-              nom: 'inbox',
-              sub: true,
-              srs: [station]
-            }
-          });
 
           if (this.state.formData.invites.length > 0) {
             let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim());

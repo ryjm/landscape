@@ -20,13 +20,6 @@ export function isAggregator(station) {
   return AGGREGATOR_NAMES.includes(cir);
 }
 
-// export function isCollection(station) {
-//   let circle = station.split("/")[1];
-//   let collParts = circle.split("-");
-//   if (circle.includes("c-"))
-// }
-
-
 export function getLoadingClass(storeTransition) {
   return classnames({
     'hide': storeTransition === PAGE_STATUS_READY,
@@ -130,23 +123,6 @@ export function uuid() {
 
   return str.slice(0,-1);
 }
-
-// export function parseCollCircle(station) {
-//   let collTa = station.split('/')[1].split('-')[1];
-//   let collPath = ['web', 'collections'].concat(pax).join()
-//
-//   let sp = st.split('/');
-//   let pax = sp[1].split('-');
-//   pax.shift();
-//   pax = ['web', 'collections'].concat(pax);
-//
-//   let  r = {
-//       ship: sp[0],
-//       path: pax,
-//       name: pax[pax.length-1]
-//   }
-//   return r;
-// }
 
 export function isPatTa(str) {
   const r = /^[a-z,0-9,\-,\.,_,~]+$/.exec(str)
@@ -254,19 +230,6 @@ export function isDMStation(station) {
   );
 }
 
-export function calculateStations(configs) {
-  let numSubs = Object.keys(configs).filter((sta) => !isDMStation(sta) && !sta.includes("inbox")).length;
-  let numDMs = Object.keys(configs).filter((sta) => isDMStation(sta)).length;
-
-  let numString = [];
-  if (numSubs) numString.push(`${numSubs} subscriptions`);
-  if (numDMs) numString.push(`${numDMs} DMs`);
-
-  numString = numString.join(", ");
-
-  return numString;
-}
-
 export function isRootCollection(station) {
   return station.split("/")[1] === "c";
 }
@@ -336,7 +299,7 @@ export function getMessageContent(msg) {
 
 export function getStationDetails(station) {
   let host = station.split("/")[0].substr(1);
-  let config = warehoues.store.configs[station];
+  let config = warehouse.store.configs[station];
 
   let ret = {
     type: "none",
@@ -440,3 +403,43 @@ export function isUrl(string) {
     return false
   }
 }
+
+/** Graveyard **/
+
+// export function calculateStations(configs) {
+//   let numSubs = Object.keys(configs).filter((sta) => !isDMStation(sta) && !sta.includes("inbox")).length;
+//   let numDMs = Object.keys(configs).filter((sta) => isDMStation(sta)).length;
+//
+//   let numString = [];
+//   if (numSubs) numString.push(`${numSubs} subscriptions`);
+//   if (numDMs) numString.push(`${numDMs} DMs`);
+//
+//   numString = numString.join(", ");
+//
+//   return numString;
+// }
+
+
+// export function parseCollCircle(station) {
+//   let collTa = station.split('/')[1].split('-')[1];
+//   let collPath = ['web', 'collections'].concat(pax).join()
+//
+//   let sp = st.split('/');
+//   let pax = sp[1].split('-');
+//   pax.shift();
+//   pax = ['web', 'collections'].concat(pax);
+//
+//   let  r = {
+//       ship: sp[0],
+//       path: pax,
+//       name: pax[pax.length-1]
+//   }
+//   return r;
+// }
+
+
+// export function isCollection(station) {
+//   let circle = station.split("/")[1];
+//   let collParts = circle.split("-");
+//   if (circle.includes("c-"))
+// }

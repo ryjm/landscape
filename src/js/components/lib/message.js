@@ -25,9 +25,12 @@ export class Message extends Component {
   }
 
   subStation(station) {
+    let stationDetails = getStationDetails(station);
+    let nom = ["collection-post", "collection-index"].includes(stationDetails.type) ? 'c' : 'inbox';
+
     this.props.api.hall({
       source: {
-        nom: "inbox",
+        nom: nom,
         sub: true,
         srs: [station]
       }

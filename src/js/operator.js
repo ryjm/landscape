@@ -4,7 +4,6 @@ import Mousetrap from 'mousetrap';
 import { warehouse } from '/warehouse';
 import { router } from '/router';
 import { getMessageContent, isDMStation } from '/lib/util';
-import { createDMStation } from '/services';
 import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY } from '/lib/constants';
 
 const LONGPOLL_TIMEOUT = 10000;
@@ -67,7 +66,7 @@ export class UrbitOperator {
         let circle = xenoStation.split("/")[1];
 
         if (!warehouse.store.dms.stations.includes(circle)) {
-          createDMStation(xenoStation, true);
+          // createDMStation(xenoStation, true);
         }
 
         let newSep = {

@@ -41,7 +41,6 @@ export class ConfigsReducer {
 
   addConfigs(configs, storeConfigs) {
     Object.keys(configs)
-      .filter(c => !isAggregator(c))
       .forEach((cos) => {
         storeConfigs[cos] = storeConfigs[cos] || {};
         Object.assign(storeConfigs[cos], configs[cos]);

@@ -24,10 +24,13 @@ export class Header extends Component {
 
   toggleSubscribe(station) {
     let subscribed = this.isSubscribed(station);
+    let stationDetails = getStationDetails(this.props.data.station);
+
+    let nom = ["collection-post", "collection-index"].includes(stationDetails.type) ? 'c' : 'inbox';
 
     this.props.api.hall({
       source: {
-        nom: "inbox",
+        nom: nom,
         sub: !subscribed,
         srs: [this.props.data.station]
       }

@@ -8,8 +8,8 @@ export class MessagesReducer {
   reduce(reports, store) {
     reports.forEach((rep) => {
       // let fromInbox = rep.from && rep.from.path.includes("inbox");
-      let circle = rep.from.path.split("/")[2];
-      let fromAggregator = AGGREGATOR_NAMES.includes(circle);
+      let fromCircle = rep.from && rep.from.path.split("/")[2];
+      let fromAggregator = AGGREGATOR_NAMES.includes(fromCircle);
 
       switch (rep.type) {
         case "circle.nes":
