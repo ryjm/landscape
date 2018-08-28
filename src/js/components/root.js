@@ -63,49 +63,38 @@ export class Root extends Component {
   }
 
   loadHeader(tempDOM) {
-    let headerQuery = tempDOM.querySelectorAll('[name="urb-header"]');
+    // Example metadata:
+    // <input
+    //   type="hidden"
+    //   name="urb-metadata"
+    //   urb-show="default"
+    //   urb-name="blogzone"
+    //   urb-owner="~zod"
+    //   urb-date-created="~2018.8.28..19.59.32..0013"
+    //   urb-last-modified="~2018.8.28..19.59.32..0013"
+    //   urb-structure-type="collection-index">
+    //   urb-content-type="blog"
+    //   urb-path="/web/collections/~2018.8.28..19.59.32..0013"
 
-    let headerType = (headerQuery.length > 0) ?
-      headerQuery[0].getAttribute('value') : "default";
-
-    let headerData;
-
-console.log(headerType);
-    if (headerType === "collection" ||
-        headerType === "both" ||
-        headerType === "raw"){
-
-      headerData = {
-        type: headerType,
-        path: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('path') : null,
-        station: `${headerQuery[0].getAttribute('ship')}/c-${headerQuery[0].getAttribute('path').split('/').slice(3).join('-')}`,
-
-        postid: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('postid') : null,
-        ship: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('ship') : null,
-        show: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('show') : null,
-      }
-
-    } else {
-      headerData = {
-        type: headerType,
-        title: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('title') : null,
-        station: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('station') : null,
-        postid: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('postid') : null,
-        ship: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('ship') : null,
-        publ: (headerQuery.length > 0) ?
-          headerQuery[0].getAttribute('publ') : null,
-      }
+    let headerQuery = tempDOM.querySelectorAll('[name="urb-metadata"]');
+    let headerData = {
+      type: "default"
     }
 
-    headerData.station = (headerData.station === "query") ? getQueryParams().station : headerData.station;
+    if (headerQuery.length > 0) {
+      headerData.type = headerQuery[0].getAttribute('urb-structure-type');
+      headerData.owner = headerQuery[0].getAttribute('urb-owner');
+      headerData.collName = headerQuery[0].getAttribute('urb-name');
+      headerData.collectionPageMode = headerQuery[0].getAttribute('urb-show');
+      headerData.dateCreated = headerQuery[0].getAttribute('urb-date-created');
+      headerData.dateModified = headerQuery[0].getAttribute('urb-date-modified');
+
+      if (headerData.type === "collection-index") {
+        headerData.title = headerData.collName;
+        headerData.collId = headerData.dateCreated;
+        headerData.station = `${headerData.owner}/c-${headerData.collId}`;
+      }
+    }
 
     return (
       <Header
@@ -117,7 +106,60 @@ console.log(headerType);
         transitionTo={this.props.transitionTo}
         runPoll={this.props.runPoll}
       />
-    )
+    );
+
+    // let headerType = (headerQuery.length > 0) ?
+    //   headerQuery[0].getAttribute('value') : "default";
+    //
+    // let headerData;
+    //
+    // if (headerType === "collection" ||
+    //     headerType === "both" ||
+    //     headerType === "raw"){
+    //
+    //   headerData = {
+    //     type: headerType,
+    //     path: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('path') : null,
+    //     station: `${headerQuery[0].getAttribute('ship')}/c-${headerQuery[0].getAttribute('path').split('/').slice(3).join('-')}`,
+    //
+    //     postid: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('postid') : null,
+    //     ship: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('ship') : null,
+    //     show: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('show') : null,
+    //   }
+    //
+    // } else {
+    //   headerData = {
+    //     type: headerType,
+    //     title: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('title') : null,
+    //     station: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('station') : null,
+    //     postid: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('postid') : null,
+    //     ship: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('ship') : null,
+    //     publ: (headerQuery.length > 0) ?
+    //       headerQuery[0].getAttribute('publ') : null,
+    //   }
+    // }
+
+    // headerData.station = (headerData.station === "query") ? getQueryParams().station : headerData.station;
+    //
+    // return (
+    //   <Header
+    //     data={headerData}
+    //     api={this.props.api}
+    //     store={this.props.store}
+    //     storeReports={this.props.storeReports}
+    //     pushCallback={this.props.pushCallback}
+    //     transitionTo={this.props.transitionTo}
+    //     runPoll={this.props.runPoll}
+    //   />
+    // )
   }
 
   render() {

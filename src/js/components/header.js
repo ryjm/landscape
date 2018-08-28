@@ -90,17 +90,17 @@ export class Header extends Component {
         }
         break;
 
-      case "collection":
+      case "collection-index":
         defaultData = this.getStationHeaderData(this.props.data.station);
 
-        if (this.props.data.show === 'default') {
+        if (this.props.data.collectionPageMode === 'default') {
           actions = {
-            details: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=details`,
-            write: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=post`,
+            details: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=details`,
+            write: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=post`,
           }
-        } else if (this.props.data.show === 'details') {
+        } else if (this.props.data.collectionPageMode === 'details') {
           actions = {
-            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`,
+            back: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}`,
           }
         }
 
@@ -115,38 +115,11 @@ export class Header extends Component {
         }
         break;
 
-      case "raw":
-      case "both":
-        defaultData = this.getStationHeaderData(this.props.data.station);
-
-        if (this.props.data.show === 'default') {
-          actions = {
-            details: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=details`,
-            edit: `/~~/${this.props.data.ship}/==${this.props.data.path}?show=edit`,
-          }
-        } else if (this.props.data.show === 'details') {
-          actions = {
-            back: `/~~/${this.props.data.ship}/==${this.props.data.path}`,
-          }
-        }
-
-        headerData = {
-          ...defaultData,
-          icon: IconBlog,
-          title: {
-            ...defaultData.title,
-            display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
-          },
-          actions: actions,
-        }
-        break;
-
-
       case "profile":
         headerData = {
           title: {
-            display: this.props.data.ship,
-            href: profileUrl(this.props.data.ship.substr(1)),
+            display: this.props.data.owner,
+            href: profileUrl(this.props.data.owner.substr(1)),
             style: "mono"
           }
         }
