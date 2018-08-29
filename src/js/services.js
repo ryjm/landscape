@@ -17,9 +17,9 @@ export function getStationDetails(station) {
 
   let circleParts = ret.cir.split("-");
 
-  if (ret.circle === "inbox") {
+  if (ret.cir === "inbox") {
     ret.type = "inbox";
-  } else if (ret.circle === "c") {
+  } else if (ret.cir === "c") {
     ret.type = "aggregator";
   } else if (isDMStation(station)) {
     ret.type = "dm";
@@ -71,3 +71,5 @@ export function getStationDetails(station) {
 
   return ret;
 }
+
+window.getStationDetails = getStationDetails

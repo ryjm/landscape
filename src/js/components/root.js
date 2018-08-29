@@ -103,6 +103,11 @@ export class Root extends Component {
         headerData.postId = headerData.dateCreated;
         headerData.station = `${headerData.owner}/c-${headerData.collId}/${headerData.postId}`;
       }
+
+      if (headerData.type === "stream") {
+        headerData.station = getQueryParams().station;
+        headerData.title = headerData.station.split("/")[1];
+      }
     }
 
     return (
