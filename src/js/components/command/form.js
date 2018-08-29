@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
-import { getStationDetails, capitalize } from '/lib/util';
+import { capitalize } from '/lib/util';
 import { PAGE_STATUS_TRANSITIONING, STATUS_LOADING, STATUS_READY } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';

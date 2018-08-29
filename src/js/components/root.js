@@ -64,17 +64,17 @@ export class Root extends Component {
 
   loadHeader(tempDOM) {
     // Example metadata:
-    // <input
-    //   type="hidden"
+
+    // <input type="hidden"
     //   name="urb-metadata"
     //   urb-show="default"
-    //   urb-name="blogzone"
+    //   urb-path="/web/collections/~2018.8.28..19.59.32..0013/~2018.8.28..21.49.27..6131"
+    //   urb-name="New post yet again"
     //   urb-owner="~zod"
-    //   urb-date-created="~2018.8.28..19.59.32..0013"
-    //   urb-last-modified="~2018.8.28..19.59.32..0013"
-    //   urb-structure-type="collection-index">
+    //   urb-date-created="~2018.8.28..21.49.27..6131"
+    //   urb-last-modified="~2018.8.28..21.49.27..6131"
     //   urb-content-type="blog"
-    //   urb-path="/web/collections/~2018.8.28..19.59.32..0013"
+    //   urb-structure-type="collection-post">
 
     let headerQuery = tempDOM.querySelectorAll('[name="urb-metadata"]');
     let headerData = {
@@ -84,15 +84,24 @@ export class Root extends Component {
     if (headerQuery.length > 0) {
       headerData.type = headerQuery[0].getAttribute('urb-structure-type');
       headerData.owner = headerQuery[0].getAttribute('urb-owner');
-      headerData.collName = headerQuery[0].getAttribute('urb-name');
+      headerData.pageTitle = headerQuery[0].getAttribute('urb-name');
       headerData.collectionPageMode = headerQuery[0].getAttribute('urb-show');
       headerData.dateCreated = headerQuery[0].getAttribute('urb-date-created');
       headerData.dateModified = headerQuery[0].getAttribute('urb-date-modified');
+      headerData.collPath = headerQuery[0].getAttribute('urb-path');
 
       if (headerData.type === "collection-index") {
-        headerData.title = headerData.collName;
+        headerData.title = headerData.pageTitle;
         headerData.collId = headerData.dateCreated;
         headerData.station = `${headerData.owner}/c-${headerData.collId}`;
+      }
+
+      if (headerData.type === "collection-post") {
+        headerData.title = headerData.pageTitle;
+        headerData.collId = headerData.collPath.split("/")[3];
+        headerData.collTitle = "TBD";
+        headerData.postId = headerData.dateCreated;
+        headerData.station = `${headerData.owner}/c-${headerData.collId}/${headerData.postId}`;
       }
     }
 

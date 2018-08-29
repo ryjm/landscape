@@ -29,7 +29,8 @@
 import React, { Component } from 'react';
 import { Elapsed } from '/components/lib/elapsed';
 import { Message } from '/components/lib/message';
-import { prettyShip, isDMStation, getStationDetails, getMessageContent } from '/lib/util';
+import { prettyShip, isDMStation, getMessageContent } from '/lib/util';
+import { getStationDetails } from '/services';
 import { Icon } from '/components/lib/icon';
 import _ from 'lodash';
 
@@ -182,7 +183,7 @@ export class InboxRecentPage extends Component {
         sections.push({
           name: aud,
           msgs: [msg],
-          details: getStationDetails(aud, this.props.store.configs[aud], this.props.api.authTokens.ship)
+          details: getStationDetails(aud)
         });
         stationIndex++;
       } else {

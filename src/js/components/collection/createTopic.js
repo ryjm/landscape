@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from '/components/lib/button';
-import { getQueryParams, getStationDetails, daToDate } from '/lib/util';
+import { getQueryParams, daToDate } from '/lib/util';
+import { getStationDetails } from '/services';
 import { Elapsed } from '/components/lib/elapsed';
 import { PAGE_STATUS_TRANSITIONING, STATUS_READY, STATUS_LOADING, REPORT_PAGE_STATUS } from '/lib/constants';
 import _ from 'lodash';

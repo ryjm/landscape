@@ -1,4 +1,4 @@
-import { getStationDetails } from '/lib/util';
+import { getStationDetails } from '/services';
 import _ from 'lodash';
 
 export class NamesReducer {
@@ -17,7 +17,7 @@ export class NamesReducer {
 
         case "circle.cos.rem":
           Object.arrayify(rep.data).forEach(({key: station, value: config}) => {
-            let details = getStationDetails(station, config);
+            let details = getStationDetails(station);
 
             if (ships[details.host]) {
               ships[details.host] = _.uniq(ships[details.host].concat(details.cir));

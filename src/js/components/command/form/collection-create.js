@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { CommandForm } from '/components/command/form';
-import { getStationDetails } from '/lib/util';
+import { getStationDetails } from '/services';
 import { PAGE_STATUS_TRANSITIONING, REPORT_PAGE_STATUS } from '/lib/constants';
 import _ from 'lodash';
 import urbitOb from 'urbit-ob';

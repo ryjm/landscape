@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { isDMStation, getStationDetails } from '/lib/util';
+import { isDMStation } from '/lib/util';
+import { getStationDetails } from '/services';
 
 export class ChatList extends Component {
   componentDidMount() {
@@ -16,7 +17,7 @@ export class ChatList extends Component {
   renderText() {
     if (this.props.store.public[this.props.hostship]) {
       const text = this.props.store.public[this.props.hostship].map((cir) => {
-        const deets = getStationDetails(cir, this.props.store.configs[cir], this.props.api.authTokens.ship)
+        const deets = getStationDetails(cir)
         if (deets.type == "text") {
           return (
             <div className="mt-2 text-500">
@@ -36,7 +37,7 @@ export class ChatList extends Component {
   renderChats() {
     if (this.props.store.public[this.props.hostship]) {
       const chats = this.props.store.public[this.props.hostship].map((cir) => {
-        const deets = getStationDetails(cir, this.props.store.configs[cir], this.props.api.authTokens.ship)
+        const deets = getStationDetails(cir)
         if (deets.type == "chat") {
           return (
             <div className="mt-2 text-500">

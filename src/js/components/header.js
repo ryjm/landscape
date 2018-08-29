@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { IconBlog } from '/components/lib/icons/icon-blog';
 import { IconStream } from '/components/lib/icons/icon-stream';
-import { getQueryParams, getStationDetails, collectionAuthorization, profileUrl, getLoadingClass } from '/lib/util';
+import { getQueryParams, collectionAuthorization, profileUrl, getLoadingClass } from '/lib/util';
+import { getStationDetails } from '/services';
 import { Button } from '/components/lib/button';
 import { REPORT_PAGE_STATUS, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
 import classnames from 'classnames';
@@ -53,7 +54,7 @@ export class Header extends Component {
   }
 
   getStationHeaderData(station) {
-    let stationDetails = getStationDetails(station, this.props.store.configs[station], this.props.api.authTokens.ship);
+    let stationDetails = getStationDetails(station);
 
     return {
       title: {
@@ -111,6 +112,38 @@ export class Header extends Component {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
           },
+          actions: actions
+        }
+        break;
+
+      case "collection-post":
+        defaultData = this.getStationHeaderData(this.props.data.station);
+
+        if (this.props.data.collectionPageMode === 'default') {
+          actions = {
+            details: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=details`,
+            edit: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit`
+          }
+        } else if (this.props.data.collectionPageMode === 'details') {
+          actions = {
+            back: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}`,
+          }
+        }
+
+        headerData = {
+          ...defaultData,
+          icon: IconBlog,
+          title: {
+            ...defaultData.title,
+            display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
+          },
+          breadcrumbs: [
+            defaultData.breadcrumbs[0],
+            {
+              display: this.props.data.collTitle,
+              href: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}`
+            }
+          ],
           actions: actions
         }
         break;

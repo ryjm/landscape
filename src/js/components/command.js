@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
-import { getStationDetails, isDMStation, isValidStation, profileUrl, getLoadingClass } from '/lib/util';
+import { isDMStation, isValidStation, profileUrl, getLoadingClass } from '/lib/util';
+import { getStationDetails } from '/services';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
 import { PAGE_STATUS_TRANSITIONING, STATUS_READY } from '/lib/constants';
@@ -176,7 +177,7 @@ export class CommandMenu extends Component {
   buildGoOption(term) {
     let isShip = urbitOb.isShip(term.substr(1));
     let isStation = isValidStation(term);
-    let details = isStation && getStationDetails(term, this.props.store.configs[term]);
+    let details = isStation && getStationDetails(term);
     // use collection description if it's a collection
     let displayTextTerm = isStation ? details.type == 'text' ? `${details.station.split("/")[0]} / ${details.stationTitle}` : details.station.split("/").join("  /  ") : term;
 

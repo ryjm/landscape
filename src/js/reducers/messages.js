@@ -26,6 +26,9 @@ export class MessagesReducer {
             store.messages.inbox.src = _.union(store.messages.inbox.src, rep.data.src);
             this.storeInboxMessages(store);
           }
+          if (fromCircle === "inbox") {
+            store.messages.inbox.config = rep.data;
+          }
           break;
         case "circle.config.dif.source":
           if (fromAggregator) {

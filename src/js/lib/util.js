@@ -2,6 +2,7 @@ import _ from 'lodash';
 import urbitOb from 'urbit-ob';
 import classnames from 'classnames';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_RECONNECTING, AGGREGATOR_NAMES } from '/lib/constants';
+import { getStationDetails } from '/services';
 
 export function capitalize(str) {
   return `${str[0].toUpperCase()}${str.substr(1)}`;
@@ -297,87 +298,23 @@ export function getMessageContent(msg) {
   return ret;
 }
 
-export function getStationDetails(station) {
-  let host = station.split("/")[0].substr(1);
-  let config = warehouse.store.configs[station];
+export function getSubscribedStations(ship, store) {
+  let inbox = store.messages.inbox;
+  let configs = store.configs;
 
-  let ret = {
-    type: "none",
-    station: station,
-    host: host,
-    cir: station.split("/")[1],
-    hostProfileUrl: profileUrl(host)
-  };
-
-  let circleParts = ret.cir.split("-");
-
-  if (station.includes("inbox")){
-    ret.type = "inbox";
-  } else if (isDMStation(station)) {
-    ret.type = "dm";
-  } else if (ret.cir.includes("c-") && circleParts.length > 2) {
-    ret.type = "collection-post";
-  } else if (ret.cir.includes("c-")) {
-    ret.type = "collection-index";
-  } else {
-    ret.type = "chat";
-  }
-
-  switch (ret.type) {
-    case "inbox":
-      ret.stationUrl = "/~~/landscape";
-      ret.stationTitle = ret.cir;
-      break;
-    case "chat":
-      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
-      ret.stationDetailsUrl = `/~~/landscape/stream/details?station=${station}`;
-      ret.stationTitle = ret.cir;
-      break;
-    case "dm":
-      if (config.con) {
-        ret.stationTitle = ret.cir
-          .split(".")
-          .filter((mem) => mem !== api.authTokens.ship)
-          .map((mem) => `~${mem}`)
-          .join(", ");;
-      } else {
-        ret.stationTitle = "unknown";
-      }
-
-      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
-      break;
-    case "collection-index":
-      ret.collId = circleParts[1];
-
-      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
-      ret.stationTitle = "TBD";
-      break;
-    case "collection-post":
-      ret.collId = circleParts[1];
-      ret.postId = circleParts[2];
-
-      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
-      ret.stationTitle = "TBD";
-      break;
-  }
-
-  return ret;
-}
-
-export function getSubscribedStations(ship, storeConfigs) {
-  let inbox = storeConfigs[`~${ship}/inbox`];
-  if (!inbox) return null;
+  // TODO: Maybe I need this?
+  // if (!inbox) return null;
 
   let stationDetailList = inbox.src
     .map((station) => {
-      if (!storeConfigs[station]) return null;
-      return getStationDetails(station, storeConfigs[station], ship)
+      if (!configs[station]) return null;
+      return getStationDetails(station)
     })
     .filter((station) => station !== null);
 
   let ret = {
     chatStations: stationDetailList.filter((d) => d.type === "chat"),
-    collStations: stationDetailList.filter((d) => d.type === "collection"),
+    collStations: stationDetailList.filter((d) => ["collection-index", "collection-post"].includes(d.type)),
     dmStations: stationDetailList.filter((d) => d.type === "dm"),
   };
 

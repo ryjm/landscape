@@ -40,7 +40,7 @@ export class InboxListPage extends Component {
   }
 
   render() {
-    let stations = getSubscribedStations(this.props.api.authTokens.ship, this.props.store.configs);
+    let stations = getSubscribedStations(this.props.api.authTokens.ship, this.props.store);
     if (!stations) return null;
 
     const chatStations = this.buildSection(stations.chatStations);
