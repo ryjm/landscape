@@ -27,11 +27,9 @@ export class Header extends Component {
     let subscribed = this.isSubscribed(station);
     let stationDetails = getStationDetails(this.props.data.station);
 
-    let nom = ["collection-post", "collection-index"].includes(stationDetails.type) ? 'c' : 'inbox';
-
     this.props.api.hall({
       source: {
-        nom: nom,
+        nom: 'inbox',
         sub: !subscribed,
         srs: [this.props.data.station]
       }
@@ -238,8 +236,6 @@ export class Header extends Component {
 
   render() {
     let type = (this.props.data.type) ? this.props.data.type : "default";
-
-    console.log('header type = ', type);
 
     // TODO: This is an ugly hack until we fix queryParams
     if (["stream", "dm", "collection-write"].includes(type) && !getQueryParams().station) {
