@@ -101,10 +101,10 @@ export class CommandForm extends Component {
       value: this.state.formData[name],
       disabled: this.state.status === STATUS_LOADING,
       placeholder: field.placeholder,
-      autocomplete: "off",
-      autocorrect: "off",
-      autocapitalize: "off",
-      spellcheck: "false"
+      autoComplete: "off",
+      autoCorrect: "off",
+      autoCapitalize: "off",
+      spellCheck: "false"
     }
 
     if (first) inputProps.ref = this.firstInputRef;

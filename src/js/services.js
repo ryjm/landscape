@@ -64,6 +64,7 @@ export function getStationDetails(station) {
       ret.collId = circleParts[1];
       ret.postId = circleParts[2];
 
+      ret.parentCollectionUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
       ret.stationTitle = "TBD";
       break;

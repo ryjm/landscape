@@ -106,36 +106,26 @@ export class TopicCreatePage extends Component {
     };
     this.props.api.coll(dat);
 
-    this.props.pushCallback("circle.gram", (rep) => {
-      api.hall({
-        source: {
-          nom: 'inbox',
-          sub: true,
-          srs: [rep.data.src]
-        }
-      })
-    });
-
     this.props.storeReports([{
       type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_TRANSITIONING
     }]);
 
-    this.props.pushCallback("circle.gram", (rep) => {
+    this.props.pushCallback("circles", (rep) => {
       this.setState({ status: STATUS_READY });
 
-      let type = _.get(rep.data, "gam.sep.fat.tac.text", null);
+      let station = `${rep.from.path.split('/')[2]}/${rep.data.cir}`;
+      let stationDetails = getStationDetails(station);
 
-      if (type && (type === 'new item' || type === 'edited item')) {
+      api.hall({
+        source: {
+          nom: 'inbox',
+          sub: true,
+          srs: [station]
+        }
+      })
 
-        let content = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
-        content = JSON.parse(content);
-
-        this.props.transitionTo(`/~~/~${details.hostship}/==/${content.path.join('/')}`);
-        return true;
-      }
-
-      return false;
+      this.props.transitionTo(stationDetails.stationUrl);
     });
   }
 
