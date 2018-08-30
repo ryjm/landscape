@@ -18,9 +18,9 @@ export class Header extends Component {
   }
 
   isSubscribed(station) {
-    let inbox = this.props.store.configs[`~${this.props.api.authTokens.ship}/inbox`];
-    if (!inbox) return false;
-    return inbox.src.includes(station);
+    let inboxSrc = this.props.store.messages.inbox.src;
+    if (!inboxSrc) return false;
+    return inboxSrc.includes(station);
   }
 
   toggleSubscribe(station) {

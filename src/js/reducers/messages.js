@@ -1,15 +1,13 @@
 import _ from 'lodash';
 import { getMessageContent, isDMStation, isRootCollection } from '/lib/util';
-import { AGGREGATOR_NAMES } from '/lib/constants';
 
 const INBOX_MESSAGE_COUNT = 30;
 
 export class MessagesReducer {
   reduce(reports, store) {
     reports.forEach((rep) => {
-      // let fromInbox = rep.from && rep.from.path.includes("inbox");
       let fromCircle = rep.from && rep.from.path.split("/")[2];
-      let fromAggregator = AGGREGATOR_NAMES.includes(fromCircle);
+      let fromInbox = fromCircle === "inbox";
 
       switch (rep.type) {
         case "circle.nes":
@@ -22,16 +20,14 @@ export class MessagesReducer {
           delete store.messages.stations[rep.data.cir];
           break;
         case "circle.cos.loc":
-          if (fromAggregator) {
-            store.messages.inbox.src = _.union(store.messages.inbox.src, rep.data.src);
-            this.storeInboxMessages(store);
-          }
-          if (fromCircle === "inbox") {
+          if (fromInbox) {
             store.messages.inbox.config = rep.data;
+            store.messages.inbox.src = rep.data.src;
+            this.storeInboxMessages(store);
           }
           break;
         case "circle.config.dif.source":
-          if (fromAggregator) {
+          if (fromInbox) {
             if (rep.data.add) {
               store.messages.inbox.src = [...store.messages.inbox.src, rep.data.src];
             } else {

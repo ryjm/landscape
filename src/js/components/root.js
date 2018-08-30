@@ -101,7 +101,7 @@ export class Root extends Component {
         headerData.collId = headerData.collPath.split("/")[3];
         headerData.collTitle = "TBD";
         headerData.postId = headerData.dateCreated;
-        headerData.station = `${headerData.owner}/c-${headerData.collId}/${headerData.postId}`;
+        headerData.station = `${headerData.owner}/c-${headerData.collId}-${headerData.postId}`;
       }
 
       if (headerData.type === "stream") {

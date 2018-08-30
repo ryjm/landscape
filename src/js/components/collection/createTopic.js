@@ -108,15 +108,15 @@ export class TopicCreatePage extends Component {
     };
     this.props.api.coll(dat);
 
-    // this.props.pushCallback("circle.config.dif.source", (rep) => {
-      // api.hall({
-      //   source: {
-      //     nom: 'inbox',
-      //     sub: true,
-      //     srs: [rep.data.src]
-      //   }
-      // })
-    // });
+    this.props.pushCallback("circle.config.dif.source", (rep) => {
+      api.hall({
+        source: {
+          nom: 'inbox',
+          sub: true,
+          srs: [rep.data.src]
+        }
+      })
+    });
 
     this.props.storeReports([{
       type: REPORT_PAGE_STATUS,
