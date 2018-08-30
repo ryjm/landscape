@@ -23,8 +23,8 @@ export class Header extends Component {
     return inboxSrc.includes(station);
   }
 
-  toggleSubscribe(station) {
-    let subscribed = this.isSubscribed(station);
+  toggleSubscribe() {
+    let subscribed = this.isSubscribed(this.props.data.station);
     let stationDetails = getStationDetails(this.props.data.station);
 
     this.props.api.hall({

@@ -79,36 +79,34 @@ export class TopicCreatePage extends Component {
       dat = {
         ship: details.hostship,
         desk: 'home',
-        acts: [
-          { post: {
-              path: '/' + details.clayPath.slice(0, -1).join('/'),
-              name: details.title,
-              comments: true,  // XX TODO Get this value from user or parent
-              type: 'blog',
-              content: this.state.topicContent,
-          }}
-        ]
+        acts: [{
+          post: {
+            path: '/' + details.clayPath.slice(0, -1).join('/'),
+            name: details.title,
+            comments: true,  // XX TODO Get this value from user or parent
+            type: 'blog',
+            content: this.state.topicContent,
+          }
+        }]
       }
     } else {
-
       dat = {
         ship: details.hostship,
         desk: 'home',
-        acts: [
-          { post: {
-              path: '/' + details.clayPath.join('/'),
-              name: this.titleExtract(this.state.topicContent),
-              comments: true,  // XX TODO Get this value from user or parent
-              type: 'blog',
-              content: this.state.topicContent,
-          }}
-        ]
+        acts: [{
+          post: {
+            path: '/' + details.clayPath.join('/'),
+            name: this.titleExtract(this.state.topicContent),
+            comments: true,  // XX TODO Get this value from user or parent
+            type: 'blog',
+            content: this.state.topicContent,
+          }
+        }]
       }
-
     };
     this.props.api.coll(dat);
 
-    this.props.pushCallback("circle.config.dif.source", (rep) => {
+    this.props.pushCallback("circle.gram", (rep) => {
       api.hall({
         source: {
           nom: 'inbox',

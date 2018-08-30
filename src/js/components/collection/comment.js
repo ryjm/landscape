@@ -33,14 +33,14 @@ export class CommentCreate extends Component {
     this.setState({ status: STATUS_LOADING });
 
     this.props.api.coll({
-        ship: this.pageShip,
-        desk: 'home',
-        acts: [{
-          comment: {
-            path: this.clayPath,
-            content: this.state.comment,
-          }
-        }]
+      ship: this.pageShip,
+      desk: 'home',
+      acts: [{
+        comment: {
+          path: this.clayPath,
+          content: this.state.comment,
+        }
+      }]
     });
 
     this.props.storeReports([{
@@ -52,7 +52,6 @@ export class CommentCreate extends Component {
       this.setState({ comment: '', status: STATUS_READY});
       // this.props.transitionTo(this.pageShip == this.props.api.authTokens.ship ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/${this.pageShip}/==/web/collections/${this.props.coll}/${this.props.top}`)
       this.props.transitionTo(window.location.pathname); // any reason we shouldnt do this?
-
     });
   }
 
