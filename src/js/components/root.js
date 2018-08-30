@@ -82,7 +82,10 @@ export class Root extends Component {
     }
 
     if (headerQuery.length > 0) {
-      headerData.type = headerQuery[0].getAttribute('urb-structure-type');
+      headerData.type = headerQuery[0].getAttribute('urb-structure-type');      
+    }
+
+    if (headerQuery.length > 0 && headerData.type) {
       headerData.owner = headerQuery[0].getAttribute('urb-owner');
       headerData.pageTitle = headerQuery[0].getAttribute('urb-name');
       headerData.collectionPageMode = headerQuery[0].getAttribute('urb-show');
@@ -106,6 +109,7 @@ export class Root extends Component {
 
       if (headerData.type === "stream") {
         headerData.station = getQueryParams().station;
+        if (!headerData.station) return;
         headerData.title = headerData.station.split("/")[1];
       }
     }
