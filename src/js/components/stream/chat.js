@@ -365,20 +365,24 @@ export class ChatPage extends Component {
 
     return (
       <div className="container">
-        <Scrollbars
-          ref={this.scrollbarRef}
-          renderTrackHorizontal={props => <div style={{display: "none"}}/>}
-          style={{height: 650}}
-          onScrollStop={this.onScrollStop}
-          renderView={props => <div {...props} className="chat-scrollpane-view"/>}
-          autoHide
-          className="chat-scrollpane">
-          {chatMessages}
-        </Scrollbars>
-        <div className="flex align-center mt-6">
-          <div className="flex-1st"></div>
-          <div className="flex-2nd"></div>
-          <div className="flex-3rd">
+        <div className="row">
+          <div className="flex-col-2"></div>
+          <div className="flex-col-rest">
+            <Scrollbars
+              ref={this.scrollbarRef}
+              renderTrackHorizontal={props => <div style={{display: "none"}}/>}
+              style={{height: 650}}
+              onScrollStop={this.onScrollStop}
+              renderView={props => <div {...props} className="chat-scrollpane-view"/>}
+              autoHide
+              className="chat-scrollpane">
+              {chatMessages}
+            </Scrollbars>
+          </div>
+        </div>
+        <div className="row align-center mt-6">
+          <div className="flex-col-2"></div>
+          <div className="flex-col-rest">
             <form onSubmit={this.messageSubmit}>
               <input className="chat-input-field"
                      type="text"
