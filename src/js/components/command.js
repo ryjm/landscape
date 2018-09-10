@@ -441,17 +441,19 @@ export class CommandMenu extends Component {
         <div className="row command-row">
           <div className="flex-col-1"></div>
           <div className="flex-col-1 cross justify-start" onClick={this.closeMenu}></div>
-          <div className="flex-col-rest command-input-placeholder-wrapper"
+          <div className="flex-col-rest">
+            <div className="command-input-placeholder-wrapper"
                data-placeholder={placeholder}
                disabled={commandInputDisabled}>
-            <input type="text"
-                   name="command-input"
-                   className="command-menu-input"
-                   disabled={commandInputDisabled}
-                   onChange={(e) => this.updateCommand(e.target.value, true)}
-                   onSubmit={this.onCommandSubmit}
-                   value={this.state.command}
-                   ref={this.commandInputRef}/>
+              <input type="text"
+                     name="command-input"
+                     className="command-menu-input"
+                     disabled={commandInputDisabled}
+                     onChange={(e) => this.updateCommand(e.target.value, true)}
+                     onSubmit={this.onCommandSubmit}
+                     value={this.state.command}
+                     ref={this.commandInputRef}/>
+            </div>
           </div>
         </div>
         <div className="row">
