@@ -79,14 +79,13 @@ export class InboxRecentPage extends Component {
 
       if (lastAut !== msg.aut) {
         let topicLink = this.buildPostTitle(messageDetails);
-        let timestamp = (i === 0) ? (<div className="timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
+        // TODO: Add timestamp back in later maybe
+        // let timestamp = (i === 0) ? (<div className="timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
 
         rowAuthor = (
-          <div className="row mt-3">
-            <div className="col-sm-1 col-sm-offset-1">
-              {timestamp}
-            </div>
-            <div className="col-sm-10">
+          <div className="row">
+            <div className="flex-col-2"></div>
+            <div className="flex-col-rest">
               <span>{topicLink}</span>
               <span className="text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a></span>
             </div>
@@ -100,7 +99,8 @@ export class InboxRecentPage extends Component {
         <div key={i}>
           {rowAuthor}
           <div className="row">
-            <div className="col-sm-10 col-sm-offset-2">
+            <div className="flex-col-2"></div>
+            <div className="flex-col-rest">
               <Message details={messageDetails} api={this.props.api} storeReports={this.props.storeReports} pushCallback={this.props.pushCallback} transitionTo={this.props.transitionTo}></Message>
             </div>
           </div>
@@ -139,7 +139,7 @@ export class InboxRecentPage extends Component {
 
       let postDisplay = null;
 
-      if (section.details.type === "collection") {
+      if (section.details.type === "collection-index") {
         let postTitle = section.details.stationTitle;
         postDisplay = (
           <span>
@@ -150,12 +150,13 @@ export class InboxRecentPage extends Component {
       }
 
       return (
-        <div className="mt-9 mb-4" key={i}>
-          <div className="row">
-            <div className="col-sm-1 col-sm-offset-1">
-              <Icon className="inbox-icon" type={section.details.type} />
+        <div className="mt-4 mb-6" key={i}>
+          <div className="row align-center">
+            <div className="flex-col-1"></div>
+            <div className="flex-col-1 flex justify-end">
+              <Icon type={section.details.type} />
             </div>
-            <div className="col-sm-10">
+            <div className="flex-col-rest">
               {hostDisplay}
               <a href={section.details.stationUrl} className="text-600 underline">{section.details.stationTitle}</a>
             </div>

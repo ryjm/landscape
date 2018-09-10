@@ -260,7 +260,7 @@ export class Header extends Component {
     // <div onClick={this.reconnectPolling} className={loadingClass}></div>
 
     return (
-      <div>
+      <div className="container header-container">
         <div className="row">
           <div className="flex-col-2"></div>
           <div className="flex-col-rest header-breadcrumbs">
@@ -307,10 +307,6 @@ export class Header extends Component {
     let headerData = this.getHeaderData(type);
     let headerContent = this.buildHeaderContent(headerData);
 
-    return (
-      <div className="container header-container">
-        {headerContent}
-      </div>
-    )
+    return headerContent;
   }
 }

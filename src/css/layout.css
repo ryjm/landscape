@@ -130,19 +130,27 @@ body {
   We're kind of using this as a grid. More explanation later.
 */
 
+.row {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
 .flex-col-1 {
-  flex-basis: 76px;
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
+  flex-basis: 80px;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 }
 
 .flex-col-2 {
-  flex-basis: 156px;
-  margin-right: 0.5rem;
-  margin-left: 0.5rem;
+  flex-basis: 160px;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 }
 
 .flex-col-rest {
   flex-basis: 0;
   flex-grow: 1;
+
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 }

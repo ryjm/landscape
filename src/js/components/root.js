@@ -82,7 +82,7 @@ export class Root extends Component {
     }
 
     if (headerQuery.length > 0) {
-      headerData.type = headerQuery[0].getAttribute('urb-structure-type');      
+      headerData.type = headerQuery[0].getAttribute('urb-structure-type');
     }
 
     if (headerQuery.length > 0 && headerData.type) {
@@ -204,10 +204,6 @@ export class Root extends Component {
       )
     }
 
-    return (
-      <div>
-        {content}
-      </div>
-    )
+    return content;
   }
 }
