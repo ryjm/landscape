@@ -434,13 +434,14 @@ export class CommandMenu extends Component {
 
     commandInputDisabled = this.commandInputDisabled();
     loadingClass = getLoadingClass(this.props.store.views.transition);
+    // <div className={loadingClass}></div>
 
     return (
       <div className="container command-page">
-        <div className="command-row">
-          <div className={loadingClass}></div>
-          <div className="cross" onClick={this.closeMenu}></div>
-          <div className="command-input-placeholder-wrapper"
+        <div className="row command-row">
+          <div className="flex-col-1"></div>
+          <div className="flex-col-1 cross justify-start" onClick={this.closeMenu}></div>
+          <div className="flex-col-rest command-input-placeholder-wrapper"
                data-placeholder={placeholder}
                disabled={commandInputDisabled}>
             <input type="text"
@@ -453,8 +454,11 @@ export class CommandMenu extends Component {
                    ref={this.commandInputRef}/>
           </div>
         </div>
-        <div className="command-options">
-          {view}
+        <div className="row">
+          <div className="flex-col-2"></div>
+          <div className="flex-col-rest command-options">
+            {view}
+          </div>
         </div>
       </div>
     );
