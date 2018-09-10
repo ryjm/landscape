@@ -8,6 +8,7 @@ export const PAGE_STATUS_DISCONNECTED = "page status disconnected";
 export const PAGE_STATUS_RECONNECTING = "page status reconnecting";
 
 export const REPORT_PAGE_STATUS = "report page status update";
+export const REPORT_NAVIGATE = "report navigate to subpage";
 
 export const AGGREGATOR_COLL = "c";
 export const AGGREGATOR_INBOX = "inbox";

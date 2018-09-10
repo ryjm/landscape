@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { IconBlog } from '/components/lib/icons/icon-blog';
 import { IconStream } from '/components/lib/icons/icon-stream';
-import { getQueryParams, collectionAuthorization, profileUrl, getLoadingClass } from '/lib/util';
+import { IconInbox } from '/components/lib/icons/icon-inbox';
+import { getQueryParams, profileUrl, getLoadingClass } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Button } from '/components/lib/button';
-import { REPORT_PAGE_STATUS, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
+import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -158,13 +159,24 @@ export class Header extends Component {
 
       case "dm":
       case "edit":
+      case "header-inbox":
+        headerData = {
+          title: {
+            display: "Inbox",
+            href: "/~~/landscape"
+          },
+          icon: IconInbox,
+          type
+        }
+        break;
       case "default":
       default:
         headerData = {
           title: {
             display: "Inbox",
             href: "/~~/landscape"
-          }
+          },
+          icon: IconInbox
         }
         break;
     }
@@ -172,8 +184,46 @@ export class Header extends Component {
     return headerData;
   }
 
+  navigateSubpage(page, view) {
+    this.props.storeReports([{
+      type: REPORT_NAVIGATE,
+      data: {page, view}
+    }]);
+  }
+
+  buildHeaderCarpet(headerData) {
+    switch (headerData.type) {
+      case "header-inbox":
+        let recentClass = classnames({
+          'vanilla': true,
+          'mr-8': true,
+          'inbox-link': true,
+          'inbox-link-active': warehouse.store.views.inbox === "inbox-recent",
+        });
+
+        let allClass = classnames({
+          'vanilla': true,
+          'inbox-link': true,
+          'inbox-link-active': warehouse.store.views.inbox === "inbox-all",
+        });
+
+        return (
+          <React.Fragment>
+            <div className="flex-col-2"></div>
+            <div className="flex-col-rest">
+              <a className={recentClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-recent') }}>Recent</a>
+              <a className={allClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-all') }}>All</a>
+            </div>
+          </React.Fragment>
+        );
+
+        break;
+    }
+  }
+
   buildHeaderContent(headerData) {
-    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem, headerClass, loadingClass;
+    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem,
+    headerClass, loadingClass, headerCarpet;
 
     if (headerData.station) {
       subscribeClass = (this.isSubscribed(headerData.station)) ? "btn-secondary" : "btn-primary";
@@ -200,25 +250,34 @@ export class Header extends Component {
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
     loadingClass = getLoadingClass(this.props.store.views.transition);
     headerClass = classnames({
-      'flex-3rd': true,
+      'flex-col-rest': true,
       'header-title': true,
       'header-title-mono': headerData.title && headerData.title.style === "mono"
     })
 
+    headerCarpet = this.buildHeaderCarpet(headerData);
+
+    // <div onClick={this.reconnectPolling} className={loadingClass}></div>
+
     return (
       <div>
         <div className="row">
-          <div className="col-sm-offset-2 col-sm-10 header-breadcrumbs">
+          <div className="flex-col-2"></div>
+          <div className="flex-col-rest header-breadcrumbs">
             {breadcrumbsElem}
           </div>
         </div>
-        <div className="flex align-center header-mainrow">
-          <div onClick={this.reconnectPolling} className={loadingClass}></div>
-          <a onClick={this.toggleMenu} className="flex-1st">
-            <div className="panini"></div>
-          </a>
-          <div className="flex-2nd">{iconElem}</div>
-          <h3 className={headerClass}><a href={headerData.title.href}>{headerData.title.display}</a></h3>
+        <div className="row align-center header-mainrow">
+          <div className="flex-col-1"></div>
+          <div className="flex-col-1 flex space-between">
+            <a onClick={this.toggleMenu}>
+              <div className="panini"></div>
+            </a>
+            <span style={{'marginRight': "12px"}}>{iconElem}</span>
+          </div>
+          <h3 className={headerClass}>
+            <a href={headerData.title.href}>{headerData.title.display}</a>
+          </h3>
           {actions}
           {headerData.station &&
             <Button
@@ -229,6 +288,9 @@ export class Header extends Component {
               responseKey="circle.config.dif.source"
                />
           }
+        </div>
+        <div className="row header-carpet text-squat">
+          {headerCarpet}
         </div>
       </div>
     )

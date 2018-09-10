@@ -6,7 +6,7 @@ import { NamesReducer } from '/reducers/names';
 import { PublicReducer } from '/reducers/public';
 import { DmsReducer } from '/reducers/dms';
 import { router } from '/router';
-import { PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
+import { PAGE_STATUS_READY, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
 
 const REPORT_KEYS = [
   'circle.gram',
@@ -21,6 +21,7 @@ const REPORT_KEYS = [
   'circle.config.dif.remove/circle.config',
   'circles',
   REPORT_PAGE_STATUS,
+  REPORT_NAVIGATE,
   'public',
   'menu.toggle'
 ]
@@ -38,7 +39,8 @@ class UrbitWarehouse {
       },
       configs: {},
       views: {
-        transition: PAGE_STATUS_READY
+        transition: PAGE_STATUS_READY,
+        inbox: "inbox-recent"
       },
       names: {},
       public: {},

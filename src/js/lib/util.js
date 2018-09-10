@@ -100,19 +100,6 @@ export function secToString(secs) {
   return fs(fm(fh(fd(fw(fy(secs)))))).trim();
 }
 
-export function collectionAuthorization(stationDetails, usership) {
-  if (stationDetails.host === usership) {
-    return "write";
-  } else if (_.has(stationDetails, "config.con.sec")) {
-    let sec = _.get(stationDetails, "config.con.sec", null);
-    if (sec === "journal") {
-      return "write";
-    }
-  }
-
-  return "read";
-}
-
 export function uuid() {
   let str = "0v"
   str += Math.ceil(Math.random()*8)+"."

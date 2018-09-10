@@ -1,4 +1,4 @@
-import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, PAGE_STATUS_RECONNECTING } from '/lib/constants';
+import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, PAGE_STATUS_RECONNECTING } from '/lib/constants';
 
 export class ViewsReducer {
   reduce(reports, store) {
@@ -15,6 +15,10 @@ export class ViewsReducer {
 
           store.views.transition = rep.data;
 
+          break;
+
+        case REPORT_NAVIGATE:
+          store.views[rep.data.page] = rep.data.view;
           break;
       }
     });

@@ -43,6 +43,10 @@ b {
   font-weight: 600;
 }
 
+[class*=col-] {
+  margin-bottom: 0;
+}
+
 /***
   Shapes
 ***/
@@ -51,7 +55,7 @@ b {
   border-top: 4px solid black;
   border-bottom: 4px solid black;
   height: 16px;
-  width: 20px;
+  width: 22px;
 }
 
 .liang {
@@ -142,16 +146,21 @@ b {
   Typography
 ***/
 
-.text-gray {
+.text-gray, .text-gray * {
   color: #9B9B9B;
 }
 
-.text-black {
+.text-black, .text-black * {
   color: black !important;
 }
 
-.red, .red * {
+.text-red, .text-red * {
   color: #EE3124;
+}
+
+.text-squat, .text-squat * {
+  font-size: 16px;
+  line-height: 20px;
 }
 
 .timestamp {

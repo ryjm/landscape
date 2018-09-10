@@ -4,7 +4,16 @@ body {
 
 .header-container {
   padding-top: 3rem;
-  padding-bottom: 2rem;
+  padding-bottom: 3rem;
+}
+
+.header-mainrow {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.header-carpet, .header-breadcrumbs {
+  height: 20px;
 }
 
 .header-title, .header-title * {
@@ -13,7 +22,7 @@ body {
 
   margin: 0;
   font-size: 24px;
-  line-height: 48px;
+  line-height: 32px;
 }
 
 .header-title-mono, .header-title-mono * {
@@ -33,21 +42,12 @@ body {
 }
 
 .header-link-breadcrumb, .header-link-breadcrumb * {
-  line-height: 6rem;
+  line-height: 5rem;
   text-transform: none;
   text-decoration: none;
 
   font-weight: 400;
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
-}
-
-.header-breadcrumbs {
-  height: 24px;
-  margin-bottom: 0;
-}
-
-.header-mainrow {
-  position: relative;
 }
 
 .page-status {
@@ -130,15 +130,19 @@ body {
   We're kind of using this as a grid. More explanation later.
 */
 
-.flex-1st {
-  flex-basis: 106px;
+.flex-col-1 {
+  flex-basis: 76px;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
 }
 
-.flex-2nd {
-  flex-basis: 52px;
+.flex-col-2 {
+  flex-basis: 156px;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
 }
 
-.flex-3rd {
+.flex-col-rest {
   flex-basis: 0;
   flex-grow: 1;
 }
