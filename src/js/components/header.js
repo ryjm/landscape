@@ -147,7 +147,7 @@ export class Header extends Component {
         }
         break;
 
-      case "profile":
+      case "header-profile":
         headerData = {
           title: {
             display: this.props.data.owner,
