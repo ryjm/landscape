@@ -85,7 +85,7 @@ export class InboxRecentPage extends Component {
         rowAuthor = (
           <div className="row">
             <div className="flex-col-2"></div>
-            <div className="flex-col-rest">
+            <div className="flex-col-x">
               <span>{topicLink}</span>
               <span className="text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a></span>
             </div>
@@ -100,7 +100,7 @@ export class InboxRecentPage extends Component {
           {rowAuthor}
           <div className="row">
             <div className="flex-col-2"></div>
-            <div className="flex-col-rest">
+            <div className="flex-col-x">
               <Message details={messageDetails} api={this.props.api} storeReports={this.props.storeReports} pushCallback={this.props.pushCallback} transitionTo={this.props.transitionTo}></Message>
             </div>
           </div>
@@ -156,7 +156,7 @@ export class InboxRecentPage extends Component {
             <div className="flex-col-1 flex justify-end">
               <Icon type={section.details.type} />
             </div>
-            <div className="flex-col-rest">
+            <div className="flex-col-x">
               {hostDisplay}
               <a href={section.details.stationUrl} className="text-600 underline">{section.details.stationTitle}</a>
             </div>

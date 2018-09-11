@@ -367,7 +367,7 @@ export class ChatPage extends Component {
       <div className="container">
         <div className="row">
           <div className="flex-col-2"></div>
-          <div className="flex-col-rest">
+          <div className="flex-col-x">
             <Scrollbars
               ref={this.scrollbarRef}
               renderTrackHorizontal={props => <div style={{display: "none"}}/>}
@@ -382,7 +382,7 @@ export class ChatPage extends Component {
         </div>
         <div className="row align-center mt-6">
           <div className="flex-col-2"></div>
-          <div className="flex-col-rest">
+          <div className="flex-col-x">
             <form onSubmit={this.messageSubmit}>
               <input className="chat-input-field"
                      type="text"

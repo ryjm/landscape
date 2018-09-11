@@ -210,7 +210,7 @@ export class Header extends Component {
         return (
           <React.Fragment>
             <div className="flex-col-2"></div>
-            <div className="flex-col-rest">
+            <div className="flex-col-x">
               <a className={recentClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-recent') }}>Recent</a>
               <a className={allClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-all') }}>All</a>
             </div>
@@ -250,7 +250,7 @@ export class Header extends Component {
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
     loadingClass = getLoadingClass(this.props.store.views.transition);
     headerClass = classnames({
-      'flex-col-rest': true,
+      'flex-col-x': true,
       'header-title': true,
       'header-title-mono': headerData.title && headerData.title.style === "mono"
     })
@@ -263,7 +263,7 @@ export class Header extends Component {
       <div className="container header-container">
         <div className="row">
           <div className="flex-col-2"></div>
-          <div className="flex-col-rest header-breadcrumbs">
+          <div className="flex-col-x header-breadcrumbs">
             {breadcrumbsElem}
           </div>
         </div>

@@ -441,7 +441,7 @@ export class CommandMenu extends Component {
         <div className="row command-row">
           <div className="flex-col-1"></div>
           <div className="flex-col-1 cross justify-start" onClick={this.closeMenu}></div>
-          <div className="flex-col-rest">
+          <div className="flex-col-x">
             <div className="command-input-placeholder-wrapper"
                data-placeholder={placeholder}
                disabled={commandInputDisabled}>
@@ -458,7 +458,7 @@ export class CommandMenu extends Component {
         </div>
         <div className="row">
           <div className="flex-col-2"></div>
-          <div className="flex-col-rest command-options">
+          <div className="flex-col-x command-options">
             {view}
           </div>
         </div>

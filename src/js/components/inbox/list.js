@@ -50,7 +50,7 @@ export class InboxListPage extends Component {
     return (
       <div className="row">
         <div className="flex-col-2"></div>
-        <div className="list-page flex-col-rest">
+        <div className="list-page flex-col-x">
           <div className="mt-4 mb-9">
             <div className="text-600">Chats</div>
             {chatStations}

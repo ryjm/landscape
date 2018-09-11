@@ -160,34 +160,34 @@ export class TopicCreatePage extends Component {
     }
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-12 pt-12">
-            {dateElem}
-            <div className="collection-edit">
-              <textarea
-                className="text-code collection-post-edit mb-4"
-                name="topicContent"
-                placeholder="New post"
+      <div className="row">
+        <div className="flex-col-x">
+          {dateElem}
+          <h5>Post</h5>
+          <div className="collection-edit">
+            <textarea
+              className="text-code collection-post-edit mb-4"
+              name="topicContent"
+              placeholder="New post"
+              disabled={this.state.status === STATUS_LOADING}
+              value={this.state.topicContent}
+              onChange={this.valueChange}
+              />
+            <div className="collection-post-actions">
+              <a href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
+                className="header-link mr-6"
+                disabled={this.state.status === STATUS_LOADING}>Cancel</a>
+              <Button
+                content="Save"
                 disabled={this.state.status === STATUS_LOADING}
-                value={this.state.topicContent}
-                onChange={this.valueChange}
-                />
-              <div className="collection-post-actions">
-                <a href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
-                  className="header-link mr-6"
-                  disabled={this.state.status === STATUS_LOADING}>Cancel</a>
-                <Button
-                  content="Save"
-                  disabled={this.state.status === STATUS_LOADING}
-                  classes="btn btn-sm btn-primary"
-                  action={this.createTopic}
-                  responseKey="circle.config.dif.full"
-                  pushCallback={this.props.pushCallback} />
-              </div>
+                classes="btn btn-sm btn-primary"
+                action={this.createTopic}
+                responseKey="circle.config.dif.full"
+                pushCallback={this.props.pushCallback} />
             </div>
           </div>
         </div>
+        <div className="flex-col-2"></div>
       </div>
     )
   }

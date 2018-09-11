@@ -151,6 +151,13 @@ b {
   Typography
 ***/
 
+h5,
+.h5 {
+  font-size: 4rem;
+  font-weight: 500;
+  line-height: 5rem;
+  margin: 1rem 0; }
+
 .text-gray, .text-gray * {
   color: #9B9B9B;
 }
