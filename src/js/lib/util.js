@@ -301,7 +301,7 @@ export function getSubscribedStations(ship, store) {
 
   let ret = {
     chatStations: stationDetailList.filter((d) => d.type === "chat"),
-    collStations: stationDetailList.filter((d) => ["collection-index", "collection-post"].includes(d.type)),
+    collStations: stationDetailList.filter((d) => d.type === "collection-index"),
     dmStations: stationDetailList.filter((d) => d.type === "dm"),
   };
 

@@ -434,10 +434,10 @@ export class CommandMenu extends Component {
 
     commandInputDisabled = this.commandInputDisabled();
     loadingClass = getLoadingClass(this.props.store.views.transition);
-    // <div className={loadingClass}></div>
-
+    
     return (
       <div className="container command-page">
+        <div className={loadingClass}></div>
         <div className="row command-row">
           <div className="flex-col-1"></div>
           <div className="flex-col-1 cross justify-start" onClick={this.closeMenu}></div>

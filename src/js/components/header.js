@@ -257,10 +257,9 @@ export class Header extends Component {
 
     headerCarpet = this.buildHeaderCarpet(headerData);
 
-    // <div onClick={this.reconnectPolling} className={loadingClass}></div>
-
     return (
       <div className="container header-container">
+        <div onClick={this.reconnectPolling} className={loadingClass}></div>
         <div className="row">
           <div className="flex-col-2"></div>
           <div className="flex-col-x header-breadcrumbs">
