@@ -270,7 +270,7 @@ export class Header extends Component {
           <div className="flex-col-1"></div>
           <div className="flex-col-1 flex space-between">
             <a onClick={this.toggleMenu}>
-              <div className="panini"></div>
+              <div className="icon-panini"></div>
             </a>
             <span style={{'marginRight': "12px"}}>{iconElem}</span>
           </div>
