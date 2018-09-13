@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { warehouse } from '/warehouse';
 import { operator } from '/operator';
-import { getQueryParams } from '/lib/util';
+import { getQueryParams, isProxyHosted } from '/lib/util';
 import { api } from '/api';
 import { Root } from '/components/root';
 import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
@@ -125,9 +125,12 @@ class UrbitRouter {
           el = el.parentNode;
         }
         // If you find an "a" tag in the clicked element's parents, it's a link
-        if (el && el.hostname === "localhost" && !el.attributes.disabled) {
-          e.preventDefault();
-          this.transitionTo(el.pathname + el.search);
+        if (el && !el.attributes.disabled) {
+          // We can probably do something a l
+          if (el.hostname === "localhost" || isProxyHosted(el.hostname)) {
+            e.preventDefault();
+            this.transitionTo(el.pathname + el.search);
+          }
         }
       }
     });

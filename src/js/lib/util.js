@@ -8,6 +8,15 @@ export function capitalize(str) {
   return `${str[0].toUpperCase()}${str.substr(1)}`;
 }
 
+// check if hostname follows ship.*.urbit.org scheme
+export function isProxyHosted(hostName) {
+  const r = /([a-z,-]+)\.(.+\.)?urbit\.org/.exec(hostName);
+  if (urbitOb.isShip(r[1])) {
+    return true;
+  }
+  return false;
+}
+
 export function getQueryParams() {
   if (window.location.search !== "") {
     return JSON.parse('{"' + decodeURI(window.location.search.substr(1).replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}');
