@@ -4,8 +4,7 @@ export class Icon extends Component {
   render() {
     switch(this.props.type) {
       case "icon-stream-chat":
-        break;
-      case "icon-stream-chat":
+        return <div className="icon-stream-chat"></div>
         break;
       case "icon-stream-dm":
         break;
@@ -14,6 +13,8 @@ export class Icon extends Component {
       case "icon-collection-post":
         break;
       case "icon-inbox":
+        break;
+      case "icon-comment":
         break;
       case "icon-lus":
         break;

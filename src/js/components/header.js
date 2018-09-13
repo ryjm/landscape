@@ -75,11 +75,11 @@ export class Header extends Component {
     let actions = {};
 
     switch (type) {
-      case "stream":
+      case "stream-chat":
         defaultData = this.getStationHeaderData(this.props.data.station);
         headerData = {
           ...defaultData,
-          icon: IconStream,
+          icon: 'icon-stream-chat',
           title: {
             ...defaultData.title,
             style: "mono"
@@ -157,8 +157,8 @@ export class Header extends Component {
         }
         break;
 
-      case "dm":
-      case "edit":
+      case "stream-dm":
+      case "collection-post-edit":
       case "header-inbox":
         headerData = {
           title: {
@@ -169,7 +169,7 @@ export class Header extends Component {
           type
         }
         break;
-      case "default":
+      case "header-default":
       default:
         headerData = {
           title: {
@@ -296,10 +296,10 @@ export class Header extends Component {
   }
 
   render() {
-    let type = (this.props.data.type) ? this.props.data.type : "default";
+    let type = (this.props.data.type) ? this.props.data.type : "header-default";
 
     // TODO: This is an ugly hack until we fix queryParams
-    if (["stream", "dm", "collection-write"].includes(type) && !getQueryParams().station) {
+    if (["stream-chat", "header-stream-dm", "collection-edit"].includes(type) && !getQueryParams().station) {
       return null;
     }
 
