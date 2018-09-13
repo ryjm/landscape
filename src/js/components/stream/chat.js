@@ -340,7 +340,7 @@ export class ChatPage extends Component {
         <div className="flex-2nd">
           {msg.printship &&
             <a className="vanilla" href={prettyShip(msg.aut)[1]}>
-              {sealDict.getSeal(msg.aut, 18)}
+              {sealDict.getSeal(msg.aut, 18, true)}
             </a>
           }
         </div>

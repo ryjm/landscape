@@ -66,11 +66,25 @@ export class SealDict {
     this.dict = {};
   }
 
-  getSeal(patp, size) {
+  // shorten patp to only suffix
+  enSuffix(str) {
+    const x = str.replace('~', '');
+    if (x.length > 3) {
+      return x.slice(3, 6);
+    }
+    return str;
+  }
+
+  getSeal(patp, size, suffix = false) {
+    // do this first so that the shortened guys get cached, too
+    if (suffix) {
+      patp = this.enSuffix(patp);
+    }
+
     let key = `${patp}+${size}`;
 
     if (!this.dict[key]) {
-      this.dict[key] = pour({patp, size, renderer: ReactSVGComponents})
+      this.dict[key] = pour({patp, size, renderer: ReactSVGComponents, colorway: ['#000', '#fff']})
     }
 
     return this.dict[key];
