@@ -11,7 +11,7 @@ export class CommandFormCollectionCreate extends Component {
       fields: [{
         name: "name",
         type: "text",
-        placeholder: "Deep Thoughts",
+        placeholder: "Collection name...",
         errorMsg: "Name can't be blank",
         validate: (value) => value !== ""
       }, {

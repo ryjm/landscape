@@ -218,7 +218,7 @@ export class Header extends Component {
             <div className="panini"></div>
           </a>
           <div className="flex-2nd">{iconElem}</div>
-          <h3 className={headerClass}><a href={headerData.title.href}>{headerData.title.display}</a></h3>
+          <h1 className={headerClass}><a href={headerData.title.href}>{headerData.title.display}</a></h1>
           {actions}
           {headerData.station &&
             <Button
