@@ -2,18 +2,23 @@
   Command Menu
 ***/
 
+.command-page {
+  padding-top: 33px;
+  position: relative;
+}
+
 .command-row {
   height: 48px;
   display: flex;
   align-items: center;
   position: relative;
 
-  margin-top: 33px;
   margin-bottom: 27px;
 }
 
 .command-options, .command-input-placeholder-wrapper {
   margin-left: -9px;
+  width: calc(100% + 9px);
 }
 
 input.command-menu-input, .command-input-placeholder-wrapper {
@@ -21,7 +26,6 @@ input.command-menu-input, .command-input-placeholder-wrapper {
   border: none;
   outline: none;
   height: 48px;
-  width: 100%;
 
   font-size: 20px;
   line-height: 48px;
