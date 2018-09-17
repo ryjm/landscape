@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { IconInbox } from '/components/lib/icons/icon-inbox';
+import { IconComment } from '/components/lib/icons/icon-comment';
 
 export class Icon extends Component {
   render() {
@@ -22,9 +23,10 @@ export class Icon extends Component {
         iconElem = <div className="icon-collection icon-collection-comment"></div>;
         break;
       case "icon-inbox":
-        iconElem = <IconInbox/>
+        iconElem = <IconInbox />
         break;
       case "icon-comment":
+        iconElem = <IconComment />
         break;
       case "icon-lus":
         break;
