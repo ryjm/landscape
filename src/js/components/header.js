@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { IconBlog } from '/components/lib/icons/icon-blog';
-import { IconStream } from '/components/lib/icons/icon-stream';
-import { IconInbox } from '/components/lib/icons/icon-inbox';
+import { Icon } from '/components/lib/icon';
 import { getQueryParams, profileUrl, getLoadingClass } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Button } from '/components/lib/button';
@@ -106,7 +104,7 @@ export class Header extends Component {
 
         headerData = {
           ...defaultData,
-          icon: IconBlog,
+          icon: 'icon-collection-index',
           title: {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
@@ -131,7 +129,7 @@ export class Header extends Component {
 
         headerData = {
           ...defaultData,
-          icon: IconBlog,
+          icon: 'icon-collection-post',
           title: {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
@@ -149,6 +147,7 @@ export class Header extends Component {
 
       case "header-profile":
         headerData = {
+          icon: 'icon-sig',
           title: {
             display: this.props.data.owner,
             href: profileUrl(this.props.data.owner.substr(1)),
@@ -158,14 +157,22 @@ export class Header extends Component {
         break;
 
       case "stream-dm":
+        headerData = {
+          icon: 'icon-stream-dm'
+        }
+        break;
       case "collection-post-edit":
+        headerData = {
+          icon: 'icon-collection-post'
+        }
+        break;
       case "header-inbox":
         headerData = {
           title: {
             display: "Inbox",
             href: "/~~/landscape"
           },
-          icon: IconInbox,
+          icon: 'icon-inbox',
           type
         }
         break;
@@ -176,7 +183,7 @@ export class Header extends Component {
             display: "Inbox",
             href: "/~~/landscape"
           },
-          icon: IconInbox
+          icon: 'icon-inbox'
         }
         break;
     }
@@ -272,7 +279,7 @@ export class Header extends Component {
             <a onClick={this.toggleMenu}>
               <div className="icon-panini"></div>
             </a>
-            <span style={{'marginRight': "12px"}}>{iconElem}</span>
+            <Icon type={headerData.icon} />
           </div>
           <h3 className={headerClass}>
             <a href={headerData.title.href}>{headerData.title.display}</a>

@@ -131,6 +131,16 @@ body {
   We're kind of using this as a grid. More explanation later.
 */
 
+.icon-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
 .row {
   margin-left: -0.5rem;
   margin-right: -0.5rem;

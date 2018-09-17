@@ -1,18 +1,28 @@
 import React, { Component } from 'react';
+import { IconInbox } from '/components/lib/icons/icon-inbox';
 
 export class Icon extends Component {
   render() {
+    let iconElem = null;
+
     switch(this.props.type) {
       case "icon-stream-chat":
-        return <div className="icon-stream-chat"></div>
+        iconElem = <div className="icon-stream-chat"></div>;
         break;
       case "icon-stream-dm":
+        iconElem = <div className="icon-stream-dm"></div>;
         break;
       case "icon-collection-index":
+        iconElem = <div className="icon-collection"></div>;
         break;
       case "icon-collection-post":
+        iconElem = <div className="icon-collection-post"></div>;
+        break;
+      case "icon-collection-comment":
+        iconElem = <div className="icon-collection icon-collection-comment"></div>;
         break;
       case "icon-inbox":
+        iconElem = <IconInbox/>
         break;
       case "icon-comment":
         break;
@@ -21,6 +31,8 @@ export class Icon extends Component {
       case "icon-panini":
         break;
       case "icon-cross":
+        break;
+      case "icon-sig":
         break;
       // case "chat":
       //   return <div className="icon icon-item icon-chat"></div>;
@@ -40,5 +52,11 @@ export class Icon extends Component {
       // default:
       //   return null;
     }
+
+    return (
+      <div className="icon-label">
+        {iconElem}
+      </div>
+    )
   }
 }
