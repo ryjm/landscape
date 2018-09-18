@@ -217,7 +217,7 @@ export class Header extends Component {
         return (
           <React.Fragment>
             <div className="flex-col-2"></div>
-            <div className="flex-col-x">
+            <div className="flex-col-x text-heading">
               <a className={recentClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-recent') }}>Recent</a>
               <a className={allClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-all') }}>All</a>
             </div>

@@ -80,7 +80,7 @@ export class InboxRecentPage extends Component {
       if (lastAut !== msg.aut) {
         let topicLink = this.buildPostTitle(messageDetails);
         // TODO: Add timestamp back in later maybe
-        // let timestamp = (i === 0) ? (<div className="timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
+        // let timestamp = (i === 0) ? (<div className="text-timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
 
         rowAuthor = (
           <div className="row">

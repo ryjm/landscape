@@ -2,11 +2,6 @@
   Inbox
 ***/
 
-.inbox-page .timestamp {
-  position: relative;
-  left: 6px;
-}
-
 .inbox-page img {
   width: 100%;
 }
