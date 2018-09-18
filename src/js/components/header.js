@@ -149,7 +149,7 @@ export class Header extends Component {
         headerData = {
           icon: 'icon-sig',
           title: {
-            display: this.props.data.owner,
+            display: this.props.data.owner.substr(1),
             href: profileUrl(this.props.data.owner.substr(1)),
             style: "mono"
           }
@@ -239,7 +239,13 @@ export class Header extends Component {
 
     if (headerData.actions) {
       actions = Object.arrayify(headerData.actions).map(({key, value}) => {
-        return (<a key={key} href={value} className="header-link mr-6">{key}</a>)
+        let lusElem = key === "write" ? (<Icon type="icon-lus" iconLabel={true} />) : null;
+        return (
+          <a key={key} href={value} className="header-link mr-6 flex align-center">
+            {lusElem}
+            <span>{key}</span>
+          </a>
+        );
       })
     }
 
@@ -279,7 +285,7 @@ export class Header extends Component {
             <a onClick={this.toggleMenu}>
               <Icon type="icon-panini" />
             </a>
-            <Icon type={headerData.icon} wrapper={true} />
+            <Icon type={headerData.icon} iconLabel={true} />
           </div>
           <h3 className={headerClass}>
             <a href={headerData.title.href}>{headerData.title.display}</a>

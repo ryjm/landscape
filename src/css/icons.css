@@ -101,6 +101,40 @@
   transform: rotate(-45deg);
 }
 
+.icon-lus {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+}
+
+.icon-lus:before, .icon-lus:after {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+
+  content: "";
+}
+
+.icon-lus:before {
+  border-top: 2px solid black;
+  border-color: inherit;
+
+  top: 5px;
+}
+
+.icon-lus:after {
+  border-left: 2px solid black;
+  border-color: inherit;
+
+  left: 5px;
+}
+
+/* .icon-lus:after {
+  left: 6px;
+  transform: rotate(-45deg);
+} */
+
 /* .icon-item {
   right: 10px;
   position: relative;

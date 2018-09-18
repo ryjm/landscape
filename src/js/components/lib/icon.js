@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { IconInbox } from '/components/lib/icons/icon-inbox';
 import { IconComment } from '/components/lib/icons/icon-comment';
+import { IconSig } from '/components/lib/icons/icon-sig';
 
 export class Icon extends Component {
   render() {
@@ -8,19 +9,28 @@ export class Icon extends Component {
 
     switch(this.props.type) {
       case "icon-stream-chat":
-        iconElem = <div className="icon-stream-chat"></div>;
+        iconElem = <span className="icon-stream-chat"></span>;
         break;
       case "icon-stream-dm":
-        iconElem = <div className="icon-stream-dm"></div>;
+        iconElem = <span className="icon-stream-dm"></span>;
         break;
       case "icon-collection-index":
-        iconElem = <div className="icon-collection"></div>;
+        iconElem = <span className="icon-collection"></span>;
         break;
       case "icon-collection-post":
-        iconElem = <div className="icon-collection-post"></div>;
+        iconElem = <span className="icon-collection-post"></span>;
         break;
       case "icon-collection-comment":
-        iconElem = <div className="icon-collection icon-collection-comment"></div>;
+        iconElem = <span className="icon-collection icon-collection-comment"></span>;
+        break;
+      case "icon-panini":
+        iconElem = <span className="icon-panini"></span>
+        break;
+      case "icon-x":
+        iconElem = <span className="icon-x"></span>
+        break;
+      case "icon-lus":
+        iconElem = <span className="icon-lus"></span>
         break;
       case "icon-inbox":
         iconElem = <IconInbox />
@@ -28,41 +38,17 @@ export class Icon extends Component {
       case "icon-comment":
         iconElem = <IconComment />
         break;
-      case "icon-panini":
-        iconElem = <div className="icon-panini"></div>
-        break;
-      case "icon-x":
-        iconElem = <div className="icon-x"></div>
-        break;
-      case "icon-lus":
-        break;
       case "icon-sig":
+        iconElem = <IconSig />
         break;
-      // case "chat":
-      //   return <div className="icon icon-item icon-chat"></div>;
-      //   break;
-      // case "dm":
-      //   return <div className="icon icon-item icon-dm"></div>;
-      //   break;
-      // case "inbox":
-      //   return <div className="icon icon-item icon-inbox"></div>;
-      //   break;
-      // case "collection-index":
-      //   return <div className="icon icon-item icon-text"></div>;
-      //   break;
-      // case "collection-post":
-      //   return <div className="icon icon-item icon-text"><div className="icon-text-topic"></div></div>;
-      //   break;
-      // default:
-      //   return null;
     }
 
-    let className = this.props.wrapper ? "icon-label" : "";
+    let className = this.props.iconLabel ? "icon-label" : "";
 
     return (
-      <div className={className}>
+      <span className={className}>
         {iconElem}
-      </div>
+      </span>
     )
   }
 }
