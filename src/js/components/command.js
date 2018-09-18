@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
+import { Icon } from '/components/lib/icon';
 import { isDMStation, isValidStation, profileUrl, getLoadingClass } from '/lib/util';
 import { getStationDetails } from '/services';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
@@ -434,13 +435,15 @@ export class CommandMenu extends Component {
 
     commandInputDisabled = this.commandInputDisabled();
     loadingClass = getLoadingClass(this.props.store.views.transition);
-    
+
     return (
       <div className="container command-page">
         <div className={loadingClass}></div>
         <div className="row command-row">
           <div className="flex-col-1"></div>
-          <div className="flex-col-1 cross justify-start" onClick={this.closeMenu}></div>
+          <div className="flex-col-1 justify-start" onClick={this.closeMenu}>
+            <Icon type="icon-x" />
+          </div>
           <div className="flex-col-x">
             <div className="command-input-placeholder-wrapper"
                data-placeholder={placeholder}

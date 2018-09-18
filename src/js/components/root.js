@@ -107,7 +107,7 @@ export class Root extends Component {
         headerData.station = `${headerData.owner}/c-${headerData.collId}-${headerData.postId}`;
       }
 
-      if (headerData.type === "stream") {
+      if (headerData.type === "stream-chat") {
         headerData.station = getQueryParams().station;
         if (!headerData.station) return;
         headerData.title = headerData.station.split("/")[1];

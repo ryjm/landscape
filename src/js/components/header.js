@@ -277,9 +277,9 @@ export class Header extends Component {
           <div className="flex-col-1"></div>
           <div className="flex-col-1 flex space-between">
             <a onClick={this.toggleMenu}>
-              <div className="icon-panini"></div>
+              <Icon type="icon-panini" />
             </a>
-            <Icon type={headerData.icon} />
+            <Icon type={headerData.icon} wrapper={true} />
           </div>
           <h3 className={headerClass}>
             <a href={headerData.title.href}>{headerData.title.display}</a>

@@ -1,38 +1,6 @@
-.icon-panini {
-  border-top: 4px solid black;
-  border-bottom: 4px solid black;
-  height: 16px;
-  width: 22px;
-}
-
-.icon-cross {
-  position: relative;
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-}
-
-.icon-cross:before, .icon-cross:after {
-  position: absolute;
-  top: 5px;
-  width: 20px;
-  height: 20px;
-
-  border-top: 4px solid black;
-  border-color: inherit;
-
-  content: "";
-}
-
-.icon-cross:before {
-  left: -8px;
-  transform: rotate(45deg);
-}
-
-.icon-cross:after {
-  left: 6px;
-  transform: rotate(-45deg);
-}
+/*
+  16px icons
+*/
 
 .icon-stream-chat {
   width: 14px;
@@ -91,6 +59,46 @@
   width: 4px;
 
   background-color: #6FDC74;
+}
+
+/*
+  Other icons
+*/
+
+.icon-panini {
+  border-top: 4px solid black;
+  border-bottom: 4px solid black;
+  height: 16px;
+  width: 22px;
+}
+
+.icon-x {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+}
+
+.icon-x:before, .icon-x:after {
+  position: absolute;
+  top: 5px;
+  width: 20px;
+  height: 20px;
+
+  border-top: 4px solid black;
+  border-color: inherit;
+
+  content: "";
+}
+
+.icon-x:before {
+  left: -8px;
+  transform: rotate(45deg);
+}
+
+.icon-x:after {
+  left: 6px;
+  transform: rotate(-45deg);
 }
 
 /* .icon-item {

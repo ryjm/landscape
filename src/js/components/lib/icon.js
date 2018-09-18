@@ -28,11 +28,13 @@ export class Icon extends Component {
       case "icon-comment":
         iconElem = <IconComment />
         break;
-      case "icon-lus":
-        break;
       case "icon-panini":
+        iconElem = <div className="icon-panini"></div>
         break;
-      case "icon-cross":
+      case "icon-x":
+        iconElem = <div className="icon-x"></div>
+        break;
+      case "icon-lus":
         break;
       case "icon-sig":
         break;
@@ -55,8 +57,10 @@ export class Icon extends Component {
       //   return null;
     }
 
+    let className = this.props.wrapper ? "icon-label" : "";
+
     return (
-      <div className="icon-label">
+      <div className={className}>
         {iconElem}
       </div>
     )
