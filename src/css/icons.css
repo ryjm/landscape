@@ -65,39 +65,55 @@
   Other icons
 */
 
+/*
+  TODO: Add a wrapper to this that ensures centered 32pxness
+*/
+
 .icon-panini {
+  width: 32px;
+  height: 32px;
+
+  position: relative;
+}
+
+.icon-panini::after {
+  position: absolute;
+  content: "";
+  left: 4px;
+  top: 8px;
+
   border-top: 4px solid black;
   border-bottom: 4px solid black;
-  height: 16px;
-  width: 22px;
+  height: 8px;
+  width: 24px;
 }
 
 .icon-x {
   position: relative;
   display: inline-block;
-  width: 18px;
-  height: 18px;
+  width: 32px;
+  height: 32px;
 }
 
 .icon-x:before, .icon-x:after {
   position: absolute;
-  top: 5px;
-  width: 20px;
-  height: 20px;
+  top: 10px;
+  width: 24px;
+  height: 24px;
 
-  border-top: 4px solid black;
+  border-top: 5px solid #000;
   border-color: inherit;
 
   content: "";
 }
 
 .icon-x:before {
-  left: -8px;
+  left: -4px;
   transform: rotate(45deg);
 }
 
 .icon-x:after {
-  left: 6px;
+  left: 13px;
   transform: rotate(-45deg);
 }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { IconInbox } from '/components/lib/icons/icon-inbox';
 import { IconComment } from '/components/lib/icons/icon-comment';
 import { IconSig } from '/components/lib/icons/icon-sig';
+import { IconDecline } from '/components/lib/icons/icon-decline';
 
 export class Icon extends Component {
   render() {
@@ -24,10 +25,16 @@ export class Icon extends Component {
         iconElem = <span className="icon-collection icon-collection-comment"></span>;
         break;
       case "icon-panini":
-        iconElem = <span className="icon-panini"></span>
+        // TODO: Should icons be display: block, inline, or inline-blocks?
+        //   1) Should naturally flow inline
+        //   2) But can't make icon-panini naturally inline without hacks like &nbsp;
+        iconElem = <div className="icon-panini"></div>
         break;
       case "icon-x":
         iconElem = <span className="icon-x"></span>
+        break;
+      case "icon-decline":
+        iconElem = <IconDecline />
         break;
       case "icon-lus":
         iconElem = <span className="icon-lus"></span>

@@ -281,7 +281,7 @@ export class Header extends Component {
         </div>
         <div className="row align-center header-mainrow">
           <div className="flex-col-1"></div>
-          <div className="flex-col-1 flex space-between">
+          <div className="flex-col-1 flex space-between align-center">
             <a onClick={this.toggleMenu}>
               <Icon type="icon-panini" />
             </a>
