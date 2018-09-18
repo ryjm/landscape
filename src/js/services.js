@@ -42,7 +42,7 @@ export function getStationDetails(station) {
       ret.stationTitle = ret.cir;
       break;
     case "dm":
-      if (config.con) {
+      if (config && config.con) {
         ret.stationTitle = ret.cir
           .split(".")
           .filter((mem) => mem !== api.authTokens.ship)

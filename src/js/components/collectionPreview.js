@@ -6,13 +6,13 @@ export class CollectionPreview extends Component {
       snipHtml: ''
     }
 
-    if (props.messageDetails.type.includes('item')) {
-      fetch(this.snipUrl(props.messageDetails.postUrl, props.api.authTokens.ship)).then(res => {
-        return (res.text())
-      }).then(d => {
-        this.setState({snipHtml: d});
-      });
-    }
+    // if (props.messageDetails.type.includes('item')) {
+    //   fetch(this.snipUrl(props.messageDetails.postUrl, props.api.authTokens.ship)).then(res => {
+    //     return (res.text())
+    //   }).then(d => {
+    //     this.setState({snipHtml: d});
+    //   });
+    // }
   }
 
   dangerousHtml(string) {

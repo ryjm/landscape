@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { IconBlog } from '/components/lib/icons/icon-blog';
-import { IconStream } from '/components/lib/icons/icon-stream';
-import { getQueryParams, collectionAuthorization, profileUrl, getLoadingClass } from '/lib/util';
+import { Icon } from '/components/lib/icon';
+import { getQueryParams, profileUrl, getLoadingClass } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Button } from '/components/lib/button';
-import { REPORT_PAGE_STATUS, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
+import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -74,11 +73,11 @@ export class Header extends Component {
     let actions = {};
 
     switch (type) {
-      case "stream":
+      case "stream-chat":
         defaultData = this.getStationHeaderData(this.props.data.station);
         headerData = {
           ...defaultData,
-          icon: IconStream,
+          icon: 'icon-stream-chat',
           title: {
             ...defaultData.title,
             style: "mono"
@@ -105,7 +104,7 @@ export class Header extends Component {
 
         headerData = {
           ...defaultData,
-          icon: IconBlog,
+          icon: 'icon-collection-index',
           title: {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
@@ -130,7 +129,7 @@ export class Header extends Component {
 
         headerData = {
           ...defaultData,
-          icon: IconBlog,
+          icon: 'icon-collection-post',
           title: {
             ...defaultData.title,
             display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
@@ -146,25 +145,45 @@ export class Header extends Component {
         }
         break;
 
-      case "profile":
+      case "header-profile":
         headerData = {
+          icon: 'icon-sig',
           title: {
-            display: this.props.data.owner,
+            display: this.props.data.owner.substr(1),
             href: profileUrl(this.props.data.owner.substr(1)),
             style: "mono"
           }
         }
         break;
 
-      case "dm":
-      case "edit":
-      case "default":
+      case "stream-dm":
+        headerData = {
+          icon: 'icon-stream-dm'
+        }
+        break;
+      case "collection-post-edit":
+        headerData = {
+          icon: 'icon-collection-post'
+        }
+        break;
+      case "header-inbox":
+        headerData = {
+          title: {
+            display: "Inbox",
+            href: "/~~/landscape"
+          },
+          icon: 'icon-inbox',
+          type
+        }
+        break;
+      case "header-default":
       default:
         headerData = {
           title: {
             display: "Inbox",
             href: "/~~/landscape"
-          }
+          },
+          icon: 'icon-inbox'
         }
         break;
     }
@@ -172,8 +191,46 @@ export class Header extends Component {
     return headerData;
   }
 
+  navigateSubpage(page, view) {
+    this.props.storeReports([{
+      type: REPORT_NAVIGATE,
+      data: {page, view}
+    }]);
+  }
+
+  buildHeaderCarpet(headerData) {
+    switch (headerData.type) {
+      case "header-inbox":
+        let recentClass = classnames({
+          'vanilla': true,
+          'mr-8': true,
+          'inbox-link': true,
+          'inbox-link-active': warehouse.store.views.inbox === "inbox-recent",
+        });
+
+        let allClass = classnames({
+          'vanilla': true,
+          'inbox-link': true,
+          'inbox-link-active': warehouse.store.views.inbox === "inbox-all",
+        });
+
+        return (
+          <React.Fragment>
+            <div className="flex-col-2"></div>
+            <div className="flex-col-x">
+              <a className={recentClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-recent') }}>Recent</a>
+              <a className={allClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-all') }}>All</a>
+            </div>
+          </React.Fragment>
+        );
+
+        break;
+    }
+  }
+
   buildHeaderContent(headerData) {
-    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem, headerClass, loadingClass;
+    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem,
+    headerClass, loadingClass, headerCarpet;
 
     if (headerData.station) {
       subscribeClass = (this.isSubscribed(headerData.station)) ? "btn-secondary" : "btn-primary";
@@ -182,7 +239,13 @@ export class Header extends Component {
 
     if (headerData.actions) {
       actions = Object.arrayify(headerData.actions).map(({key, value}) => {
-        return (<a key={key} href={value} className="header-link mr-6">{key}</a>)
+        let lusElem = key === "write" ? (<Icon type="icon-lus" iconLabel={true} />) : null;
+        return (
+          <a key={key} href={value} className="header-link mr-6 flex align-center">
+            {lusElem}
+            <span>{key}</span>
+          </a>
+        );
       })
     }
 
@@ -200,25 +263,33 @@ export class Header extends Component {
     iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
     loadingClass = getLoadingClass(this.props.store.views.transition);
     headerClass = classnames({
-      'flex-3rd': true,
+      'flex-col-x': true,
       'header-title': true,
       'header-title-mono': headerData.title && headerData.title.style === "mono"
     })
 
+    headerCarpet = this.buildHeaderCarpet(headerData);
+
     return (
-      <div>
+      <div className="container header-container">
+        <div onClick={this.reconnectPolling} className={loadingClass}></div>
         <div className="row">
-          <div className="col-sm-offset-2 col-sm-10 header-breadcrumbs">
+          <div className="flex-col-2"></div>
+          <div className="flex-col-x header-breadcrumbs">
             {breadcrumbsElem}
           </div>
         </div>
-        <div className="flex align-center header-mainrow">
-          <div onClick={this.reconnectPolling} className={loadingClass}></div>
-          <a onClick={this.toggleMenu} className="flex-1st">
-            <div className="panini"></div>
-          </a>
-          <div className="flex-2nd">{iconElem}</div>
-          <h1 className={headerClass}><a href={headerData.title.href}>{headerData.title.display}</a></h1>
+        <div className="row align-center header-mainrow">
+          <div className="flex-col-1"></div>
+          <div className="flex-col-1 flex space-between">
+            <a onClick={this.toggleMenu}>
+              <Icon type="icon-panini" />
+            </a>
+            <Icon type={headerData.icon} iconLabel={true} />
+          </div>
+          <h1 className={headerClass}>
+            <a href={headerData.title.href}>{headerData.title.display}</a>
+          </h1>
           {actions}
           {headerData.station &&
             <Button
@@ -230,25 +301,24 @@ export class Header extends Component {
                />
           }
         </div>
+        <div className="row header-carpet text-squat">
+          {headerCarpet}
+        </div>
       </div>
     )
   }
 
   render() {
-    let type = (this.props.data.type) ? this.props.data.type : "default";
+    let type = (this.props.data.type) ? this.props.data.type : "header-default";
 
     // TODO: This is an ugly hack until we fix queryParams
-    if (["stream", "dm", "collection-write"].includes(type) && !getQueryParams().station) {
+    if (["stream-chat", "header-stream-dm", "collection-edit"].includes(type) && !getQueryParams().station) {
       return null;
     }
 
     let headerData = this.getHeaderData(type);
     let headerContent = this.buildHeaderContent(headerData);
 
-    return (
-      <div className="container header-container">
-        {headerContent}
-      </div>
-    )
+    return headerContent;
   }
 }

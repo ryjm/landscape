@@ -48,21 +48,20 @@ export class InboxListPage extends Component {
     const DMStations = this.buildDMSection(stations.dmStations);
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="list-page col-sm-10 col-sm-offset-2">
-            <div className="mt-9">
-              <div className="text-600">Chats</div>
-              {chatStations}
-            </div>
-            <div className="mt-9">
-              <div className="text-600">Blogs, Forum and Notes</div>
-              {collStations}
-            </div>
-            <div className="mt-9">
-              <div className="text-600">Direct Messages</div>
-              {DMStations}
-            </div>
+      <div className="row">
+        <div className="flex-col-2"></div>
+        <div className="list-page flex-col-x">
+          <div className="mt-4 mb-9">
+            <div className="text-600">Chats</div>
+            {chatStations}
+          </div>
+          <div className="mt-4 mb-9">
+            <div className="text-600">Blogs, Forum and Notes</div>
+            {collStations}
+          </div>
+          <div className="mt-4 mb-9">
+            <div className="text-600">Direct Messages</div>
+            {DMStations}
           </div>
         </div>
       </div>

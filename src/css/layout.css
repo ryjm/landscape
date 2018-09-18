@@ -22,9 +22,18 @@ h4 {
 
 .header-container {
   padding-top: 3rem;
-  padding-bottom: 2rem;
+  padding-bottom: 3rem;
+  position: relative;
 }
 
+.header-mainrow {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.header-carpet, .header-breadcrumbs {
+  height: 20px;
+}
 
 .header-title, .header-title * {
   text-decoration: none;
@@ -49,7 +58,7 @@ h4 {
 }
 
 .header-link-breadcrumb, .header-link-breadcrumb * {
-  line-height: 6rem;
+  line-height: 5rem;
   text-transform: none;
   text-decoration: none;
 
@@ -57,19 +66,10 @@ h4 {
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
 }
 
-.header-breadcrumbs {
-  height: 24px;
-  margin-bottom: 0;
-}
-
-.header-mainrow {
-  position: relative;
-}
-
 .page-status {
   position: absolute;
-  left: 0;
-  top: 94px;
+  right: 10px;
+  top: 10px;
 
   border-radius: 100%;
   height: 18px;
@@ -146,15 +146,37 @@ h4 {
   We're kind of using this as a grid. More explanation later.
 */
 
-.flex-1st {
-  flex-basis: 106px;
+.icon-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
 }
 
-.flex-2nd {
-  flex-basis: 52px;
+.row {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
 }
 
-.flex-3rd {
+.flex-col-1 {
+  flex-basis: 80px;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.flex-col-2 {
+  flex-basis: 160px;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.flex-col-x {
   flex-basis: 0;
   flex-grow: 1;
+
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
 }

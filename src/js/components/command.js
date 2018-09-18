@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
 import { CommandHelpItem } from '/components/command/help-item';
+import { Icon } from '/components/lib/icon';
 import { isDMStation, isValidStation, profileUrl, getLoadingClass } from '/lib/util';
 import { getStationDetails } from '/services';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
@@ -437,24 +438,32 @@ export class CommandMenu extends Component {
 
     return (
       <div className="container command-page">
-        <div className="command-row">
-          <div className={loadingClass}></div>
-          <div className="cross" onClick={this.closeMenu}></div>
-          <div className="command-input-placeholder-wrapper"
+        <div className={loadingClass}></div>
+        <div className="row command-row">
+          <div className="flex-col-1"></div>
+          <div className="flex-col-1 justify-start" onClick={this.closeMenu}>
+            <Icon type="icon-x" />
+          </div>
+          <div className="flex-col-x">
+            <div className="command-input-placeholder-wrapper"
                data-placeholder={placeholder}
                disabled={commandInputDisabled}>
-            <input type="text"
-                   name="command-input"
-                   className="command-menu-input"
-                   disabled={commandInputDisabled}
-                   onChange={(e) => this.updateCommand(e.target.value, true)}
-                   onSubmit={this.onCommandSubmit}
-                   value={this.state.command}
-                   ref={this.commandInputRef}/>
+              <input type="text"
+                     name="command-input"
+                     className="command-menu-input"
+                     disabled={commandInputDisabled}
+                     onChange={(e) => this.updateCommand(e.target.value, true)}
+                     onSubmit={this.onCommandSubmit}
+                     value={this.state.command}
+                     ref={this.commandInputRef}/>
+            </div>
           </div>
         </div>
-        <div className="command-options">
-          {view}
+        <div className="row">
+          <div className="flex-col-2"></div>
+          <div className="flex-col-x command-options">
+            {view}
+          </div>
         </div>
       </div>
     );
