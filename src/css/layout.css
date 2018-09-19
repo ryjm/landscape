@@ -41,29 +41,22 @@ h4 {
   margin: 0;
 }
 
-.header-title-mono, .header-title-mono * {
-  font-weight: 500;
-  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
-}
-
 .header-link {
-  font-size: 3rem;
-  line-height: 3rem;
-
-  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
   font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-decoration: none;
-
   text-transform: capitalize;
 }
 
 .header-link-breadcrumb, .header-link-breadcrumb * {
-  line-height: 5rem;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 300;
+  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
   text-transform: none;
   text-decoration: none;
-
-  font-weight: 400;
-  font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
 }
 
 .page-status {
@@ -108,21 +101,6 @@ h4 {
 
 .page-status-tertiary {
   background-color: #EE3124;
-  cursor: pointer;
-}
-
-.page-status-tertiary::after {
-  background-color: #FBD5D3;
-  cursor: pointer;
-}
-
-.page-status-tertiary::before {
-  position: absolute;
-  top: 24px;
-  color: red;
-  content: "retry";
-  font-family: "Source Code Pro";
-  text-decoration: underline;
   cursor: pointer;
 }
 

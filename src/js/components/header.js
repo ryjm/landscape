@@ -265,7 +265,7 @@ export class Header extends Component {
     headerClass = classnames({
       'flex-col-x': true,
       'header-title': true,
-      'header-title-mono': headerData.title && headerData.title.style === "mono"
+      'text-mono': headerData.title && headerData.title.style === "mono"
     })
 
     headerCarpet = this.buildHeaderCarpet(headerData);
