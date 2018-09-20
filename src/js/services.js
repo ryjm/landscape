@@ -58,7 +58,7 @@ export function getStationDetails(station) {
       ret.collId = circleParts[1];
 
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
-      ret.stationTitle = "TBD";
+      ret.stationTitle = config && config.extConf ? config.extConf.name : "TBD";
       break;
     case "collection-post":
       ret.collId = circleParts[1];
@@ -66,7 +66,7 @@ export function getStationDetails(station) {
 
       ret.parentCollectionUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
-      ret.stationTitle = "TBD";
+      ret.stationTitle = config && config.extConf ? config.extConf.name : "TBD";
       break;
   }
 

@@ -7,6 +7,13 @@ export class ConfigsReducer {
       let stations = {};
 
       switch (rep.type) {
+        case "circle.gram":
+
+          break;
+
+        case "circle.nes":
+          this.processGramConfigs(rep.data, store.configs);
+          break;
         case "circle.cos.loc":
           stationName = `~${rep.from.ship}/${rep.from.path.split("/")[2]}`;
           stations[stationName] = rep.data;
@@ -37,6 +44,24 @@ export class ConfigsReducer {
           break;
       }
     });
+  }
+
+  processGramConfigs(grams, storeConfigs) {
+    grams.forEach(gram => {
+      let tac = _.get(gram, 'gam.sep.fat.tac.text', null);
+      if (tac && ['new item', 'edited item'].includes(tac)) {
+        let conf = _.get(gram, 'gam.sep.fat.sep.lin.msg', null);
+        if (conf) {
+          let parsedConf = JSON.parse(conf);
+          if (parsedConf['parent-config']) {
+            storeConfigs[gram.gam.aud[0]] = {
+              ...storeConfigs[gram.gam.aud[0]],
+              ...{ extConf: parsedConf['parent-config'] }
+            };
+          }
+        }
+      }
+    })
   }
 
   addConfigs(configs, storeConfigs) {
