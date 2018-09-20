@@ -89,7 +89,7 @@ div.mod
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
   font-weight: 300;
   font-size: 3rem;
-  line-height: 3rem;
+  line-height: 5rem;
 }
 
 .collection-title {
@@ -98,18 +98,18 @@ div.mod
 
 .collection-post::before, .collection-title::before {
   content: "";
-  background-color: #0A7960;
-  border-radius: 1px;
+  background-color: #6FDC74;
+  border-radius: 100%;
 
-  width: 2rem;
-  height: 2rem;
+  width: 4px;
+  height: 4px;
 
   position: absolute;
 }
 
 .collection-post::before {
-  margin-top: 35px;
-  margin-left: -11rem;
+  margin-top: 30px;
+  margin-left: -18px;
 }
 
 .collection-title::before {
@@ -119,11 +119,6 @@ div.mod
 
 .collection-edit::before {
   margin-left: -11rem;
-}
-
-.collection-post h3 {
-  font-weight: 500;
-  line-height: 9rem;
 }
 
 .collection-post-page {

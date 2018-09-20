@@ -1,4 +1,18 @@
 /*
+  Layout classes / Landscape-specific
+*/
+
+.icon-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+/*
   16px icons
 */
 

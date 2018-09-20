@@ -163,7 +163,7 @@
     "/~~/{(scow %p p.full-path.meta.col)}/=={(spud (flop (slag 1 s.full-path.meta.col)))}"
   ;div
     ;div.collection-date: {<date-created.meta.col>}
-    ;h3
+    ;h2.mt-0.mb-0
       ;a(href lnk): {(trip name.meta.col)}
     ==
     ;div.who.text-mono.text-600: {<owner.meta.col>}
@@ -189,7 +189,7 @@
   ::
   ;div
     ;div.collection-date: {(trip date)}
-    ;h3
+    ;h2
       ;+  ?~  hed.ht
             ;a(href lnk): {(trip title)}
           ;a(href lnk): *{hed.ht}
@@ -213,16 +213,18 @@
   ::
   ;div
     ;div.collection-date: {<date-created.meta.col>}
-    ;h3
+    ;h2.mt-0.mb-0.text-500
       ;+  ?~  hed.ht
             ;a(href lnk): {(trip title)}
           ;a(href lnk): *{hed.ht}
     ==
-    ;div.who.text-mono.text-600: {<owner.meta.col>}
-    ;div.snippet: *{tal.ht}
-    ;div.meta-cont
-      ;div.com-count.ml-12
-        ; {(trip (scot %ud ~(wyt by data.col)))} comments
+    ;div.text-mono-bold.mt-1.mb-1: {<owner.meta.col>}
+    ;div
+      ;span.icon-label.justify-start
+        ;span(urb-component "IconComment");
+        ;span.ml-1
+          ; {(trip (scot %ud ~(wyt by data.col)))}
+        ==
       ==
     ==
   ==

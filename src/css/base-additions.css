@@ -55,14 +55,21 @@ body, p, input[type="text"], textarea, .text-body {
   line-height: 24px;
 
   font-family: "San Francisco Text", Arial, sans-serif;
+  color: #000;
 }
 
 h1, h2, h3, h4, h5, button, .text-heading {
   font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-label, .text-timestamp, .text-mono {
+label, .text-timestamp, .text-mono, .text-mono-bold {
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
+}
+
+.text-mono-bold {
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 600;
 }
 
 h1, .h1 {
@@ -77,15 +84,15 @@ h3, .h3 {
   font-size: 4rem; /* 20px */
 }
 
-h4, .h4 {
-  font-size: 2rem;
-}
-
 h5, .h5 {
   font-size: 4rem;
   font-weight: 500;
   line-height: 5rem;
   margin: 1rem 0;
+}
+
+.text-mono-bold {
+
 }
 
 .text-gray, .text-gray * {
@@ -131,7 +138,7 @@ h5, .h5 {
 }
 
 .justify-start {
-  justify-content: flex-start;
+  justify-content: flex-start !important;
 }
 
 .justify-end {
