@@ -142,8 +142,8 @@ export class Message extends Component {
           <pre className="text-mono mt-0">{this.props.details.res}</pre>
         </div>
       )
-    } else if (this.props.details.type === 'new item') {
-      return <CollectionPreview messageDetails={this.props.details} api={this.props.api}></CollectionPreview>
+    } else if (['new item', 'edited item'].includes(this.props.details.type)) {
+      return <span className="text-body" dangerouslySetInnerHTML={{__html: this.props.details.snip}}></span>
     } else if (this.props.details.type === "lin") {
       return <span className="text-body">{this.props.details.content}</span>
     }

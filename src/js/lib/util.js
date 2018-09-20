@@ -251,6 +251,7 @@ export function getMessageContent(msg) {
         type: msg.sep.fat.tac.text,
         contentType: jason.type,
         content: content,
+        snip: jason.snip,
         owner: jason.owner,
         date: jason.date,
         path: jason.path,
