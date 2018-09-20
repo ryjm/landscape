@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.34",
+    "@babel/core": "^7.0.0-rc.2",
     "@babel/plugin-transform-react-jsx": "^7.0.0-beta.34",
     "@babel/preset-env": "^7.0.0-beta.34",
     "gulp": "github:gulpjs/gulp#4.0",
@@ -17,7 +17,7 @@
     "gulp-copy": "^1.1.0",
     "gulp-cssimport": "^6.0.0",
     "gulp-cssnano": "^2.1.2",
-    "rollup-plugin-babel": "rollup/rollup-plugin-babel",
+    "rollup-plugin-babel": "4.0.0-beta.8",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-json": "^2.3.0",
     "rollup-plugin-node-builtins": "^2.1.2",
