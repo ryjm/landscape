@@ -3,7 +3,7 @@ import { Button } from '/components/lib/button';
 import { getQueryParams, daToDate } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Elapsed } from '/components/lib/elapsed';
-import { PAGE_STATUS_TRANSITIONING, STATUS_READY, STATUS_LOADING, REPORT_PAGE_STATUS } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
 import _ from 'lodash';
 
 export class TopicCreatePage extends Component {
@@ -12,8 +12,7 @@ export class TopicCreatePage extends Component {
 
     this.state = {
       topicContent: props.content ? props.content : '',
-      details: this.getDetails(props),
-      status: STATUS_READY
+      details: this.getDetails(props)
     };
 
     this.createTopic = this.createTopic.bind(this);
@@ -71,10 +70,7 @@ export class TopicCreatePage extends Component {
   }
 
   createTopic() {
-    this.setState({ status: STATUS_LOADING });
-
     let dat = {};
-
     let details = this.getDetails();
 
     if (details.isEdit) {
@@ -83,11 +79,12 @@ export class TopicCreatePage extends Component {
         desk: 'home',
         acts: [{
           post: {
-            path: '/' + details.clayPath.slice(0, -1).join('/'),
+            path: '/' + details.clayPath.join('/'), // TODO: should be web/collections/~2018.9.11..17.41.40..6823/~2018.9.11..20.21.42..607c
             name: details.title,
             comments: true,  // XX TODO Get this value from user or parent
             type: 'blog',
             content: this.state.topicContent,
+            edit: true
           }
         }]
       }
@@ -102,6 +99,7 @@ export class TopicCreatePage extends Component {
             comments: true,  // XX TODO Get this value from user or parent
             type: 'blog',
             content: this.state.topicContent,
+            edit: false
           }
         }]
       }
@@ -113,22 +111,42 @@ export class TopicCreatePage extends Component {
       data: PAGE_STATUS_TRANSITIONING
     }]);
 
-    this.props.pushCallback("circles", (rep) => {
-      this.setState({ status: STATUS_READY });
+    if (details.isEdit) {
+      this.props.pushCallback("circle.gram", rep => {
+        let gramType = _.get(rep, 'data.gam.sep.fat.tac.text', null);
+        if (gramType && gramType === "edited item") {
+          this.props.storeReports([{
+            type: REPORT_PAGE_STATUS,
+            data: PAGE_STATUS_READY
+          }]);
 
-      let station = `${rep.from.path.split('/')[2]}/${rep.data.cir}`;
-      let stationDetails = getStationDetails(station);
-
-      api.hall({
-        source: {
-          nom: 'inbox',
-          sub: true,
-          srs: [station]
+          this.props.transitionTo(`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`);
+          return true;
         }
-      })
 
-      this.props.transitionTo(stationDetails.stationUrl);
-    });
+        return false;
+      });
+    } else {
+      this.props.pushCallback("circles", (rep) => {
+        this.props.storeReports([{
+          type: REPORT_PAGE_STATUS,
+          data: PAGE_STATUS_READY
+        }]);
+
+        let station = `${rep.from.path.split('/')[2]}/${rep.data.cir}`;
+        let stationDetails = getStationDetails(station);
+
+        api.hall({
+          source: {
+            nom: 'inbox',
+            sub: true,
+            srs: [station]
+          }
+        })
+
+        this.props.transitionTo(stationDetails.stationUrl);
+      });
+    }
   }
 
   valueChange(event) {
@@ -169,17 +187,17 @@ export class TopicCreatePage extends Component {
               className="text-code collection-post-edit mb-4"
               name="topicContent"
               placeholder="New post"
-              disabled={this.state.status === STATUS_LOADING}
+              disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
               value={this.state.topicContent}
               onChange={this.valueChange}
               />
             <div className="collection-post-actions">
               <a href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
                 className="header-link mr-6"
-                disabled={this.state.status === STATUS_LOADING}>Cancel</a>
+                disabled={this.props.store.views.transition !== PAGE_STATUS_READY}>Cancel</a>
               <Button
                 content="Save"
-                disabled={this.state.status === STATUS_LOADING}
+                disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
                 classes="btn btn-sm btn-primary"
                 action={this.createTopic}
                 responseKey="circle.config.dif.full"

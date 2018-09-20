@@ -27,15 +27,19 @@ class UrbitApi {
     });
   }
 
-  hall(data, transition) {
-    this.action("hall", "hall-action", data, transition);
+  hall(data) {
+    this.action("hall", "hall-action", data);
   }
 
-  coll(data, transition) {
-    this.action("collections", "collections-action", data, transition);
+  coll(data) {
+    this.action("collections", "collections-action", data);
   }
 
-  action(appl, mark, data, transition) {
+  setOnboardingBit(value) {
+    this.action("collections", "json", { onboard: value });
+  }
+
+  action(appl, mark, data) {
     const params = {
       appl,
       mark,
