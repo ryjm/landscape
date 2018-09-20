@@ -67,6 +67,10 @@ export function getStationDetails(station) {
       ret.parentCollectionUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
       ret.stationTitle = config && config.extConf ? config.extConf.name : "TBD";
+
+      let collCircle = `~${ret.host}/c-${ret.collId}`;
+      let collConfig = warehouse.store.configs[collCircle];
+      ret.collTitle = collConfig && collConfig.extConf ? collConfig.extConf.name : "TBD";
       break;
   }
 

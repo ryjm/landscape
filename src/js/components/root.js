@@ -105,6 +105,10 @@ export class Root extends Component {
         headerData.collTitle = "TBD";
         headerData.postId = headerData.dateCreated;
         headerData.station = `${headerData.owner}/c-${headerData.collId}-${headerData.postId}`;
+
+        let collCircle = `${headerData.owner}/c-${headerData.collId}`;
+        let collConfig = warehouse.store.configs[collCircle];
+        headerData.collTitle = collConfig && collConfig.extConf ? collConfig.extConf.name : "TBD";
       }
 
       if (headerData.type === "stream-chat") {
