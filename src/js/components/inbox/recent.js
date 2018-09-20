@@ -154,7 +154,7 @@ export class InboxRecentPage extends Component {
           <div className="row align-center">
             <div className="flex-col-1"></div>
             <div className="flex-col-1 flex justify-end">
-              <Icon type={section.details.type} />
+              <Icon type={section.details.iconType} iconLabel={true}/>
             </div>
             <div className="flex-col-x">
               {hostDisplay}
