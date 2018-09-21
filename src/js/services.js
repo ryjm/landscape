@@ -42,16 +42,11 @@ export function getStationDetails(station) {
       ret.stationTitle = ret.cir;
       break;
     case "stream-dm":
-      if (config && config.con) {
-        ret.stationTitle = ret.cir
-          .split(".")
-          .filter((mem) => mem !== api.authTokens.ship)
-          .map((mem) => `~${mem}`)
-          .join(", ");;
-      } else {
-        ret.stationTitle = "unknown";
-      }
-
+      ret.stationTitle = ret.cir
+        .split(".")
+        .filter((mem) => mem !== api.authTokens.ship)
+        .map((mem) => `~${mem}`)
+        .join(", ");;
       ret.stationUrl = `/~~/landscape/stream?station=${station}`;
       break;
     case "collection-index":
