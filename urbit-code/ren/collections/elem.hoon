@@ -8,18 +8,14 @@
 ::
 ::
 /=  collection-post
-::  /^  $-(raw-item:collections manx)
   /:  /===/web/landscape/collections/post      /!noun/
-::/=  collection-details
-::  /^  manx
-::  /:  /===/web/landscape/collections/details  /%  /!hymn/
-::
 ::
 =<  (item-to-elem itm)
 |%
 ++  item-to-elem
   |=  itm=item:collections
   ^-  manx
+  ?<  =(/collections/web s.bem.gas)
   =/  sho  (fall (~(get by qix.gas) %show) %default)
   ;div.container
     ;div.row
@@ -85,8 +81,6 @@
   ;div.mb-18.mt-4
     ;+  elm
   ==
-  ::  if comments are enabled it should be a %both not a %raw
-  ::  XX REVIEW ^^ not robust enough?
 ::
 ++  both-to-elem
   |=  [col=collection:collections raw=raw-item:collections]
@@ -109,9 +103,7 @@
             (gth a-dat b-dat)
           |=  [nom=knot ite=item:collections]
           ^-  manx
-          ::  XX TODO: accept types other than comments
           ?>  ?=(%raw -.ite)
-         :: ?>  =(%comments (~(got by meta.raw.ite) %type))
           =/  owner  (fall (~(get by meta.raw.ite) %owner) 'anonymous')
           =/  date  (fall (~(get by meta.raw.ite) %date-created) 'missing date')
           ;li.collection-comment
