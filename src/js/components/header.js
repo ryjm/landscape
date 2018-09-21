@@ -14,6 +14,7 @@ export class Header extends Component {
     this.toggleSubscribe = this.toggleSubscribe.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
     this.reconnectPolling = this.reconnectPolling.bind(this);
+    this.handleHeaderAction = this.handleHeaderAction.bind(this);
   }
 
   isSubscribed(station) {
@@ -83,6 +84,7 @@ export class Header extends Component {
             style: "mono"
           },
           actions: {
+            subscribe: null,
             details: defaultData.stationDetails.stationDetailsUrl,
           },
         }
@@ -93,12 +95,9 @@ export class Header extends Component {
 
         if (this.props.data.collectionPageMode === 'default') {
           actions = {
-            details: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=details`,
             write: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=post`,
-          }
-        } else if (this.props.data.collectionPageMode === 'details') {
-          actions = {
-            back: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}`,
+            subscribe: null,
+            details: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=details`,
           }
         }
 
@@ -118,12 +117,7 @@ export class Header extends Component {
 
         if (this.props.data.collectionPageMode === 'default') {
           actions = {
-            details: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=details`,
             edit: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit`
-          }
-        } else if (this.props.data.collectionPageMode === 'details') {
-          actions = {
-            back: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}`,
           }
         }
 
@@ -228,29 +222,9 @@ export class Header extends Component {
     }
   }
 
-  buildHeaderContent(headerData) {
-    let actions, subscribeClass, subscribeLabel, iconElem, breadcrumbsElem,
-    headerClass, loadingClass, headerCarpet;
-
-    if (headerData.station) {
-      subscribeClass = (this.isSubscribed(headerData.station)) ? "btn-secondary" : "btn-primary";
-      subscribeLabel = (this.isSubscribed(headerData.station)) ? "Unsubscribe" : "Subscribe";
-    }
-
-    if (headerData.actions) {
-      actions = Object.arrayify(headerData.actions).map(({key, value}) => {
-        let lusElem = key === "write" ? (<Icon type="icon-lus" iconLabel={true} />) : null;
-        return (
-          <a key={key} href={value} className="header-link mr-6 flex align-center">
-            {lusElem}
-            <span>{key}</span>
-          </a>
-        );
-      })
-    }
-
+  buildHeaderBreadcrumbs(headerData) {
     if (headerData.breadcrumbs) {
-      breadcrumbsElem = headerData.breadcrumbs.map(({display, href}, i) => {
+      return headerData.breadcrumbs.map(({display, href}, i) => {
         return (
           <React.Fragment>
             <a className="header-link header-link-breadcrumb" key={display} href={href}>{display}</a>
@@ -260,15 +234,77 @@ export class Header extends Component {
       })
     }
 
-    iconElem = headerData.icon ? <headerData.icon /> : <div style={{width: "24px", height: "24px"}}></div>;
+    return null;
+  }
+
+  handleHeaderAction(e) {
+    if (e.currentTarget.dataset["key"] === "subscribe") {
+      e.preventDefault();
+
+      this.props.storeReports([{
+        type: REPORT_PAGE_STATUS,
+        data: PAGE_STATUS_PROCESSING
+      }]);
+
+      this.toggleSubscribe();
+
+      this.props.pushCallback("circle.config.dif.source", rep => {
+        this.props.storeReports([{
+          type: REPORT_PAGE_STATUS,
+          data: PAGE_STATUS_READY
+        }]);
+      });
+    }
+  }
+
+  buildHeaderActions(headerData) {
+    if (headerData.actions) {
+      return Object.arrayify(headerData.actions).map(({key, value}) => {
+        let lusElem = null;
+        let labelElem = key;
+        let subscribeAction = false;
+
+        switch (key) {
+          case "details":
+            labelElem = (<Icon type="icon-ellipsis" />);
+            break;
+          case "subscribe":
+            labelElem = this.isSubscribed(headerData.station) ? "Unsubscribe" : "Subscribe";
+            subscribeAction = true;
+            break;
+          case "write":
+            lusElem = key === "write" ? (<Icon type="icon-lus" iconLabel={true} />) : null;
+            break;
+        }
+
+        // TODO: No idea why .key and .href aren't showing up in the attributes
+        // in currentTarget when you click this. Bad javascript, bad!
+        return (
+          <a key={key} href={value} onClick={this.handleHeaderAction} data-key={key} className="header-link mr-6 flex align-center">
+            {lusElem}
+            <span>{labelElem}</span>
+          </a>
+        );
+      })
+    }
+
+    return null;
+  }
+
+  buildHeaderContent(headerData) {
+    let actions, subscribeClass, subscribeLabel, breadcrumbsElem, headerClass,
+      loadingClass, headerCarpet;
+
+    actions = this.buildHeaderActions(headerData);
+    breadcrumbsElem = this.buildHeaderBreadcrumbs(headerData);
+    headerCarpet = this.buildHeaderCarpet(headerData);
+
     loadingClass = getLoadingClass(this.props.store.views.transition);
     headerClass = classnames({
       'flex-col-x': true,
       'header-title': true,
       'text-mono': headerData.title && headerData.title.style === "mono"
     })
-
-    headerCarpet = this.buildHeaderCarpet(headerData);
 
     return (
       <div className="container header-container">
@@ -291,15 +327,6 @@ export class Header extends Component {
             <a href={headerData.title.href}>{headerData.title.display}</a>
           </h1>
           {actions}
-          {headerData.station &&
-            <Button
-              classes={`btn btn-sm ${subscribeClass}`}
-              action={this.toggleSubscribe}
-              content={subscribeLabel}
-              pushCallback={this.props.pushCallback}
-              responseKey="circle.config.dif.source"
-               />
-          }
         </div>
         <div className="row header-carpet text-squat">
           {headerCarpet}

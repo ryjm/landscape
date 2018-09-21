@@ -160,6 +160,20 @@
   left: 5px;
 }
 
+.icon-ellipsis-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 1px;
+}
+
+.icon-ellipsis-dot {
+  width: 2px;
+  height: 2px;
+  background-color: black;
+}
+
 /* .icon-lus:after {
   left: 6px;
   transform: rotate(-45deg);

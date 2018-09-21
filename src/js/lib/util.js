@@ -11,7 +11,7 @@ export function capitalize(str) {
 // check if hostname follows ship.*.urbit.org scheme
 export function isProxyHosted(hostName) {
   const r = /([a-z,-]+)\.(.+\.)?urbit\.org/.exec(hostName);
-  if (urbitOb.isShip(r[1])) {
+  if (r && urbitOb.isShip(r[1])) {
     return true;
   }
   return false;
