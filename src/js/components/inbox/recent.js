@@ -174,8 +174,8 @@ export class InboxRecentPage extends Component {
       return "icon-stream-dm";
     } else if (stationDetails.type === "collection-index" && msgDetails.type === "new item") {
       return "icon-collection-index";
-    } else if (stationDetails.type === "collection-post" && msgDetails.type === "new comment") {
-      return "icon-collection-post";
+    } else if (stationDetails.type === "collection-post" && msgDetails.type === "new item") {
+      return "icon-collection-comment";
     }
   }
 

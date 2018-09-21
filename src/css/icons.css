@@ -56,16 +56,18 @@
   border-radius: 100%;
 }
 
-.icon-collection-comment::before, {
+.icon-collection-comment::before {
   height: 4px;
   width: 4px;
 
   position: absolute;
   top: 4px;
   left: 4px;
+  z-index: 2;
   content: "";
 
   background-color: #6FDC74;
+  border-radius: 100%;
 }
 
 .icon-collection-post {
