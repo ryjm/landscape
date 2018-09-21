@@ -111,11 +111,13 @@ export class MessagesReducer {
     let typeApp = msgDetails.type === "app";
     let typeInv = msgDetails.type === "inv";
     let isDmInvite = typeInv && isDMStation(msgDetails.content);
+    let isEditUpdate = msgDetails.type === "edited item";
     let hasResponded = typeInv && msgDetails.content === "~zod/null";
 
     if (typeApp) return false;
     if (isDmInvite) return false;
     if (hasResponded) return false;
+    if (isEditUpdate) return false;
 
     return true;
   }

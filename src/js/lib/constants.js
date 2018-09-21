@@ -11,6 +11,6 @@ export const REPORT_PAGE_STATUS = "report page status update";
 export const REPORT_NAVIGATE = "report navigate to subpage";
 
 export const AGGREGATOR_COLL = "c";
-export const AGGREGATOR_INBOX = "inbox";
+export const AGGREGATOR_INBOX = "aggregator-inbox";
 export const AGGREGATOR_NAMES = [AGGREGATOR_INBOX, AGGREGATOR_COLL];
 export const AGGREGATOR_SUB_NAMES = [AGGREGATOR_COLL];

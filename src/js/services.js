@@ -18,35 +18,30 @@ export function getStationDetails(station) {
   let circleParts = ret.cir.split("-");
 
   if (ret.cir === "inbox") {
-    ret.type = "inbox";
-    ret.iconType = "icon-inbox";
+    ret.type = "aggregator-inbox";
   } else if (ret.cir === "c") {
     ret.type = "aggregator";
   } else if (isDMStation(station)) {
-    ret.type = "dm";
-    ret.iconType = "icon-stream-dm";
+    ret.type = "stream-dm";
   } else if (ret.cir.includes("c-") && circleParts.length > 2) {
     ret.type = "collection-post";
-    ret.iconType = "icon-collection-post";
   } else if (ret.cir.includes("c-")) {
     ret.type = "collection-index";
-    ret.iconType = "icon-collection-index";
   } else {
-    ret.type = "chat";
-    ret.iconType = "icon-stream-chat";
+    ret.type = "stream-chat";
   }
 
   switch (ret.type) {
-    case "inbox":
+    case "aggregator-inbox":
       ret.stationUrl = "/~~/landscape";
       ret.stationTitle = ret.cir;
       break;
-    case "chat":
+    case "stream-chat":
       ret.stationUrl = `/~~/landscape/stream?station=${station}`;
       ret.stationDetailsUrl = `/~~/landscape/stream/details?station=${station}`;
       ret.stationTitle = ret.cir;
       break;
-    case "dm":
+    case "stream-dm":
       if (config && config.con) {
         ret.stationTitle = ret.cir
           .split(".")

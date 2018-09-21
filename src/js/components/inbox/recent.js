@@ -130,21 +130,21 @@ export class InboxRecentPage extends Component {
   buildSections(sections) {
     return sections.map((section, i) => {
       let sectionContent = this.buildSectionContent(section);
-      let hostDisplay = (section.details.type === "dm") ? null : (
+      let hostDisplay = (section.stationDetails.type === "stream-dm") ? null : (
         <span>
-          <a href={section.details.hostProfileUrl} className="text-600 text-mono underline">~{section.details.host}</a>
+          <a href={section.stationDetails.hostProfileUrl} className="text-600 text-mono underline">~{section.stationDetails.host}</a>
           <span className="ml-2 mr-2">/</span>
         </span>
       );
 
       let postDisplay = null;
 
-      if (section.details.type === "collection-index") {
-        let postTitle = section.details.stationTitle;
+      if (section.stationDetails.type === "collection-index") {
+        let postTitle = section.stationDetails.stationTitle;
         postDisplay = (
           <span>
             <span className="ml-2 mr-2">/</span>
-            <a href={section.details.postUrl} className="text-600 underline">{postTitle}</a>
+            <a href={section.stationDetails.postUrl} className="text-600 underline">{postTitle}</a>
           </span>
         )
       }
@@ -154,11 +154,11 @@ export class InboxRecentPage extends Component {
           <div className="row align-center">
             <div className="flex-col-1"></div>
             <div className="flex-col-1 flex justify-end">
-              <Icon type={section.details.iconType} iconLabel={true}/>
+              <Icon type={section.icon} iconLabel={true}/>
             </div>
             <div className="flex-col-x">
               {hostDisplay}
-              <a href={section.details.stationUrl} className="text-600 underline">{section.details.stationTitle}</a>
+              <a href={section.stationDetails.stationUrl} className="text-600 underline">{section.stationDetails.stationTitle}</a>
             </div>
           </div>
           {sectionContent}
@@ -167,24 +167,41 @@ export class InboxRecentPage extends Component {
     })
   }
 
+  getSectionIconType(msgDetails, stationDetails) {
+    if (stationDetails.type === "stream-chat") {
+      return "icon-stream-chat";
+    } else if (stationDetails.type === "stream-dm" ) {
+      return "icon-stream-dm";
+    } else if (stationDetails.type === "collection-index" && msgDetails.type === "new item") {
+      return "icon-collection-index";
+    } else if (stationDetails.type === "collection-post" && msgDetails.type === "new comment") {
+      return "icon-collection-post";
+    }
+  }
+
   // Group inbox messages by time-chunked stations, strictly ordered by message time.
   // TODO:  Inbox does not handle messages with multiple audiences very well
   getSectionData() {
     let inbox = this.props.store.messages.inbox.messages;
 
     let lastStationName = [];
+    let lastMessageType = "";
     let sections = [];
     let stationIndex = -1;
 
     for (var i = 0; i < inbox.length; i++) {
       let msg = inbox[i];
       let aud = msg.aud[0];
+      let msgDetails = getMessageContent(msg);
+      let stationDetails = getStationDetails(aud);
 
-      if (!_.isEqual(aud, lastStationName)) {
+      if (aud !== lastStationName || msgDetails.type !== lastMessageType) {
         sections.push({
           name: aud,
           msgs: [msg],
-          details: getStationDetails(aud)
+          icon: this.getSectionIconType(msgDetails, stationDetails),
+          msgDetails: msgDetails,
+          stationDetails: stationDetails
         });
         stationIndex++;
       } else {
@@ -192,6 +209,7 @@ export class InboxRecentPage extends Component {
       }
 
       lastStationName = aud;
+      lastMessageType = msgDetails.type;
     }
 
     return sections;
