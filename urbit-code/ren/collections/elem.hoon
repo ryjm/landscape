@@ -210,7 +210,7 @@
             ;a(href lnk): {(trip title)}
           ;a(href lnk): *{hed.ht}
     ==
-    ;div.text-mono-bold.mt-1.mb-1: {<owner.meta.col>}
+    ;div.text-mono.text-small.text-300.mt-1.mb-1: {<owner.meta.col>}
     ;div
       ;span.icon-label.justify-start
         ;span(urb-component "IconComment");

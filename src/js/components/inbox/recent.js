@@ -35,17 +35,6 @@ import { Icon } from '/components/lib/icon';
 import _ from 'lodash';
 
 export class InboxRecentPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      filter: "",
-      feed: "",
-      collections: {}
-    };
-
-  }
-
   buildSectionContent(section) {
     let lastAut = "";
 
@@ -91,53 +80,27 @@ export class InboxRecentPage extends Component {
     return messageRows;
   }
 
-  // TODO:  This function is super bunk. Post circles should (probably) have post title in the post config.
-  findPostTitleFromMessage(postId) {
-    let inbox = this.props.store.messages.inbox.messages;
-    let result = null;
-
-    for (var i = 0; i < inbox.length; i++) {
-      inbox[i].aud.forEach((aud) => {
-        if (aud.includes(postId)) {
-          result = inbox[i].sep.fat.sep.lin.msg.split("|")[1];
-        }
-      })
-    }
-
-    return result;
-  }
-
   buildSections(sections) {
     return sections.map((section, i) => {
       let sectionContent = this.buildSectionContent(section);
-      let hostDisplay = (section.stationDetails.type === "stream-dm") ? null : (
-        <span>
-          <a href={section.stationDetails.hostProfileUrl} className="text-600 text-mono underline">~{section.stationDetails.host}</a>
-          <span className="ml-2 mr-2">/</span>
-        </span>
-      );
-
-      let postDisplay = null;
-
-      if (section.stationDetails.type === "collection-index") {
-        let postTitle = section.stationDetails.stationTitle;
-        postDisplay = (
-          <span>
-            <span className="ml-2 mr-2">/</span>
-            <a href={section.stationDetails.postUrl} className="text-600 underline">{postTitle}</a>
-          </span>
-        )
-      }
 
       return (
         <div className="mt-4 mb-6" key={i}>
+          {section.stationDetails.type !== "stream-dm" &&
+            <div className="row">
+              <div className="flex-col-2"></div>
+              <div className="flex-col-x text-mono text-small text-300">
+                <a href={section.stationDetails.hostProfileUrl} className="vanilla">~{section.stationDetails.host}</a>
+                <span className="ml-2 mr-2">/</span>
+              </div>
+            </div>
+          }
           <div className="row align-center">
             <div className="flex-col-1"></div>
             <div className="flex-col-1 flex justify-end">
               <Icon type={section.icon} iconLabel={true}/>
             </div>
             <div className="flex-col-x">
-              {hostDisplay}
               <a href={section.stationDetails.stationUrl} className="text-600 underline">{section.stationDetails.stationTitle}</a>
             </div>
           </div>
