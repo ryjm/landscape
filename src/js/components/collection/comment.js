@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { PAGE_STATUS_TRANSITIONING, STATUS_READY, STATUS_LOADING, REPORT_PAGE_STATUS } from '/lib/constants';
 import { Button } from '/components/lib/button';
+import { Sigil } from '/components/lib/icons/sigil';
 
 export class CommentCreate extends Component {
   constructor(props) {

@@ -4,7 +4,7 @@ import { TopicCreatePage } from '/components/collection/createTopic';
 import { CommentCreate } from '/components/collection/comment';
 import { Elapsed } from '/components/lib/elapsed';
 import { IconComment } from '/components/lib/icons/icon-comment';
-import { AvatarLg } from '/components/lib/icons/avatar-lg';
+import { Sigil } from '/components/lib/icons/sigil';
 import { ChatList } from '/components/lib/chat-list';
 import { ProfileMsgBtn } from '/components/lib/profile-msg-btn';
 
@@ -16,6 +16,6 @@ export var ComponentMap = {
   "InboxPage": InboxPage,
   "Elapsed": Elapsed,
   "IconComment": IconComment,
-  "AvatarLg": AvatarLg,
+  "Sigil": Sigil,
   "ProfileMsgBtn": ProfileMsgBtn,
 };
