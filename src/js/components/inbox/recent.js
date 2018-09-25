@@ -40,33 +40,29 @@ export class InboxRecentPage extends Component {
 
     let messageRows = section.msgs.map((msg, i) => {
       let messageDetails = getMessageContent(msg);
-      let rowAuthor = null;
+      let isPostUpdate = messageDetails.contentType === "blog";
 
-      if (lastAut !== msg.aut) {
-        // TODO: Add timestamp back in later maybe
-        // let timestamp = (i === 0) ? (<div className="text-timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
-
-        rowAuthor = (
-          <div className="row">
-            <div className="flex-col-2"></div>
-            <div className="flex-col-x">
-              {messageDetails.postUrl &&
-                <a className="pr-12 text-600 underline"
-                  href={messageDetails.postUrl}>
-                  {messageDetails.postTitle}
-                </a>
-              }
-              <span className="text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a></span>
-            </div>
-          </div>
-        );
-      }
-
-      lastAut = msg.aut;
-
-      return (
+      let ret = (
         <div key={i}>
-          {rowAuthor}
+          {lastAut !== msg.aut &&
+            <div className={`row align-center ${isPostUpdate && 'mt-3'}`}>
+              <div className="flex-col-1"></div>
+              <div className="flex-col-1 flex justify-end">
+                {isPostUpdate &&
+                  <Icon type='icon-collection-post' iconLabel={true}/>
+                }
+              </div>
+              <div className="flex-col-x">
+                {messageDetails.postUrl &&
+                  <a className="pr-12 text-600 underline"
+                    href={messageDetails.postUrl}>
+                    {messageDetails.postTitle}
+                  </a>
+                }
+                <span className="text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a></span>
+              </div>
+            </div>
+          }
           <div className="row">
             <div className="flex-col-2"></div>
             <div className="flex-col-x">
@@ -74,7 +70,10 @@ export class InboxRecentPage extends Component {
             </div>
           </div>
         </div>
-      )
+      );
+
+      lastAut = msg.aut;
+      return ret;
     });
 
     return messageRows;
