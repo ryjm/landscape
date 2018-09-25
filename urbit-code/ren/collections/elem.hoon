@@ -95,12 +95,12 @@
     ;+  (raw-to-elem raw)
     ::
     ;div
-      ;div.mb-2
-        ;span(urb-component "IconComment");
-        ;span: {<~(wyt by data.col)>}
+      ;div.mb-4
+        ;div.icon-comment(urb-component "IconComment");
+        ;div.ml-2.comment-count.text-600: {<~(wyt by data.col)>}
       ==
       ::
-      ;ul
+      ;ul.comments
       ;*  %+  turn
             %+  sort  ~(tap by data.col)
             |=  [[knot a=item:collections] [knot b=item:collections]]
@@ -114,15 +114,23 @@
          :: ?>  =(%comments (~(got by meta.raw.ite) %type))
           =/  owner  (fall (~(get by meta.raw.ite) %owner) 'anonymous')
           =/  date  (fall (~(get by meta.raw.ite) %date-created) 'missing date')
-          ;li.collection-comment
-            ;div
-              ;a.collection-comment-author.text-mono
-                =href  "/~~/landscape/profile"
-                ; {(trip owner)}
+          ;li.collection-comment.mb-4
+            ;div.comment-metadata
+              ;div.comment-sigil
+                =urb-component  "Sigil"
+                =urb-ship       "{(trip owner)}"
+                =urb-size       "18";
+              ;div.author-time-container
+                ;a.collection-comment-author.text-mono.ml-2
+                  =href  "/~~/landscape/profile"
+                  ; {(trip owner)}
+                ==
+                ;div.comment-time.text-mono.text-300.ml-2
+                  =urb-component  "Elapsed"
+                  =urb-timestring  "{(trip date)}";
               ==
-              ;+  elm:(static:cram (ream data.raw.ite))
             ==
-            ;span.collection-date: {(trip date)}
+            ;+  elm:(static:cram (ream data.raw.ite))
           ==
       ==
       ::
@@ -220,9 +228,9 @@
     ==
     ;div.text-mono-bold.mt-1.mb-1: {<owner.meta.col>}
     ;div
-      ;span.icon-label.justify-start
-        ;span(urb-component "IconComment");
-        ;span.ml-1
+      ;div.icon-label.justify-start
+        ;div(urb-component "IconComment");
+        ;div.ml-2
           ; {(trip (scot %ud ~(wyt by data.col)))}
         ==
       ==

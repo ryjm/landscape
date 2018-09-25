@@ -15,7 +15,7 @@
     ;div.row
       ;div.col-sm-offset-2.col-sm-10
         ;div.profile-avatar
-          ;div(urb-component "AvatarLg", urb-ship "{(scow %p p.bem.gas)}");
+          ;div(urb-component "Sigil", urb-size "320", urb-ship "{(scow %p p.bem.gas)}");
           ;div(urb-component "ProfileMsgBtn", urb-ship "{(scow %p p.bem.gas)}");
         ==
       ==
