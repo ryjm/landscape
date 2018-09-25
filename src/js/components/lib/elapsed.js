@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { secToString } from '/lib/util';
+import { secToString, esoo } from '/lib/util';
 // display elapsed time by converting galactic time to client time
 
 /*
@@ -16,7 +16,7 @@ export class Elapsed extends Component {
   }
 
   renderTime() {
-    const serverTime = new Date(this.props.timestring);
+    const serverTime = new Date(esoo(this.props.timestring));
     const clientTime = new Date(); // local
     return secToString((clientTime - serverTime) / 1000).split(' ')[0];
   }

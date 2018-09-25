@@ -8,6 +8,22 @@ export function capitalize(str) {
   return `${str[0].toUpperCase()}${str.substr(1)}`;
 }
 
+// takes a galactic (urbit) time and converts to 8601
+export function esoo(str) {
+
+  var dubb = function(num) {
+    return num < 10 ? '0' + parseInt(num) : parseInt(num);
+  }
+
+  const p = /\~(\d\d\d\d).(\d\d?).(\d\d?)..(\d\d?).(\d\d?).(\d\d?)/.exec(str);
+
+  if (p) {
+    return `${p[1]}-${dubb(p[2])}-${dubb(p[3])}T${dubb(p[4])}:${dubb(p[5])}:${dubb(p[6])}Z`
+  }
+  return false;
+
+}
+
 // check if hostname follows ship.*.urbit.org scheme
 export function isProxyHosted(hostName) {
   const r = /([a-z,-]+)\.(.+\.)?urbit\.org/.exec(hostName);
