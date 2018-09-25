@@ -46,30 +46,6 @@ export class InboxRecentPage extends Component {
 
   }
 
-  buildPostTitle(messageDetails) {
-    if (messageDetails.postUrl) {
-      if (messageDetails.contentType === "comments") {
-
-        return (
-          <a className="pr-12 text-600 underline"
-            href={messageDetails.parentUrl}>
-            {messageDetails.parentTitle}  /  comment
-          </a>
-        )
-
-      } else {
-        return (
-          <a className="pr-12 text-600 underline"
-            href={messageDetails.postUrl}>
-            {messageDetails.postTitle}
-          </a>
-        )
-      }
-    } else {
-      return null;
-    }
-  }
-
   buildSectionContent(section) {
     let lastAut = "";
 
@@ -78,7 +54,6 @@ export class InboxRecentPage extends Component {
       let rowAuthor = null;
 
       if (lastAut !== msg.aut) {
-        let topicLink = this.buildPostTitle(messageDetails);
         // TODO: Add timestamp back in later maybe
         // let timestamp = (i === 0) ? (<div className="text-timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
 
@@ -86,7 +61,12 @@ export class InboxRecentPage extends Component {
           <div className="row">
             <div className="flex-col-2"></div>
             <div className="flex-col-x">
-              <span>{topicLink}</span>
+              {messageDetails.postUrl &&
+                <a className="pr-12 text-600 underline"
+                  href={messageDetails.postUrl}>
+                  {messageDetails.postTitle}
+                </a>
+              }
               <span className="text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a></span>
             </div>
           </div>

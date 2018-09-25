@@ -256,8 +256,6 @@ export function getMessageContent(msg) {
         path: jason.path,
         postTitle: jason.name,
         postUrl: `/~~/${jason.owner}/==/${jason.path.join('/')}`,
-        parentTitle: jason.path.slice(-2, -1),
-        parentUrl: `/~~/${jason.owner}/==/${jason.path.slice(0, -1).join('/')}`,
       }
     },
     'sep.inv.cir': 'inv',
