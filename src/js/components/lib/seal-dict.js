@@ -70,7 +70,7 @@ export class SealDict {
     let key = `${patp}+${size}`;
 
     if (!this.dict[key]) {
-      this.dict[key] = pour({patp, size, renderer: ReactSVGComponents})
+      this.dict[key] = pour({patp, size, renderer: ReactSVGComponents, colorway: ['#000', '#fff']})
     }
 
     return this.dict[key];
