@@ -34,12 +34,30 @@ textarea.comment-edit
 {
   border: none;
   resize: none;
-  padding: 0;
+  padding: 2rem;
+  height: 24rem;
+  width: 80%;
+  border: 1px solid #aaa;
 }
 
 .create-comment .usership
 {
   color: #000;
+}
+
+.create-comment button
+{
+  margin-left: calc(2rem + 18px);
+}
+
+ul.comments
+{
+  padding-left: 0;
+}
+
+ul.comments > li
+{
+  padding-left: 0;
 }
 
 div.coll-title
@@ -144,7 +162,37 @@ div.mod
   font-size: 14px;
   line-height: 24px;
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 600;
+  float: left;
+}
+
+div.icon-comment
+{
+  float: left;
+  display: inline-block;
+}
+
+div.comment-count
+{
+  display: inline-block;
+  margin-top: -3px;
+}
+
+.comment-time
+{
+  float: left;
+}
+
+div.comment-sigil
+{
+  float: left;
+  display: inline-block;
+}
+
+div.author-time-container
+{
+  display: inline-block;
+  margin-top: -3px;
 }
 
 .collection-post-actions {
