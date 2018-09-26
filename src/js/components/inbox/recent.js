@@ -40,32 +40,36 @@ export class InboxRecentPage extends Component {
       let messageDetails = getMessageContent(msg);
       let isPostUpdate = messageDetails.contentType === "blog";
 
+      if (lastAut !== msg.aut) console.log("aut = ", msg.aut);
+
       let ret = (
         <div key={i}>
           {lastAut !== msg.aut &&
-            <div className={`row align-center ${isPostUpdate && 'mt-3'}`}>
-              <div className="flex-col-1"></div>
-              <div className="flex-col-1 flex justify-end">
-                {isPostUpdate &&
-                  <Icon type='icon-collection-post' iconLabel={true}/>
-                }
+            <React.Fragment>
+              <div className={`row align-center ${isPostUpdate && 'mt-3'}`}>
+                <div className="flex-col-1"></div>
+                <div className="flex-col-1 flex justify-end">
+                  {isPostUpdate &&
+                    <Icon type='icon-collection-post' iconLabel={true}/>
+                  }
+                </div>
+                <div className="flex-col-x">
+                  {messageDetails.postUrl &&
+                    <a className="text-500"
+                      href={messageDetails.postUrl}>
+                      {messageDetails.postTitle}
+                    </a>
+                  }
+                </div>
               </div>
-              <div className="flex-col-x">
-                {messageDetails.postUrl &&
-                  <a className="text-500"
-                    href={messageDetails.postUrl}>
-                    {messageDetails.postTitle}
-                  </a>
-                }
+              <div className="row">
+                <div className="flex-col-2"></div>
+                <div className={`flex-col-x ${isPostUpdate ? 'mt-1' : 'mt-3'}`}>
+                  <a className="vanilla text-mono text-small text-700" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
+                </div>
               </div>
-            </div>
+            </React.Fragment>
           }
-          <div className="row">
-            <div className="flex-col-2"></div>
-            <div className={`flex-col-x ${isPostUpdate ? 'mt-1' : 'mt-3'}`}>
-              <a className="vanilla text-mono text-small text-700" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
-            </div>
-          </div>
           <div className="row">
             <div className="flex-col-2"></div>
             <div className="flex-col-x">
