@@ -1,8 +1,11 @@
 textarea.chat-input-field {
+  height: 56px;
   padding: 8px 10px;
-  
+
   border: 1px solid #E6E6E6;
   border-radius: 1px;
+
+  resize: none;
 }
 
 .chat-input-field:placeholder {

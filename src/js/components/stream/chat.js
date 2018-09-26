@@ -8,6 +8,7 @@ import { prettyShip, isUrl, uuid, getMessageContent, isDMStation, dateToDa } fro
 import { sealDict } from '/components/lib/seal-dict';
 import { Elapsed } from '/components/lib/elapsed';
 import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
+import Mousetrap from 'mousetrap';
 import classnames from 'classnames';
 
 export class ChatPage extends Component {
@@ -52,6 +53,7 @@ export class ChatPage extends Component {
     this.buildMessage = this.buildMessage.bind(this);
 
     this.scrollbarRef = React.createRef();
+    this.textareaRef = React.createRef();
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -74,12 +76,22 @@ export class ChatPage extends Component {
     }
   }
 
+  bindShortcuts() {
+    Mousetrap(this.textareaRef.current).bind('enter', e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.messageSubmit(e);
+    });
+  }
+
   componentDidMount() {
     let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
     this.props.api.bind(path, "PUT", this.state.host);
 
     this.scrollIfLocked();
+    this.bindShortcuts();
   }
 
   componentWillUnmount() {
@@ -174,10 +186,7 @@ export class ChatPage extends Component {
     this.setState({invitee: event.target.value});
   }
 
-  messageSubmit(event) {
-    event.preventDefault();
-    event.stopPropagation();
-
+  messageSubmit() {
     let aud, sep;
     let wen = Date.now();
     let uid = uuid();
@@ -381,11 +390,13 @@ export class ChatPage extends Component {
             </a>
           </div>
           <div className="flex-col-x">
-            <form onSubmit={this.messageSubmit}>
+            <form>
               <textarea className="chat-input-field"
-                 placeholder={this.state.placeholder}
-                 value={this.state.message}
-                 onChange={this.messageChange} />
+                resize="none"
+                ref={this.textareaRef}
+                placeholder={this.state.placeholder}
+                value={this.state.message}
+                onChange={this.messageChange} />
             </form>
           </div>
         </div>
