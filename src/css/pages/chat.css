@@ -1,13 +1,8 @@
-/* TODO: This is probably bad */
-.chat-container .col-sm-2 {
-  flex-basis: 43rem;
-  max-width: 43rem;
-}
-
-.chat-input-field[type="text"] {
-  border: none;
-  padding: 0;
-  line-height: 6rem;
+textarea.chat-input-field {
+  padding: 8px 10px;
+  
+  border: 1px solid #E6E6E6;
+  border-radius: 1px;
 }
 
 .chat-input-field:placeholder {

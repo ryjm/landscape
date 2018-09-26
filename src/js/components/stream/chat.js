@@ -374,18 +374,20 @@ export class ChatPage extends Component {
           className="chat-scrollpane">
           {chatMessages}
         </Scrollbars>
-        <div className="row align-center mt-6">
-          <div className="flex-col-2"></div>
+        <div className="row mt-3">
+          <div className="flex-col-2 flex justify-end">
+            <a className="vanilla chat-sigil" href={prettyShip(api.authTokens.ship)[1]}>
+              {sealDict.getSeal(api.authTokens.ship, 18)}
+            </a>
+          </div>
           <div className="flex-col-x">
             <form onSubmit={this.messageSubmit}>
-              <input className="chat-input-field"
-                     type="text"
-                     placeholder={this.state.placeholder}
-                     value={this.state.message}
-                     onChange={this.messageChange} />
+              <textarea className="chat-input-field"
+                 placeholder={this.state.placeholder}
+                 value={this.state.message}
+                 onChange={this.messageChange} />
             </form>
           </div>
-          <a onClick={this.messageSubmit} className="text-600">Send</a>
         </div>
       </div>
     )
