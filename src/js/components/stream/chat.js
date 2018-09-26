@@ -372,18 +372,17 @@ export class ChatPage extends Component {
     let chatMessages = chatRows.map(this.buildMessage);
 
     return (
-      <div className="container">
+      <div className="container flex flex-column space-between">
         <Scrollbars
           ref={this.scrollbarRef}
           renderTrackHorizontal={props => <div style={{display: "none"}}/>}
-          style={{height: 650}}
           onScrollStop={this.onScrollStop}
           renderView={props => <div {...props} className="chat-scrollpane-view"/>}
           autoHide
-          className="chat-scrollpane">
+          className="chat-scrollpane flex-chat-body">
           {chatMessages}
         </Scrollbars>
-        <div className="row mt-3">
+        <div className="row mt-3 flex-chat-input">
           <div className="flex-col-2 flex justify-end">
             <a className="vanilla chat-sigil" href={prettyShip(api.authTokens.ship)[1]}>
               {sealDict.getSeal(api.authTokens.ship, 18)}
