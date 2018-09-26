@@ -13,7 +13,8 @@
   ;input(type "hidden", name "urb-header", value "header-profile", ship "{(scow %p p.bem.gas)}");
   ;div.container
     ;div.row
-      ;div.col-sm-offset-2.col-sm-10
+      ;div.flex-col-2;
+      ;div.flex-col-x
         ;div.profile-avatar
           ;div(urb-component "AvatarLg", urb-ship "{(scow %p p.bem.gas)}");
           ;div(urb-component "ProfileMsgBtn", urb-ship "{(scow %p p.bem.gas)}");
@@ -21,8 +22,8 @@
       ==
     ==
     ;div.row
-      ;div.col-sm-offset-2.col-sm-10
-        ;div(urb-component "ChatList", urb-hostship "{(scow %p p.bem.gas)}");
+      ;div.flex-col-2;
+      ;div.flex-col-x
         ;div.text-700.mt-8: Meta
         ;div.mt-2.text-500.row
           ;span.col-sm-2: Started:
