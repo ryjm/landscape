@@ -306,11 +306,11 @@ export class ChatPage extends Component {
 
     let details = msg.printship ? null : getMessageContent(msg);
     let appClass = classnames({
-      'flex': true,
+      'row': true,
       'align-center': true,
       'chat-msg-app': msg.app,
       'chat-msg-pending': msg.pending,
-      'mt-6': msg.printship
+      'mt-4': msg.printship
     });
 
     if (msg.printship) {
@@ -336,15 +336,14 @@ export class ChatPage extends Component {
            data-date-group={msg.dateGroup}
            onMouseEnter={this.mouseenterActivate}
            onMouseLeave={this.mouseleaveActivate}>
-        <div className="flex-1st"></div>
-        <div className="flex-2nd">
+        <div className="flex-col-2 flex align-center justify-end">
           {msg.printship &&
-            <a className="vanilla" href={prettyShip(msg.aut)[1]}>
+            <a className="vanilla chat-sigil" href={prettyShip(msg.aut)[1]}>
               {sealDict.getSeal(msg.aut, 18)}
             </a>
           }
         </div>
-        <div className="flex-3rd">
+        <div className="flex-col-x">
           {contentElem}
         </div>
       </div>
@@ -365,21 +364,16 @@ export class ChatPage extends Component {
 
     return (
       <div className="container">
-        <div className="row">
-          <div className="flex-col-2"></div>
-          <div className="flex-col-x">
-            <Scrollbars
-              ref={this.scrollbarRef}
-              renderTrackHorizontal={props => <div style={{display: "none"}}/>}
-              style={{height: 650}}
-              onScrollStop={this.onScrollStop}
-              renderView={props => <div {...props} className="chat-scrollpane-view"/>}
-              autoHide
-              className="chat-scrollpane">
-              {chatMessages}
-            </Scrollbars>
-          </div>
-        </div>
+        <Scrollbars
+          ref={this.scrollbarRef}
+          renderTrackHorizontal={props => <div style={{display: "none"}}/>}
+          style={{height: 650}}
+          onScrollStop={this.onScrollStop}
+          renderView={props => <div {...props} className="chat-scrollpane-view"/>}
+          autoHide
+          className="chat-scrollpane">
+          {chatMessages}
+        </Scrollbars>
         <div className="row align-center mt-6">
           <div className="flex-col-2"></div>
           <div className="flex-col-x">

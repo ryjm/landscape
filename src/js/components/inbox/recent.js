@@ -47,8 +47,7 @@ export class InboxRecentPage extends Component {
           {lastAut !== msg.aut &&
             <React.Fragment>
               <div className={`row align-center ${isPostUpdate && 'mt-3'}`}>
-                <div className="flex-col-1"></div>
-                <div className="flex-col-1 flex justify-end">
+                <div className="flex-col-2 flex justify-end">
                   {isPostUpdate &&
                     <Icon type='icon-collection-post' iconLabel={true}/>
                   }
@@ -102,8 +101,7 @@ export class InboxRecentPage extends Component {
             </div>
           }
           <div className="row align-center">
-            <div className="flex-col-1"></div>
-            <div className="flex-col-1 flex justify-end">
+            <div className="flex-col-2 flex justify-end">
               <Icon type={section.icon} iconLabel={true}/>
             </div>
             <div className="flex-col-x">

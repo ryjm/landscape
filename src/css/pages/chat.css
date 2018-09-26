@@ -28,6 +28,10 @@
   color: #9B9B9B;
 }
 
+.chat-sigil {
+  margin-right: 2px;
+}
+
 .cir-status {
   width: 2rem;
   height: 2rem;
@@ -53,6 +57,10 @@
 .cir-red {
   background-color: #FF4444;
 }
+
+/***
+  Scrollpane
+***/
 
 .chat-scrollpane-view {
   display: flex;
