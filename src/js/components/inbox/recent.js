@@ -22,9 +22,7 @@
         <span mono *>[dmjoin]</span>
 
     dm:
-
 */
-
 
 import React, { Component } from 'react';
 import { Elapsed } from '/components/lib/elapsed';
@@ -54,15 +52,20 @@ export class InboxRecentPage extends Component {
               </div>
               <div className="flex-col-x">
                 {messageDetails.postUrl &&
-                  <a className="pr-12 text-600 underline"
+                  <a className="text-500"
                     href={messageDetails.postUrl}>
                     {messageDetails.postTitle}
                   </a>
                 }
-                <span className="text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a></span>
               </div>
             </div>
           }
+          <div className="row">
+            <div className="flex-col-2"></div>
+            <div className={`flex-col-x ${isPostUpdate ? 'mt-1' : 'mt-3'}`}>
+              <a className="vanilla text-mono text-small text-700" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
+            </div>
+          </div>
           <div className="row">
             <div className="flex-col-2"></div>
             <div className="flex-col-x">
