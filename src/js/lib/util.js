@@ -238,8 +238,7 @@ export function getMessageContent(msg) {
     'sep.app.sep.fat.sep.lin.msg': 'app',
     'sep.app.sep.lin.msg': 'app',
     'sep.fat': (msg) => {
-
-      let type =  msg.sep.fat.tac.text;
+      let type = msg.sep.fat.tac.text;
       let station = msg.aud[0];
       let stationDetails = getStationDetails(station);
       let jason = JSON.parse(msg.sep.fat.sep.lin.msg);

@@ -3,7 +3,7 @@ import { Button } from '/components/lib/button';
 import { getQueryParams, daToDate } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Elapsed } from '/components/lib/elapsed';
-import { PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
+import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
 import _ from 'lodash';
 
 export class TopicCreatePage extends Component {
@@ -108,7 +108,7 @@ export class TopicCreatePage extends Component {
 
     this.props.storeReports([{
       type: REPORT_PAGE_STATUS,
-      data: PAGE_STATUS_TRANSITIONING
+      data: PAGE_STATUS_PROCESSING
     }]);
 
     if (details.isEdit) {
