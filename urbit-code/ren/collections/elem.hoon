@@ -117,7 +117,7 @@
                   =href  "/~~/landscape/profile"
                   ; {(trip owner)}
                 ==
-                ;div.comment-time.text-mono.text-300.ml-2
+                ;div.comment-time.text-mono.text-300.ml-4
                   =urb-component  "Elapsed"
                   =urb-timestring  "{(trip date)}";
               ==
