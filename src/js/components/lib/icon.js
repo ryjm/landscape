@@ -3,6 +3,7 @@ import { IconInbox } from '/components/lib/icons/icon-inbox';
 import { IconComment } from '/components/lib/icons/icon-comment';
 import { IconSig } from '/components/lib/icons/icon-sig';
 import { IconDecline } from '/components/lib/icons/icon-decline';
+import { IconUser } from '/components/lib/icons/icon-user';
 
 export class Icon extends Component {
   render() {
@@ -47,6 +48,9 @@ export class Icon extends Component {
         break;
       case "icon-sig":
         iconElem = <IconSig />
+        break;
+      case "icon-user":
+        iconElem = <IconUser />
         break;
       case "icon-ellipsis":
         iconElem = (

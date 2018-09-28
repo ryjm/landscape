@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getSubscribedStations } from '/lib/util';
 import { Icon } from '/components/lib/icon';
+import { Elapsed } from '/components/lib/elapsed';
 import classnames from 'classnames';
 
 export class InboxListPage extends Component {
@@ -31,21 +32,27 @@ export class InboxListPage extends Component {
       });
 
       return (
-        <div key={stationDetails.station} className="mt-3 flex space-between align-center">
-          <div className="text-mono">
+        <div key={stationDetails.station} className="mt-3 row align-center">
+          <div className="text-mono flex-col-3 flex-offset-2">
             {stationDetails.type !== "stream-dm" &&
               <React.Fragment>
                 <a className="text-host-breadcrumb" href={stationDetails.hostProfileUrl}>
                   ~{stationDetails.host}
                 </a>
-                <span className="text-host-breadcrumb ml-2 mr-2">  /  </span>
+                <span className="text-host-breadcrumb ml-2 mr-2">/</span>
               </React.Fragment>
             }
             <a className={stationClass} href={stationDetails.stationUrl}>
               {stationDetails.stationTitle}
             </a>
           </div>
-          <div>{stationDetails.config.con.sis.length} Members</div>
+          <div className="flex-col-1">
+            <Elapsed timestring={1538163986689} classes="text-timestamp" />
+          </div>
+          <div className="flex-col-1 flex align-center">
+            <Icon type="icon-user" label={true} />
+            <span className="text-host-breadcrumb">122</span>
+          </div>
         </div>
       );
     });
@@ -75,7 +82,7 @@ export class InboxListPage extends Component {
 
     let sectionElems = sections.map(s => {
       return (
-        <div className="mt-9 mb-17">
+        <div className="mt-4 mb-17">
           <div className="row">
             <div className="flex-col-2 flex justify-end align-center">
               <Icon type={s.icon} label={true} />
@@ -84,12 +91,7 @@ export class InboxListPage extends Component {
               <h2 className="text-500">{s.title}</h2>
             </div>
           </div>
-          <div className="row">
-            <div className="flex-col-2"></div>
-            <div className="flex-col-x">
-              {s.data}
-            </div>
-          </div>
+          {s.data}
         </div>
       );
     });
