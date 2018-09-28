@@ -106,7 +106,7 @@
           ?>  ?=(%raw -.ite)
           =/  owner  (fall (~(get by meta.raw.ite) %owner) 'anonymous')
           =/  date  (fall (~(get by meta.raw.ite) %date-created) 'missing date')
-          ;li.collection-comment.mb-4
+          ;li.collection-comment.mb-8
             ;div.comment-metadata
               ;div.comment-sigil
                 =urb-component  "Sigil"
