@@ -99,6 +99,27 @@ export class MessagesReducer {
     //   console.log(`msg ${msg.uid}: ${msg.wen}`);
     // }
 
+    // store.messages.inbox.messages = [
+    //   {
+    //     aud: ["~zod/marzod.zod"],
+    //     aut: "zod",
+    //     sep: { lin: {
+    //       msg: "Hey marzod!"
+    //     }},
+    //     uid: "0v4.85q7h.25nnt.5mhop.92c1u.3rhsa",
+    //     wen: 1538084786999,
+    //   }, {
+    //     aud: ["~zod/marzod.zod"],
+    //     aut: "marzod",
+    //     sep: { lin: {
+    //       msg: "oh hey zod"
+    //     }},
+    //     uid: "0v4.85q7h.25nnt.5mhop.92c1u.3rhfa",
+    //     wen: 1538084787000,
+    //   },
+    //   ...ret
+    // ];
+
     store.messages.inbox.messages = ret;
   }
 
@@ -111,6 +132,7 @@ export class MessagesReducer {
     let typeApp = msgDetails.type === "app";
     let typeInv = msgDetails.type === "inv";
     let isDmInvite = typeInv && isDMStation(msgDetails.content);
+    let isInboxMsg = msg.aud[0].split("/")[1] === "inbox";
     let isEditUpdate = msgDetails.type === "edited item";
     let hasResponded = typeInv && msgDetails.content === "~zod/null";
 
@@ -118,6 +140,7 @@ export class MessagesReducer {
     if (isDmInvite) return false;
     if (hasResponded) return false;
     if (isEditUpdate) return false;
+    if (isInboxMsg) return false;
 
     return true;
   }
