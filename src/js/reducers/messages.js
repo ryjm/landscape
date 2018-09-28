@@ -22,16 +22,20 @@ export class MessagesReducer {
         case "circle.cos.loc":
           if (fromInbox) {
             store.messages.inbox.config = rep.data;
-            store.messages.inbox.src = rep.data.src;
+            // store.messages.inbox.src = rep.data.src;
+            store.messages.inbox.src = [...rep.data.src, "~zod/marzod.zod"];
             this.storeInboxMessages(store);
           }
           break;
         case "circle.config.dif.source":
           if (fromInbox) {
             if (rep.data.add) {
-              store.messages.inbox.src = [...store.messages.inbox.src, rep.data.src];
+              // store.messages.inbox.src = [...store.messages.inbox.src, rep.data.src];
+              store.messages.inbox.src = [...store.messages.inbox.src, rep.data.src, "~zod/marzod.zod"];
             } else {
+              // store.messages.inbox.src = store.messages.inbox.src.filter(src => src !== rep.data.src);
               store.messages.inbox.src = store.messages.inbox.src.filter(src => src !== rep.data.src);
+              store.messages.inbox.src = [...store.messages.inbox.src, "~zod/marzod.zod"];
             }
             this.storeInboxMessages(store);
           }

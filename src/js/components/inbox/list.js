@@ -47,7 +47,7 @@ export class InboxListPage extends Component {
             </a>
           </div>
           <div className="flex-col-1">
-            <Elapsed timestring={1538163986689} classes="text-timestamp" />
+            <Elapsed timestring={1538163986689} classes="text-host-breadcrumb" />
           </div>
           <div className="flex-col-1 flex align-center">
             <Icon type="icon-user" label={true} />

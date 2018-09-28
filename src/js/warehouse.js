@@ -37,7 +37,27 @@ class UrbitWarehouse {
         },
         stations: {}
       },
-      configs: {},
+      configs: {
+        '~zod/marzod.zod': {
+          "con": {
+            "sis": [
+              "zod"
+            ],
+            "sec": "journal"
+          },
+          "src": [
+            "~zod/c-~2018.9.27..21.46.45..5ccd",
+            "~zod/c-~2018.9.27..21.46.45..5ccd-~2018.9.27..21.47.05..1ff4/1"
+          ],
+          "red": 0,
+          "fit": {
+            "utf": true,
+            "cas": true
+          },
+          "tag": [],
+          "cap": "Fora",
+        }
+      },
       views: {
         transition: PAGE_STATUS_READY,
         inbox: "inbox-list"
