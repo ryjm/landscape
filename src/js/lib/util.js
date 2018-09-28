@@ -247,6 +247,7 @@ export function getMessageContent(msg) {
 
       return {
         type: msg.sep.fat.tac.text,
+        msg: msg,
         contentType: jason.type,
         content: content,
         snip: jason.snip,
@@ -263,6 +264,7 @@ export function getMessageContent(msg) {
     'sep.exp': (msg) => {
       return {
         type: "exp",
+        msg: msg,
         content: msg.sep.exp.exp,
         res: msg.sep.exp.res.join('\n')
       }
@@ -274,6 +276,7 @@ export function getMessageContent(msg) {
       if (typeof value === "string") {
         ret = {
           type: value,
+          msg: msg,
           content: _.get(msg, key)
         }
       } else if (typeof value === "function") {

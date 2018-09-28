@@ -33,6 +33,38 @@ import { Icon } from '/components/lib/icon';
 import _ from 'lodash';
 
 export class InboxRecentPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activatedMsg: {
+        dateGroup: null,  // TODO: What's a good "0" value for Dates?
+        date: null
+      }
+    };
+
+    this.mouseenterActivate = this.mouseenterActivate.bind(this);
+    this.mouseleaveActivate = this.mouseenterActivate.bind(this);
+  }
+
+  activateMessageGroup(dateGroup, date) {
+    this.setState({
+      activatedMsg: {
+        dateGroup: dateGroup,
+        date: date
+      }
+    });
+  }
+
+  mouseenterActivate(e) {
+    if (e.currentTarget.dataset.date) {
+      this.activateMessageGroup(e.currentTarget.dataset.dateGroup, e.currentTarget.dataset.date);
+    }
+  }
+
+  mouseleaveActivate(e) {
+    this.activateMessageGroup(null, null);
+  }
+
   buildSectionContent(section) {
     let lastAut = "";
 
@@ -43,7 +75,11 @@ export class InboxRecentPage extends Component {
       if (lastAut !== msg.aut) console.log("aut = ", msg.aut);
 
       let ret = (
-        <div key={i}>
+        <div key={msg.uid}
+          data-date={msg.wen}
+          data-date-group={msg.dateGroup}
+          onMouseEnter={this.mouseenterActivate}
+          onMouseLeave={this.mouseleaveActivate}>
           {lastAut !== msg.aut &&
             <React.Fragment>
               <div className={`row align-center ${isPostUpdate && 'mt-3'}`}>
@@ -106,6 +142,9 @@ export class InboxRecentPage extends Component {
             </div>
             <div className="flex-col-x">
               <a href={section.stationDetails.stationUrl} className="text-600 underline">{section.stationDetails.stationTitle}</a>
+              {section.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
+                <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-3 text-timestamp" />
+              }
             </div>
           </div>
           {sectionContent}
@@ -135,6 +174,7 @@ export class InboxRecentPage extends Component {
     let lastMessageType = "";
     let sections = [];
     let stationIndex = -1;
+    let lastDateGroup = "";
 
     for (var i = 0; i < inbox.length; i++) {
       let msg = inbox[i];
@@ -143,15 +183,19 @@ export class InboxRecentPage extends Component {
       let stationDetails = getStationDetails(aud);
 
       if (aud !== lastStationName || msgDetails.type !== lastMessageType) {
+        lastDateGroup = msg.wen;
+        msg.dateGroup = lastDateGroup;
         sections.push({
           name: aud,
           msgs: [msg],
           icon: this.getSectionIconType(msgDetails, stationDetails),
           msgDetails: msgDetails,
+          dateGroup: lastDateGroup,
           stationDetails: stationDetails
         });
         stationIndex++;
       } else {
+        msg.dateGroup = lastDateGroup;
         sections[stationIndex].msgs.push(msg);
       }
 
