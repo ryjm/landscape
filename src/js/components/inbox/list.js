@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getSubscribedStations } from '/lib/util';
 import { Icon } from '/components/lib/icon';
+import classnames from 'classnames';
 
 export class InboxListPage extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ export class InboxListPage extends Component {
         <div key={stationDetails.station} className="mt-3">
           <div className="text-mono">
             <a className="vanilla" href={stationDetails.stationUrl}>
-              <u className="text-600">{stationDetails.stationTitle}</u>
+              {stationDetails.stationTitle}
             </a>
           </div>
         </div>
@@ -23,15 +24,25 @@ export class InboxListPage extends Component {
 
   buildSection(stations) {
     return stations.map((stationDetails) => {
+      let stationClass = classnames({
+        'text-mono': !stationDetails.type.includes("collection"),
+        'text-heading': stationDetails.type.includes("collection"),
+        'text-700': true
+      });
+
       return (
-        <div key={stationDetails.station} className="mt-3">
+        <div key={stationDetails.station} className="mt-3 flex space-between align-center">
           <div className="text-mono">
-            <a className="vanilla" href={stationDetails.hostProfileUrl}>
-              <u>{stationDetails.host}</u>
-            </a>
-            <span className="text-600">  /  </span>
-            <a className="vanilla" href={stationDetails.stationUrl}>
-              <u className="text-600">{stationDetails.stationTitle}</u>
+            {stationDetails.type !== "stream-dm" &&
+              <React.Fragment>
+                <a className="text-host-breadcrumb" href={stationDetails.hostProfileUrl}>
+                  ~{stationDetails.host}
+                </a>
+                <span className="text-host-breadcrumb ml-2 mr-2">  /  </span>
+              </React.Fragment>
+            }
+            <a className={stationClass} href={stationDetails.stationUrl}>
+              {stationDetails.stationTitle}
             </a>
           </div>
           <div>{stationDetails.config.con.sis.length} Members</div>
@@ -46,7 +57,7 @@ export class InboxListPage extends Component {
 
     const chatStations = this.buildSection(stations.chatStations);
     const collStations = this.buildSection(stations.collStations);
-    const DMStations = this.buildDMSection(stations.dmStations);
+    const DMStations = this.buildSection(stations.dmStations);
 
     let sections = [{
       title: "Chats",
@@ -54,7 +65,7 @@ export class InboxListPage extends Component {
       data: chatStations,
     }, {
       title: "Forum",
-      icon: "icon-collection",
+      icon: "icon-collection-index",
       data: collStations
     }, {
       title: "Direct Messages",

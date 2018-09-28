@@ -130,9 +130,9 @@ export class InboxRecentPage extends Component {
           {section.stationDetails.type !== "stream-dm" &&
             <div className="row">
               <div className="flex-col-2"></div>
-              <div className="flex-col-x text-mono text-small text-300">
-                <a href={section.stationDetails.hostProfileUrl} className="vanilla">~{section.stationDetails.host}</a>
-                <span className="ml-2 mr-2">/</span>
+              <div className="flex-col-x">
+                <a href={section.stationDetails.hostProfileUrl} className="text-host-breadcrumb">~{section.stationDetails.host}</a>
+                <span className="text-host-breadcrumb ml-2 mr-2">/</span>
               </div>
             </div>
           }

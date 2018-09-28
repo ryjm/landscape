@@ -227,8 +227,8 @@ export class Header extends Component {
       return headerData.breadcrumbs.map(({display, href}, i) => {
         return (
           <React.Fragment>
-            <a className="vanilla text-300 text-mono text-small" key={display} href={href}>{display}</a>
-            <span className="text-300 text-mono text-small ml-2 mr-2">/</span>
+            <a className="text-host-breadcrumb" key={display} href={href}>{display}</a>
+            <span className="text-host-breadcrumb ml-2 mr-2">/</span>
           </React.Fragment>
         )
       })
