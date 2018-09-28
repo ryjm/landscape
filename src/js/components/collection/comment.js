@@ -69,22 +69,22 @@ export class CommentCreate extends Component {
 
   render() {
     return (
-      <div className="create-comment">
-        <div>
-          <div className="comment-sigil">
+      <div>
+        <div className="flex align-top">
+          <div className="mr-2">
             <Sigil ship={`~${this.props.api.authTokens.ship}`} size="18" />
           </div>
           <textarea
             value={this.state.comment}
             onChange={this.valueChange}
             name="comment"
-            className="comment-edit mb-4 ml-2"
+            className="comment-edit mb-4"
             disabled={this.state.status === STATUS_LOADING}
             placeholder="">
           </textarea>
         </div>
         <Button
-          classes="btn btn-tetiary"
+          classes="btn btn-tetiary collection-comment-content"
           disabled={this.state.comment.length === 0 || this.state.status === STATUS_LOADING}
           action={this.createComment}
           responseKey="circle.gram"
