@@ -50,16 +50,6 @@ textarea.comment-edit
   margin-left: calc(2rem + 18px);
 }
 
-ul.comments
-{
-  padding-left: 0;
-}
-
-ul.comments > li
-{
-  padding-left: 0;
-}
-
 div.coll-title
 {
   font-size: 6rem;
@@ -143,11 +133,6 @@ div.mod
   padding-top: 12rem;
 }
 
-.collection-comment {
-  margin-bottom: 11rem;
-  position: relative;
-}
-
 .collection-comment-avatar {
   position: absolute;
 
@@ -158,45 +143,12 @@ div.mod
   height: 32px;
 }
 
-.collection-comment-author {
-  font-size: 14px;
-  line-height: 24px;
-  text-decoration: none;
-  font-weight: 600;
-  float: left;
-}
-
-div.icon-comment
-{
-  float: left;
-  display: inline-block;
-}
-
-div.comment-count
-{
-  display: inline-block;
-  margin-top: -3px;
-}
-
-.comment-time
-{
-  float: left;
-}
-
-div.comment-sigil
-{
-  float: left;
-  display: inline-block;
-}
-
-div.author-time-container
-{
-  display: inline-block;
-  margin-top: -3px;
-}
-
 .collection-post-actions {
   justify-content: flex-end;
   display: flex;
   align-items: center;
+}
+
+.collection-comment-content {
+  margin-left: 26px;
 }

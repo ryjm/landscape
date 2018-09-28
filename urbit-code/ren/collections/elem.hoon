@@ -89,12 +89,12 @@
     ;+  (raw-to-elem raw)
     ::
     ;div
-      ;div.mb-4
-        ;div.icon-comment(urb-component "IconComment");
-        ;div.ml-2.comment-count.text-600: {<~(wyt by data.col)>}
+      ;div.flex.align-center.mb-5
+        ;div(urb-component "IconComment");
+        ;div.ml-2.text-small.text-mono.text-600: {<~(wyt by data.col)>}
       ==
       ::
-      ;ul.comments
+      ;ul.vanilla
       ;*  %+  turn
             %+  sort  ~(tap by data.col)
             |=  [[knot a=item:collections] [knot b=item:collections]]
@@ -106,23 +106,25 @@
           ?>  ?=(%raw -.ite)
           =/  owner  (fall (~(get by meta.raw.ite) %owner) 'anonymous')
           =/  date  (fall (~(get by meta.raw.ite) %date-created) 'missing date')
-          ;li.collection-comment.mb-8
-            ;div.comment-metadata
-              ;div.comment-sigil
+          ;li.mb-6
+            ;div.flex.align-center
+              ;div.mr-2
                 =urb-component  "Sigil"
                 =urb-ship       "{(trip owner)}"
                 =urb-size       "18";
-              ;div.author-time-container
-                ;a.collection-comment-author.text-mono.ml-2
+              ;div
+                ;a.vanilla.text-mono.text-small.text-700.mr-4
                   =href  "/~~/landscape/profile"
                   ; {(trip owner)}
                 ==
-                ;div.comment-time.text-mono.text-300.ml-4
-                  =urb-component  "Elapsed"
-                  =urb-timestring  "{(trip date)}";
               ==
+              ;div.text-host-breadcrumb
+                =urb-component  "Elapsed"
+                =urb-timestring  "{(trip date)}";
             ==
-            ;+  elm:(static:cram (ream data.raw.ite))
+            ;div.collection-comment-content
+              ;+  elm:(static:cram (ream data.raw.ite))
+            ==
           ==
       ==
       ::
