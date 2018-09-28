@@ -85,7 +85,7 @@ export class InboxRecentPage extends Component {
               <div className={`row align-center ${isPostUpdate && 'mt-3'}`}>
                 <div className="flex-col-2 flex justify-end">
                   {isPostUpdate &&
-                    <Icon type='icon-collection-post' iconLabel={true}/>
+                    <Icon type='icon-collection-post' label={true}/>
                   }
                 </div>
                 <div className="flex-col-x">
@@ -138,7 +138,7 @@ export class InboxRecentPage extends Component {
           }
           <div className="row align-center">
             <div className="flex-col-2 flex justify-end">
-              <Icon type={section.icon} iconLabel={true}/>
+              <Icon type={section.icon} label={true}/>
             </div>
             <div className="flex-col-x">
               <a href={section.stationDetails.stationUrl} className="text-600 underline">{section.stationDetails.stationTitle}</a>

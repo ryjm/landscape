@@ -40,7 +40,7 @@ class UrbitWarehouse {
       configs: {},
       views: {
         transition: PAGE_STATUS_READY,
-        inbox: "inbox-recent"
+        inbox: "inbox-list"
       },
       names: {},
       public: {},

@@ -13,7 +13,7 @@ export class InboxPage extends Component {
 
     if (this.props.store.views.inbox === "inbox-recent") {
       content = <InboxRecentPage {...this.props} />;
-    } else if (this.props.store.views.inbox === "inbox-all") {
+    } else if (this.props.store.views.inbox === "inbox-list") {
       content = <InboxListPage {...this.props} />;
     }
 

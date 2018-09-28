@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getSubscribedStations } from '/lib/util';
+import { Icon } from '/components/lib/icon';
 
 export class InboxListPage extends Component {
   constructor(props) {
@@ -47,24 +48,41 @@ export class InboxListPage extends Component {
     const collStations = this.buildSection(stations.collStations);
     const DMStations = this.buildDMSection(stations.dmStations);
 
-    return (
-      <div className="row">
-        <div className="flex-col-2"></div>
-        <div className="list-page flex-col-x">
-          <div className="mt-4 mb-9">
-            <div className="text-600">Chats</div>
-            {chatStations}
+    let sections = [{
+      title: "Chats",
+      icon: "icon-stream-chat",
+      data: chatStations,
+    }, {
+      title: "Forum",
+      icon: "icon-collection",
+      data: collStations
+    }, {
+      title: "Direct Messages",
+      icon: "icon-stream-dm",
+      data: DMStations
+    }];
+
+    let sectionElems = sections.map(s => {
+      return (
+        <div className="mt-9 mb-17">
+          <div className="row">
+            <div className="flex-col-2 flex justify-end align-center">
+              <Icon type={s.icon} label={true} />
+            </div>
+            <div className="flex-col-x">
+              <h2 className="text-500">{s.title}</h2>
+            </div>
           </div>
-          <div className="mt-4 mb-9">
-            <div className="text-600">Blogs, Forum and Notes</div>
-            {collStations}
-          </div>
-          <div className="mt-4 mb-9">
-            <div className="text-600">Direct Messages</div>
-            {DMStations}
+          <div className="row">
+            <div className="flex-col-2"></div>
+            <div className="flex-col-x">
+              {s.data}
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    });
+
+    return sectionElems;
   }
 }

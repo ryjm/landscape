@@ -59,7 +59,7 @@ export class Icon extends Component {
         break;
     }
 
-    let className = this.props.iconLabel ? "icon-label" : "";
+    let className = this.props.label ? "icon-label" : "";
 
     return (
       <span className={className}>
