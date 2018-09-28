@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pour } from '/vendor/sigils-0.1.1';
+import { pour } from '/vendor/urb-sigils';
 import _ from 'lodash';
 
 const ReactSVGComponents = {
@@ -66,11 +66,16 @@ export class SealDict {
     this.dict = {};
   }
 
+  getSuffix(patp) {
+    return patp.length === 3 ? patp : patp.substr(-3, 3);
+  }
+
   getSeal(patp, size) {
-    let key = `${patp}+${size}`;
+    let suffix = this.getSuffix(patp);
+    let key = `${suffix}+${size}`;
 
     if (!this.dict[key]) {
-      this.dict[key] = pour({patp, size, renderer: ReactSVGComponents, colorway: ['#000', '#fff']})
+      this.dict[key] = pour({size, patp: suffix, renderer: ReactSVGComponents})
     }
 
     return this.dict[key];

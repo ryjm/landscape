@@ -27,7 +27,7 @@ export function esoo(str) {
 // check if hostname follows ship.*.urbit.org scheme
 export function isProxyHosted(hostName) {
   const r = /([a-z,-]+)\.(.+\.)?urbit\.org/.exec(hostName);
-  if (urbitOb.isShip(r[1])) {
+  if (r && urbitOb.isShip(r[1])) {
     return true;
   }
   return false;
@@ -260,7 +260,6 @@ export function getMessageContent(msg) {
       let stationDetails = getStationDetails(station);
       let jason = JSON.parse(msg.sep.fat.sep.lin.msg);
       let content = (type.includes('collection')) ? null : jason.content;
-
       let par = jason.path.slice(0, -1);
 
       return {
@@ -273,8 +272,6 @@ export function getMessageContent(msg) {
         path: jason.path,
         postTitle: jason.name,
         postUrl: `/~~/${jason.owner}/==/${jason.path.join('/')}`,
-        parentTitle: jason.path.slice(-2, -1),
-        parentUrl: `/~~/${jason.owner}/==/${jason.path.slice(0, -1).join('/')}`,
       }
     },
     'sep.inv.cir': 'inv',
@@ -326,9 +323,9 @@ export function getSubscribedStations(ship, store) {
     .filter((station) => station !== null);
 
   let ret = {
-    chatStations: stationDetailList.filter((d) => d.type === "chat"),
+    chatStations: stationDetailList.filter((d) => d.type === "stream-chat"),
     collStations: stationDetailList.filter((d) => d.type === "collection-index"),
-    dmStations: stationDetailList.filter((d) => d.type === "dm"),
+    dmStations: stationDetailList.filter((d) => d.type === "stream-dm"),
   };
 
   let numSubs = ret.chatStations.length + ret.collStations.length;

@@ -8,6 +8,7 @@ import { prettyShip, isUrl, uuid, getMessageContent, isDMStation, dateToDa } fro
 import { sealDict } from '/components/lib/seal-dict';
 import { Elapsed } from '/components/lib/elapsed';
 import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
+import Mousetrap from 'mousetrap';
 import classnames from 'classnames';
 
 export class ChatPage extends Component {
@@ -52,6 +53,7 @@ export class ChatPage extends Component {
     this.buildMessage = this.buildMessage.bind(this);
 
     this.scrollbarRef = React.createRef();
+    this.textareaRef = React.createRef();
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -74,12 +76,22 @@ export class ChatPage extends Component {
     }
   }
 
+  bindShortcuts() {
+    Mousetrap(this.textareaRef.current).bind('enter', e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.messageSubmit(e);
+    });
+  }
+
   componentDidMount() {
     let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
     this.props.api.bind(path, "PUT", this.state.host);
 
     this.scrollIfLocked();
+    this.bindShortcuts();
   }
 
   componentWillUnmount() {
@@ -174,10 +186,7 @@ export class ChatPage extends Component {
     this.setState({invitee: event.target.value});
   }
 
-  messageSubmit(event) {
-    event.preventDefault();
-    event.stopPropagation();
-
+  messageSubmit() {
     let aud, sep;
     let wen = Date.now();
     let uid = uuid();
@@ -306,11 +315,11 @@ export class ChatPage extends Component {
 
     let details = msg.printship ? null : getMessageContent(msg);
     let appClass = classnames({
-      'flex': true,
+      'row': true,
       'align-center': true,
       'chat-msg-app': msg.app,
       'chat-msg-pending': msg.pending,
-      'mt-6': msg.printship
+      'mt-4': msg.printship
     });
 
     if (msg.printship) {
@@ -336,15 +345,14 @@ export class ChatPage extends Component {
            data-date-group={msg.dateGroup}
            onMouseEnter={this.mouseenterActivate}
            onMouseLeave={this.mouseleaveActivate}>
-        <div className="flex-1st"></div>
-        <div className="flex-2nd">
+        <div className="flex-col-2 flex align-center justify-end">
           {msg.printship &&
-            <a className="vanilla" href={prettyShip(msg.aut)[1]}>
+            <a className="vanilla chat-sigil" href={prettyShip(msg.aut)[1]}>
               {sealDict.getSeal(msg.aut, 18)}
             </a>
           }
         </div>
-        <div className="flex-3rd">
+        <div className="flex-col-x">
           {contentElem}
         </div>
       </div>
@@ -364,34 +372,32 @@ export class ChatPage extends Component {
     let chatMessages = chatRows.map(this.buildMessage);
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="flex-col-2"></div>
-          <div className="flex-col-x">
-            <Scrollbars
-              ref={this.scrollbarRef}
-              renderTrackHorizontal={props => <div style={{display: "none"}}/>}
-              style={{height: 650}}
-              onScrollStop={this.onScrollStop}
-              renderView={props => <div {...props} className="chat-scrollpane-view"/>}
-              autoHide
-              className="chat-scrollpane">
-              {chatMessages}
-            </Scrollbars>
+      <div className="container flex flex-column space-between">
+        <Scrollbars
+          ref={this.scrollbarRef}
+          renderTrackHorizontal={props => <div style={{display: "none"}}/>}
+          onScrollStop={this.onScrollStop}
+          renderView={props => <div {...props} className="chat-scrollpane-view"/>}
+          autoHide
+          className="chat-scrollpane flex-chat-body">
+          {chatMessages}
+        </Scrollbars>
+        <div className="row mt-3 flex-chat-input">
+          <div className="flex-col-2 flex justify-end">
+            <a className="vanilla chat-sigil" href={prettyShip(api.authTokens.ship)[1]}>
+              {sealDict.getSeal(api.authTokens.ship, 18)}
+            </a>
           </div>
-        </div>
-        <div className="row align-center mt-6">
-          <div className="flex-col-2"></div>
           <div className="flex-col-x">
-            <form onSubmit={this.messageSubmit}>
-              <input className="chat-input-field"
-                     type="text"
-                     placeholder={this.state.placeholder}
-                     value={this.state.message}
-                     onChange={this.messageChange} />
+            <form>
+              <textarea className="chat-input-field"
+                resize="none"
+                ref={this.textareaRef}
+                placeholder={this.state.placeholder}
+                value={this.state.message}
+                onChange={this.messageChange} />
             </form>
           </div>
-          <a onClick={this.messageSubmit} className="text-600">Send</a>
         </div>
       </div>
     )

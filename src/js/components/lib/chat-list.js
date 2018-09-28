@@ -38,7 +38,7 @@ export class ChatList extends Component {
     if (this.props.store.public[this.props.hostship]) {
       const chats = this.props.store.public[this.props.hostship].map((cir) => {
         const deets = getStationDetails(cir)
-        if (deets.type == "chat") {
+        if (deets.type == "stream-chat") {
           return (
             <div className="mt-2 text-500">
               <a href={`/~~/landscape/stream?station=${cir}`}>{cir}</a>

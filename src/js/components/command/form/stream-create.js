@@ -48,7 +48,9 @@ export class CommandFormStreamCreate extends Component {
           }
         });
 
-        this.props.pushCallback("circles", (rep) => {
+        this.props.pushCallback("circles", rep => {
+          if (!rep.data.cir) return false;
+
           let station = `~${this.props.api.authTokens.ship}/${rep.data.cir}`;
           let details = getStationDetails(station);
 

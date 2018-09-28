@@ -8,9 +8,8 @@ export class ConfigsReducer {
 
       switch (rep.type) {
         case "circle.gram":
-
+          this.processGramConfigs([rep.data], store.configs);
           break;
-
         case "circle.nes":
           this.processGramConfigs(rep.data, store.configs);
           break;

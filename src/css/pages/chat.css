@@ -1,13 +1,29 @@
-/* TODO: This is probably bad */
-.chat-container .col-sm-2 {
-  flex-basis: 43rem;
-  max-width: 43rem;
+/***
+  Layout
+***/
+
+.flex-chat-body {
+  /* 56px for chat input */
+  /* 108px for header */
+  flex-basis: calc(100% - 56px - 108px);
 }
 
-.chat-input-field[type="text"] {
-  border: none;
-  padding: 0;
-  line-height: 6rem;
+.flex-chat-input {
+  flex-basis: 56px;
+}
+
+/***
+  Styles
+***/
+
+textarea.chat-input-field {
+  height: 56px;
+  padding: 8px 10px;
+
+  border: 1px solid #E6E6E6;
+  border-radius: 1px;
+
+  resize: none;
 }
 
 .chat-input-field:placeholder {
@@ -26,6 +42,10 @@
 
 .chat-msg-app, .chat-msg-app * {
   color: #9B9B9B;
+}
+
+.chat-sigil {
+  margin-right: 2px;
 }
 
 .cir-status {
@@ -53,6 +73,10 @@
 .cir-red {
   background-color: #FF4444;
 }
+
+/***
+  Scrollpane
+***/
 
 .chat-scrollpane-view {
   display: flex;

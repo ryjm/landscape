@@ -181,7 +181,7 @@ export class TopicCreatePage extends Component {
       <div className="row">
         <div className="flex-col-x">
           {dateElem}
-          <h5>Post</h5>
+          <h3>Post</h3>
           <div className="collection-edit">
             <textarea
               className="text-code collection-post-edit mb-4"

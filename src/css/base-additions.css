@@ -62,37 +62,38 @@ h1, h2, h3, h4, h5, button, .text-heading {
   font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-label, .text-timestamp, .text-mono, .text-mono-bold {
+label, .text-mono, .text-mono-bold, .text-mono-light, .text-timestamp {
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
-}
-
-.text-mono-bold {
-  font-size: 12px;
-  line-height: 20px;
-  font-weight: 600;
 }
 
 h1, .h1 {
   font-size: 6rem; /* 24px */
+  line-height: 8rem; /* 32px */
 }
 
 h2, .h2 {
   font-size: 5rem; /* 20px */
+  line-height: 6rem; /* 24px */
 }
 
 h3, .h3 {
-  font-size: 4rem; /* 20px */
+  font-size: 4rem; /* 16px */
+  line-height: 5rem; /* 20px */
 }
 
-h5, .h5 {
-  font-size: 4rem;
-  font-weight: 500;
-  line-height: 5rem;
-  margin: 1rem 0;
+h4 {
+  font-size: 14px;
+  line-height: 20px;
 }
 
-.text-mono-bold {
+.text-small, .text-small * {
+  font-size: 12px;
+  line-height: 20px;
+}
 
+.text-squat, .text-squat * {
+  font-size: 16px;
+  line-height: 20px;
 }
 
 .text-gray, .text-gray * {
@@ -105,11 +106,6 @@ h5, .h5 {
 
 .text-red, .text-red * {
   color: #EE3124;
-}
-
-.text-squat, .text-squat * {
-  font-size: 16px;
-  line-height: 20px;
 }
 
 .text-timestamp {
@@ -133,6 +129,10 @@ h5, .h5 {
   justify-content: space-between;
 }
 
+.align-start {
+  align-items: flex-start;
+}
+
 .align-center {
   align-items: center;
 }
@@ -143,6 +143,14 @@ h5, .h5 {
 
 .justify-end {
   justify-content: flex-end;
+}
+
+.justify-between {
+  justify-content: between;
+}
+
+.flex-column {
+  flex-direction: column;
 }
 
 .pointer {

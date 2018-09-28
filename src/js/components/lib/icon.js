@@ -48,6 +48,15 @@ export class Icon extends Component {
       case "icon-sig":
         iconElem = <IconSig />
         break;
+      case "icon-ellipsis":
+        iconElem = (
+          <div className="icon-ellipsis-wrapper icon-label">
+            <div className="icon-ellipsis-dot"></div>
+            <div className="icon-ellipsis-dot"></div>
+            <div className="icon-ellipsis-dot"></div>
+          </div>
+        )
+        break;
     }
 
     let className = this.props.iconLabel ? "icon-label" : "";

@@ -22,9 +22,7 @@
         <span mono *>[dmjoin]</span>
 
     dm:
-
 */
-
 
 import React, { Component } from 'react';
 import { Elapsed } from '/components/lib/elapsed';
@@ -35,69 +33,42 @@ import { Icon } from '/components/lib/icon';
 import _ from 'lodash';
 
 export class InboxRecentPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      filter: "",
-      feed: "",
-      collections: {}
-    };
-
-  }
-
-  buildPostTitle(messageDetails) {
-    if (messageDetails.postUrl) {
-      if (messageDetails.contentType === "comments") {
-
-        return (
-          <a className="pr-12 text-600 underline"
-            href={messageDetails.parentUrl}>
-            {messageDetails.parentTitle}  /  comment
-          </a>
-        )
-
-      } else {
-        return (
-          <a className="pr-12 text-600 underline"
-            href={messageDetails.postUrl}>
-            {messageDetails.postTitle}
-          </a>
-        )
-      }
-    } else {
-      return null;
-    }
-  }
-
   buildSectionContent(section) {
     let lastAut = "";
 
     let messageRows = section.msgs.map((msg, i) => {
       let messageDetails = getMessageContent(msg);
-      let rowAuthor = null;
+      let isPostUpdate = messageDetails.contentType === "blog";
 
-      if (lastAut !== msg.aut) {
-        let topicLink = this.buildPostTitle(messageDetails);
-        // TODO: Add timestamp back in later maybe
-        // let timestamp = (i === 0) ? (<div className="text-timestamp"><Elapsed timestring={msg.wen} /></div>) : null;
+      if (lastAut !== msg.aut) console.log("aut = ", msg.aut);
 
-        rowAuthor = (
-          <div className="row">
-            <div className="flex-col-2"></div>
-            <div className="flex-col-x">
-              <span>{topicLink}</span>
-              <span className="text-mono"><a className="shipname" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a></span>
-            </div>
-          </div>
-        );
-      }
-
-      lastAut = msg.aut;
-
-      return (
+      let ret = (
         <div key={i}>
-          {rowAuthor}
+          {lastAut !== msg.aut &&
+            <React.Fragment>
+              <div className={`row align-center ${isPostUpdate && 'mt-3'}`}>
+                <div className="flex-col-2 flex justify-end">
+                  {isPostUpdate &&
+                    <Icon type='icon-collection-post' iconLabel={true}/>
+                  }
+                </div>
+                <div className="flex-col-x">
+                  {messageDetails.postUrl &&
+                    <a className="text-500"
+                      href={messageDetails.postUrl}>
+                      {messageDetails.postTitle}
+                    </a>
+                  }
+                </div>
+              </div>
+              <div className="row">
+                <div className="flex-col-2"></div>
+                <div className={`flex-col-x ${isPostUpdate ? 'mt-1' : 'mt-3'}`}>
+                  <a className="vanilla text-mono text-small text-700" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
+                </div>
+              </div>
+            </React.Fragment>
+          }
           <div className="row">
             <div className="flex-col-2"></div>
             <div className="flex-col-x">
@@ -105,60 +76,36 @@ export class InboxRecentPage extends Component {
             </div>
           </div>
         </div>
-      )
+      );
+
+      lastAut = msg.aut;
+      return ret;
     });
 
     return messageRows;
   }
 
-  // TODO:  This function is super bunk. Post circles should (probably) have post title in the post config.
-  findPostTitleFromMessage(postId) {
-    let inbox = this.props.store.messages.inbox.messages;
-    let result = null;
-
-    for (var i = 0; i < inbox.length; i++) {
-      inbox[i].aud.forEach((aud) => {
-        if (aud.includes(postId)) {
-          result = inbox[i].sep.fat.sep.lin.msg.split("|")[1];
-        }
-      })
-    }
-
-    return result;
-  }
-
   buildSections(sections) {
     return sections.map((section, i) => {
       let sectionContent = this.buildSectionContent(section);
-      let hostDisplay = (section.details.type === "dm") ? null : (
-        <span>
-          <a href={section.details.hostProfileUrl} className="text-600 text-mono underline">~{section.details.host}</a>
-          <span className="ml-2 mr-2">/</span>
-        </span>
-      );
-
-      let postDisplay = null;
-
-      if (section.details.type === "collection-index") {
-        let postTitle = section.details.stationTitle;
-        postDisplay = (
-          <span>
-            <span className="ml-2 mr-2">/</span>
-            <a href={section.details.postUrl} className="text-600 underline">{postTitle}</a>
-          </span>
-        )
-      }
 
       return (
         <div className="mt-4 mb-6" key={i}>
+          {section.stationDetails.type !== "stream-dm" &&
+            <div className="row">
+              <div className="flex-col-2"></div>
+              <div className="flex-col-x text-mono text-small text-300">
+                <a href={section.stationDetails.hostProfileUrl} className="vanilla">~{section.stationDetails.host}</a>
+                <span className="ml-2 mr-2">/</span>
+              </div>
+            </div>
+          }
           <div className="row align-center">
-            <div className="flex-col-1"></div>
-            <div className="flex-col-1 flex justify-end">
-              <Icon type={section.details.iconType} iconLabel={true}/>
+            <div className="flex-col-2 flex justify-end">
+              <Icon type={section.icon} iconLabel={true}/>
             </div>
             <div className="flex-col-x">
-              {hostDisplay}
-              <a href={section.details.stationUrl} className="text-600 underline">{section.details.stationTitle}</a>
+              <a href={section.stationDetails.stationUrl} className="text-600 underline">{section.stationDetails.stationTitle}</a>
             </div>
           </div>
           {sectionContent}
@@ -167,24 +114,41 @@ export class InboxRecentPage extends Component {
     })
   }
 
+  getSectionIconType(msgDetails, stationDetails) {
+    if (stationDetails.type === "stream-chat") {
+      return "icon-stream-chat";
+    } else if (stationDetails.type === "stream-dm" ) {
+      return "icon-stream-dm";
+    } else if (stationDetails.type === "collection-index" && msgDetails.type === "new item") {
+      return "icon-collection-index";
+    } else if (stationDetails.type === "collection-post" && msgDetails.type === "new item") {
+      return "icon-collection-comment";
+    }
+  }
+
   // Group inbox messages by time-chunked stations, strictly ordered by message time.
   // TODO:  Inbox does not handle messages with multiple audiences very well
   getSectionData() {
     let inbox = this.props.store.messages.inbox.messages;
 
     let lastStationName = [];
+    let lastMessageType = "";
     let sections = [];
     let stationIndex = -1;
 
     for (var i = 0; i < inbox.length; i++) {
       let msg = inbox[i];
       let aud = msg.aud[0];
+      let msgDetails = getMessageContent(msg);
+      let stationDetails = getStationDetails(aud);
 
-      if (!_.isEqual(aud, lastStationName)) {
+      if (aud !== lastStationName || msgDetails.type !== lastMessageType) {
         sections.push({
           name: aud,
           msgs: [msg],
-          details: getStationDetails(aud)
+          icon: this.getSectionIconType(msgDetails, stationDetails),
+          msgDetails: msgDetails,
+          stationDetails: stationDetails
         });
         stationIndex++;
       } else {
@@ -192,6 +156,7 @@ export class InboxRecentPage extends Component {
       }
 
       lastStationName = aud;
+      lastMessageType = msgDetails.type;
     }
 
     return sections;
