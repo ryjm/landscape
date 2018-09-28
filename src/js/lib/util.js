@@ -254,8 +254,7 @@ export function getMessageContent(msg) {
     'sep.app.sep.fat.sep.lin.msg': 'app',
     'sep.app.sep.lin.msg': 'app',
     'sep.fat': (msg) => {
-
-      let type =  msg.sep.fat.tac.text;
+      let type = msg.sep.fat.tac.text;
       let station = msg.aud[0];
       let stationDetails = getStationDetails(station);
       let jason = JSON.parse(msg.sep.fat.sep.lin.msg);
@@ -264,6 +263,7 @@ export function getMessageContent(msg) {
 
       return {
         type: msg.sep.fat.tac.text,
+        msg: msg,
         contentType: jason.type,
         content: content,
         snip: jason.snip,
@@ -280,6 +280,7 @@ export function getMessageContent(msg) {
     'sep.exp': (msg) => {
       return {
         type: "exp",
+        msg: msg,
         content: msg.sep.exp.exp,
         res: msg.sep.exp.res.join('\n')
       }
@@ -291,6 +292,7 @@ export function getMessageContent(msg) {
       if (typeof value === "string") {
         ret = {
           type: value,
+          msg: msg,
           content: _.get(msg, key)
         }
       } else if (typeof value === "function") {

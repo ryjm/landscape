@@ -62,7 +62,7 @@ h1, h2, h3, h4, h5, button, .text-heading {
   font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-label, .text-mono, .text-mono-bold, .text-mono-light, .text-timestamp {
+label, .text-mono, .text-mono-bold, .text-mono-light, .text-timestamp, .text-host-breadcrumb {
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
 }
 
@@ -111,6 +111,14 @@ h4 {
 .text-timestamp {
   font-size: 9px;
   font-weight: 300;
+  line-height: 16px;
+}
+
+.text-host-breadcrumb {
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  text-decoration: none;
 }
 
 /***

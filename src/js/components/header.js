@@ -205,7 +205,7 @@ export class Header extends Component {
         let allClass = classnames({
           'vanilla': true,
           'inbox-link': true,
-          'inbox-link-active': warehouse.store.views.inbox === "inbox-all",
+          'inbox-link-active': warehouse.store.views.inbox === "inbox-list",
         });
 
         return (
@@ -213,7 +213,7 @@ export class Header extends Component {
             <div className="flex-col-2"></div>
             <div className="flex-col-x text-heading">
               <a className={recentClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-recent') }}>Recent</a>
-              <a className={allClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-all') }}>All</a>
+              <a className={allClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-list') }}>All</a>
             </div>
           </React.Fragment>
         );
@@ -227,8 +227,8 @@ export class Header extends Component {
       return headerData.breadcrumbs.map(({display, href}, i) => {
         return (
           <React.Fragment>
-            <a className="vanilla text-300 text-mono text-small" key={display} href={href}>{display}</a>
-            <span className="text-300 text-mono text-small ml-2 mr-2">/</span>
+            <a className="text-host-breadcrumb" key={display} href={href}>{display}</a>
+            <span className="text-host-breadcrumb ml-2 mr-2">/</span>
           </React.Fragment>
         )
       })
@@ -273,7 +273,7 @@ export class Header extends Component {
             subscribeAction = true;
             break;
           case "write":
-            lusElem = key === "write" ? (<Icon type="icon-lus" iconLabel={true} />) : null;
+            lusElem = key === "write" ? (<Icon type="icon-lus" label={true} />) : null;
             break;
         }
 
@@ -321,7 +321,7 @@ export class Header extends Component {
             <a onClick={this.toggleMenu}>
               <Icon type="icon-panini" />
             </a>
-            <Icon type={headerData.icon} iconLabel={true} />
+            <Icon type={headerData.icon} label={true} />
           </div>
           <h1 className={headerClass}>
             <a href={headerData.title.href}>{headerData.title.display}</a>

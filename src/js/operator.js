@@ -49,9 +49,17 @@ export class UrbitOperator {
       this.bindInbox();
       this.bindShortcuts();
       this.bindQuietDmInvites();
+      this.setCleanupTasks();
     } else {
       console.error("~~~ ERROR: Must set api.authTokens before operation ~~~");
     }
+  }
+
+  setCleanupTasks() {
+    window.addEventListener("beforeunload", e => {
+      api.bind(`/circles/~${api.authTokens.ship}`, "DELETE");
+      api.bind("/public", "DELETE");
+    });
   }
 
   quietlyAcceptDmInvites(msgs) {

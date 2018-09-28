@@ -328,7 +328,7 @@ export class ChatPage extends Component {
           <a className="vanilla hoverline text-600 text-mono" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
           {msg.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
             <React.Fragment>
-              <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-5 mr-2 text-mono" />
+              <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-5 mr-2 text-timestamp" />
               <span className="text-mono text-gray">{dateToDa(new Date(parseInt(this.state.activatedMsg.date, 10)))}</span>
             </React.Fragment>
           }
