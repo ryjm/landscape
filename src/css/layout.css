@@ -131,3 +131,8 @@ body {
   padding-right: 0.5rem;
   padding-left: 0.5rem;
 }
+
+/* TODO: This is obviously bad */
+.flex-offset-special {
+  margin-left: 160px;
+}
