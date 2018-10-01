@@ -193,23 +193,24 @@ export class TopicCreatePage extends Component {
             disabled={this.props.store.views.transition !== PAGE_STATUS_READY} />
           <h3 className="text-500 mt-6">Post</h3>
           <textarea
-            className={`text-code collection-post-edit mb-4 ${this.state.topicContent.length > 0 && 'collection-value-filled'}`}
+            className={`text-code collection-post-edit mb-6 ${this.state.topicContent.length > 0 && 'collection-value-filled'}`}
             name="topicContent"
             disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
             value={this.state.topicContent}
             onChange={this.valueChange}
             />
-          <div className="collection-post-actions">
-            <a href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
-              className="header-link mr-6"
-              disabled={this.props.store.views.transition !== PAGE_STATUS_READY}>Cancel</a>
+          <div>
             <Button
-              content="Save"
+              content="Publish"
               disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
-              classes="btn btn-sm btn-primary"
+              classes="btn btn-sm btn-secondary mr-1"
               action={this.createTopic}
               responseKey="circle.config.dif.full"
               pushCallback={this.props.pushCallback} />
+            <a
+              href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
+              className="vanilla btn btn-default">
+              Cancel</a>
           </div>
         </div>
         <div className="flex-col-2"></div>

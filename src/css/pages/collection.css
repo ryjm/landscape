@@ -124,7 +124,6 @@ div.mod
 }
 
 .collection-post-actions {
-  justify-content: flex-end;
   display: flex;
   align-items: center;
 }
