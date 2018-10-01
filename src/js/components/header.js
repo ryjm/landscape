@@ -155,7 +155,7 @@ export class Header extends Component {
           icon: 'icon-stream-dm'
         }
         break;
-      case "collection-post-edit":
+      case "collection-write":
         headerData = {
           icon: 'icon-collection-post'
         }

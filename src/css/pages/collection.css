@@ -1,30 +1,18 @@
-.page-notes-edit textarea {
-  border: none;
-  height: 800px;
+input.collection-title, textarea.collection-post-edit {
+  border: 1px solid #B1B2B3;
 }
 
-.page-notes-index h1 {
-  margin-top: 0;
+input.collection-title:focus, textarea.collection-post-edit:focus, .collection-value-filled {
+  border-color: black !important;
 }
 
-.notes-actions .btn-secondary {
-  margin-right: 10rem;
-}
-
-.notes-blurbs {
-  margin-top: 8rem;
-}
-
-.notes-blurbs li {
-  display: flex;
-  position: relative;
-  margin: 4rem 0;
+input.collection-title {
+  padding: 10px 16px;
 }
 
 textarea.collection-post-edit
 {
   height: 352px;
-  border: 1px solid #D0D0D0;
   background: white;
   resize: none;
   padding: 4rem;
@@ -123,14 +111,6 @@ div.mod
 .collection-title::before {
   margin-top: 22px;
   margin-left: -10rem;
-}
-
-.collection-edit::before {
-  margin-left: -11rem;
-}
-
-.collection-post-page {
-  padding-top: 12rem;
 }
 
 .collection-comment-avatar {

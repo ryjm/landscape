@@ -76,9 +76,15 @@ h2, .h2 {
   line-height: 6rem; /* 24px */
 }
 
+/*
+  TODO:
+    - Making this !important because .h3 should override input[type="text"]
+    - Probably ways to avoid this if we want to avoid !important
+*/
+
 h3, .h3 {
-  font-size: 4rem; /* 16px */
-  line-height: 5rem; /* 20px */
+  font-size: 4rem !important; /* 16px */
+  line-height: 5rem !important; /* 20px */
 }
 
 h4 {

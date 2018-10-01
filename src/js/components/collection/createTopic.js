@@ -5,12 +5,14 @@ import { getStationDetails } from '/services';
 import { Elapsed } from '/components/lib/elapsed';
 import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
 import _ from 'lodash';
+import classnames from 'classnames';
 
 export class TopicCreatePage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      title: props.title ? props.title : '',
       topicContent: props.content ? props.content : '',
       details: this.getDetails(props)
     };
@@ -181,28 +183,33 @@ export class TopicCreatePage extends Component {
       <div className="row">
         <div className="flex-col-x">
           {dateElem}
-          <h3>Post</h3>
-          <div className="collection-edit">
-            <textarea
-              className="text-code collection-post-edit mb-4"
-              name="topicContent"
-              placeholder="New post"
+          <h3 className="text-500">Title</h3>
+          <input
+            type="text"
+            name="title"
+            className={`h3 mt-0 mb-0 text-500 collection-title ${this.state.title.length > 0 && 'collection-value-filled'}`}
+            value={this.state.title}
+            onChange={this.valueChange}
+            disabled={this.props.store.views.transition !== PAGE_STATUS_READY} />
+          <h3 className="text-500 mt-6">Post</h3>
+          <textarea
+            className={`text-code collection-post-edit mb-4 ${this.state.topicContent.length > 0 && 'collection-value-filled'}`}
+            name="topicContent"
+            disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
+            value={this.state.topicContent}
+            onChange={this.valueChange}
+            />
+          <div className="collection-post-actions">
+            <a href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
+              className="header-link mr-6"
+              disabled={this.props.store.views.transition !== PAGE_STATUS_READY}>Cancel</a>
+            <Button
+              content="Save"
               disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
-              value={this.state.topicContent}
-              onChange={this.valueChange}
-              />
-            <div className="collection-post-actions">
-              <a href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
-                className="header-link mr-6"
-                disabled={this.props.store.views.transition !== PAGE_STATUS_READY}>Cancel</a>
-              <Button
-                content="Save"
-                disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
-                classes="btn btn-sm btn-primary"
-                action={this.createTopic}
-                responseKey="circle.config.dif.full"
-                pushCallback={this.props.pushCallback} />
-            </div>
+              classes="btn btn-sm btn-primary"
+              action={this.createTopic}
+              responseKey="circle.config.dif.full"
+              pushCallback={this.props.pushCallback} />
           </div>
         </div>
         <div className="flex-col-2"></div>
