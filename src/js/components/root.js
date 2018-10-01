@@ -83,23 +83,28 @@ export class Root extends Component {
 
     if (headerQuery.length > 0) {
       headerData.type = headerQuery[0].getAttribute('urb-structure-type');
+      headerData.subtype = headerQuery[0].getAttribute('urb-show');
+
+      if (headerData.type.includes("collection")) {
+        headerData.type = `${headerData.type}-${headerData.subtype}`
+      }
     }
 
     if (headerQuery.length > 0 && headerData.type) {
       headerData.owner = headerQuery[0].getAttribute('urb-owner');
       headerData.pageTitle = headerQuery[0].getAttribute('urb-name');
-      headerData.collectionPageMode = headerQuery[0].getAttribute('urb-show');
       headerData.dateCreated = headerQuery[0].getAttribute('urb-date-created');
       headerData.dateModified = headerQuery[0].getAttribute('urb-date-modified');
       headerData.collPath = headerQuery[0].getAttribute('urb-path');
 
-      if (headerData.type === "collection-index") {
+      if (headerData.type.includes("collection-index")) {
         headerData.title = headerData.pageTitle;
         headerData.collId = headerData.dateCreated;
+        headerData.collTitle = "TBD";
         headerData.station = `${headerData.owner}/c-${headerData.collId}`;
       }
 
-      if (headerData.type === "collection-post") {
+      if (headerData.type.includes("collection-post")) {
         headerData.title = headerData.pageTitle;
         headerData.collId = headerData.collPath.split("/")[3];
         headerData.collTitle = "TBD";

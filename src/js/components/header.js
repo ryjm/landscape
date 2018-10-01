@@ -90,15 +90,13 @@ export class Header extends Component {
         }
         break;
 
-      case "collection-index":
+      case "collection-index-default":
         defaultData = this.getStationHeaderData(this.props.data.station);
 
-        if (this.props.data.collectionPageMode === 'default') {
-          actions = {
-            write: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=post`,
-            subscribe: null,
-            details: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=details`,
-          }
+        actions = {
+          write: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=post`,
+          subscribe: null,
+          details: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=details`,
         }
 
         headerData = {
@@ -112,22 +110,36 @@ export class Header extends Component {
         }
         break;
 
-      case "collection-post":
+      case "collection-index-post": // TODO: should probably be 'collection-post-write'
+      case "collection-post-edit":
+      case "collection-post-default":
         defaultData = this.getStationHeaderData(this.props.data.station);
 
-        if (this.props.data.collectionPageMode === 'default') {
+        if (this.props.data.subtype === 'default') {
           actions = {
             edit: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit`
           }
         }
 
+        let icon = "icon-collection-post";
+        if (this.props.data.type === "collection-post-default") icon = "icon-collection-comment";
+
+        let title = {
+          display: this.props.data.title,
+          href: defaultData.title.href
+        }
+
+        if (this.props.data.type === "collection-index-post") {
+          title = {
+            display: "New post",
+            href: "javascript:void(0)"
+          }
+        }
+
         headerData = {
           ...defaultData,
-          icon: 'icon-collection-post',
-          title: {
-            ...defaultData.title,
-            display: (this.props.data.title) ? this.props.data.title : defaultData.title.display
-          },
+          icon,
+          title,
           breadcrumbs: [
             defaultData.breadcrumbs[0],
             {
@@ -135,7 +147,7 @@ export class Header extends Component {
               href: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}`
             }
           ],
-          actions: actions
+          actions
         }
         break;
 
@@ -219,6 +231,9 @@ export class Header extends Component {
         );
 
         break;
+      // case "collection-post-post":
+      //
+      //   break;
     }
   }
 
