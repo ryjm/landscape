@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Icon } from '/components/lib/icon';
-import { getQueryParams, profileUrl, getLoadingClass } from '/lib/util';
+import { getQueryParams, profileUrl, getLoadingClass, dateToDa } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Button } from '/components/lib/button';
 import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
@@ -179,7 +179,6 @@ export class Header extends Component {
             href: "/~~/landscape"
           },
           icon: 'icon-inbox',
-          type
         }
         break;
       case "header-default":
@@ -193,6 +192,8 @@ export class Header extends Component {
         }
         break;
     }
+
+    headerData.type = type;
 
     return headerData;
   }
@@ -223,7 +224,7 @@ export class Header extends Component {
         return (
           <React.Fragment>
             <div className="flex-col-2"></div>
-            <div className="flex-col-x text-heading">
+            <div className="flex-col-x text-heading text-squat">
               <a className={recentClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-recent') }}>Recent</a>
               <a className={allClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-list') }}>All</a>
             </div>
@@ -231,9 +232,20 @@ export class Header extends Component {
         );
 
         break;
-      // case "collection-post-post":
-      //
-      //   break;
+      case "collection-index-post":
+      case "collection-post-edit":
+      case "collection-post-default":
+        // <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-5 mr-2 text-timestamp" />
+
+        return (
+          <React.Fragment>
+            <div className="flex-col-2"></div>
+            <div className="flex-col-x">
+              <span className="text-mono text-300 text-small">{this.props.data.dateCreated.slice(0, -6)}</span>
+            </div>
+          </React.Fragment>
+        );
+        break;
     }
   }
 
@@ -343,7 +355,7 @@ export class Header extends Component {
           </h1>
           {actions}
         </div>
-        <div className="row header-carpet text-squat">
+        <div className="row header-carpet">
           {headerCarpet}
         </div>
       </div>

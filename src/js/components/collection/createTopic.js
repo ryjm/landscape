@@ -162,27 +162,13 @@ export class TopicCreatePage extends Component {
   }
 
   render() {
-    let hostship, dateElem, id;
+    let hostship, id;
 
     let details = this.getDetails();
-
-    if (details.isEdit) {
-      let lastEditDate = (details.lastedit == 'missing-date') ?
-        '' :
-        daToDate(details.lastedit).toISOString();
-
-      dateElem = (
-        <div className="mb-5">
-          <Elapsed timestring={lastEditDate} classes="collection-date text-black mr-4" />
-          <span className="collection-date">{details.lastedit}</span>
-        </div>
-      );
-    }
 
     return (
       <div className="row">
         <div className="flex-col-x">
-          {dateElem}
           <h3 className="text-500">Title</h3>
           <input
             type="text"
