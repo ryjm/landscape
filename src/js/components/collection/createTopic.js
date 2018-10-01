@@ -12,9 +12,10 @@ export class TopicCreatePage extends Component {
     super(props);
 
     this.state = {
-      title: props.title ? props.title : '',
+      editMode: props.show === "edit",
+      title: "",
       topicContent: props.content ? props.content : '',
-      details: this.getDetails(props)
+      details: this.getDetails(props, props.show === "edit")
     };
 
     this.createTopic = this.createTopic.bind(this);
@@ -25,6 +26,13 @@ export class TopicCreatePage extends Component {
     let path = `/circle/${this.state.details.namedCircle}/config-l/grams/-10`;
 
     this.props.api.bind(path, "PUT", this.state.details.hostship);
+
+    if (this.state.editMode) {
+      let metadataQuery = window.document.querySelectorAll('[name="urb-metadata"]')[0];
+      let title = metadataQuery && metadataQuery.getAttribute("urb-name");
+      title = title || "";
+      this.setState({ title });
+    }
   }
 
   componentWillUnmount() {
@@ -33,22 +41,11 @@ export class TopicCreatePage extends Component {
     this.props.api.bind(path, "DELETE", this.state.details.hostship);
   }
 
-  titleExtract(s) {
-    const r = s.split('\n').filter(x =>
-      x.startsWith('# ')
-    );
-    if (r.length > 0) {
-      return r[0].slice(2);
-    }
-    return '';
-  }
-
-  getDetails(conProps) {
+  getDetails(conProps, editMode) {
     let props = this.props || conProps;
     let details = {};
-    details.isEdit = (props.show == 'edit');
 
-    if (details.isEdit) {
+    if (editMode) {
       details.clayPath = props.claypath.split('/').slice(1);
       details.hostship = props.ship.substr(1);
       details.circle = `~${details.hostship}/c${[''].concat(details.clayPath.slice(2, -1)).join('-')}`;
@@ -75,14 +72,14 @@ export class TopicCreatePage extends Component {
     let dat = {};
     let details = this.getDetails();
 
-    if (details.isEdit) {
+    if (this.state.editMode) {
       dat = {
         ship: details.hostship,
         desk: 'home',
         acts: [{
           post: {
             path: '/' + details.clayPath.join('/'), // TODO: should be web/collections/~2018.9.11..17.41.40..6823/~2018.9.11..20.21.42..607c
-            name: details.title,
+            name: this.state.title,
             comments: true,  // XX TODO Get this value from user or parent
             type: 'blog',
             content: this.state.topicContent,
@@ -97,7 +94,7 @@ export class TopicCreatePage extends Component {
         acts: [{
           post: {
             path: '/' + details.clayPath.join('/'),
-            name: this.titleExtract(this.state.topicContent),
+            name: this.state.title,
             comments: true,  // XX TODO Get this value from user or parent
             type: 'blog',
             content: this.state.topicContent,
@@ -113,7 +110,7 @@ export class TopicCreatePage extends Component {
       data: PAGE_STATUS_PROCESSING
     }]);
 
-    if (details.isEdit) {
+    if (this.state.editMode) {
       this.props.pushCallback("circle.gram", rep => {
         let gramType = _.get(rep, 'data.gam.sep.fat.tac.text', null);
         if (gramType && gramType === "edited item") {
@@ -179,7 +176,7 @@ export class TopicCreatePage extends Component {
             disabled={this.props.store.views.transition !== PAGE_STATUS_READY} />
           <h3 className="text-500 mt-6">Post</h3>
           <textarea
-            className={`text-code collection-post-edit mb-6 ${this.state.topicContent.length > 0 && 'collection-value-filled'}`}
+            className={`collection-post-edit mb-6 ${this.state.topicContent.length > 0 && 'collection-value-filled'}`}
             name="topicContent"
             disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
             value={this.state.topicContent}
@@ -195,6 +192,7 @@ export class TopicCreatePage extends Component {
               pushCallback={this.props.pushCallback} />
             <a
               href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
+              disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
               className="vanilla btn btn-default">
               Cancel</a>
           </div>

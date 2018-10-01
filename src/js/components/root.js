@@ -134,59 +134,6 @@ export class Root extends Component {
         runPoll={this.props.runPoll}
       />
     );
-
-    // let headerType = (headerQuery.length > 0) ?
-    //   headerQuery[0].getAttribute('value') : "default";
-    //
-    // let headerData;
-    //
-    // if (headerType === "collection" ||
-    //     headerType === "both" ||
-    //     headerType === "raw"){
-    //
-    //   headerData = {
-    //     type: headerType,
-    //     path: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('path') : null,
-    //     station: `${headerQuery[0].getAttribute('ship')}/c-${headerQuery[0].getAttribute('path').split('/').slice(3).join('-')}`,
-    //
-    //     postid: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('postid') : null,
-    //     ship: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('ship') : null,
-    //     show: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('show') : null,
-    //   }
-    //
-    // } else {
-    //   headerData = {
-    //     type: headerType,
-    //     title: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('title') : null,
-    //     station: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('station') : null,
-    //     postid: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('postid') : null,
-    //     ship: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('ship') : null,
-    //     publ: (headerQuery.length > 0) ?
-    //       headerQuery[0].getAttribute('publ') : null,
-    //   }
-    // }
-
-    // headerData.station = (headerData.station === "query") ? getQueryParams().station : headerData.station;
-    //
-    // return (
-    //   <Header
-    //     data={headerData}
-    //     api={this.props.api}
-    //     store={this.props.store}
-    //     storeReports={this.props.storeReports}
-    //     pushCallback={this.props.pushCallback}
-    //     transitionTo={this.props.transitionTo}
-    //     runPoll={this.props.runPoll}
-    //   />
-    // )
   }
 
   render() {
