@@ -131,28 +131,28 @@ export class CommandForm extends Component {
 
     return (
       <div className="mb-3 form-mve">
-        <div className="mt-2 ml-3">Note: All circles are public on the testnet while permissions are built</div>
-
         {fieldElems}
-
+        <div className="mb-2">
+          <Button
+            name="sup"
+            classes={`btn btn-secondary mt-3`}
+            focusChange={this.focusChange}
+            action={this.onSubmit}
+            disabled={this.state.errorList.length > 0 || this.state.status === STATUS_LOADING}
+            content="Create →"
+            pushCallback={this.props.pushCallback}
+            responseKey="circles"
+          />
+        </div>
         <Button
-          name="sup"
-          classes={`btn btn-sm btn-text btn-block mt-3`}
-          focusChange={this.focusChange}
-          action={this.onSubmit}
-          disabled={this.state.errorList.length > 0 || this.state.status === STATUS_LOADING}
-          content="Create →"
-          pushCallback={this.props.pushCallback}
-          responseKey="circles"
-        />
-        <Button
-          classes={`btn btn-sm btn-text btn-block red`}
+          classes={`btn btn-sm btn-block`}
           action={this.props.cancel}
           focusChange={this.focusChange}
           disabled={this.state.status === STATUS_LOADING}
           content="Cancel"
           pushCallback={this.props.pushCallback}
         />
+        <div className="mt-2 ml-3">Note: All circles are public on the testnet while permissions are built</div>
       </div>
     )
   }

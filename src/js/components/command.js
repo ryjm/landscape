@@ -349,6 +349,11 @@ export class CommandMenu extends Component {
 
     options = options.filter(opt => opt.name.includes(trimmedCmd));
 
+    // Filter out "new collection" and "new chat" options from default list of options
+    if (!["new collection", "new chat"].includes(trimmedCmd)) {
+      options = options.filter(opt => !opt.name.includes("new"))
+    }
+
     return options;
   }
 
