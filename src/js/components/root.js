@@ -100,7 +100,7 @@ export class Root extends Component {
       if (headerData.type.includes("collection-index")) {
         headerData.title = headerData.pageTitle;
         headerData.collId = headerData.dateCreated;
-        headerData.collTitle = "TBD";
+        headerData.collTitle = headerData.title;
         headerData.station = `${headerData.owner}/c-${headerData.collId}`;
       }
 
