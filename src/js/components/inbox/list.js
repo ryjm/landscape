@@ -90,6 +90,7 @@ export class InboxListPage extends Component {
             <div className="flex-col-x">
               <h2 className="text-500 mb-1 mt-1">{s.title}</h2>
             </div>
+            <div className="flex-col-3"></div>
           </div>
           {s.data}
         </div>

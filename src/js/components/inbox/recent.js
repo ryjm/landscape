@@ -96,12 +96,14 @@ export class InboxRecentPage extends Component {
                     </a>
                   }
                 </div>
+                <div className="flex-col-3"></div>
               </div>
               <div className="row">
                 <div className="flex-col-2"></div>
                 <div className={`flex-col-x ${isPostUpdate ? 'mt-1' : 'mt-3'}`}>
                   <a className="vanilla text-mono text-small text-700" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
                 </div>
+                <div className="flex-col-3"></div>
               </div>
             </React.Fragment>
           }
@@ -110,6 +112,7 @@ export class InboxRecentPage extends Component {
             <div className="flex-col-x">
               <Message details={messageDetails} api={this.props.api} storeReports={this.props.storeReports} pushCallback={this.props.pushCallback} transitionTo={this.props.transitionTo}></Message>
             </div>
+            <div className="flex-col-3"></div>
           </div>
         </div>
       );
@@ -134,6 +137,7 @@ export class InboxRecentPage extends Component {
                 <a href={section.stationDetails.hostProfileUrl} className="text-host-breadcrumb">~{section.stationDetails.host}</a>
                 <span className="text-host-breadcrumb ml-2 mr-2">/</span>
               </div>
+              <div className="flex-col-3"></div>
             </div>
           }
           <div className="row align-center">
@@ -146,6 +150,7 @@ export class InboxRecentPage extends Component {
                 <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-3 text-timestamp" />
               }
             </div>
+            <div className="flex-col-3"></div>
           </div>
           {sectionContent}
         </div>

@@ -50,6 +50,7 @@
               ==
         ==
       ==
+      ;div.flex-col-2;
     ==
   ==
 ++  collection-to-elem
