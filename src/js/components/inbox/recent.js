@@ -71,8 +71,7 @@ export class InboxRecentPage extends Component {
     let messageRows = section.msgs.map((msg, i) => {
       let messageDetails = getMessageContent(msg);
       let isPostUpdate = messageDetails.contentType === "blog";
-
-      if (lastAut !== msg.aut) console.log("aut = ", msg.aut);
+      let displayAuthorRow = (lastAut !== msg.aut) || isPostUpdate;
 
       let ret = (
         <div key={msg.uid}
@@ -80,7 +79,7 @@ export class InboxRecentPage extends Component {
           data-date-group={msg.dateGroup}
           onMouseEnter={this.mouseenterActivate}
           onMouseLeave={this.mouseleaveActivate}>
-          {lastAut !== msg.aut &&
+          {displayAuthorRow &&
             <React.Fragment>
               <div className={`row align-center ${isPostUpdate && 'mt-3'}`}>
                 <div className="flex-col-2 flex justify-end">
