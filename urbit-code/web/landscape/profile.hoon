@@ -10,7 +10,7 @@
 --
 ^-  manx
 ;div.profile-page
-  ;input(type "hidden", name "urb-header", value "header-profile", ship "{(scow %p p.bem.gas)}");
+  ;input(type "hidden", name "urb-metadata", urb-structure-type "header-profile", urb-owner "{(scow %p p.bem.gas)}");
   ;div.container
     ;div.row
       ;div.flex-col-2;
