@@ -114,6 +114,17 @@ export class UrbitOperator {
     });
   }
 
+  wipeSubscription(path) {
+    api.hall({
+      wipe: {
+        sub: [{
+          hos: api.authTokens.ship,
+          pax: path
+        }]
+      }
+    });
+  }
+
   bindShortcuts() {
     Mousetrap.bind(["mod+k"], () => {
       warehouse.storeReports([{
@@ -130,14 +141,14 @@ export class UrbitOperator {
       // inbox local + remote configs, remote presences
       api.bind("/circle/inbox/config/group-r/0", "PUT");
 
-      // grab the config for the root collection circle
-      api.bind("/circle/c/config/group-r/0", "PUT");
-
       // inbox messages
       api.bind("/circle/inbox/grams/-50", "PUT");
 
       return true;
     });
+
+    // grab the config for the root collection circle
+    // api.bind("/circle/c/config/group-r/0", "PUT");
 
     // parses client-specific info (ship nicknames, glyphs, etc)
     // this.bind("/client", "PUT");
@@ -214,3 +225,4 @@ export class UrbitOperator {
 }
 
 export let operator = new UrbitOperator();
+window.operator = operator;
