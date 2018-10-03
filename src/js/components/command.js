@@ -257,7 +257,7 @@ export class CommandMenu extends Component {
     return [{
       name: "inbox",
       action: () => {
-        this.props.transitionTo('/~~/landscape');
+        this.props.transitionTo('/~~');
       },
       displayText: "inbox",
       helpText: "Go to the inbox",
