@@ -215,18 +215,17 @@ export class Header extends Component {
           'inbox-link-active': warehouse.store.views.inbox === "inbox-recent",
         });
 
-        let allClass = classnames({
+        let listClass = classnames({
           'vanilla': true,
           'inbox-link': true,
           'inbox-link-active': warehouse.store.views.inbox === "inbox-list",
         });
-
         return (
           <React.Fragment>
             <div className="flex-col-2"></div>
             <div className="flex-col-x text-heading text-squat">
               <a className={recentClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-recent') }}>Recent</a>
-              <a className={allClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-list') }}>All</a>
+              <a className={listClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-list') }}>All</a>
             </div>
           </React.Fragment>
         );
@@ -242,6 +241,29 @@ export class Header extends Component {
             <div className="flex-col-2"></div>
             <div className="flex-col-x">
               <span className="text-mono text-300 text-small">{this.props.data.dateCreated.slice(0, -6)}</span>
+            </div>
+          </React.Fragment>
+        );
+        break;
+      case "header-profile":
+        let onSettingsPage = window.location.href.includes("settings");
+        let indexClass = classnames({
+          'vanilla': true,
+          'mr-8': true,
+          'inbox-link': true,
+          'inbox-link-active': !onSettingsPage,
+        });
+        let settingsClass = classnames({
+          'vanilla': true,
+          'inbox-link': true,
+          'inbox-link-active': onSettingsPage,
+        });
+        return (
+          <React.Fragment>
+            <div className="flex-col-2"></div>
+            <div className="flex-col-x text-heading text-squat">
+              <a className={indexClass} href={`/~~/${this.props.data.owner}/==/web/landscape/profile`}>Profile</a>
+              <a className={settingsClass} href={`/~~/${this.props.data.owner}/==/web/landscape/profile/settings`}>Settings</a>
             </div>
           </React.Fragment>
         );

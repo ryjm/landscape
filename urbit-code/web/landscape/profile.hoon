@@ -9,7 +9,7 @@
   visible.meta.col
 --
 ^-  manx
-;div.profile-page
+;div
   ;input(type "hidden", name "urb-metadata", urb-structure-type "header-profile", urb-owner "{(scow %p p.bem.gas)}");
   ;div.container
     ;div.row
