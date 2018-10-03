@@ -24,7 +24,7 @@ textarea.comment-edit
   resize: none;
   padding: 2rem;
   height: 24rem;
-  width: 80%;
+  width: calc(100% - 26px);
   border: 1px solid #aaa;
 }
 

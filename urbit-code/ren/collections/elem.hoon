@@ -13,45 +13,75 @@
 =<  (item-to-elem itm)
 |%
 ++  item-to-elem
+  !:
   |=  itm=item:collections
   ^-  manx
   ?<  =(/collections/web s.bem.gas)
   =/  sho  (fall (~(get by qix.gas) %show) %default)
   ;div.container
-    ;div.row
-      ;div.flex-col-2;
-      ;div.flex-col-x
-        ;div.collection-index
-            ;+  (meta-to-elem itm sho)
-            ;+
-              ?-    -.itm
-              ::
-                  %collection
-                ?+  sho     !!
-                  %default  (collection-to-elem col.itm)
-                  %post     (collection-post ~ (flop s.bem.gas))
-                  %edit     !!
-                ==
-              ::
-                  %raw
-                ?+  sho     !!
-                  %default  (raw-to-elem raw.itm)
-                  %post     !!
-                  %edit     (collection-post `raw.itm (flop s.bem.gas))
-                ==
-              ::
-                  %both
-                ?+  sho     !!
-                  %default  (both-to-elem col.itm raw.itm)
-                  %post     !!
-                  %edit     (collection-post `raw.itm (flop s.bem.gas))
-                ==
-              ::
+    ;+
+      ?+    -.itm  !!
+          %collection
+        ?+    sho  !!
+        ::
+            %default
+          ;div.row
+            ;div.flex-col-2;
+            ;div.flex-col-x
+              ;div.collection-index
+                ;+  (meta-to-elem itm sho)
+                ;+  (collection-to-elem col.itm)
               ==
+            ==
+            ;+  ?:  =(type.meta.col.itm %blog)
+                  ;div.flex-col-5;
+                ?:  =(type.meta.col.itm %fora)
+                  ;div.flex-col-4;
+                ;div.flex-col-4;
+          ==
+        ::
+            %post
+          ;div.row
+            ;div.flex-col-2;
+            ;div.flex-col-x
+              ;div.collection-index
+                ;+  (meta-to-elem itm sho)
+                ;+  (collection-post ~ (flop s.bem.gas))
+              ==
+            ==
+            ;div.flex-col-2;
+          ==
+        ==
+::        %raw
+      ::
+          %both
+        ?+    sho  !!
+        ::
+            %default
+          ;div.row
+            ;div.flex-col-2;
+            ;div.flex-col-x
+              ;div.collection-index
+                ;+  (meta-to-elem itm sho)
+                ;+  (both-to-elem col.itm raw.itm)
+              ==
+            ==
+            ;div.flex-col-3;
+          ==
+        ::
+            %edit
+          ;div.row
+            ;div.flex-col-2;
+            ;div.flex-col-x
+              ;div.collection-index
+                ;+  (meta-to-elem itm sho)
+                ;+  (collection-post `raw.itm (flop s.bem.gas))
+              ==
+            ==
+            ;div.flex-col-2;
+          ==
         ==
       ==
-      ;div.flex-col-2;
-    ==
   ==
 ++  collection-to-elem
   |=  col=collection:collections

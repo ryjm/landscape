@@ -164,8 +164,7 @@ export class TopicCreatePage extends Component {
     let details = this.getDetails();
 
     return (
-      <div className="row">
-        <div className="flex-col-x">
+        <div>
           <h3 className="text-500">Title</h3>
           <input
             type="text"
@@ -197,8 +196,6 @@ export class TopicCreatePage extends Component {
               Cancel</a>
           </div>
         </div>
-        <div className="flex-col-2"></div>
-      </div>
     )
   }
 }
