@@ -15,8 +15,7 @@
     ;div.row
       ;div.flex-col-2;
       ;div.flex-col-x
-        ;button.btn.btn-primary(type "button"): Connect device
-        :: ;a(href "javascript:(function(){document.querySelectorAll('[urb-devices]')[0].classList.add('hide'); document.querySelectorAll('[urb-devices]')[0].classList.remove('hide');})()"): Connect device
+        ;a.vanilla.btn.btn-primary(href (trip 'javascript:(function(){document.querySelectorAll("[urb-devices]")[0].classList.add("hide"); document.querySelectorAll("[urb-qr]")[0].classList.remove("hide");})()')): Connect device
       ==
     ==
   ==
@@ -24,9 +23,7 @@
     ;div.row
       ;div.flex-col-2;
       ;div.flex-col-x
-        ;button.btn.btn-primary(type "button"): Done
-        :: ;a(href "javascript:(function(){ document.querySelectorAll('[urb-devices]')[0].classList.add('hide'); document.querySelectorAll('[urb-devices]')[0].classList.remove('hide'); })()")
-        :: ==
+        ;a.vanilla.btn.btn-primary(href (trip 'javascript:(function(){document.querySelectorAll("[urb-qr]")[0].classList.add("hide"); document.querySelectorAll("[urb-devices]")[0].classList.remove("hide");})()')): Done
       ==
     ==
   ==
