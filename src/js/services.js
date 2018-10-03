@@ -33,7 +33,7 @@ export function getStationDetails(station) {
 
   switch (ret.type) {
     case "aggregator-inbox":
-      ret.stationUrl = "/~~/landscape";
+      ret.stationUrl = "/~~";
       ret.stationTitle = ret.cir;
       break;
     case "stream-chat":
