@@ -1,13 +1,8 @@
-/+  collections, colls
 /=  gas  /$  fuel:html
-::/=  all-colls  /:  /===/web/collections
-::               /collection-web-item/
-|%
-  :: is this collection on the profile?
-  ++  is-pro
-  |=  col=collection:collections
-  visible.meta.col
---
+=/  cod=tape
+  %+  slag  1
+  %+  scow  %p
+  .^(@p %a /(scot %p p.bem.gas)/code/(scot r.bem.gas)/(scot %p p.bem.gas))
 ^-  manx
 ;div
   ;input(type "hidden", name "urb-metadata", urb-structure-type "header-profile", urb-owner "{(scow %p p.bem.gas)}");
@@ -44,7 +39,7 @@
         ;div
           =urb-component  "QRCodeComponent"
           =urb-ship       "{(scow %p p.bem.gas)}"
-          =urb-code       "lidlut-tabwed-pillex-ridrup";
+          =urb-code       "{cod}";
         ;h2.mt-8.mt-0.text-500.profile-qr-desc: Scan this code to connect your device
         ;a.mt-4.vanilla.btn.btn-primary(href (trip 'javascript:(function(){document.querySelectorAll("[urb-qr]")[0].classList.add("hide"); document.querySelectorAll("[urb-devices]")[0].classList.remove("hide");})()')): Done
       ==
