@@ -185,6 +185,11 @@ export class UrbitOperator {
         if (data.beat) {
           console.log('beat');
           this.runPoll();
+        } else if (data.type === "quit") {
+          console.log("rebinding: ", data);
+          api.bind(data.from.path, "PUT", data.from.ship, data.from.appl);
+          this.seqn++;
+          this.runPoll();
         } else {
           console.log("new server data: ", data);
 
