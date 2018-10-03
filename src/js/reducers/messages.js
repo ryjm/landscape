@@ -131,14 +131,14 @@ export class MessagesReducer {
     let msgDetails = getMessageContent(msg);
     let typeApp = msgDetails.type === "app";
     let typeInv = msgDetails.type === "inv";
-    let isDmInvite = typeInv && isDMStation(msgDetails.content);
+    // let isDmInvite = typeInv && isDMStation(msgDetails.content);
     let isInboxMsg = msg.aud[0].split("/")[1] === "inbox";
     let isEditUpdate = msgDetails.type === "edited item";
-    let hasResponded = typeInv && msgDetails.content === "~zod/null";
+    // let hasResponded = typeInv && msgDetails.content === "~zod/null";
 
     if (typeApp) return false;
-    if (isDmInvite) return false;
-    if (hasResponded) return false;
+    if (typeInv) return false;
+    // if (hasResponded) return false;
     if (isEditUpdate) return false;
     if (isInboxMsg) return false;
 
