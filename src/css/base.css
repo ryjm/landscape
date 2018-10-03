@@ -773,12 +773,12 @@ th {
 
 @font-face {
   font-family: "Source Code Pro";
-  src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-bold.woff");
+  src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-semibold.woff");
   font-weight: 600; }
 
 @font-face {
   font-family: "Source Code Pro";
-  src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-black.woff");
+  src: url("https://storage.googleapis.com/media.urbit.org/fonts/scp-bold.woff");
   font-weight: 700; }
 
 * {
