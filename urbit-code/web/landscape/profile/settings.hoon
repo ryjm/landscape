@@ -11,27 +11,23 @@
 ^-  manx
 ;div
   ;input(type "hidden", name "urb-metadata", urb-structure-type "header-profile", urb-owner "{(scow %p p.bem.gas)}");
-  ;div.container
+  ;div.container(urb-devices "")
     ;div.row
       ;div.flex-col-2;
       ;div.flex-col-x
-        ;h2: Well hello
-        ;span: eyeyey
-        :: ;a(href "javascript:(function()&#123;document.querySelectorAll('[urb-devices]')[0].classList.add('hide'); document.querySelectorAll('[urb-devices]')[0].classList.remove('hide');&#125;)()"): Hello
-        ;a(href "javascript:(function() consolelog(5) )()"): Hello
-          :: ;button(type "button").btn.btn-primary: Connect device
-        ==
+        ;button.btn.btn-primary(type "button"): Connect device
+        :: ;a(href "javascript:(function(){document.querySelectorAll('[urb-devices]')[0].classList.add('hide'); document.querySelectorAll('[urb-devices]')[0].classList.remove('hide');})()"): Connect device
       ==
     ==
   ==
-  :: ;div(urb-qr).container.hide
-  ::   ;div.row
-  ::     ;div.flex-col-2;
-  ::     ;div.flex-col-x
-  ::       ;a(href "javascript:(function(){ document.querySelectorAll('[urb-devices]')[0].classList.add('hide'); document.querySelectorAll('[urb-devices]')[0].classList.remove('hide'); })()")
-  ::         ;button(type "button").btn.btn-primary: Done
-  ::       ==
-  ::     ==
-  ::   ==
-  :: ==
+  ;div.container.hide(urb-qr "")
+    ;div.row
+      ;div.flex-col-2;
+      ;div.flex-col-x
+        ;button.btn.btn-primary(type "button"): Done
+        :: ;a(href "javascript:(function(){ document.querySelectorAll('[urb-devices]')[0].classList.add('hide'); document.querySelectorAll('[urb-devices]')[0].classList.remove('hide'); })()")
+        :: ==
+      ==
+    ==
+  ==
 ==
