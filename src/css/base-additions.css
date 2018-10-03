@@ -53,8 +53,6 @@ form {
 body, p, input[type="text"], textarea, .text-body {
   font-size: 14px;
   line-height: 24px;
-
-  font-family: "San Francisco Text", Arial, sans-serif;
   color: #000;
 }
 
