@@ -7,6 +7,7 @@ import { IconComment } from '/components/lib/icons/icon-comment';
 import { Sigil } from '/components/lib/icons/sigil';
 import { ChatList } from '/components/lib/chat-list';
 import { ProfileMsgBtn } from '/components/lib/profile-msg-btn';
+import { QRCodeComponent } from '/components/lib/qrcode';
 
 export var ComponentMap = {
   "ChatPage": ChatPage,
@@ -18,4 +19,5 @@ export var ComponentMap = {
   "IconComment": IconComment,
   "Sigil": Sigil,
   "ProfileMsgBtn": ProfileMsgBtn,
+  "QRCodeComponent": QRCodeComponent
 };

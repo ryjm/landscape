@@ -58,7 +58,7 @@ body, p, input[type="text"], textarea, .text-body {
   color: #000;
 }
 
-h1, h2, h3, h4, h5, button, .btn, .text-heading {
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, button, .btn, .text-heading {
   font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 

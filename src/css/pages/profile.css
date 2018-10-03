@@ -16,3 +16,7 @@
   background: white;
   display: inline-block;
 }
+
+.profile-qr-desc {
+  max-width: 256px;
+}
