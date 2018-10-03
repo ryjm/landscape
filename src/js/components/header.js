@@ -176,7 +176,7 @@ export class Header extends Component {
         headerData = {
           title: {
             display: "Inbox",
-            href: "/~~/landscape"
+            href: "/~~"
           },
           icon: 'icon-inbox',
         }
@@ -186,7 +186,7 @@ export class Header extends Component {
         headerData = {
           title: {
             display: "Inbox",
-            href: "/~~/landscape"
+            href: "/~~"
           },
           icon: 'icon-inbox'
         }
