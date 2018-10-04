@@ -57,8 +57,20 @@ export class UrbitOperator {
 
   setCleanupTasks() {
     window.addEventListener("beforeunload", e => {
-      api.bind(`/circles/~${api.authTokens.ship}`, "DELETE");
-      api.bind("/public", "DELETE");
+      api.bindPaths.forEach(p => {
+        this.wipeSubscription(p);
+      });
+    });
+  }
+
+  wipeSubscription(path) {
+    api.hall({
+      wipe: {
+        sub: [{
+          hos: api.authTokens.ship,
+          pax: path
+        }]
+      }
     });
   }
 
@@ -111,17 +123,6 @@ export class UrbitOperator {
       })
 
       return true;
-    });
-  }
-
-  wipeSubscription(path) {
-    api.hall({
-      wipe: {
-        sub: [{
-          hos: api.authTokens.ship,
-          pax: path
-        }]
-      }
     });
   }
 
