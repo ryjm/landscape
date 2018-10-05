@@ -123,21 +123,9 @@ export class InboxRecentPage extends Component {
 
     return messageRows;
   }
-
-  // styleStationClass(isCollection) {
-  //   return classnames({
-  //     'text-mono text-700': isCollection,
-  //     'text-heading text-600': isCollection,
-  //     // 'text-600': true
-  //   });
-  // }
-
   buildSections(sections) {
     return sections.map((section, i) => {
-      let sectionContent = this.buildSectionContent(section);
-
-      // const sc = styleStationClass(section.stationDetails.type.includes("collection"))
-      
+      let sectionContent = this.buildSectionContent(section);      
       let stationClass = classnames({
         'text-mono text-700': !section.stationDetails.type.includes("collection"),
         'text-heading text-600': section.stationDetails.type.includes("collection"),
