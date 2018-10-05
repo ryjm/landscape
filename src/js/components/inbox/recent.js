@@ -31,6 +31,7 @@ import { prettyShip, isDMStation, getMessageContent } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Icon } from '/components/lib/icon';
 import _ from 'lodash';
+import classnames from 'classnames';
 
 export class InboxRecentPage extends Component {
   constructor(props) {
@@ -89,7 +90,7 @@ export class InboxRecentPage extends Component {
                 </div>
                 <div className="flex-col-x">
                   {messageDetails.postUrl &&
-                    <a className="text-500"
+                    <a className="text-heading text-500"
                       href={messageDetails.postUrl}>
                       {messageDetails.postTitle}
                     </a>
@@ -126,6 +127,11 @@ export class InboxRecentPage extends Component {
   buildSections(sections) {
     return sections.map((section, i) => {
       let sectionContent = this.buildSectionContent(section);
+      let stationClass = classnames({
+        'text-mono text-700': !section.stationDetails.type.includes("collection"),
+        'text-heading text-600': section.stationDetails.type.includes("collection"),
+        // 'text-600': true
+      });
 
       return (
         <div className="mt-4 mb-6" key={i}>
@@ -144,7 +150,7 @@ export class InboxRecentPage extends Component {
               <Icon type={section.icon} label={true}/>
             </div>
             <div className="flex-col-x">
-              <a href={section.stationDetails.stationUrl} className="text-600 underline">{section.stationDetails.stationTitle}</a>
+              <a href={section.stationDetails.stationUrl} className={stationClass} >{section.stationDetails.stationTitle}</a>
               {section.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
                 <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-3 text-timestamp" />
               }

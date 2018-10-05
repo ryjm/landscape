@@ -26,9 +26,8 @@ export class InboxListPage extends Component {
   buildSection(stations) {
     return stations.map((stationDetails) => {
       let stationClass = classnames({
-        'text-mono': !stationDetails.type.includes("collection"),
-        'text-heading': stationDetails.type.includes("collection"),
-        'text-700': true
+        'text-mono text-700': !stationDetails.type.includes("collection"),
+        'text-heading text-600': stationDetails.type.includes("collection"),
       });
 
       return (
