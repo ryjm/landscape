@@ -33,7 +33,7 @@ export class ChatPage extends Component {
       numMessages: 0,
       scrollLocked: true,
       pendingMessages: [],
-      dmStationCreated: false,
+      // dmStationCreated: false,
       activatedMsg: {
         dateGroup: null,  // TODO: What's a good "0" value for Dates?
         date: null
@@ -101,23 +101,35 @@ export class ChatPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.createDMStationIfNeeded();
+    if (isDMStation(this.state.station)) {
+      // this.props.api.hall({
+      //   newdm: {
+      //     hos: "zod",
+      //     sis: ["marzod"]
+      //   }
+      // })
+    }
+
+    // this.createDMStationIfNeeded();
     this.updateNumMessagesLoaded(prevProps, prevState);
   }
 
-  createDMStationIfNeeded() {
-    if (this.props.store.dms.stored === true &&
-        isDMStation(this.state.station) &&
-        !this.props.store.dms.stations.includes(this.state.station.split("/")[1]) &&
-        !this.state.dmStationCreated)
-    {
-      // createDMStation(this.state.station, false);
-
-      this.setState({
-        dmStationCreated: true
-      });
-    }
-  }
+  // createDMStationIfNeeded() {
+  //   if
+  //
+  //
+  //   if (this.props.store.dms.stored === true &&
+  //       isDMStation(this.state.station) &&
+  //       !this.props.store.dms.stations.includes(this.state.station.split("/")[1]) &&
+  //       !this.state.dmStationCreated)
+  //   {
+  //     // createDMStation(this.state.station, false);
+  //
+  //     this.setState({
+  //       dmStationCreated: true
+  //     });
+  //   }
+  // }
 
   updateNumMessagesLoaded(prevProps, prevState) {
     let station = prevProps.store.messages.stations[this.state.station] || [];

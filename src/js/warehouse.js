@@ -4,7 +4,7 @@ import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
 import { NamesReducer } from '/reducers/names';
 import { PublicReducer } from '/reducers/public';
-import { DmsReducer } from '/reducers/dms';
+import { CirclesReducer } from '/reducers/circles';
 import { router } from '/router';
 import { PAGE_STATUS_READY, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
 
@@ -44,6 +44,7 @@ class UrbitWarehouse {
       },
       names: {},
       public: {},
+      circles: [],
       dms: {
         stored: false,
         stations: []
@@ -57,7 +58,7 @@ class UrbitWarehouse {
     this.viewsReducer = new ViewsReducer();
     this.namesReducer = new NamesReducer();
     this.publicReducer = new PublicReducer();
-    this.dmsReducer = new DmsReducer();
+    this.circlesReducer = new CirclesReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
     this.storeReports = this.storeReports.bind(this);
@@ -116,7 +117,7 @@ class UrbitWarehouse {
     this.configsReducer.reduce(newReports, this.store);
     this.viewsReducer.reduce(newReports, this.store);
     this.namesReducer.reduce(newReports, this.store);
-    this.dmsReducer.reduce(newReports, this.store);
+    this.circlesReducer.reduce(newReports, this.store);
     this.publicReducer.reduce(newReports, this.store);
 
     console.log('full store = ', this.store);
