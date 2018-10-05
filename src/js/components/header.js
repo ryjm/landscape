@@ -277,7 +277,7 @@ export class Header extends Component {
         return (
           <React.Fragment>
             <a className="text-host-breadcrumb" key={display} href={href}>{display}</a>
-            <span className="text-host-breadcrumb ml-2 mr-2">/</span>
+            <span className="text-host-breadcrumb text-600 ml-2 mr-2">/</span>
           </React.Fragment>
         )
       })
