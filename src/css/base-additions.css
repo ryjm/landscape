@@ -53,8 +53,7 @@ form {
 body, p, input[type="text"], textarea, .text-body {
   font-size: 14px;
   line-height: 24px;
-
-  font-family: "San Francisco Text", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   color: #000;
 }
 

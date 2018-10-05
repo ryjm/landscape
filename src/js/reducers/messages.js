@@ -119,7 +119,6 @@ export class MessagesReducer {
     //   },
     //   ...ret
     // ];
-
     store.messages.inbox.messages = ret;
   }
 
