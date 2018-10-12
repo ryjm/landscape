@@ -86,6 +86,17 @@ export class ChatPage extends Component {
   }
 
   componentDidMount() {
+    if (isDMStation(this.state.station)) {
+      let cir = this.state.station.split("/")[1];
+      this.props.api.hall({
+        newdm: {
+          sis: cir.split(".")
+        }
+      })
+    }
+
+    // TODO: Not exactly guaranteed to execute after "newdm" action -- probably
+    // conditional this to execute when "circles" returns, if not existing yet
     let path = `/circle/${this.state.circle}/config-l/grams/-20`;
 
     this.props.api.bind(path, "PUT", this.state.host);
@@ -101,35 +112,8 @@ export class ChatPage extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (isDMStation(this.state.station)) {
-      // this.props.api.hall({
-      //   newdm: {
-      //     hos: "zod",
-      //     sis: ["marzod"]
-      //   }
-      // })
-    }
-
-    // this.createDMStationIfNeeded();
     this.updateNumMessagesLoaded(prevProps, prevState);
   }
-
-  // createDMStationIfNeeded() {
-  //   if
-  //
-  //
-  //   if (this.props.store.dms.stored === true &&
-  //       isDMStation(this.state.station) &&
-  //       !this.props.store.dms.stations.includes(this.state.station.split("/")[1]) &&
-  //       !this.state.dmStationCreated)
-  //   {
-  //     // createDMStation(this.state.station, false);
-  //
-  //     this.setState({
-  //       dmStationCreated: true
-  //     });
-  //   }
-  // }
 
   updateNumMessagesLoaded(prevProps, prevState) {
     let station = prevProps.store.messages.stations[this.state.station] || [];

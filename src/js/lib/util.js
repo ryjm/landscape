@@ -274,7 +274,7 @@ export function getMessageContent(msg) {
         postUrl: `/~~/${jason.owner}/==/${jason.path.join('/')}`,
       }
     },
-    'sep.inv.cir': 'inv',
+    'sep.inv': 'inv',
     'sep.lin.msg': 'lin',
     'sep.url': 'url',
     'sep.exp': (msg) => {

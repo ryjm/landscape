@@ -73,57 +73,43 @@ export class UrbitOperator {
     });
   }
 
-  // quietlyAcceptDmInvites(msgs) {
-  //   msgs.forEach(msg => {
-  //     let details = getMessageContent(msg);
-  //     let xenoStation = details.content;
-  //
-  //     if (details.type === "inv" &&
-  //         isDMStation(xenoStation) &&
-  //         xenoStation !== "~zod/null") {
-  //
-  //       let circle = xenoStation.split("/")[1];
-  //
-  //       if (!warehouse.store.dms.stations.includes(circle)) {
-  //         // createDMStation(xenoStation, true);
-  //       }
-  //
-  //       let newSep = {
-  //         sep: {
-  //           inv: {
-  //             inv: true,
-  //             cir: "~zod/null"
-  //           }
-  //         },
-  //         wen: (new Date()).getTime()
-  //       };
-  //
-  //       api.hall({convey: [{
-  //         ...msg,
-  //         ...newSep
-  //       }]});
-  //     }
-  //   })
-  // }
+  quietlyAcceptDmInvites(msgs) {
+    msgs.forEach(msg => {
+      let details = getMessageContent(msg);
+      let xenoStation = details.content;
 
-  // bindQuietDmInvites() {
-  //   // Automatically accept DM invite messages
-  //   warehouse.pushCallback('circles', rep => {
-  //     warehouse.pushCallback('circle.gram', (rep) => {
-  //       this.quietlyAcceptDmInvites([rep.data.gam]);
-  //
-  //       return false;
-  //     })
-  //
-  //     warehouse.pushCallback('circle.nes', (rep) => {
-  //       this.quietlyAcceptDmInvites(rep.data.map(m => m.gam));
-  //
-  //       return false;
-  //     })
-  //
-  //     return true;
-  //   });
-  // }
+      // TODO: Don't fire this if the invite has already been accepted.
+      if (details.type === "inv" &&
+          isDMStation(xenoStation)) {
+
+        let cir = xenoStation.split("/")[1];
+        this.props.api.hall({
+          newdm: {
+            sis: cir.split(".")
+          }
+        });
+      }
+    })
+  }
+
+  bindQuietDmInvites() {
+    // Automatically accept DM invite messages
+    warehouse.pushCallback('circles', rep => {
+      warehouse.pushCallback('circle.gram', (rep) => {
+        this.quietlyAcceptDmInvites([rep.data.gam]);
+
+        return false;
+      })
+
+      warehouse.pushCallback('circle.nes', (rep) => {
+        this.quietlyAcceptDmInvites(rep.data.map(m => m.gam));
+
+        return false;
+      })
+
+      return true;
+    });
+  }
 
   bindShortcuts() {
     Mousetrap.bind(["mod+k"], () => {
@@ -131,24 +117,6 @@ export class UrbitOperator {
         type: "menu.toggle"
       }]);
     });
-  }
-
-  createAndBindAggregators() {
-    if (!warehouse.store.circles.includes("i")) {
-      api.hall({
-        create: {
-          nom: "i",
-          des: "landscape-invites",
-          sec: "mailbox"
-        }
-      });
-
-      warehouse.pushCallback('circles', rep => {
-        api.bind("/circle/i/grams/0", "PUT");
-      });
-    } else {
-      api.bind("/circle/i/grams/0", "PUT");
-    }
   }
 
   initializeLandscape() {
@@ -161,8 +129,9 @@ export class UrbitOperator {
 
       // inbox messages
       api.bind("/circle/inbox/grams/-50", "PUT");
+      api.bind("/circle/i/grams/0", "PUT");
 
-      this.createAndBindAggregators();
+      // this.createAndBindAggregators();
 
       return true;
     });
