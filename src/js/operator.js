@@ -46,9 +46,8 @@ export class UrbitOperator {
   start() {
     if (api.authTokens) {
       this.runPoll();
-      this.bindInbox();
+      this.initializeLandscape();
       this.bindShortcuts();
-      this.bindQuietDmInvites();
       this.setCleanupTasks();
     } else {
       console.error("~~~ ERROR: Must set api.authTokens before operation ~~~");
@@ -79,30 +78,16 @@ export class UrbitOperator {
       let details = getMessageContent(msg);
       let xenoStation = details.content;
 
+      // TODO: Don't fire this if the invite has already been accepted.
       if (details.type === "inv" &&
-          isDMStation(xenoStation) &&
-          xenoStation !== "~zod/null") {
+          isDMStation(xenoStation)) {
 
-        let circle = xenoStation.split("/")[1];
-
-        if (!warehouse.store.dms.stations.includes(circle)) {
-          // createDMStation(xenoStation, true);
-        }
-
-        let newSep = {
-          sep: {
-            inv: {
-              inv: true,
-              cir: "~zod/null"
-            }
-          },
-          wen: (new Date()).getTime()
-        };
-
-        api.hall({convey: [{
-          ...msg,
-          ...newSep
-        }]});
+        let cir = xenoStation.split("/")[1];
+        this.props.api.hall({
+          newdm: {
+            sis: cir.split(".")
+          }
+        });
       }
     })
   }
@@ -134,7 +119,7 @@ export class UrbitOperator {
     });
   }
 
-  bindInbox() {
+  initializeLandscape() {
     // owner's circles
     api.bind(`/circles/~${api.authTokens.ship}`, "PUT");
 
@@ -144,6 +129,9 @@ export class UrbitOperator {
 
       // inbox messages
       api.bind("/circle/inbox/grams/-50", "PUT");
+      api.bind("/circle/i/grams/0", "PUT");
+
+      // this.createAndBindAggregators();
 
       return true;
     });
