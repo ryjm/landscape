@@ -76,39 +76,20 @@ export class UrbitOperator {
   quietlyAcceptDmInvites(msgs) {
     msgs.forEach(msg => {
       let details = getMessageContent(msg);
-      let xenoStation = details.content;
+      let xenoStation = details.content.cir;
 
       // TODO: Don't fire this if the invite has already been accepted.
       if (details.type === "inv" &&
           isDMStation(xenoStation)) {
 
         let cir = xenoStation.split("/")[1];
-        this.props.api.hall({
+        api.hall({
           newdm: {
             sis: cir.split(".")
           }
         });
       }
     })
-  }
-
-  bindQuietDmInvites() {
-    // Automatically accept DM invite messages
-    warehouse.pushCallback('circles', rep => {
-      warehouse.pushCallback('circle.gram', (rep) => {
-        this.quietlyAcceptDmInvites([rep.data.gam]);
-
-        return false;
-      })
-
-      warehouse.pushCallback('circle.nes', (rep) => {
-        this.quietlyAcceptDmInvites(rep.data.map(m => m.gam));
-
-        return false;
-      })
-
-      return true;
-    });
   }
 
   bindShortcuts() {
@@ -129,7 +110,19 @@ export class UrbitOperator {
 
       // inbox messages
       api.bind("/circle/inbox/grams/-50", "PUT");
-      api.bind("/circle/i/grams/0", "PUT");
+      api.bind("/circle/i/grams/-999", "PUT");
+
+      warehouse.pushCallback('circle.gram', (rep) => {
+        this.quietlyAcceptDmInvites([rep.data.gam]);
+
+        return false;
+      })
+
+      warehouse.pushCallback('circle.nes', (rep) => {
+        this.quietlyAcceptDmInvites(rep.data.map(m => m.gam));
+
+        return false;
+      })
 
       // this.createAndBindAggregators();
 
