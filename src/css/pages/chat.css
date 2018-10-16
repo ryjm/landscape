@@ -12,6 +12,10 @@
   flex-basis: 56px;
 }
 
+.flex-chat-input .chat-sigil {
+  margin-top: 12px;
+}
+
 /***
   Styles
 ***/

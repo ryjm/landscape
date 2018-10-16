@@ -78,6 +78,7 @@ input.command-menu-input[disabled] {
 
 .command-item-selected {
   background-color: #F6F6F6;
+  font-weight: 600;
 }
 
 .command-help a {

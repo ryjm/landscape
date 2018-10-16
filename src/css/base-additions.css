@@ -61,7 +61,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, button, .btn, .text-heading {
   font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-label, .text-mono, .text-mono-bold, .text-mono-light, .text-timestamp, .text-host-breadcrumb {
+label, .text-mono, .text-mono-bold, .text-mono-light, .text-timestamp, .text-host-breadcrumb, .command-item {
   font-family: "Source Code Pro", "Roboto mono", "Courier New", monospace;
 }
 

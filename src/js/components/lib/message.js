@@ -127,7 +127,7 @@ export class Message extends Component {
     } else if (this.props.details.type === "url") {
         if (/(jpg|img|png|gif|tiff|jpeg|JPG|IMG|PNG|TIFF)$/.exec(this.props.details.content)) {
           return (
-            <img src={this.props.details.content} style={{width:"100%"}}></img>
+            <img src={this.props.details.content} style={{width:"30%"}}></img>
           )
         }
         else {
