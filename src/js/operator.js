@@ -120,6 +120,11 @@ export class UrbitOperator {
       warehouse.pushCallback('circle.nes', (rep) => {
         this.quietlyAcceptDmInvites(rep.data.map(m => m.gam));
 
+        warehouse.storeReports([{
+          type: REPORT_PAGE_STATUS,
+          data: PAGE_STATUS_READY
+        }]);
+
         return false;
       })
 

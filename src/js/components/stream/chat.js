@@ -103,6 +103,11 @@ export class ChatPage extends Component {
 
     this.scrollIfLocked();
     this.bindShortcuts();
+
+    this.props.storeReports([{
+      type: REPORT_PAGE_STATUS,
+      data: PAGE_STATUS_PROCESSING
+    }]);
   }
 
   componentWillUnmount() {

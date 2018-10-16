@@ -6,7 +6,7 @@ import { NamesReducer } from '/reducers/names';
 import { PublicReducer } from '/reducers/public';
 // import { CirclesReducer } from '/reducers/circles';
 import { router } from '/router';
-import { PAGE_STATUS_READY, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
+import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
 
 const REPORT_KEYS = [
   'circle.gram',
@@ -39,7 +39,7 @@ class UrbitWarehouse {
       },
       configs: {},
       views: {
-        transition: PAGE_STATUS_READY,
+        transition: PAGE_STATUS_PROCESSING,
         inbox: "inbox-recent"
       },
       names: {},
