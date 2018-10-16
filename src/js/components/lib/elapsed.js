@@ -16,7 +16,8 @@ export class Elapsed extends Component {
   }
 
   renderTime() {
-    const serverTime = new Date(esoo(this.props.timestring));
+    let parsed = esoo(this.props.timestring);
+    const serverTime = new Date(parsed ? parsed : this.props.timestring);
     const clientTime = new Date(); // local
     return secToString((clientTime - serverTime) / 1000).split(' ')[0];
   }
