@@ -76,18 +76,17 @@ export class UrbitOperator {
   quietlyAcceptDmInvites(msgs) {
     msgs.forEach(msg => {
       let details = getMessageContent(msg);
-      let xenoStation = details.content.cir;
-
-      // TODO: Don't fire this if the invite has already been accepted.
-      if (details.type === "inv" &&
-          isDMStation(xenoStation)) {
-
-        let cir = xenoStation.split("/")[1];
-        api.hall({
-          newdm: {
-            sis: cir.split(".")
-          }
-        });
+      if (details.type === "inv") {
+        let xenoStation = details.content.cir;
+        // TODO: Don't fire this if the invite has already been accepted.
+        if (isDMStation(xenoStation)) {
+          let cir = xenoStation.split("/")[1];
+          api.hall({
+            newdm: {
+              sis: cir.split(".")
+            }
+          });
+        }
       }
     })
   }
