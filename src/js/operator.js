@@ -99,8 +99,28 @@ export class UrbitOperator {
     });
   }
 
+  eagerFetchExtConfs() {
+    Object.keys(warehouse.store.configs).forEach(station => {
+      let stationDetails = getStationDetails(station);
+      let isCollection = ['collection-post', 'collection-index'].includes(stationDetails.type);
+      let noExtConf = !warehouse.store.configs[station].extConf;
+      if (isCollection && noExtConf) {
+        fetch(`${stationDetails.stationUrl}.x-collections-json`, {
+          credentials: "same-origin",
+          // signal: controller.signal
+
+        }).then(res => {
+          return res.json();
+        }).then(extConfJson => {
+          console.log('extConf = ', extConfJson);
+        });
+        // Do stuff
+      }
+    })
+  }
+
   initializeLandscape() {
-    // owner's circles
+    // first step: bind to owner's circles
     api.bind(`/circles/~${api.authTokens.ship}`, "PUT");
 
     warehouse.pushCallback('circles', rep => {
@@ -109,26 +129,32 @@ export class UrbitOperator {
 
       // inbox messages
       api.bind("/circle/inbox/grams/-50", "PUT");
+
+      // bind to invite circle (shouldn't be subscribed to inbox)
       api.bind("/circle/i/grams/-999", "PUT");
 
-      warehouse.pushCallback('circle.gram', (rep) => {
-        this.quietlyAcceptDmInvites([rep.data.gam]);
+      warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
+        // Any message comes in to the /i circle
+        if (rep.from.path.split('/')[2] === "i") {
+          let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
+          this.quietlyAcceptDmInvites(msgs);
+        }
 
         return false;
       })
 
       warehouse.pushCallback('circle.nes', (rep) => {
-        this.quietlyAcceptDmInvites(rep.data.map(m => m.gam));
+        // First batch of inbox messages has gotten in
 
-        warehouse.storeReports([{
-          type: REPORT_PAGE_STATUS,
-          data: PAGE_STATUS_READY
-        }]);
-
-        return false;
-      })
-
-      // this.createAndBindAggregators();
+        if (rep.from.path.includes("inbox")) {
+          this.eagerFetchExtConfs();
+          warehouse.storeReports([{
+            type: REPORT_PAGE_STATUS,
+            data: PAGE_STATUS_READY
+          }]);
+          return false;
+        }
+      });
 
       return true;
     });
