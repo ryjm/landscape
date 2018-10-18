@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { getMessageContent, isDMStation, isRootCollection } from '/lib/util';
-
-const INBOX_MESSAGE_COUNT = 30;
+import { INBOX_MESSAGE_COUNT } from '/lib/constants';
 
 export class MessagesReducer {
   reduce(reports, store) {
@@ -52,6 +51,7 @@ export class MessagesReducer {
   storeStationMessages(messages, store) {
     messages.forEach((message) => {
       let msg = message.gam;
+      msg.num = message.num;
       msg.aud.forEach((aud) => {
         let msgClone = { ...msg, aud: [aud] };
         let station = store.messages.stations[aud]

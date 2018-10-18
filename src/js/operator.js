@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 import { warehouse } from '/warehouse';
 import { router } from '/router';
 import { getMessageContent, isDMStation } from '/lib/util';
-import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY } from '/lib/constants';
+import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
 
 const LONGPOLL_TIMEOUT = 10000;
 const LONGPOLL_TRYAGAIN = 30000;
@@ -107,14 +107,22 @@ export class UrbitOperator {
       if (isCollection && noExtConf) {
         fetch(`${stationDetails.stationUrl}.x-collections-json`, {
           credentials: "same-origin",
-          // signal: controller.signal
-
         }).then(res => {
           return res.json();
         }).then(extConfJson => {
           console.log('extConf = ', extConfJson);
+          let collName;
+          if (extConfJson.item) {
+            collName = extConfJson.item.meta.name;
+          } else {
+            collName = extConfJson.collection.meta.name;
+          }
+
+          warehouse.storeReports([{
+            type: "config.ext",
+            data: { station, extConf: { name: collName } }
+          }])
         });
-        // Do stuff
       }
     })
   }
@@ -128,7 +136,7 @@ export class UrbitOperator {
       api.bind("/circle/inbox/config/group-r/0", "PUT");
 
       // inbox messages
-      api.bind("/circle/inbox/grams/-50", "PUT");
+      api.bind(`/circle/inbox/grams/-${INBOX_MESSAGE_COUNT}`, "PUT");
 
       // bind to invite circle (shouldn't be subscribed to inbox)
       api.bind("/circle/i/grams/-999", "PUT");

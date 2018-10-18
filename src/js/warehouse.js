@@ -23,7 +23,8 @@ const REPORT_KEYS = [
   REPORT_PAGE_STATUS,
   REPORT_NAVIGATE,
   'public',
-  'menu.toggle'
+  'menu.toggle',
+  'config.ext'
 ]
 
 class UrbitWarehouse {

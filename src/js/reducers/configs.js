@@ -41,6 +41,10 @@ export class ConfigsReducer {
         case "circle.config.dif.remove":
           delete store.configs[rep.data.cir];
           break;
+        case "config.ext":
+          store.configs[rep.data.station] = store.configs[rep.data.station] || {};
+          store.configs[rep.data.station].extConf = rep.data.extConf;
+          break;
       }
     });
   }
