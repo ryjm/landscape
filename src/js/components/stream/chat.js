@@ -110,12 +110,6 @@ export class ChatPage extends Component {
     }]);
   }
 
-  componentWillUnmount() {
-    let path = `/circle/${this.state.circle}/config-l/grams/-20`;
-
-    this.props.api.bind(path, "DELETE", this.state.host);
-  }
-
   componentDidUpdate(prevProps, prevState) {
     this.updateNumMessagesLoaded(prevProps, prevState);
   }

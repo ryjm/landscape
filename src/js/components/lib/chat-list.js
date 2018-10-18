@@ -9,11 +9,6 @@ export class ChatList extends Component {
     this.props.api.bind(path, "PUT", this.props.hostship.slice(1));
   }
 
-  componentWillUnmount() {
-    let path = `/public`;
-
-    this.props.api.bind(path, "DELETE", this.props.hostship.slice(1));
-  }
   renderText() {
     if (this.props.store.public[this.props.hostship]) {
       const text = this.props.store.public[this.props.hostship].map((cir) => {

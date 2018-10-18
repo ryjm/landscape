@@ -35,12 +35,6 @@ export class TopicCreatePage extends Component {
     }
   }
 
-  componentWillUnmount() {
-    let path = `/circle/${this.state.details.namedCircle}/config-l/grams/-10`;
-
-    this.props.api.bind(path, "DELETE", this.state.details.hostship);
-  }
-
   getDetails(conProps, editMode) {
     let props = this.props || conProps;
     let details = {};
