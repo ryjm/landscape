@@ -343,7 +343,7 @@ export class ChatPage extends Component {
         <div className="flex-col-2 flex align-center justify-end">
           {msg.printship &&
             <a className="vanilla chat-sigil" href={prettyShip(msg.aut)[1]}>
-              {sealDict.getSeal(msg.aut, 18)}
+              {sealDict.getSeal(msg.aut, 18, true)}
             </a>
           }
         </div>
@@ -380,7 +380,7 @@ export class ChatPage extends Component {
         <div className="row mt-3 flex-chat-input">
           <div className="flex-col-2 flex justify-end">
             <a className="vanilla chat-sigil" href={prettyShip(api.authTokens.ship)[1]}>
-              {sealDict.getSeal(api.authTokens.ship, 18)}
+              {sealDict.getSeal(api.authTokens.ship, 18, true)}
             </a>
           </div>
           <div className="flex-col-x">

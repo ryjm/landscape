@@ -70,12 +70,12 @@ export class SealDict {
     return patp.length === 3 ? patp : patp.substr(-3, 3);
   }
 
-  getSeal(patp, size) {
-    let suffix = this.getSuffix(patp);
-    let key = `${suffix}+${size}`;
+  getSeal(patp, size, suffix) {
+    let sigilShip = suffix ? this.getSuffix(patp) : patp;
+    let key = `${sigilShip}+${size}`;
 
     if (!this.dict[key]) {
-      this.dict[key] = pour({size: size, patp: suffix, renderer: ReactSVGComponents, margin: 0, colorway: ["#000", "#fff"]})
+      this.dict[key] = pour({size: size, patp: sigilShip, renderer: ReactSVGComponents, margin: 0, colorway: ["#000", "#fff"]})
     }
 
     return this.dict[key];

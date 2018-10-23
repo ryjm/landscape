@@ -142,7 +142,8 @@
               ;div.mr-2
                 =urb-component  "Sigil"
                 =urb-ship       "{(trip owner)}"
-                =urb-size       "18";
+                =urb-size       "18"
+                =urb-suffix     "true";
               ;div
                 ;a.vanilla.text-mono.text-small.text-700.mr-4
                   =href  "/~~/landscape/profile"
