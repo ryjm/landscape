@@ -5,6 +5,7 @@ import { warehouse } from '/warehouse';
 import { router } from '/router';
 import { getMessageContent, isDMStation } from '/lib/util';
 import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
+import urbitOb from 'urbit-ob';
 
 const LONGPOLL_TIMEOUT = 10000;
 const LONGPOLL_TRYAGAIN = 30000;
@@ -142,10 +143,31 @@ export class UrbitOperator {
       api.bind("/circle/i/grams/-999", "PUT");
 
       warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
+        let circle = rep.from.path.split('/')[2];
+
+        // do nothing with gram binds to foreign ships
+        if (urbitOb.isShip(circle)) return;
+
         // Any message comes in to the /i circle
-        if (rep.from.path.split('/')[2] === "i") {
+        if (circle === "i") {
           let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
           this.quietlyAcceptDmInvites(msgs);
+        }
+
+        let lastReadNum;
+        if (_.isArray(rep.data) && rep.data.length > 0) {
+          lastReadNum = _.nth(rep.data, -1).num;
+        } else {
+          lastReadNum = rep.data.num;
+        }
+
+        if (lastReadNum) {
+          api.hall({
+            read: {
+              nom: circle,
+              red: lastReadNum
+            }
+          });
         }
 
         return false;
