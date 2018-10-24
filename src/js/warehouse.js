@@ -24,7 +24,8 @@ const REPORT_KEYS = [
   REPORT_NAVIGATE,
   'public',
   'menu.toggle',
-  'config.ext'
+  'config.ext',
+  'inbox.sources-loaded'
 ]
 
 class UrbitWarehouse {

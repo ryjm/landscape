@@ -186,6 +186,15 @@ export class UrbitOperator {
         }
       });
 
+      warehouse.pushCallback('circle.cos.loc', (rep) => {
+        let fromCircle = rep.from && rep.from.path.split("/")[2];
+        let fromInbox = fromCircle === "inbox";
+
+        warehouse.storeReports([{
+          type: "inbox.sources-loaded",
+        }]);
+      });
+
       return true;
     });
 

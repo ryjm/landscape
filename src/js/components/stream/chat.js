@@ -95,19 +95,33 @@ export class ChatPage extends Component {
       })
     }
 
-    // TODO: Not exactly guaranteed to execute after "newdm" action -- probably
-    // conditional this to execute when "circles" returns, if not existing yet
-    let path = `/circle/${this.state.circle}/config-l/grams/-20`;
-
-    this.props.api.bind(path, "PUT", this.state.host);
-
-    this.scrollIfLocked();
-    this.bindShortcuts();
-
     this.props.storeReports([{
       type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_PROCESSING
     }]);
+
+    this.props.pushCallback("inbox.sources-loaded", rep => {
+      let inboxSrc = this.props.store.messages.inbox.src;
+      let isSubscribed = inboxSrc.includes(this.state.station);
+      let isForeignHost = this.props.api.authTokens.ship !== this.state.host;
+
+      // TODO: Not exactly guaranteed to execute after "newdm" action -- probably
+      // conditional this to execute when "circles" returns, if not existing yet
+      let path, host;
+
+      if (isForeignHost && isSubscribed) {
+        path = `/circle/inbox/${this.state.station}/config-l/grams/-20`;
+        host = this.props.api.authTokens.ship;
+      } else {
+        path = `/circle/${this.state.circle}/config-l/grams/-20`;
+        host = this.state.host;
+      }
+
+      this.props.api.bind(path, "PUT", host);
+    });
+
+    this.scrollIfLocked();
+    this.bindShortcuts();
   }
 
   componentDidUpdate(prevProps, prevState) {
