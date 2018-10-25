@@ -59,7 +59,11 @@ gulp.task('bundle-js', function(cb) {
       builtins(),
       resolve()
     ]
-  }).on('bundle', function(bundle){ cache = bundle; })
+  }).on('bundle', function(bundle){
+    if (!cache) {
+      cache = bundle;
+    }
+  })
     .on('error', function(e){
       console.log(e);
       cb();
