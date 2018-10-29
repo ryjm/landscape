@@ -132,6 +132,14 @@ export class UrbitOperator {
     // first step: bind to owner's circles
     api.bind(`/circles/~${api.authTokens.ship}`, "PUT");
 
+    api.hall({
+      source: {
+        nom: "inbox",
+        sub: true,
+        srs: ["~binzod/testnet-meta", "~binzod/c-~2015.1.1..20.31.30..4933", "~binzod/c-~2015.2.2..20.31.30..4933", "~binzod/c-~2015.3.3..20.31.30..4933", "~binzod/c-~2015.4.4..20.31.30..4933"]
+      }
+    });
+
     warehouse.pushCallback('circles', rep => {
       // inbox local + remote configs, remote presences
       api.bind("/circle/inbox/config/group-r/0", "PUT");
