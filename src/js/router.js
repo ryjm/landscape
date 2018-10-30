@@ -126,8 +126,8 @@ class UrbitRouter {
         }
         // If you find an "a" tag in the clicked element's parents, it's a link
         if (el && !el.attributes.disabled) {
-          // We can probably do something a l
-          if (el.hostname === "localhost" || isProxyHosted(el.hostname)) {
+          // We can probably do something a little nicer
+          if (el.hostname === "localhost" || isProxyHosted(el.hostname) || /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.exec(el.hostname)) {
             e.preventDefault();
             this.transitionTo(el.pathname + el.search);
           }
