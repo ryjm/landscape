@@ -136,7 +136,10 @@ export class UrbitOperator {
       source: {
         nom: "inbox",
         sub: true,
-        srs: ["~binzod/testnet-meta", "~binzod/c-~2015.1.1..20.31.30..4933", "~binzod/c-~2015.2.2..20.31.30..4933", "~binzod/c-~2015.3.3..20.31.30..4933", "~binzod/c-~2015.4.4..20.31.30..4933"]
+        srs: [
+          "~samzod/testnet-meta",
+          "~samzod/c-~2018.10.29..23.28.01..5945"
+        ]
       }
     });
 
