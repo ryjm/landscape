@@ -291,12 +291,12 @@ export class ChatPage extends Component {
     if (!this.presence) {
       this.presence = true;
 
-      this.props.api.hall({
-        notify: {
-          aud: [station],
-          pes: "idle"
-        }
-      });
+      // this.props.api.hall({
+      //   notify: {
+      //     aud: [station],
+      //     pes: "idle"
+      //   }
+      // });
     }
   }
 
