@@ -44,6 +44,7 @@ class UrbitWarehouse {
         transition: PAGE_STATUS_PROCESSING,
         inbox: "inbox-recent"
       },
+      reads: {},
       names: {},
       public: {},
       circles: [],

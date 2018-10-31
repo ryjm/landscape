@@ -31,6 +31,7 @@ export class ChatPage extends Component {
       message: "",
       invitee: "",
       numMessages: 0,
+      lastBatchRequested: 0,
       scrollLocked: true,
       pendingMessages: [],
       // dmStationCreated: false,
@@ -101,27 +102,33 @@ export class ChatPage extends Component {
     }]);
 
     this.props.pushCallback("inbox.sources-loaded", rep => {
-      let inboxSrc = this.props.store.messages.inbox.src;
-      let isSubscribed = inboxSrc.includes(this.state.station);
-      let isForeignHost = this.props.api.authTokens.ship !== this.state.host;
-
-      // TODO: Not exactly guaranteed to execute after "newdm" action -- probably
-      // conditional this to execute when "circles" returns, if not existing yet
-      let path, host;
-
-      if (isForeignHost && isSubscribed) {
-        path = `/circle/inbox/${this.state.station}/config-l/grams/-20`;
-        host = this.props.api.authTokens.ship;
-      } else {
-        path = `/circle/${this.state.circle}/config-l/grams/-20`;
-        host = this.state.host;
-      }
-
-      this.props.api.bind(path, "PUT", host);
+      this.intelligentlyBindGramRange([-20]);
     });
 
     this.scrollIfLocked();
     this.bindShortcuts();
+  }
+
+  intelligentlyBindGramRange(range) {
+    let inboxSrc = this.props.store.messages.inbox.src;
+    let isSubscribed = inboxSrc.includes(this.state.station);
+    let isForeignHost = this.props.api.authTokens.ship !== this.state.host;
+
+    // TODO: Not exactly guaranteed to execute after "newdm" action -- probably
+    // conditional this to execute when "circles" returns, if not existing yet
+    let path, host;
+
+    if (isForeignHost && isSubscribed) {
+      path = `/circle/inbox/${this.state.station}/config-l/grams/${range.join("/")}`;
+      host = this.props.api.authTokens.ship;
+    } else {
+      path = `/circle/${this.state.circle}/config-l/grams/${range.join("/")}`;
+      host = this.state.host;
+    }
+
+    console.log("intelligently bind gram");
+
+    return this.props.api.bind(path, "PUT", host);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -150,15 +157,20 @@ export class ChatPage extends Component {
   requestChatBatch() {
     let newNumMessages = this.state.numMessages + 50;
 
+    if (newNumMessages === this.state.lastBatchRequested) {
+      return;
+    }
+
     this.props.storeReports([{
       type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_PROCESSING
     }])
 
-    let path = `/circle/${this.state.circle}/grams/-${newNumMessages}/-${this.state.numMessages}`;
+    console.log("request chat batch");
 
-    this.props.api.bind(path, "PUT", this.state.host)
+    this.intelligentlyBindGramRange([newNumMessages * -1, this.state.numMessages * -1])
       .then((res) => {
+        console.log("intelligently bind gram response");
         if (res.status === 500) {
           this.props.storeReports([{
             type: REPORT_PAGE_STATUS,
@@ -173,6 +185,10 @@ export class ChatPage extends Component {
         data: PAGE_STATUS_READY
       }])
     })
+
+    this.setState({
+      lastBatchRequested: newNumMessages
+    });
   }
 
   onScrollStop() {
