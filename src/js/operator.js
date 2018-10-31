@@ -80,13 +80,26 @@ export class UrbitOperator {
       if (details.type === "inv") {
         let xenoStation = details.content.cir;
         // TODO: Don't fire this if the invite has already been accepted.
+
         if (isDMStation(xenoStation)) {
-          let cir = xenoStation.split("/")[1];
-          api.hall({
-            newdm: {
-              sis: cir.split(".")
-            }
+          let xenoCir = xenoStation.split("/")[1];
+
+          let existingDMStation = _.find(Object.keys(warehouse.store.configs), station => {
+            let host = station.split("/")[0];
+            let cir = station.split("/")[1];
+
+            return (host === `~${api.authTokens.ship}` && cir === xenoCir)
           });
+
+          if (!existingDMStation) {
+            api.hall({
+              newdm: {
+                sis: cir.split(".")
+              }
+            });
+          } else {
+            console.log("test1 found station: ", existingDMStation);
+          }
         }
       }
     })
@@ -131,17 +144,6 @@ export class UrbitOperator {
   initializeLandscape() {
     // first step: bind to owner's circles
     api.bind(`/circles/~${api.authTokens.ship}`, "PUT");
-
-    api.hall({
-      source: {
-        nom: "inbox",
-        sub: true,
-        srs: [
-          "~samzod/testnet-meta",
-          "~samzod/c-~2018.10.29..23.28.01..5945"
-        ]
-      }
-    });
 
     warehouse.pushCallback('circles', rep => {
       // inbox local + remote configs, remote presences
@@ -209,9 +211,26 @@ export class UrbitOperator {
         let fromCircle = rep.from && rep.from.path.split("/")[2];
         let fromInbox = fromCircle === "inbox";
 
-        warehouse.storeReports([{
-          type: "inbox.sources-loaded",
-        }]);
+        if (fromInbox) {
+          warehouse.storeReports([{
+            type: "inbox.sources-loaded",
+          }]);
+
+          if (!warehouse.store.messages.inbox.src.includes("~samzod/testnet-meta")) {
+            api.hall({
+              source: {
+                nom: "inbox",
+                sub: true,
+                srs: [
+                  "~samzod/testnet-meta",
+                  "~samzod/c-~2018.10.29..23.28.01..5945"
+                ]
+              }
+            });            
+          }
+        }
+
+        return false;
       });
 
       return true;
