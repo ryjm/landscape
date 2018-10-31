@@ -172,13 +172,21 @@ export class UrbitOperator {
           lastReadNum = rep.data.num;
         }
 
-        if (lastReadNum) {
+        if (lastReadNum && warehouse.store.configs[`~${api.authTokens.ship}/${circle}`].lastReadNum < lastReadNum) {
           api.hall({
             read: {
               nom: circle,
               red: lastReadNum
             }
           });
+
+          warehouse.storeReports([{
+            type: "circle.read",
+            data: {
+              station: `~${api.authTokens.ship}/${circle}`,
+              lastReadNum
+            }
+          }])
         }
 
         return false;

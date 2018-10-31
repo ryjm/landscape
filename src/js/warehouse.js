@@ -25,7 +25,8 @@ const REPORT_KEYS = [
   'public',
   'menu.toggle',
   'config.ext',
-  'inbox.sources-loaded'
+  'inbox.sources-loaded',
+  'circle.read'
 ]
 
 class UrbitWarehouse {
@@ -60,7 +61,7 @@ class UrbitWarehouse {
     this.configsReducer = new ConfigsReducer();
     this.viewsReducer = new ViewsReducer();
     this.namesReducer = new NamesReducer();
-    this.publicReducer = new PublicReducer();
+    // this.publicReducer = new PublicReducer();
     // this.circlesReducer = new CirclesReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
@@ -121,7 +122,7 @@ class UrbitWarehouse {
     this.viewsReducer.reduce(newReports, this.store);
     this.namesReducer.reduce(newReports, this.store);
     // this.circlesReducer.reduce(newReports, this.store);
-    this.publicReducer.reduce(newReports, this.store);
+    // this.publicReducer.reduce(newReports, this.store);
 
     console.log('full store = ', this.store);
 
