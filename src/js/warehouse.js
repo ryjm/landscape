@@ -5,7 +5,7 @@ import { ViewsReducer } from '/reducers/views';
 import { NamesReducer } from '/reducers/names';
 import { PublicReducer } from '/reducers/public';
 // import { CirclesReducer } from '/reducers/circles';
-import { router } from '/router';
+// import { router } from '/router';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
 
 const REPORT_KEYS = [
@@ -126,7 +126,7 @@ class UrbitWarehouse {
     console.log('full store = ', this.store);
 
     this.processPending(newReports);
-    router.renderRoot();
+    // router.renderRoot();
   }
 
   processPending(reports) {

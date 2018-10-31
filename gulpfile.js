@@ -2,7 +2,8 @@ var gulp = require('gulp');
 var cssimport = require('gulp-cssimport');
 var cssnano = require('gulp-cssnano');
 
-var rollup = require('rollup-stream');
+// var rollup = require('rollup-stream');
+var rollup = require('gulp-better-rollup');
 var source = require('vinyl-source-stream');
 
 var babel = require('rollup-plugin-babel');
@@ -31,47 +32,85 @@ gulp.task('bundle-css', function() {
     .pipe(gulp.dest('./urbit-code/web/landscape/css'));
 });
 
-var cache;
+// var cache;
 
 gulp.task('bundle-js', function(cb) {
-  return rollup({
-    input: './src/index.js',
-    cache: cache,
-    format: "umd",
-    plugins: [
-      babel({
-        ignore: ['src/js/vendor/**', 'node_modules/**']
-      }),
-      commonjs({
-        namedExports: {
-          'node_modules/react/index.js': [ 'Component' ]
-        }
-      }),
-      replace({
-        'process.env.NODE_ENV': JSON.stringify('development')
-      }),
-      rootImport({
-        root: `${__dirname}/src/js`,
-        useEntry: 'prepend',
-        extensions: '.js'
-      }),
-      json(),
-      builtins(),
-      resolve()
-    ]
-  }).on('bundle', function(bundle){
-    if (!cache) {
-      cache = bundle;
-    }
-  })
+  gulp.src('src/index.js')
+    .pipe(rollup({
+      // format: "umd",
+      plugins: [
+        babel({
+          ignore: ['src/js/vendor/**', 'node_modules/**']
+        }),
+        commonjs({
+          namedExports: {
+            'node_modules/react/index.js': [ 'Component' ]
+          }
+        }),
+        replace({
+          'process.env.NODE_ENV': JSON.stringify('development')
+        }),
+        rootImport({
+          root: `${__dirname}/src/js`,
+          useEntry: 'prepend',
+          extensions: '.js'
+        }),
+        json(),
+        builtins(),
+        resolve()
+      ]
+    }, 'umd'))
     .on('error', function(e){
       console.log(e);
       cb();
     })
-    .pipe(source('index.js'))
+    // .pipe(source('index.js'))
     .pipe(gulp.dest('./urbit-code/web/landscape/js/'))
     .on('end', cb);
 });
+
+// gulp.task('bundle-js', function(cb) {
+//   return rollup({
+//     input: './src/index.js',
+//     cache: cache,
+//     format: "umd",
+//     plugins: [
+//       babel({
+//         ignore: ['src/js/vendor/**', 'node_modules/**']
+//       }),
+//       commonjs({
+//         namedExports: {
+//           'node_modules/react/index.js': [ 'Component' ]
+//         }
+//       }),
+//       replace({
+//         'process.env.NODE_ENV': JSON.stringify('development')
+//       }),
+//       rootImport({
+//         root: `${__dirname}/src/js`,
+//         useEntry: 'prepend',
+//         extensions: '.js'
+//       }),
+//       json(),
+//       builtins(),
+//       resolve()
+//     ]
+//   }).on('bundle', function(bundle){
+//     // console.log("bundle = ", bundle);
+//     console.log("bundle.cache = ", bundle.cache);
+//
+//     if (!cache) {
+//       cache = bundle;
+//     }
+//   })
+//     .on('error', function(e){
+//       console.log(e);
+//       cb();
+//     })
+//     .pipe(source('index.js'))
+//     .pipe(gulp.dest('./urbit-code/web/landscape/js/'))
+//     .on('end', cb);
+// });
 
 gulp.task('copy-urbit', function () {
   let ret = gulp.src('urbit-code/**/*');
