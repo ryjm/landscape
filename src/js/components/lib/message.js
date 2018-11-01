@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { isDMStation, getMessageContent } from '/lib/util';
 import { Button } from '/components/lib/button';
-import { CollectionPreview } from '/components/collectionPreview';
 import { getStationDetails } from '/services';
 import { PAGE_STATUS_TRANSITIONING, REPORT_PAGE_STATUS } from '/lib/constants';
 

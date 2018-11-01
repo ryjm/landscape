@@ -126,8 +126,6 @@ export class ChatPage extends Component {
       host = this.state.host;
     }
 
-    console.log("intelligently bind gram");
-
     return this.props.api.bind(path, "PUT", host);
   }
 
@@ -166,11 +164,8 @@ export class ChatPage extends Component {
       data: PAGE_STATUS_PROCESSING
     }])
 
-    console.log("request chat batch");
-
     this.intelligentlyBindGramRange([newNumMessages * -1, this.state.numMessages * -1])
       .then((res) => {
-        console.log("intelligently bind gram response");
         if (res.status === 500) {
           this.props.storeReports([{
             type: REPORT_PAGE_STATUS,

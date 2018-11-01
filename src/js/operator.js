@@ -94,11 +94,9 @@ export class UrbitOperator {
           if (!existingDMStation) {
             api.hall({
               newdm: {
-                sis: cir.split(".")
+                sis: xenoCir.split(".")
               }
             });
-          } else {
-            console.log("test1 found station: ", existingDMStation);
           }
         }
       }
@@ -226,7 +224,7 @@ export class UrbitOperator {
                   "~samzod/c-~2018.10.29..23.28.01..5945"
                 ]
               }
-            });            
+            });
           }
         }
 
