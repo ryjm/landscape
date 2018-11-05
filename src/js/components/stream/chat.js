@@ -17,7 +17,7 @@ export class ChatPage extends Component {
 
     this.presence = false;
 
-    // // TODO: This is bad. Issue is that queryParams aren't being loaded properly
+    // TODO: This is bad. Issue is that queryParams aren't being loaded properly
     let station = props.queryParams.station || "~zod/null";
 
     let circle = station.split("/")[1];

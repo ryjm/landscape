@@ -32,6 +32,15 @@ body {
   text-transform: capitalize;
 }
 
+.header-error-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 8px 16px;
+  background: black;
+  color: white;
+}
+
 .page-status {
   position: absolute;
   right: 10px;
@@ -42,6 +51,12 @@ body {
   width: 18px;
 
   background-color: #999;
+}
+
+.header-error-panel .page-status {
+  position: relative;
+  right: 7px;
+  top: 1px;
 }
 
 .page-status::after {
@@ -83,12 +98,6 @@ body {
 
 .page-status-quaternary::after {
   background-color: #FEBC98;
-}
-
-.sidebar {
-  position: absolute;
-  right: 24rem;
-  top: 48rem;
 }
 
 /*

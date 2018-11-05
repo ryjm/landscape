@@ -380,6 +380,10 @@ export class Header extends Component {
         <div className="row header-carpet">
           {headerCarpet}
         </div>
+        <div className="header-error-panel text-small flex">
+          <div className="page-status page-status-tertiary"></div>
+          <span>Connection to <span className="text-mono">~ravmel-rodpyl</span> failed</span>
+        </div>
       </div>
     )
   }
