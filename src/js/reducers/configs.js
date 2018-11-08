@@ -45,6 +45,10 @@ export class ConfigsReducer {
           store.configs[rep.data.station] = store.configs[rep.data.station] || {};
           store.configs[rep.data.station].extConf = rep.data.extConf;
           break;
+        case "circle.read":
+          store.configs[rep.data.station] = store.configs[rep.data.station] || {};
+          store.configs[rep.data.station].lastReadNum = rep.data.lastReadNum;
+          break;
       }
     });
   }

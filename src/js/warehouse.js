@@ -9,23 +9,40 @@ import { PublicReducer } from '/reducers/public';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
 
 const REPORT_KEYS = [
+        // /circle/<cir_name>/grams
+        // call automatically on inbox
+        // call automatically on /urbit-meta
+        // call automatically on any DM circles created
   'circle.gram',
   'circle.nes',
-  'circle.pes.loc',
-  'circle.pes.rem',
+        // /circle/<cir_name>/config-l
+        // used for loading inbox config
   'circle.cos.loc',
+        // /circle/<cir_name>/config-r
+        // used for loading inbox's sources' configs
   'circle.cos.rem',
+        // /circle/<cir_name>/config-l
+        // used for fora topic creation....maybe? let me check
   'circle.config.dif.full',
+        // /circle/<cir_name>/config-l
+        // used for subscription / unsubscription
   'circle.config.dif.source',
-  'circle.config.dif.permit/circle.config',
-  'circle.config.dif.remove/circle.config',
+        // /circles, required for initialization
   'circles',
-  REPORT_PAGE_STATUS,
-  REPORT_NAVIGATE,
-  'public',
+
+        // frontend specific, no server calls
   'menu.toggle',
   'config.ext',
-  'inbox.sources-loaded'
+  'inbox.sources-loaded',
+  'circle.read'
+  REPORT_PAGE_STATUS,
+  REPORT_NAVIGATE,
+        // unused events
+  // 'public',
+  // 'circle.config.dif.permit/circle.config',
+  // 'circle.config.dif.remove/circle.config',
+  // 'circle.pes.loc',
+  // 'circle.pes.rem',
 ]
 
 class UrbitWarehouse {
@@ -60,7 +77,7 @@ class UrbitWarehouse {
     this.configsReducer = new ConfigsReducer();
     this.viewsReducer = new ViewsReducer();
     this.namesReducer = new NamesReducer();
-    this.publicReducer = new PublicReducer();
+    // this.publicReducer = new PublicReducer();
     // this.circlesReducer = new CirclesReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
@@ -121,7 +138,7 @@ class UrbitWarehouse {
     this.viewsReducer.reduce(newReports, this.store);
     this.namesReducer.reduce(newReports, this.store);
     // this.circlesReducer.reduce(newReports, this.store);
-    this.publicReducer.reduce(newReports, this.store);
+    // this.publicReducer.reduce(newReports, this.store);
 
     console.log('full store = ', this.store);
 

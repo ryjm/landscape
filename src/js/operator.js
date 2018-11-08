@@ -80,13 +80,24 @@ export class UrbitOperator {
       if (details.type === "inv") {
         let xenoStation = details.content.cir;
         // TODO: Don't fire this if the invite has already been accepted.
+
         if (isDMStation(xenoStation)) {
-          let cir = xenoStation.split("/")[1];
-          api.hall({
-            newdm: {
-              sis: cir.split(".")
-            }
+          let xenoCir = xenoStation.split("/")[1];
+
+          let existingDMStation = _.find(Object.keys(warehouse.store.configs), station => {
+            let host = station.split("/")[0];
+            let cir = station.split("/")[1];
+
+            return (host === `~${api.authTokens.ship}` && cir === xenoCir)
           });
+
+          if (!existingDMStation) {
+            api.hall({
+              newdm: {
+                sis: xenoCir.split(".")
+              }
+            });
+          }
         }
       }
     })
@@ -132,20 +143,9 @@ export class UrbitOperator {
     // first step: bind to owner's circles
     api.bind(`/circles/~${api.authTokens.ship}`, "PUT");
 
-    api.hall({
-      source: {
-        nom: "inbox",
-        sub: true,
-        srs: [
-          "~samzod/testnet-meta",
-          "~samzod/c-~2018.10.29..23.28.01..5945"
-        ]
-      }
-    });
-
     warehouse.pushCallback('circles', rep => {
       // inbox local + remote configs, remote presences
-      api.bind("/circle/inbox/config/group-r/0", "PUT");
+      api.bind("/circle/inbox/config/group-r", "PUT");
 
       // inbox messages
       api.bind(`/circle/inbox/grams/-${INBOX_MESSAGE_COUNT}`, "PUT");
@@ -172,13 +172,21 @@ export class UrbitOperator {
           lastReadNum = rep.data.num;
         }
 
-        if (lastReadNum) {
+        if (lastReadNum && warehouse.store.configs[`~${api.authTokens.ship}/${circle}`].lastReadNum < lastReadNum) {
           api.hall({
             read: {
               nom: circle,
               red: lastReadNum
             }
           });
+
+          warehouse.storeReports([{
+            type: "circle.read",
+            data: {
+              station: `~${api.authTokens.ship}/${circle}`,
+              lastReadNum
+            }
+          }])
         }
 
         return false;
@@ -201,9 +209,28 @@ export class UrbitOperator {
         let fromCircle = rep.from && rep.from.path.split("/")[2];
         let fromInbox = fromCircle === "inbox";
 
-        warehouse.storeReports([{
-          type: "inbox.sources-loaded",
-        }]);
+        // this.wipeSubscription('/circle/inbox/config/group-r/0');
+
+        if (fromInbox) {
+          warehouse.storeReports([{
+            type: "inbox.sources-loaded",
+          }]);
+
+          if (!warehouse.store.messages.inbox.src.includes("~samzod/testnet-meta")) {
+            api.hall({
+              source: {
+                nom: "inbox",
+                sub: true,
+                srs: [
+                  "~samzod/testnet-meta",
+                  "~samzod/c-~2018.10.29..23.28.01..5945"
+                ]
+              }
+            });
+          }
+        }
+
+        return false;
       });
 
       return true;
@@ -216,7 +243,7 @@ export class UrbitOperator {
     // this.bind("/client", "PUT");
 
     // public membership
-    api.bind("/public", "PUT");
+    // api.bind("/public", "PUT");
 
     // bind to collections
     // this.bind("/", "PUT", "collections");
