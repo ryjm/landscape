@@ -145,7 +145,7 @@ export class UrbitOperator {
 
     warehouse.pushCallback('circles', rep => {
       // inbox local + remote configs, remote presences
-      api.bind("/circle/inbox/config/group-r/0", "PUT");
+      api.bind("/circle/inbox/config/group-r", "PUT");
 
       // inbox messages
       api.bind(`/circle/inbox/grams/-${INBOX_MESSAGE_COUNT}`, "PUT");
@@ -209,6 +209,8 @@ export class UrbitOperator {
         let fromCircle = rep.from && rep.from.path.split("/")[2];
         let fromInbox = fromCircle === "inbox";
 
+        // this.wipeSubscription('/circle/inbox/config/group-r/0');
+
         if (fromInbox) {
           warehouse.storeReports([{
             type: "inbox.sources-loaded",
@@ -241,7 +243,7 @@ export class UrbitOperator {
     // this.bind("/client", "PUT");
 
     // public membership
-    api.bind("/public", "PUT");
+    // api.bind("/public", "PUT");
 
     // bind to collections
     // this.bind("/", "PUT", "collections");

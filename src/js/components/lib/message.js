@@ -45,51 +45,51 @@ export class Message extends Component {
     });
   }
 
-  createDMStation(station) {
-    let circle = station.split("/")[1];
-    let everyoneElse = circle.split(".").filter((ship) => ship !== this.props.api.authTokens.ship);
-
-    this.props.api.hall({
-      create: {
-        nom: circle,
-        des: "dm",
-        sec: "village"
-      }
-    });
-
-    this.props.pushCallback("circles", (rep) => {
-      api.hall({
-        source: {
-          nom: 'inbox',
-          sub: true,
-          srs: [`~${this.props.api.authTokens.ship}/${rep.data.cir}`]
-        }
-      })
-    });
-
-    this.props.storeReports([{
-      type: REPORT_PAGE_STATUS,
-      data: PAGE_STATUS_TRANSITIONING
-    }]);
-
-    this.props.pushCallback("circle.config.dif.full", (rep) => {
-      this.props.transitionTo(`/~~/landscape/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
-    });
-
-    this.props.pushCallback("circle.config.dif.full", (rep) => {
-      api.permit(circle, everyoneElse, false);
-    });
-
-    this.props.pushCallback("circle.config.dif.full", (rep) => {
-      api.hall({
-        source: {
-          nom: circle,
-          sub: true,
-          srs: [station]
-        }
-      })
-    });
-  }
+  // createDMStation(station) {
+  //   let circle = station.split("/")[1];
+  //   let everyoneElse = circle.split(".").filter((ship) => ship !== this.props.api.authTokens.ship);
+  //
+  //   this.props.api.hall({
+  //     create: {
+  //       nom: circle,
+  //       des: "dm",
+  //       sec: "village"
+  //     }
+  //   });
+  //
+  //   this.props.pushCallback("circles", (rep) => {
+  //     api.hall({
+  //       source: {
+  //         nom: 'inbox',
+  //         sub: true,
+  //         srs: [`~${this.props.api.authTokens.ship}/${rep.data.cir}`]
+  //       }
+  //     })
+  //   });
+  //
+  //   this.props.storeReports([{
+  //     type: REPORT_PAGE_STATUS,
+  //     data: PAGE_STATUS_TRANSITIONING
+  //   }]);
+  //
+  //   this.props.pushCallback("circle.config.dif.full", (rep) => {
+  //     this.props.transitionTo(`/~~/landscape/stream?station=~${this.props.api.authTokens.ship}/${circle}`);
+  //   });
+  //
+  //   this.props.pushCallback("circle.config.dif.full", (rep) => {
+  //     api.permit(circle, everyoneElse, false);
+  //   });
+  //
+  //   this.props.pushCallback("circle.config.dif.full", (rep) => {
+  //     api.hall({
+  //       source: {
+  //         nom: circle,
+  //         sub: true,
+  //         srs: [station]
+  //       }
+  //     })
+  //   });
+  // }
 
   acceptInvite(actionData) {
     if (actionData.response === "no") {
