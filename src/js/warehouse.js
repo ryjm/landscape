@@ -34,7 +34,7 @@ const REPORT_KEYS = [
   'menu.toggle',
   'config.ext',
   'inbox.sources-loaded',
-  'circle.read'
+  'circle.read',
   REPORT_PAGE_STATUS,
   REPORT_NAVIGATE,
         // unused events
