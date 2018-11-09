@@ -39,9 +39,9 @@ gulp.task('bundle-js', function(cb) {
     .pipe(rollup({
       // format: "umd",
       plugins: [
-        babel({
-          ignore: ['src/js/vendor/**', 'node_modules/**']
-        }),
+        // babel({
+        //   ignore: ['src/js/vendor/**', 'node_modules/**']
+        // }),
         commonjs({
           namedExports: {
             'node_modules/react/index.js': [ 'Component' ]
