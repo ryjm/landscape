@@ -94,7 +94,7 @@
           |=  [[knot a=item:collections] [knot b=item:collections]]
           =/  a-dat  (extract-date-created a)
           =/  b-dat  (extract-date-created b)
-          (lte a-dat b-dat)
+          (lth a-dat b-dat)
         |=  [[nom=knot ite=item:collections] out=marl]
         ^-  marl
         ?:  ?=(%error -.ite)
