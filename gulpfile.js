@@ -6,7 +6,7 @@ var cssnano = require('gulp-cssnano');
 var rollup = require('gulp-better-rollup');
 var source = require('vinyl-source-stream');
 
-var babel = require('rollup-plugin-babel');
+var jsx = require('rollup-plugin-jsx-js');
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
@@ -39,9 +39,7 @@ gulp.task('bundle-js', function(cb) {
     .pipe(rollup({
       // format: "umd",
       plugins: [
-        // babel({
-        //   ignore: ['src/js/vendor/**', 'node_modules/**']
-        // }),
+        // jsx({precise: true}),
         commonjs({
           namedExports: {
             'node_modules/react/index.js': [ 'Component' ]
