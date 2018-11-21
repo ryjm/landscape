@@ -5,8 +5,9 @@ var cssnano = require('gulp-cssnano');
 // var rollup = require('rollup-stream');
 var rollup = require('gulp-better-rollup');
 var source = require('vinyl-source-stream');
+var rollupUrb = require('rollup-urb');
 
-var jsx = require('rollup-plugin-jsx-js');
+// var jsx = require('rollup-plugin-jsx-js');
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
@@ -38,6 +39,7 @@ gulp.task('bundle-js', function(cb) {
   gulp.src('src/index.js')
     .pipe(rollup({
       // format: "umd",
+      rollup: rollupUrb,
       plugins: [
         // jsx({precise: true}),
         commonjs({
