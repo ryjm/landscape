@@ -215,19 +215,6 @@ export class UrbitOperator {
           warehouse.storeReports([{
             type: "inbox.sources-loaded",
           }]);
-
-          if (!warehouse.store.messages.inbox.src.includes("~samzod/testnet-meta")) {
-            api.hall({
-              source: {
-                nom: "inbox",
-                sub: true,
-                srs: [
-                  "~samzod/testnet-meta",
-                  "~samzod/c-~2018.10.29..23.28.01..5945"
-                ]
-              }
-            });
-          }
         }
 
         return false;
