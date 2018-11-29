@@ -1,4 +1,3 @@
-import "babel-polyfill";
 import "/lib/object-extensions";
 import { api } from '/api';
 import { warehouse } from '/warehouse';
