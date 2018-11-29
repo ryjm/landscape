@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var cssimport = require('gulp-cssimport');
 var cssnano = require('gulp-cssnano');
 var rollup = require('gulp-better-rollup');
-var gulpPlugin = require('@sucrase/gulp-plugin');
+var sucrase = require('@sucrase/gulp-plugin');
 
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
@@ -32,7 +32,7 @@ gulp.task('bundle-css', function() {
 
 gulp.task('jsx-transform', function(cb) {
   return gulp.src('src/**/*.js')
-    .pipe(gulpPlugin({
+    .pipe(sucrase({
       transforms: ['jsx']
     }))
     .pipe(gulp.dest('dist'));
