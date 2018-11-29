@@ -125,7 +125,7 @@ export class InboxRecentPage extends Component {
   }
   buildSections(sections) {
     return sections.map((section, i) => {
-      let sectionContent = this.buildSectionContent(section);      
+      let sectionContent = this.buildSectionContent(section);
       let stationClass = classnames({
         'text-mono text-700': !section.stationDetails.type.includes("collection"),
         'text-heading text-600': section.stationDetails.type.includes("collection"),

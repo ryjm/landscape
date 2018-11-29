@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getMessageContent, isDMStation, isRootCollection } from '/lib/util';
+import { isDMStation, isRootCollection, getMessageContent } from '/lib/util';
 import { INBOX_MESSAGE_COUNT } from '/lib/constants';
 
 export class MessagesReducer {

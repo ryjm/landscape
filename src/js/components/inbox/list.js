@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getSubscribedStations } from '/lib/util';
+import { getSubscribedStations } from '/services';
 import { Icon } from '/components/lib/icon';
 import { Elapsed } from '/components/lib/elapsed';
 import classnames from 'classnames';

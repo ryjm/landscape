@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 import { warehouse } from '/warehouse';
 import { router } from '/router';
-import { getMessageContent, isDMStation } from '/lib/util';
+import { isDMStation, getMessageContent } from '/lib/util';
 import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 

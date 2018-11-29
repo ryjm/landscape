@@ -72,4 +72,36 @@ export function getStationDetails(station) {
   return ret;
 }
 
+export function getSubscribedStations(ship, store) {
+  let inbox = store.messages.inbox;
+  let configs = store.configs;
+
+  // TODO: Maybe I need this?
+  // if (!inbox) return null;
+
+  let stationDetailList = inbox.src
+    .map((station) => {
+      if (!configs[station]) return null;
+      return getStationDetails(station)
+    })
+    .filter((station) => station !== null);
+
+  let ret = {
+    chatStations: stationDetailList.filter((d) => d.type === "stream-chat"),
+    collStations: stationDetailList.filter((d) => d.type === "collection-index"),
+    dmStations: stationDetailList.filter((d) => d.type === "stream-dm"),
+  };
+
+  let numSubs = ret.chatStations.length + ret.collStations.length;
+  let numDMs = ret.dmStations.length;
+
+  let numString = [];
+  if (numSubs > 0) numString.push(`${numSubs} subscriptions`);
+  if (numDMs > 0) numString.push(`${numDMs} DMs`);
+
+  ret.numString = numString.join(", ");
+
+  return ret;
+}
+
 window.getStationDetails = getStationDetails

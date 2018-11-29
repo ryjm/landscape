@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { MessagesReducer } from '/reducers/messages';
 import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
-import { NamesReducer } from '/reducers/names';
+// import { NamesReducer } from '/reducers/names';
 import { PublicReducer } from '/reducers/public';
 // import { CirclesReducer } from '/reducers/circles';
 // import { router } from '/router';
@@ -76,7 +76,7 @@ class UrbitWarehouse {
     this.messagesReducer = new MessagesReducer();
     this.configsReducer = new ConfigsReducer();
     this.viewsReducer = new ViewsReducer();
-    this.namesReducer = new NamesReducer();
+    // this.namesReducer = new NamesReducer();
     // this.publicReducer = new PublicReducer();
     // this.circlesReducer = new CirclesReducer();
 
@@ -136,7 +136,7 @@ class UrbitWarehouse {
     this.messagesReducer.reduce(newReports, this.store);
     this.configsReducer.reduce(newReports, this.store);
     this.viewsReducer.reduce(newReports, this.store);
-    this.namesReducer.reduce(newReports, this.store);
+    // this.namesReducer.reduce(newReports, this.store);
     // this.circlesReducer.reduce(newReports, this.store);
     // this.publicReducer.reduce(newReports, this.store);
 
