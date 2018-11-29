@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Header } from '/components/header';
-// import HtmlToReact from 'html-to-react';
+import HtmlToReact from 'html-to-react';
 import { ComponentMap } from '/lib/component-map';
 import { getQueryParams } from '/lib/util';
 import { CommandMenu } from '/components/command';
@@ -14,8 +14,8 @@ export class Root extends Component {
     };
 
     // Required to convert arbitrary HTML into React elements
-    // this.htmlParser = HtmlToReact.Parser();
-    // this.htmlParserNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
+    this.htmlParser = HtmlToReact.Parser();
+    this.htmlParserNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
 
     props.pushCallback("menu.toggle", (rep) => {
       let newStatus = (rep.data) ? rep.data.open : !this.state.menuOpen;

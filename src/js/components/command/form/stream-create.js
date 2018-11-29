@@ -3,7 +3,7 @@ import { CommandForm } from '/components/command/form';
 import { isPatTa } from '/lib/util';
 import { getStationDetails } from '/services';
 import { PAGE_STATUS_TRANSITIONING, REPORT_PAGE_STATUS } from '/lib/constants';
-import urbitOb from '/lib/temputil';
+import urbitOb from 'urbit-ob';
 import _ from 'lodash';
 
 export class CommandFormStreamCreate extends Component {

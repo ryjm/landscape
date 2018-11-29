@@ -17,7 +17,7 @@ var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
 var json = require('rollup-plugin-json');
-// var builtins = require('rollup-plugin-node-builtins');
+var builtins = require('rollup-plugin-node-builtins');
 var rootImport = require('rollup-plugin-root-import');
 
 /***
@@ -64,6 +64,7 @@ gulp.task('js-imports', function(cb) {
           extensions: '.js'
         }),
         json(),
+        builtins(),
         resolve()
       ]
     }, 'umd'))
