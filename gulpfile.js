@@ -40,13 +40,13 @@ gulp.task('bundle-css', function() {
 gulp.task('jsx-transform', function(cb) {
   return gulp.src('src/**/*.js')
     .pipe(sucrase({
-      transforms: ['jsx']
+      transforms: ['jsx', 'imports']
     }))
     .pipe(gulp.dest('dist'));
 });
 
 gulp.task('js-imports', function(cb) {
-  return gulp.src('dist/index.js')
+  return gulp.src('dist/bundle.js')
     .pipe(rollup({
       plugins: [
         commonjs({
@@ -62,7 +62,7 @@ gulp.task('js-imports', function(cb) {
           useEntry: 'prepend',
           extensions: '.js'
         }),
-        json(),
+        // json(),
         builtins(),
         resolve()
       ]
