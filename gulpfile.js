@@ -1,24 +1,16 @@
 var gulp = require('gulp');
 var cssimport = require('gulp-cssimport');
 var cssnano = require('gulp-cssnano');
-
-// var rollupReal = require('rollup');
-// var rollup = require('rollup-stream');
 var rollup = require('gulp-better-rollup');
-// var source = require('vinyl-source-stream')
-// var acornJSX = require('acorn-jsx');
-// var gulpJSX = require('gulp-jsx');;
-// var gulpReplace = require('gulp-replace');
-// var rollupUrb = require('rollup-urb');
+var gulpPlugin = require('@sucrase/gulp-plugin');
 
-// var jsx = require('rollup-plugin-jsx-js');
-var sucrase = require('@sucrase/gulp-plugin');
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
 var replace = require('rollup-plugin-replace');
 var json = require('rollup-plugin-json');
 var builtins = require('rollup-plugin-node-builtins');
 var rootImport = require('rollup-plugin-root-import');
+var globals = require('rollup-plugin-node-globals');
 
 /***
   Main config options
@@ -40,7 +32,7 @@ gulp.task('bundle-css', function() {
 
 gulp.task('jsx-transform', function(cb) {
   return gulp.src('src/**/*.js')
-    .pipe(sucrase({
+    .pipe(gulpPlugin({
       transforms: ['jsx']
     }))
     .pipe(gulp.dest('dist'));
@@ -64,6 +56,7 @@ gulp.task('js-imports', function(cb) {
           extensions: '.js'
         }),
         json(),
+        globals(),
         builtins(),
         resolve()
       ]
