@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import urbitOb from 'urbit-ob';
+import urbitOb from '/lib/temputil';
 import classnames from 'classnames';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_RECONNECTING, AGGREGATOR_NAMES } from '/lib/constants';
 

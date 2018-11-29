@@ -7,7 +7,7 @@ import { getStationDetails } from '/services';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
 import { PAGE_STATUS_TRANSITIONING, STATUS_READY } from '/lib/constants';
-import urbitOb from 'urbit-ob';
+import urbitOb from '/lib/temputil';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
 
