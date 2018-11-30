@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 import { warehouse } from '/warehouse';
 import { isDMStation, getMessageContent } from '/lib/util';
 import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
-import urbitOb from 'urbit-ob';
+import urbitOb from '/lib/temputil';
 
 const LONGPOLL_TIMEOUT = 10000;
 const LONGPOLL_TRYAGAIN = 30000;
