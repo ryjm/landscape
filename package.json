@@ -12,7 +12,6 @@
     "@sucrase/gulp-plugin": "^2.0.0",
     "gulp": "^4.0.0",
     "gulp-better-rollup": "github:MikeKovarik/gulp-better-rollup#greenkeeper/rollup-0.67.3",
-    "gulp-copy": "^1.1.0",
     "gulp-cssimport": "^6.0.0",
     "gulp-cssnano": "^2.1.2",
     "rollup-plugin-commonjs": "^9.2.0",
@@ -34,7 +33,6 @@
     "react": "^16.5.2",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.5.2",
-    "react-router-dom": "^4.2.2",
     "urbit-ob": "^1.0.0"
   },
   "resolutions": {
