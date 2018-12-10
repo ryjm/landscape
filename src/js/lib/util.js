@@ -26,7 +26,7 @@ export function esoo(str) {
 // check if hostname follows ship.*.urbit.org scheme
 export function isProxyHosted(hostName) {
   const r = /([a-z,-]+)\.(.+\.)?urbit\.org/.exec(hostName);
-  if (r && urbitOb.isShip(r[1])) {
+  if (r && urbitOb.isValidPatp(r[1])) {
     return true;
   }
   return false;
@@ -146,7 +146,7 @@ export function isValidStation(st) {
 
   if (tokens.length !== 2) return false;
 
-  return urbitOb.isShip(tokens[0]) && isPatTa(tokens[1]);
+  return urbitOb.isValidPatp(tokens[0]) && isPatTa(tokens[1]);
 }
 
 

@@ -1,5 +1,5 @@
 export default defthing = {
-  isShip() {
+  isValidPatp() {
     return true;
   }
 }

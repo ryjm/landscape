@@ -176,7 +176,7 @@ export class CommandMenu extends Component {
 
   // term can be '~marzod' or '~marzod/testnet-meta'
   buildGoOption(term) {
-    let isShip = urbitOb.isShip(term.substr(1));
+    let isValidPatp = urbitOb.isValidPatp(term.substr(1));
     let isStation = isValidStation(term);
     let details = isStation && getStationDetails(term);
     // use collection description if it's a collection
@@ -191,7 +191,7 @@ export class CommandMenu extends Component {
       name: `go ${term}`,
       action: () => {
         let targetUrl;
-        if (isShip) {
+        if (isValidPatp) {
           targetUrl = profileUrl(term.substr(1))
           this.props.transitionTo(targetUrl);
         } else if (isStation) {
@@ -218,7 +218,7 @@ export class CommandMenu extends Component {
     return {
       name: `dm ${name}`,
       action: () => {
-        if (urbitOb.isShip(name.substr(1))) {
+        if (urbitOb.isValidPatp(name.substr(1))) {
           let members = [this.props.api.authTokens.ship, name.substr(1)]
           let station = `~${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
           let stationDetails = getStationDetails(station);

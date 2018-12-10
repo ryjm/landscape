@@ -156,7 +156,7 @@ export class UrbitOperator {
         let circle = rep.from.path.split('/')[2];
 
         // do nothing with gram binds to foreign ships
-        if (urbitOb.isShip(circle)) return;
+        if (urbitOb.isValidPatp(circle)) return;
 
         // Any message comes in to the /i circle
         if (circle === "i") {

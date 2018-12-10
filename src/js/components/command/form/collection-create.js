@@ -22,7 +22,7 @@ export class CommandFormCollectionCreate extends Component {
         validate: (value) => {
           if (value === "") return true;
           let tokens = value.trim().split("\n").map(t => t.trim());
-          return tokens.reduce((valid, s) => valid && urbitOb.isShip(s) && s.includes("~"), true);
+          return tokens.reduce((valid, s) => valid && urbitOb.isValidPatp(s) && s.includes("~"), true);
         }
       }, {
         name: "visible",
