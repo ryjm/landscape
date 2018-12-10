@@ -3,7 +3,7 @@ import { CommandForm } from '/components/command/form';
 import { getStationDetails } from '/services';
 import { PAGE_STATUS_TRANSITIONING, REPORT_PAGE_STATUS } from '/lib/constants';
 import _ from 'lodash';
-import urbitOb from '/lib/temputil';
+import urbitOb from 'urbit-ob';
 
 export class CommandFormCollectionCreate extends Component {
   getCollectionCreateForm() {

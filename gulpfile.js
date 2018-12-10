@@ -57,7 +57,7 @@ gulp.task('js-imports', function(cb) {
         }),
         json(),
         globals(),
-        // builtins(),
+        builtins(),
         resolve()
       ]
     }, 'umd'))
