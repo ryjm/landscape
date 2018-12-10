@@ -139,88 +139,91 @@ export class UrbitOperator {
   }
 
   initializeLandscape() {
+    api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections');
+
+
     // first step: bind to owner's circles
-    api.bind(`/circles/~${api.authTokens.ship}`, "PUT");
-
-    warehouse.pushCallback('circles', rep => {
-      // inbox local + remote configs, remote presences
-      api.bind("/circle/inbox/config/group-r", "PUT");
-
-      // inbox messages
-      api.bind(`/circle/inbox/grams/-${INBOX_MESSAGE_COUNT}`, "PUT");
-
-      // bind to invite circle (shouldn't be subscribed to inbox)
-      api.bind("/circle/i/grams/-999", "PUT");
-
-      warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
-        let circle = rep.from.path.split('/')[2];
-
-        // do nothing with gram binds to foreign ships
-        if (urbitOb.isValidPatp(circle)) return;
-
-        // Any message comes in to the /i circle
-        if (circle === "i") {
-          let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
-          this.quietlyAcceptDmInvites(msgs);
-        }
-
-        let lastReadNum;
-        if (_.isArray(rep.data) && rep.data.length > 0) {
-          lastReadNum = _.nth(rep.data, -1).num;
-        } else {
-          lastReadNum = rep.data.num;
-        }
-
-        if (lastReadNum && warehouse.store.configs[`~${api.authTokens.ship}/${circle}`].lastReadNum < lastReadNum) {
-          api.hall({
-            read: {
-              nom: circle,
-              red: lastReadNum
-            }
-          });
-
-          warehouse.storeReports([{
-            type: "circle.read",
-            data: {
-              station: `~${api.authTokens.ship}/${circle}`,
-              lastReadNum
-            }
-          }])
-        }
-
-        return false;
-      })
-
-      warehouse.pushCallback('circle.nes', (rep) => {
-        // First batch of inbox messages has gotten in
-
-        if (rep.from.path.includes("inbox")) {
-          this.eagerFetchExtConfs();
-          warehouse.storeReports([{
-            type: REPORT_PAGE_STATUS,
-            data: PAGE_STATUS_READY
-          }]);
-          return false;
-        }
-      });
-
-      warehouse.pushCallback('circle.cos.loc', (rep) => {
-        let fromCircle = rep.from && rep.from.path.split("/")[2];
-        let fromInbox = fromCircle === "inbox";
-
-        // this.wipeSubscription('/circle/inbox/config/group-r/0');
-
-        if (fromInbox) {
-          warehouse.storeReports([{
-            type: "inbox.sources-loaded",
-          }]);
-        }
-
-        return false;
-      });
-
-      return true;
-    });
+    // api.bind(`/circles/~${api.authTokens.ship}`, "PUT");
+    //
+    // warehouse.pushCallback('circles', rep => {
+    //   // inbox local + remote configs, remote presences
+    //   api.bind("/circle/inbox/config/group-r", "PUT");
+    //
+    //   // inbox messages
+    //   api.bind(`/circle/inbox/grams/-${INBOX_MESSAGE_COUNT}`, "PUT");
+    //
+    //   // bind to invite circle (shouldn't be subscribed to inbox)
+    //   api.bind("/circle/i/grams/-999", "PUT");
+    //
+    //   warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
+    //     let circle = rep.from.path.split('/')[2];
+    //
+    //     // do nothing with gram binds to foreign ships
+    //     if (urbitOb.isValidPatp(circle)) return;
+    //
+    //     // Any message comes in to the /i circle
+    //     if (circle === "i") {
+    //       let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
+    //       this.quietlyAcceptDmInvites(msgs);
+    //     }
+    //
+    //     let lastReadNum;
+    //     if (_.isArray(rep.data) && rep.data.length > 0) {
+    //       lastReadNum = _.nth(rep.data, -1).num;
+    //     } else {
+    //       lastReadNum = rep.data.num;
+    //     }
+    //
+    //     if (lastReadNum && warehouse.store.configs[`~${api.authTokens.ship}/${circle}`].lastReadNum < lastReadNum) {
+    //       api.hall({
+    //         read: {
+    //           nom: circle,
+    //           red: lastReadNum
+    //         }
+    //       });
+    //
+    //       warehouse.storeReports([{
+    //         type: "circle.read",
+    //         data: {
+    //           station: `~${api.authTokens.ship}/${circle}`,
+    //           lastReadNum
+    //         }
+    //       }])
+    //     }
+    //
+    //     return false;
+    //   })
+    //
+    //   warehouse.pushCallback('circle.nes', (rep) => {
+    //     // First batch of inbox messages has gotten in
+    //
+    //     if (rep.from.path.includes("inbox")) {
+    //       this.eagerFetchExtConfs();
+    //       warehouse.storeReports([{
+    //         type: REPORT_PAGE_STATUS,
+    //         data: PAGE_STATUS_READY
+    //       }]);
+    //       return false;
+    //     }
+    //   });
+    //
+    //   warehouse.pushCallback('circle.cos.loc', (rep) => {
+    //     let fromCircle = rep.from && rep.from.path.split("/")[2];
+    //     let fromInbox = fromCircle === "inbox";
+    //
+    //     // this.wipeSubscription('/circle/inbox/config/group-r/0');
+    //
+    //     if (fromInbox) {
+    //       warehouse.storeReports([{
+    //         type: "inbox.sources-loaded",
+    //       }]);
+    //     }
+    //
+    //     return false;
+    //   });
+    //
+    //   return true;
+    // });
 
     // grab the config for the root collection circle
     // api.bind("/circle/c/config/group-r/0", "PUT");

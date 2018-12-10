@@ -49,6 +49,12 @@ export class ConfigsReducer {
           store.configs[rep.data.station] = store.configs[rep.data.station] || {};
           store.configs[rep.data.station].lastReadNum = rep.data.lastReadNum;
           break;
+
+        case "landscape-prize":
+          rep.data.circles.forEach(c => {
+            store.configs[c.circle] = c.config || {};
+          });
+          break;
       }
     });
   }

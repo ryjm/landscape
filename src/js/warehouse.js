@@ -9,6 +9,7 @@ import { PublicReducer } from '/reducers/public';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
 
 const REPORT_KEYS = [
+  'landscape-prize',
         // /circle/<cir_name>/grams
         // call automatically on inbox
         // call automatically on /urbit-meta
