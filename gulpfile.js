@@ -23,7 +23,7 @@ var urbitrc = require('./.urbitrc');
   End main config options
 ***/
 
-gulp.task('bundle-css', function() {
+gulp.task('css-bundle', function() {
   return gulp
     .src('src/index.css')
     .pipe(cssimport())
@@ -66,8 +66,6 @@ gulp.task('js-imports', function(cb) {
       console.log(e);
       cb();
     })
-    // .pipe(source('index.js'))
-    // .pipe(minify())
     .pipe(gulp.dest('./urbit-code/web/landscape/js/'))
     .on('end', cb);
 });
@@ -78,7 +76,7 @@ gulp.task('js-minify', function () {
     .pipe(gulp.dest('./urbit-code/web/landscape/js/'));
 });
 
-gulp.task('copy-urbit', function () {
+gulp.task('urbit-copy', function () {
   let ret = gulp.src('urbit-code/**/*');
 
   urbitrc.URBIT_PIERS.forEach(function(pier) {
@@ -88,13 +86,13 @@ gulp.task('copy-urbit', function () {
   return ret;
 });
 
-gulp.task('js-bundle', gulp.series('jsx-transform', 'js-imports'));
-gulp.task('js-minify', gulp.series('jsx-transform', 'js-imports', 'js-minify'));
+gulp.task('js-bundle-dev', gulp.series('jsx-transform', 'js-imports'));
+gulp.task('js-bundle-prod', gulp.series('jsx-transform', 'js-imports', 'js-minify'));
 
-gulp.task('default', gulp.series(gulp.parallel('js-bundle', 'bundle-css'), 'copy-urbit'));
+gulp.task('default', gulp.series(gulp.parallel('js-bundle-dev', 'css-bundle'), 'urbit-copy'));
 gulp.task('watch', gulp.series('default', function() {
-  gulp.watch('src/**/*.js', gulp.parallel('js-bundle'));
-  gulp.watch('src/**/*.css', gulp.parallel('bundle-css'));
+  gulp.watch('src/**/*.js', gulp.parallel('js-bundle-dev'));
+  gulp.watch('src/**/*.css', gulp.parallel('css-bundle'));
 
-  gulp.watch('urbit-code/**/*', gulp.parallel('copy-urbit'));
+  gulp.watch('urbit-code/**/*', gulp.parallel('urbit-copy'));
 }));
