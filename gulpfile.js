@@ -3,6 +3,7 @@ var cssimport = require('gulp-cssimport');
 var cssnano = require('gulp-cssnano');
 var rollup = require('gulp-better-rollup');
 var sucrase = require('@sucrase/gulp-plugin');
+var minify = require('gulp-minify');
 
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
@@ -66,8 +67,15 @@ gulp.task('js-imports', function(cb) {
       cb();
     })
     // .pipe(source('index.js'))
+    // .pipe(minify())
     .pipe(gulp.dest('./urbit-code/web/landscape/js/'))
     .on('end', cb);
+});
+
+gulp.task('js-minify', function () {
+  return gulp.src('./urbit-code/web/landscape/js/index.js')
+    .pipe(minify())
+    .pipe(gulp.dest('./urbit-code/web/landscape/js/'));
 });
 
 gulp.task('copy-urbit', function () {
@@ -80,10 +88,12 @@ gulp.task('copy-urbit', function () {
   return ret;
 });
 
-gulp.task('bundle-js', gulp.series('jsx-transform', 'js-imports'));
-gulp.task('default', gulp.series(gulp.parallel('bundle-js', 'bundle-css'), 'copy-urbit'));
+gulp.task('js-bundle', gulp.series('jsx-transform', 'js-imports'));
+gulp.task('js-minify', gulp.series('jsx-transform', 'js-imports', 'js-minify'));
+
+gulp.task('default', gulp.series(gulp.parallel('js-bundle', 'bundle-css'), 'copy-urbit'));
 gulp.task('watch', gulp.series('default', function() {
-  gulp.watch('src/**/*.js', gulp.parallel('bundle-js'));
+  gulp.watch('src/**/*.js', gulp.parallel('js-bundle'));
   gulp.watch('src/**/*.css', gulp.parallel('bundle-css'));
 
   gulp.watch('urbit-code/**/*', gulp.parallel('copy-urbit'));
