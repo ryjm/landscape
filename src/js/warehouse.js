@@ -2,14 +2,14 @@ import _ from 'lodash';
 import { MessagesReducer } from '/reducers/messages';
 import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
-// import { NamesReducer } from '/reducers/names';
-import { PublicReducer } from '/reducers/public';
-// import { CirclesReducer } from '/reducers/circles';
-// import { router } from '/router';
+import { NamesReducer } from '/reducers/names';
+import { CirclesReducer } from '/reducers/circles';
+// import { PublicReducer } from '/reducers/public';
+import { router } from '/router';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
 
 const REPORT_KEYS = [
-  'landscape-prize',
+  'landscape.prize',
         // /circle/<cir_name>/grams
         // call automatically on inbox
         // call automatically on /urbit-meta
@@ -24,6 +24,8 @@ const REPORT_KEYS = [
   'circle.cos.rem',
         // /circle/<cir_name>/config-l
         // used for fora topic creation....maybe? let me check
+
+  'circle.config',
   'circle.config.dif.full',
         // /circle/<cir_name>/config-l
         // used for subscription / unsubscription
@@ -77,9 +79,9 @@ class UrbitWarehouse {
     this.messagesReducer = new MessagesReducer();
     this.configsReducer = new ConfigsReducer();
     this.viewsReducer = new ViewsReducer();
-    // this.namesReducer = new NamesReducer();
+    this.namesReducer = new NamesReducer();
     // this.publicReducer = new PublicReducer();
-    // this.circlesReducer = new CirclesReducer();
+    this.circlesReducer = new CirclesReducer();
 
     this.pushCallback = this.pushCallback.bind(this);
     this.storeReports = this.storeReports.bind(this);
@@ -137,14 +139,14 @@ class UrbitWarehouse {
     this.messagesReducer.reduce(newReports, this.store);
     this.configsReducer.reduce(newReports, this.store);
     this.viewsReducer.reduce(newReports, this.store);
-    // this.namesReducer.reduce(newReports, this.store);
-    // this.circlesReducer.reduce(newReports, this.store);
+    this.namesReducer.reduce(newReports, this.store);
+    this.circlesReducer.reduce(newReports, this.store);
     // this.publicReducer.reduce(newReports, this.store);
 
     console.log('full store = ', this.store);
 
     this.processPending(newReports);
-    // router.renderRoot();
+    router.renderRoot();
   }
 
   processPending(reports) {

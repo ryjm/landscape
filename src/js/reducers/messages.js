@@ -35,6 +35,32 @@ export class MessagesReducer {
             this.storeInboxMessages(store);
           }
           break;
+
+        case "circle.config":
+          let fromInbox = rep.data.cir.includes("inbox");
+          if (fromInbox && _.get(rep.data, 'dif.source', null)) {
+            if (rep.data.dif.source.add) {
+              store.messages.inbox.src = [...store.messages.inbox.src, rep.data.dif.source.src];
+            } else {
+              store.messages.inbox.src = store.messages.inbox.src.filter(src => src !== rep.data.dif.source.src);
+            }
+            this.storeInboxMessages(store);
+          }
+
+        case "landscape.prize":
+          if (rep.data.inbox) {
+            store.messages.inbox.src = [...store.messages.inbox.src, ...rep.data.inbox.config.src];
+          }
+          //
+          // if (fromInbox) {
+          //   if (rep.data.add) {
+          //     store.messages.inbox.src = [...store.messages.inbox.src, rep.data.src];
+          //   } else {
+          //     store.messages.inbox.src = store.messages.inbox.src.filter(src => src !== rep.data.src);
+          //   }
+          //   this.storeInboxMessages(store);
+          // }
+          break;
       }
     });
   }
