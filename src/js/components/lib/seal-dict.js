@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { pour } from '/vendor/urb-sigils';
+import { pour } from '/vendor/sigils-1.2.5';
 import _ from 'lodash';
 
 const ReactSVGComponents = {
@@ -75,7 +75,7 @@ export class SealDict {
     let key = `${sigilShip}+${size}`;
 
     if (!this.dict[key]) {
-      // this.dict[key] = pour({size: size, patp: sigilShip, renderer: ReactSVGComponents, margin: 0, colorway: ["#000", "#fff"]})
+      this.dict[key] = pour({size: size, patp: sigilShip, renderer: ReactSVGComponents, margin: 0, colorway: ["#000", "#fff"]})
     }
 
     return this.dict[key];
