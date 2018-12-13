@@ -73,7 +73,7 @@ class UrbitApi {
     });
 
     if (message) {
-      let audInboxes = aud.map((aud) => `~${aud}/inbox`);
+      let audInboxes = aud.map((aud) => `~${aud}/i`);
       let inviteMessage = {
         aud: audInboxes,
         ses: [{

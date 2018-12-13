@@ -237,6 +237,10 @@ label {
   color: white;
 }
 
+.btn:focus {
+  text-decoration: underline;
+}
+
 .btn[disabled] {
   background-color: #C4C4C4;
   color: white;

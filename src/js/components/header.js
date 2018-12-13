@@ -311,15 +311,15 @@ export class Header extends Component {
       return Object.arrayify(headerData.actions).map(({key, value}) => {
         let lusElem = null;
         let labelElem = key;
-        let subscribeAction = false;
 
         switch (key) {
           case "details":
             labelElem = (<Icon type="icon-ellipsis" />);
+            return null;  // Remove "details" page for now
             break;
           case "subscribe":
             labelElem = this.isSubscribed(headerData.station) ? "Unsubscribe" : "Subscribe";
-            subscribeAction = true;
+            return null;  // Remove "subscribe" action for now
             break;
           case "write":
             lusElem = key === "write" ? (<Icon type="icon-lus" label={true} />) : null;
