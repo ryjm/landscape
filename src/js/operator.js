@@ -141,6 +141,24 @@ export class UrbitOperator {
   initializeLandscape() {
     api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections');
 
+    warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
+      let station = rep.data.gam.aud[0];
+      let circle = station.split('/')[1];
+
+      if (circle === "i") {
+        let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
+        this.quietlyAcceptDmInvites(msgs);
+      }
+    });
+
+
+      // let circle = rep.from.path.split('/')[2];
+
+      // do nothing with gram binds to foreign ships
+      // if (urbitOb.isValidPatp(circle)) return;
+
+      // Any message comes in to the /i circle
+
 
     // first step: bind to owner's circles
     // api.bind(`/circles/~${api.authTokens.ship}`, "PUT");

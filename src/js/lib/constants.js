@@ -16,3 +16,5 @@ export const AGGREGATOR_COLL = "c";
 export const AGGREGATOR_INBOX = "aggregator-inbox";
 export const AGGREGATOR_NAMES = [AGGREGATOR_INBOX, AGGREGATOR_COLL];
 export const AGGREGATOR_SUB_NAMES = [AGGREGATOR_COLL];
+
+export const HARDCODED_FORA = "~bus/c-~2018.12.13..17.35.37..1d94";

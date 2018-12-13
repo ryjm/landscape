@@ -3,7 +3,7 @@ import { Button } from '/components/lib/button';
 import { getQueryParams, daToDate } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Elapsed } from '/components/lib/elapsed';
-import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
+import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS, HARDCODED_FORA } from '/lib/constants';
 import _ from 'lodash';
 import classnames from 'classnames';
 
@@ -121,7 +121,7 @@ export class TopicCreatePage extends Component {
       });
     } else {
       this.props.pushCallback("circle.gram", (rep) => {
-        let isFora = rep.data.gam.aud[0] === "~nopdus-hadlut/c-~2018.12.13..00.51.16..2184";
+        let isFora = rep.data.gam.aud[0] === HARDCODED_FORA;
 
         let tacText = _.get(rep.data, "gam.sep.fat.tac.text", null);
         let isNewPost = tacText && tacText === "new item";
@@ -130,17 +130,19 @@ export class TopicCreatePage extends Component {
         let gramMetadata = linMsg && JSON.parse(linMsg);
         let isYourNewPost = gramMetadata.owner === `~${api.authTokens.ship}`;
 
-        if (isFora && isNewPost && isYourNewPost) {
+        if (isNewPost && isYourNewPost) {
           this.props.storeReports([{
             type: REPORT_PAGE_STATUS,
             data: PAGE_STATUS_READY
           }]);
 
-          let topicStation = `~nopdus-hadlut/c-~2018.12.13..00.51.16..2184/${gramMetadata.date}`;
+          let topicStation = `${rep.data.gam.aud[0]}-${gramMetadata.date}`;
+          let stationDetails = getStationDetails(topicStation);
+          this.props.transitionTo(stationDetails.stationUrl);
         }
 
         let station = `${rep.from.path.split('/')[2]}/${rep.data.cir}`;
-        let stationDetails = getStationDetails(station);
+
 
         // api.hall({
         //   source: {
@@ -150,7 +152,7 @@ export class TopicCreatePage extends Component {
         //   }
         // })
 
-        this.props.transitionTo(stationDetails.stationUrl);
+
       });
     }
   }

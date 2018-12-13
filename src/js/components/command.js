@@ -218,7 +218,7 @@ export class CommandMenu extends Component {
     return {
       name: `dm ${name}`,
       action: () => {
-        if (urbitOb.isValidPatp(name.substr(1))) {
+        if (urbitOb.isValidPatp(name)) {
           let members = [this.props.api.authTokens.ship, name.substr(1)]
           let station = `~${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
           let stationDetails = getStationDetails(station);
