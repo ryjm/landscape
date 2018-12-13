@@ -47,6 +47,8 @@ export class MessagesReducer {
             this.storeInboxMessages(store);
           }
 
+          break;
+
         case "landscape.prize":
           if (rep.data.inbox) {
             store.messages.inbox.src = [...store.messages.inbox.src, ...rep.data.inbox.config.src];

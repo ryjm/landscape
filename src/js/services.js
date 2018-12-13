@@ -54,6 +54,15 @@ export function getStationDetails(station) {
 
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
       ret.stationTitle = config && config.extConf ? config.extConf.name : "TBD";
+
+      if (config && config.extConf) {
+        ret.stationTitle = config.extConf.name;
+      }
+
+      if (config) {
+        ret.stationTitle = config.cap;
+      }
+
       break;
     case "collection-post":
       ret.collId = circleParts[1];
