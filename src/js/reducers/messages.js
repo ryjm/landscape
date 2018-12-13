@@ -37,7 +37,7 @@ export class MessagesReducer {
           break;
 
         case "circle.config":
-          let fromInbox = rep.data.cir.includes("inbox");
+          fromInbox = rep.data.cir.includes("inbox");
           if (fromInbox && _.get(rep.data, 'dif.source', null)) {
             if (rep.data.dif.source.add) {
               store.messages.inbox.src = [...store.messages.inbox.src, rep.data.dif.source.src];
@@ -50,7 +50,13 @@ export class MessagesReducer {
         case "landscape.prize":
           if (rep.data.inbox) {
             store.messages.inbox.src = [...store.messages.inbox.src, ...rep.data.inbox.config.src];
+            store.messages.inbox.config = rep.data.inbox.config;
+            this.processMessages(rep.data.inbox.messages, store);
+            this.storeInboxMessages(store);
+          } else {
+            console.log("WEIRD: no inbox property in landscape.prize?")
           }
+
           //
           // if (fromInbox) {
           //   if (rep.data.add) {

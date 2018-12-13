@@ -100,9 +100,9 @@ export class ChatPage extends Component {
       data: PAGE_STATUS_PROCESSING
     }]);
 
-    this.props.pushCallback("inbox.sources-loaded", rep => {
-      this.intelligentlyBindGramRange([-20]);
-    });
+    // this.props.pushCallback("inbox.sources-loaded", rep => {
+    //   this.intelligentlyBindGramRange([-20]);
+    // });
 
     this.scrollIfLocked();
     this.bindShortcuts();
@@ -163,15 +163,15 @@ export class ChatPage extends Component {
       data: PAGE_STATUS_PROCESSING
     }])
 
-    this.intelligentlyBindGramRange([newNumMessages * -1, this.state.numMessages * -1])
-      .then((res) => {
-        if (res.status === 500) {
-          this.props.storeReports([{
-            type: REPORT_PAGE_STATUS,
-            data: PAGE_STATUS_READY
-          }])
-        }
-      });
+    // this.intelligentlyBindGramRange([newNumMessages * -1, this.state.numMessages * -1])
+    //   .then((res) => {
+    //     if (res.status === 500) {
+    //       this.props.storeReports([{
+    //         type: REPORT_PAGE_STATUS,
+    //         data: PAGE_STATUS_READY
+    //       }])
+    //     }
+    //   });
 
     this.props.pushCallback('circle.nes', rep => {
       this.props.storeReports([{

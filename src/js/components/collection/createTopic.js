@@ -23,9 +23,9 @@ export class TopicCreatePage extends Component {
   }
 
   componentDidMount() {
-    let path = `/circle/${this.state.details.namedCircle}/config-l/grams/-10`;
+    // let path = `/circle/${this.state.details.namedCircle}/config-l/grams/-10`;
 
-    this.props.api.bind(path, "PUT", this.state.details.hostship);
+    // this.props.api.bind(path, "PUT", this.state.details.hostship);
 
     if (this.state.editMode) {
       let metadataQuery = window.document.querySelectorAll('[name="urb-metadata"]')[0];
@@ -120,22 +120,35 @@ export class TopicCreatePage extends Component {
         return false;
       });
     } else {
-      this.props.pushCallback("circles", (rep) => {
-        this.props.storeReports([{
-          type: REPORT_PAGE_STATUS,
-          data: PAGE_STATUS_READY
-        }]);
+      this.props.pushCallback("circle.gram", (rep) => {
+        let isFora = rep.data.gam.aud[0] === "~nopdus-hadlut/c-~2018.12.13..00.51.16..2184";
+
+        let tacText = _.get(rep.data, "gam.sep.fat.tac.text", null);
+        let isNewPost = tacText && tacText === "new item";
+
+        let linMsg = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
+        let gramMetadata = linMsg && JSON.parse(linMsg);
+        let isYourNewPost = gramMetadata.owner === `~${api.authTokens.ship}`;
+
+        if (isFora && isNewPost && isYourNewPost) {
+          this.props.storeReports([{
+            type: REPORT_PAGE_STATUS,
+            data: PAGE_STATUS_READY
+          }]);
+
+          let topicStation = `~nopdus-hadlut/c-~2018.12.13..00.51.16..2184/${gramMetadata.date}`;
+        }
 
         let station = `${rep.from.path.split('/')[2]}/${rep.data.cir}`;
         let stationDetails = getStationDetails(station);
 
-        api.hall({
-          source: {
-            nom: 'inbox',
-            sub: true,
-            srs: [station]
-          }
-        })
+        // api.hall({
+        //   source: {
+        //     nom: 'inbox',
+        //     sub: true,
+        //     srs: [station]
+        //   }
+        // })
 
         this.props.transitionTo(stationDetails.stationUrl);
       });
