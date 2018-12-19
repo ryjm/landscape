@@ -5,7 +5,8 @@
 .flex-chat-body {
   /* 56px for chat input */
   /* 108px for header */
-  flex-basis: calc(100% - 56px - 108px);
+  /* 12px for ... some arbitrary value I can't figure out */
+  flex-basis: calc(100% - 56px - 108px - 12px);
 }
 
 .flex-chat-input {

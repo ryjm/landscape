@@ -153,10 +153,10 @@ export class Root extends Component {
       let parser = new DOMParser();
       let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
       content = (
-        <div>
+        <React.Fragment>
           {this.loadHeader(tempDOM)}
           {this.reactify()}
-        </div>
+        </React.Fragment>
       )
     }
 
