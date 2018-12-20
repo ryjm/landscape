@@ -398,7 +398,7 @@ export class ChatPage extends Component {
           onScrollStop={this.onScrollStop}
           renderView={props => <div {...props} className="chat-scrollpane-view"/>}
           autoHide
-          className="chat-scrollpane flex-chat-body">
+          className="flex-chat-scrollpane">
           {chatMessages}
         </Scrollbars>
         <div className="row mt-3 flex-chat-input">

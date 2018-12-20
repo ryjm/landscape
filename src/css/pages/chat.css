@@ -2,11 +2,17 @@
   Layout
 ***/
 
-.flex-chat-body {
-  /* 56px for chat input */
-  /* 108px for header */
-  /* 12px for ... some arbitrary value I can't figure out */
-  flex-basis: calc(100% - 56px - 108px - 12px);
+.chat-container {
+  height: calc(100% - 106px);
+}
+
+.chat-container-inner, .chat-container-inner .container {
+  height: 100%;
+}
+
+.flex-chat-scrollpane {
+  flex-grow: 1;
+  flex-basis: 0;
 }
 
 .flex-chat-input {
@@ -20,6 +26,10 @@
 /***
   Styles
 ***/
+
+.chat-container img {
+  width: 100%;
+}
 
 textarea.chat-input-field {
   height: 56px;
@@ -87,10 +97,6 @@ textarea.chat-input-field {
   display: flex;
   flex-direction: column;
   /* justify-content: flex-end; */
-}
-
-.chat-scrollpane img {
-  width: 100%;
 }
 
 .chat-scrollpane-view > * {
