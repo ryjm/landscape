@@ -107,6 +107,8 @@ export class UrbitOperator {
       warehouse.storeReports([{
         type: "menu.toggle"
       }]);
+
+      return false;
     });
   }
 
