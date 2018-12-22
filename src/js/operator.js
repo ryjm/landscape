@@ -153,6 +153,13 @@ export class UrbitOperator {
       }
     });
 
+    warehouse.pushCallback(['landscape.prize'], (rep) => {
+      warehouse.storeReports([{
+        type: REPORT_PAGE_STATUS,
+        data: PAGE_STATUS_READY
+      }]);
+    });
+
 
       // let circle = rep.from.path.split('/')[2];
 

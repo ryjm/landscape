@@ -61,7 +61,7 @@ class UrbitWarehouse {
       },
       configs: {},
       views: {
-        transition: PAGE_STATUS_READY,
+        transition: PAGE_STATUS_PROCESSING,
         inbox: "inbox-recent"
       },
       reads: {},

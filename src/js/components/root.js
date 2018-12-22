@@ -151,7 +151,7 @@ export class Root extends Component {
       )
     } else {
       let parser = new DOMParser();
-      let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
+      let tempDOM = parser.parseFromString(this.props.scaffold, "text/html");
       content = (
         <React.Fragment>
           {this.loadHeader(tempDOM)}
