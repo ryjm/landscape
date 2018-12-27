@@ -45,15 +45,15 @@ export class InboxListPage extends Component {
               {stationDetails.stationTitle}
             </a>
           </div>
-          <div className="flex-col-1">
-            <Elapsed timestring={1538163986689} classes="text-timestamp" />
-          </div>
-          <div className="flex-col-1 flex align-center">
-            <Icon type="icon-user" label={true} />
-            <span className="text-host-breadcrumb">122</span>
-          </div>
         </div>
       );
+
+      // <div className="flex-col-1">
+      //   <Elapsed timestring={1538163986689} classes="text-timestamp" />
+      // </div>
+      // <div className="flex-col-1 flex align-center">
+      //   <Icon type="icon-user" label={true} />
+      // </div>
     });
   }
 
