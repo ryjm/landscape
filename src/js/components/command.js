@@ -271,7 +271,7 @@ export class CommandMenu extends Component {
     }, {
       name: "go",
       action: "go ~",
-      displayText: "go [~ship/stream]",
+      displayText: "go [~ship/chat]",
       helpText: "Go to <stream> on <~ship>",
     }, {
       name: "go",

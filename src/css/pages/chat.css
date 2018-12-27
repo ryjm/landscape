@@ -96,6 +96,7 @@ textarea.chat-input-field {
 .chat-scrollpane-view {
   display: flex;
   flex-direction: column;
+  overflow-x: hidden !important;
   /* justify-content: flex-end; */
 }
 
