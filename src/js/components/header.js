@@ -365,7 +365,9 @@ export class Header extends Component {
           </div>
         </div>
         <div className="row align-center header-mainrow">
-          <div className="flex-col-1"></div>
+          <div className="flex-col-1 flex justify-end">
+            <div className="header-notifications text-mono text-700">3</div>
+          </div>
           <div className="flex-col-1 flex space-between align-center">
             <a onClick={this.toggleMenu}>
               <Icon type="icon-panini" />
