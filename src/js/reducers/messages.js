@@ -69,6 +69,10 @@ export class MessagesReducer {
           //   this.storeInboxMessages(store);
           // }
           break;
+
+        case "dm.new": {
+          
+        }
       }
     });
   }

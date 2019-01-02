@@ -96,6 +96,11 @@ export class ChatPage extends Component {
     }
 
     this.props.storeReports([{
+      type: "views.streamActive",
+      data: this.state.station
+    }]);
+
+    this.props.storeReports([{
       type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_PROCESSING
     }]);
@@ -106,6 +111,13 @@ export class ChatPage extends Component {
 
     this.scrollIfLocked();
     this.bindShortcuts();
+  }
+
+  componentWillUnmount() {
+    this.props.storeReports([{
+      type: "views.streamActive",
+      data: null
+    }]);
   }
 
   intelligentlyBindGramRange(range) {

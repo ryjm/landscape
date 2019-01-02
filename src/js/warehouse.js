@@ -38,6 +38,8 @@ const REPORT_KEYS = [
   'config.ext',
   'inbox.sources-loaded',
   'circle.read',
+  'views.streamActive',
+  'dm.new',
   REPORT_PAGE_STATUS,
   REPORT_NAVIGATE,
         // unused events
@@ -57,12 +59,14 @@ class UrbitWarehouse {
           messages: [],
           config: {}
         },
+        notifications: [],
         stations: {}
       },
       configs: {},
       views: {
         transition: PAGE_STATUS_PROCESSING,
-        inbox: "inbox-recent"
+        inbox: "inbox-recent",
+        activeStream: null,
       },
       reads: {},
       names: {},

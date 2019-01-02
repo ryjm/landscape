@@ -3,6 +3,7 @@ import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 import { warehouse } from '/warehouse';
 import { isDMStation, getMessageContent } from '/lib/util';
+import { getStationDetails } from '/lib/services';
 import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 
@@ -145,11 +146,19 @@ export class UrbitOperator {
 
     warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
       let station = rep.data.gam.aud[0];
+      let stationDetails = getStationDetails(station);
       let circle = station.split('/')[1];
 
       if (circle === "i") {
         let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
         this.quietlyAcceptDmInvites(msgs);
+      }
+
+      if (stationDetails.type === "dm") {
+        warehouse.storeReports([{
+          type: 'dm.new',
+          data: rep.data.gam
+        }]);
       }
     });
 
@@ -159,6 +168,10 @@ export class UrbitOperator {
         data: PAGE_STATUS_READY
       }]);
     });
+
+    // warehouse.pushCallback(['dm.new'], (rep) => {
+    //
+    // });
 
 
       // let circle = rep.from.path.split('/')[2];
