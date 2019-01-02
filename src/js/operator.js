@@ -145,21 +145,24 @@ export class UrbitOperator {
     api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections');
 
     warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
-      let station = rep.data.gam.aud[0];
-      let stationDetails = getStationDetails(station);
-      let circle = station.split('/')[1];
+      stations.forEach(station => {
+        let stationDetails = getStationDetails(station);
+        let circle = station.split('/')[1];
 
-      if (circle === "i") {
-        let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
-        this.quietlyAcceptDmInvites(msgs);
-      }
+        if (circle === "i") {
+          let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
+          this.quietlyAcceptDmInvites(msgs);
+        }
 
-      if (stationDetails.type === "dm") {
-        warehouse.storeReports([{
-          type: 'dm.new',
-          data: rep.data.gam
-        }]);
-      }
+        if (stationDetails.type === "dm") {
+          if (stationDetails.host === api.authTokens.ship) {
+            warehouse.storeReports([{
+              type: 'dm.new',
+              data: rep.data.gam
+            }]);
+          }
+        }
+      })
     });
 
     warehouse.pushCallback(['landscape.prize'], (rep) => {
