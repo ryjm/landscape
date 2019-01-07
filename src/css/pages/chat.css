@@ -97,7 +97,7 @@ textarea.chat-input-field {
   display: flex;
   flex-direction: column;
   overflow-x: hidden !important;
-  /* justify-content: flex-end; */
+  padding-bottom: 15px;
 }
 
 .chat-scrollpane-view > * {
