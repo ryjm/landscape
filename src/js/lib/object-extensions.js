@@ -16,3 +16,19 @@ Object.arrayify = (obj) => {
 
   return ret;
 }
+
+Object.cloneByProperty = (obj, propName) => {
+  let ret = [];
+  let arr = obj[propName];
+
+  console.log("obj = ", obj);
+  console.log("obj.arr = ", arr);
+
+  arr.forEach(item => {
+    let objClone = {...obj};
+    objClone[propName] = [item];
+    ret.push(objClone);
+  });
+
+  return ret;
+}

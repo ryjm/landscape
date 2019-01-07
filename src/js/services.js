@@ -113,4 +113,18 @@ export function getSubscribedStations(ship, store) {
   return ret;
 }
 
+/*
+  Does two things:
+    1) truncates partner "auds" in DM messages to just return one message for your own DM circle
+    2) split message's "aud" property into a separate message for each aud;
+*/
+export function pruneMessages(msgs) {
+  let gams = msgs.map(m => m.gam);
+  let msgAuds = _.flatMap(msgs.map(m => m.gam), m => Object.cloneByProperty(m, "aud"));
+  return msgAuds.filter(m => {
+    m.stationDetails = getStationDetails(m.aud[0]);
+    return (m.stationDetails.type !== "stream-dm" || m.stationDetails.host === api.authTokens.ship)
+  });
+}
+
 window.getStationDetails = getStationDetails

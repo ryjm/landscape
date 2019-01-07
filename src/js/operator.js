@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Mousetrap from 'mousetrap';
 import { warehouse } from '/warehouse';
 import { isDMStation, getMessageContent } from '/lib/util';
-import { getStationDetails } from '/lib/services';
+import { getStationDetails, pruneMessages } from '/services';
 import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 
@@ -74,35 +74,6 @@ export class UrbitOperator {
     });
   }
 
-  quietlyAcceptDmInvites(msgs) {
-    msgs.forEach(msg => {
-      let details = getMessageContent(msg);
-      if (details.type === "inv") {
-        let xenoStation = details.content.cir;
-        // TODO: Don't fire this if the invite has already been accepted.
-
-        if (isDMStation(xenoStation)) {
-          let xenoCir = xenoStation.split("/")[1];
-
-          let existingDMStation = _.find(Object.keys(warehouse.store.configs), station => {
-            let host = station.split("/")[0];
-            let cir = station.split("/")[1];
-
-            return (host === `~${api.authTokens.ship}` && cir === xenoCir)
-          });
-
-          if (!existingDMStation) {
-            api.hall({
-              newdm: {
-                sis: xenoCir.split(".")
-              }
-            });
-          }
-        }
-      }
-    })
-  }
-
   bindShortcuts() {
     Mousetrap.bind(["mod+k"], () => {
       warehouse.storeReports([{
@@ -113,56 +84,25 @@ export class UrbitOperator {
     });
   }
 
-  eagerFetchExtConfs() {
-    Object.keys(warehouse.store.configs).forEach(station => {
-      let stationDetails = getStationDetails(station);
-      let isCollection = ['collection-post', 'collection-index'].includes(stationDetails.type);
-      let noExtConf = !warehouse.store.configs[station].extConf;
-      if (isCollection && noExtConf) {
-        fetch(`${stationDetails.stationUrl}.x-collections-json`, {
-          credentials: "same-origin",
-        }).then(res => {
-          return res.json();
-        }).then(extConfJson => {
-          console.log('extConf = ', extConfJson);
-          let collName;
-          if (extConfJson.item) {
-            collName = extConfJson.item.meta.name;
-          } else {
-            collName = extConfJson.collection.meta.name;
-          }
-
-          warehouse.storeReports([{
-            type: "config.ext",
-            data: { station, extConf: { name: collName } }
-          }])
-        });
-      }
-    })
-  }
-
   initializeLandscape() {
     api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections');
 
     warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
-      stations.forEach(station => {
-        let stationDetails = getStationDetails(station);
-        let circle = station.split('/')[1];
+      let msgs = rep.type === "circle.gram" ? [rep.data] : rep.data;
+      let prunedMsgs = pruneMessages(msgs);
 
-        if (circle === "i") {
-          let msgs = rep.type === "circle.gram" ? [rep.data.gam] : rep.data.map(m => m.gam);
-          this.quietlyAcceptDmInvites(msgs);
+      prunedMsgs.forEach(msg => {
+        let isDM = msg.stationDetails.type === "stream-dm";
+        let fromOther = msg.aud !== api.authTokens.ship;
+        if (isDM && fromOther) {
+          warehouse.storeReports([{
+            type: 'dm.new',
+            data: msg
+          }]);
         }
+      });
 
-        if (stationDetails.type === "dm") {
-          if (stationDetails.host === api.authTokens.ship) {
-            warehouse.storeReports([{
-              type: 'dm.new',
-              data: rep.data.gam
-            }]);
-          }
-        }
-      })
+      return false;
     });
 
     warehouse.pushCallback(['landscape.prize'], (rep) => {
@@ -171,6 +111,8 @@ export class UrbitOperator {
         data: PAGE_STATUS_READY
       }]);
     });
+
+    // api.bind(`/circle/inbox/grams/-${INBOX_MESSAGE_COUNT}`, "PUT");
 
     // warehouse.pushCallback(['dm.new'], (rep) => {
     //

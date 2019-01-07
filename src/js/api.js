@@ -89,6 +89,22 @@ class UrbitApi {
       });
     }
   }
+
+  message(aud, words) {
+    let msg = {
+      aud,
+      ses: [{
+        lin: {
+          msg: words,
+          pat: false
+        }
+      }]
+    };
+
+    this.hall({
+      phrase: msg
+    });
+  }
 }
 
 export let api = new UrbitApi();
