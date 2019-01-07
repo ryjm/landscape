@@ -6,7 +6,7 @@ import { isDMStation, isValidStation, profileUrl, getLoadingClass } from '/lib/u
 import { getStationDetails } from '/services';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
-import { PAGE_STATUS_TRANSITIONING, STATUS_READY } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, STATUS_READY, LANDSCAPE_ROOT } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
@@ -257,7 +257,7 @@ export class CommandMenu extends Component {
     return [{
       name: "inbox",
       action: () => {
-        this.props.transitionTo('/~~');
+        this.props.transitionTo(LANDSCAPE_ROOT);
       },
       displayText: "inbox",
       helpText: "Go to the inbox",

@@ -3,7 +3,7 @@ import { Icon } from '/components/lib/icon';
 import { getQueryParams, profileUrl, getLoadingClass, dateToDa } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Button } from '/components/lib/button';
-import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
+import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING, LANDSCAPE_ROOT } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -176,7 +176,7 @@ export class Header extends Component {
         headerData = {
           title: {
             display: "Inbox",
-            href: "/~~"
+            href: LANDSCAPE_ROOT
           },
           icon: 'icon-inbox',
         }
@@ -186,7 +186,7 @@ export class Header extends Component {
         headerData = {
           title: {
             display: "Inbox",
-            href: "/~~"
+            href: LANDSCAPE_ROOT
           },
           icon: 'icon-inbox'
         }

@@ -1,5 +1,6 @@
 import { profileUrl, isDMStation } from '/lib/util';
 import { warehouse } from '/warehouse';
+import { LANDSCAPE_ROOT } from '/lib/constants';
 import { api } from '/api';
 
 export function getStationDetails(station) {
@@ -33,7 +34,7 @@ export function getStationDetails(station) {
 
   switch (ret.type) {
     case "aggregator-inbox":
-      ret.stationUrl = "/~~";
+      ret.stationUrl = LANDSCAPE_ROOT;
       ret.stationTitle = ret.cir;
       break;
     case "stream-chat":
