@@ -180,6 +180,16 @@ class UrbitWarehouse {
       })
     }
   }
+
+  /* LocalStorage functions */
+
+  localSet(key, val) {
+    window.localStorage.setItem(key, JSON.stringify(val));
+  }
+
+  localGet(key) {
+    return JSON.parse(window.localStorage.getItem(key));
+  }
 }
 
 export let warehouse = new UrbitWarehouse();

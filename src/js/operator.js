@@ -84,23 +84,40 @@ export class UrbitOperator {
     });
   }
 
+  initializeLocalStorage() {
+    warehouse.pushCallback('landscape.prize', rep => {
+      let uids = Object.values(rep.data.dms).flatMap(m => m.messages).map(m => m.gam.uid);
+
+      if (!warehouse.localGet('dms-seen')) {
+        warehouse.localSet('dms-seen', uids);
+      }
+    });
+  }
+
   initializeLandscape() {
+    this.initializeLocalStorage();
+
     api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections');
 
     warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
       let msgs = rep.type === "circle.gram" ? [rep.data] : rep.data;
       let prunedMsgs = pruneMessages(msgs);
+      let dmMsgs = prunedMsgs.filter(m => {
+        let isDm = m.stationDetails.type === "stream-dm";
+        let fromOther = m.aud !== api.authTokens.ship;
 
-      prunedMsgs.forEach(msg => {
-        let isDM = msg.stationDetails.type === "stream-dm";
-        let fromOther = msg.aud !== api.authTokens.ship;
-        if (isDM && fromOther) {
-          warehouse.storeReports([{
-            type: 'dm.new',
-            data: msg
-          }]);
-        }
+        return isDm && fromOther;
       });
+
+      let seenDms = warehouse.localGet('dms-seen');
+      let newDms = _.difference(dmMsgs, seenDms);
+
+      if (newDms.length > 0) {
+        warehouse.storeReports([{
+          type: 'dm.new',
+          data: newDms
+        }]);
+      }
 
       return false;
     });
