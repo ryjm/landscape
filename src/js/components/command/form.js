@@ -145,7 +145,7 @@ export class CommandForm extends Component {
           />
         </div>
         <Button
-          classes={`btn btn-sm btn-block`}
+          classes={`btn btn-block`}
           action={this.props.cancel}
           focusChange={this.focusChange}
           disabled={this.state.status === STATUS_LOADING}

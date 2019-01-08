@@ -194,7 +194,7 @@ export class TopicCreatePage extends Component {
             <Button
               content="Publish"
               disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
-              classes="btn btn-sm btn-secondary mr-1"
+              classes="btn btn-secondary mr-1"
               action={this.createTopic}
               responseKey="circle.config.dif.full"
               pushCallback={this.props.pushCallback} />

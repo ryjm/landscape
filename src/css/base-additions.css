@@ -228,6 +228,7 @@ label {
   padding: 8px 0;
   margin-bottom: 0;
   display: inline-block;
+  position: relative;
 
   font-size: 16px;
   line-height: 20px;
@@ -266,10 +267,11 @@ label {
 }
 
 .btn-spinner {
-  position: relative;
+  position: absolute;
   display: inline-block;
   width: 10px;
   height: 10px;
+  top: 12px;
 }
 
 .btn-spinner::after {
