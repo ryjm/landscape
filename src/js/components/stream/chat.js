@@ -3,8 +3,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
-import { prettyShip, isUrl, uuid, getMessageContent, isDMStation, dateToDa } from '/lib/util';
-// import { createDMStation } from '/services';
+import { prettyShip, getMessageContent, isUrl, uuid, isDMStation, dateToDa } from '/lib/util';
 import { sealDict } from '/components/lib/seal-dict';
 import { Elapsed } from '/components/lib/elapsed';
 import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
@@ -17,17 +16,7 @@ export class ChatPage extends Component {
 
     this.presence = false;
 
-    // TODO: This is bad. Issue is that queryParams aren't being loaded properly
-    let station = props.queryParams.station || "~zod/null";
-
-    let circle = station.split("/")[1];
-    let host = station.split("/")[0].substr(1);
-
     this.state = {
-      station,
-      circle,
-      host,
-      placeholder: `Send a message to /${circle}`,
       message: "",
       invitee: "",
       numMessages: 0,
@@ -71,8 +60,20 @@ export class ChatPage extends Component {
 
     _.pullAt(state.pendingMessages, clearIndexes);
 
+    let station = props.queryParams.station || null;
+    let circle, host;
+
+    if (station) {
+      circle = station.split("/")[1];
+      host = station.split("/")[0].substr(1);
+    }
+
     return {
       ...state,
+      station,
+      circle,
+      host,
+      placeholder: `Send a message to /${circle}`,
       pendingMessages: state.pendingMessages,
     }
   }
@@ -87,6 +88,8 @@ export class ChatPage extends Component {
   }
 
   componentDidMount() {
+    if (!this.state.station) return null;
+
     if (isDMStation(this.state.station)) {
       let cir = this.state.station.split("/")[1];
       this.props.api.hall({
@@ -97,16 +100,28 @@ export class ChatPage extends Component {
     }
 
     this.props.storeReports([{
+      type: "views.streamActive",
+      data: this.state.station
+    }]);
+
+    this.props.storeReports([{
       type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_PROCESSING
     }]);
 
-    this.props.pushCallback("inbox.sources-loaded", rep => {
-      this.intelligentlyBindGramRange([-20]);
-    });
+    // this.props.pushCallback("inbox.sources-loaded", rep => {
+    //   this.intelligentlyBindGramRange([-20]);
+    // });
 
     this.scrollIfLocked();
     this.bindShortcuts();
+  }
+
+  componentWillUnmount() {
+    this.props.storeReports([{
+      type: "views.streamActive",
+      data: null
+    }]);
   }
 
   intelligentlyBindGramRange(range) {
@@ -164,15 +179,15 @@ export class ChatPage extends Component {
       data: PAGE_STATUS_PROCESSING
     }])
 
-    this.intelligentlyBindGramRange([newNumMessages * -1, this.state.numMessages * -1])
-      .then((res) => {
-        if (res.status === 500) {
-          this.props.storeReports([{
-            type: REPORT_PAGE_STATUS,
-            data: PAGE_STATUS_READY
-          }])
-        }
-      });
+    // this.intelligentlyBindGramRange([newNumMessages * -1, this.state.numMessages * -1])
+    //   .then((res) => {
+    //     if (res.status === 500) {
+    //       this.props.storeReports([{
+    //         type: REPORT_PAGE_STATUS,
+    //         data: PAGE_STATUS_READY
+    //       }])
+    //     }
+    //   });
 
     this.props.pushCallback('circle.nes', rep => {
       this.props.storeReports([{
@@ -379,11 +394,31 @@ export class ChatPage extends Component {
     )
   }
 
+  setSeenDms(msgs) {
+    if (isDMStation(this.state.station) && msgs) {
+      let msgIds = msgs.map(m => m.uid);
+      let seenIds = this.props.localGet('dms-seen');
+      let newSeenMsgIds = _.uniq([...msgIds, ...seenIds]);
+      this.props.localSet('dms-seen', newSeenMsgIds);
+
+      if (seenIds.length !== newSeenMsgIds.length) {
+        this.props.storeReports([{
+          type: 'dm.clear',
+          data: newSeenMsgIds
+        }]);
+      }
+    }
+  }
+
   render() {
     // TODO: This is bad. Issue is that props aren't being loaded properly
-    if (this.state.station === "~zod/null") return null;
+
+    if (!this.state.station) return null;
 
     let messages = this.props.store.messages.stations[this.state.station] || [];
+
+    this.setSeenDms(messages);
+
     messages = [...messages, ...this.state.pendingMessages];
 
     this.setPresence(this.state.station);
@@ -399,7 +434,7 @@ export class ChatPage extends Component {
           onScrollStop={this.onScrollStop}
           renderView={props => <div {...props} className="chat-scrollpane-view"/>}
           autoHide
-          className="chat-scrollpane flex-chat-body">
+          className="flex-chat-scrollpane">
           {chatMessages}
         </Scrollbars>
         <div className="row mt-3 flex-chat-input">

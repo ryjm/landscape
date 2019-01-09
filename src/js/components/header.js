@@ -3,7 +3,7 @@ import { Icon } from '/components/lib/icon';
 import { getQueryParams, profileUrl, getLoadingClass, dateToDa } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Button } from '/components/lib/button';
-import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING } from '/lib/constants';
+import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING, LANDSCAPE_ROOT } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -176,7 +176,7 @@ export class Header extends Component {
         headerData = {
           title: {
             display: "Inbox",
-            href: "/~~"
+            href: LANDSCAPE_ROOT
           },
           icon: 'icon-inbox',
         }
@@ -186,7 +186,7 @@ export class Header extends Component {
         headerData = {
           title: {
             display: "Inbox",
-            href: "/~~"
+            href: LANDSCAPE_ROOT
           },
           icon: 'icon-inbox'
         }
@@ -311,15 +311,15 @@ export class Header extends Component {
       return Object.arrayify(headerData.actions).map(({key, value}) => {
         let lusElem = null;
         let labelElem = key;
-        let subscribeAction = false;
 
         switch (key) {
           case "details":
             labelElem = (<Icon type="icon-ellipsis" />);
+            return null;  // Remove "details" page for now
             break;
           case "subscribe":
             labelElem = this.isSubscribed(headerData.station) ? "Unsubscribe" : "Subscribe";
-            subscribeAction = true;
+            return null;  // Remove "subscribe" action for now
             break;
           case "write":
             lusElem = key === "write" ? (<Icon type="icon-lus" label={true} />) : null;
@@ -365,7 +365,12 @@ export class Header extends Component {
           </div>
         </div>
         <div className="row align-center header-mainrow">
-          <div className="flex-col-1"></div>
+          <div className="flex-col-1 flex justify-end">
+            <HeaderNotification
+              notifications={this.props.store.messages.notifications}
+              pushCallback={this.props.pushCallback}
+            />
+          </div>
           <div className="flex-col-1 flex space-between align-center">
             <a onClick={this.toggleMenu}>
               <Icon type="icon-panini" />
@@ -400,5 +405,49 @@ export class Header extends Component {
     let headerContent = this.buildHeaderContent(headerData);
 
     return headerContent;
+  }
+}
+
+class HeaderNotification extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      notificationClass: null
+    }
+  }
+
+  componentDidMount() {
+    this.props.pushCallback('dm.new', rep => {
+      this.setState({
+        notificationClass: "header-notifications-flash"
+      });
+
+      setTimeout(() => {
+        this.setState({
+          notificationClass: null
+        });
+      }, 5000);
+
+      return false;
+    })
+  }
+
+  render() {
+    let notificationHref;
+
+    if (this.props.notifications.length > 0) {
+      notificationHref = this.props.notifications[0].stationDetails.stationUrl;
+    }
+
+    return (
+      <React.Fragment>
+        {this.props.notifications.length > 0 &&
+          <a className="vanilla" href={notificationHref}>
+            <div className={`header-notifications text-mono text-700 ${this.state.notificationClass}`}>{this.props.notifications.length}</div>
+          </a>
+        }
+      </React.Fragment>
+    )
   }
 }

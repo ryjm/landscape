@@ -2,7 +2,6 @@ import _ from 'lodash';
 import urbitOb from 'urbit-ob';
 import classnames from 'classnames';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_RECONNECTING, AGGREGATOR_NAMES } from '/lib/constants';
-import { getStationDetails } from '/services';
 
 export function capitalize(str) {
   return `${str[0].toUpperCase()}${str.substr(1)}`;
@@ -27,7 +26,7 @@ export function esoo(str) {
 // check if hostname follows ship.*.urbit.org scheme
 export function isProxyHosted(hostName) {
   const r = /([a-z,-]+)\.(.+\.)?urbit\.org/.exec(hostName);
-  if (r && urbitOb.isShip(r[1])) {
+  if (r && urbitOb.isValidPatp(r[1])) {
     return true;
   }
   return false;
@@ -147,7 +146,7 @@ export function isValidStation(st) {
 
   if (tokens.length !== 2) return false;
 
-  return urbitOb.isShip(tokens[0]) && isPatTa(tokens[1]);
+  return urbitOb.isValidPatp(tokens[0]) && isPatTa(tokens[1]);
 }
 
 
@@ -247,6 +246,17 @@ export function isRootCollection(station) {
   return station.split("/")[1] === "c";
 }
 
+// maybe do fancier stuff later
+export function isUrl(string) {
+  const r = /^http|^www|\.com$/.exec(string)
+  if (r) {
+    return true
+  }
+  else {
+    return false
+  }
+}
+
 export function getMessageContent(msg) {
   let ret;
 
@@ -256,7 +266,6 @@ export function getMessageContent(msg) {
     'sep.fat': (msg) => {
       let type = msg.sep.fat.tac.text;
       let station = msg.aud[0];
-      let stationDetails = getStationDetails(station);
       let jason = JSON.parse(msg.sep.fat.sep.lin.msg);
       let content = (type.includes('collection')) ? null : jason.content;
       let par = jason.path.slice(0, -1);
@@ -308,47 +317,4 @@ export function getMessageContent(msg) {
   }
 
   return ret;
-}
-
-export function getSubscribedStations(ship, store) {
-  let inbox = store.messages.inbox;
-  let configs = store.configs;
-
-  // TODO: Maybe I need this?
-  // if (!inbox) return null;
-
-  let stationDetailList = inbox.src
-    .map((station) => {
-      if (!configs[station]) return null;
-      return getStationDetails(station)
-    })
-    .filter((station) => station !== null);
-
-  let ret = {
-    chatStations: stationDetailList.filter((d) => d.type === "stream-chat"),
-    collStations: stationDetailList.filter((d) => d.type === "collection-index"),
-    dmStations: stationDetailList.filter((d) => d.type === "stream-dm"),
-  };
-
-  let numSubs = ret.chatStations.length + ret.collStations.length;
-  let numDMs = ret.dmStations.length;
-
-  let numString = [];
-  if (numSubs > 0) numString.push(`${numSubs} subscriptions`);
-  if (numDMs > 0) numString.push(`${numDMs} DMs`);
-
-  ret.numString = numString.join(", ");
-
-  return ret;
-}
-
-// maybe do fancier stuff later
-export function isUrl(string) {
-  const r = /^http|^www|\.com$/.exec(string)
-  if (r) {
-    return true
-  }
-  else {
-    return false
-  }
 }

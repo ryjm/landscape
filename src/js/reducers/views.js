@@ -14,11 +14,14 @@ export class ViewsReducer {
           // }
 
           store.views.transition = rep.data;
-
           break;
 
         case REPORT_NAVIGATE:
           store.views[rep.data.page] = rep.data.view;
+          break;
+
+        case "views.streamActive":
+          store.views.streamActive = rep.data;
           break;
       }
     });

@@ -1,7 +1,5 @@
-/+  collections, colls
+/+  collections
 /=  gas  /$  fuel:html
-::/=  all-colls  /:  /===/web/collections
-::               /collection-web-item/
 |%
   :: is this collection on the profile?
   ++  is-pro
@@ -35,7 +33,7 @@
       ;div.flex-col-2;
       ;h3.text-500.flex-col-1.mt-0: Issued:
       ;div.flex-col-x
-        ;a.text-mono(href "/~~/{(scow %p (sein:title p.bem.gas))}/==/web/landscape/profile"): {(scow %p (sein:title p.bem.gas))}
+        ;a.text-mono(href "/~~/{(scow %p (^sein:title p.bem.gas))}/==/web/landscape/profile"): {(scow %p (^sein:title p.bem.gas))}
       ==
     ==
   ==

@@ -51,6 +51,8 @@ export class Root extends Component {
           storeReports: this.props.storeReports,
           pushCallback: this.props.pushCallback,
           transitionTo: this.props.transitionTo,
+          localGet: this.props.localGet,
+          localSet: this.props.localSet,
           queryParams: getQueryParams(),
         }, propsObj));
       }
@@ -131,6 +133,8 @@ export class Root extends Component {
         storeReports={this.props.storeReports}
         pushCallback={this.props.pushCallback}
         transitionTo={this.props.transitionTo}
+        localSet={this.props.localSet}
+        localGet={this.props.localGet}
         runPoll={this.props.runPoll}
       />
     );
@@ -151,12 +155,12 @@ export class Root extends Component {
       )
     } else {
       let parser = new DOMParser();
-      let tempDOM = parser.parseFromString(this.props.scaffold, "text/xml");
+      let tempDOM = parser.parseFromString(this.props.scaffold, "text/html");
       content = (
-        <div>
+        <React.Fragment>
           {this.loadHeader(tempDOM)}
           {this.reactify()}
-        </div>
+        </React.Fragment>
       )
     }
 

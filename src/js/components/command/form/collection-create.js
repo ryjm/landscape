@@ -22,7 +22,7 @@ export class CommandFormCollectionCreate extends Component {
         validate: (value) => {
           if (value === "") return true;
           let tokens = value.trim().split("\n").map(t => t.trim());
-          return tokens.reduce((valid, s) => valid && urbitOb.isShip(s) && s.includes("~"), true);
+          return tokens.reduce((valid, s) => valid && urbitOb.isValidPatp(s) && s.includes("~"), true);
         }
       }, {
         name: "visible",
@@ -56,13 +56,13 @@ export class CommandFormCollectionCreate extends Component {
           let station = `~${this.props.api.authTokens.ship}/${rep.data.cir}`;
           let details = getStationDetails(station);
 
-          this.props.api.hall({
-            source: {
-              nom: 'inbox',
-              sub: true,
-              srs: [station]
-            }
-          });
+          // this.props.api.hall({
+          //   source: {
+          //     nom: 'inbox',
+          //     sub: true,
+          //     srs: [station]
+          //   }
+          // });
 
           if (this.state.formData.invites.length > 0) {
             let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim());

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getMessageContent, isDMStation, isRootCollection } from '/lib/util';
+import { isDMStation, isRootCollection, getMessageContent } from '/lib/util';
 import { INBOX_MESSAGE_COUNT } from '/lib/constants';
 
 export class MessagesReducer {
@@ -35,6 +35,50 @@ export class MessagesReducer {
             this.storeInboxMessages(store);
           }
           break;
+
+        case "circle.config":
+          fromInbox = rep.data.cir.includes("inbox");
+          if (fromInbox && _.get(rep.data, 'dif.source', null)) {
+            if (rep.data.dif.source.add) {
+              store.messages.inbox.src = [...store.messages.inbox.src, rep.data.dif.source.src];
+            } else {
+              store.messages.inbox.src = store.messages.inbox.src.filter(src => src !== rep.data.dif.source.src);
+            }
+            this.storeInboxMessages(store);
+          }
+
+          break;
+
+        case "landscape.prize":
+          if (rep.data.inbox) {
+            store.messages.inbox.src = [...store.messages.inbox.src, ...rep.data.inbox.config.src];
+            store.messages.inbox.config = rep.data.inbox.config;
+            this.processMessages(rep.data.inbox.messages, store);
+            this.processMessages(rep.data.invites, store);
+            this.storeInboxMessages(store);
+          } else {
+            console.log("WEIRD: no inbox property in landscape.prize?")
+          }
+
+          // if (fromInbox) {
+          //   if (rep.data.add) {
+          //     store.messages.inbox.src = [...store.messages.inbox.src, rep.data.src];
+          //   } else {
+          //     store.messages.inbox.src = store.messages.inbox.src.filter(src => src !== rep.data.src);
+          //   }
+          //   this.storeInboxMessages(store);
+          // }
+          break;
+
+        case "dm.new": {
+          store.messages.notifications = [...store.messages.notifications, ...rep.data];
+          break;
+        }
+
+        case "dm.clear": {
+          store.messages.notifications = store.messages.notifications.filter(n => !rep.data.includes(n.uid));
+          break;
+        }
       }
     });
   }

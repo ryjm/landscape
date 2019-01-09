@@ -6,7 +6,7 @@ import { isDMStation, isValidStation, profileUrl, getLoadingClass } from '/lib/u
 import { getStationDetails } from '/services';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
-import { PAGE_STATUS_TRANSITIONING, STATUS_READY } from '/lib/constants';
+import { PAGE_STATUS_TRANSITIONING, STATUS_READY, LANDSCAPE_ROOT } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
@@ -85,7 +85,6 @@ export class CommandMenu extends Component {
     });
 
     Mousetrap.bind('esc', (e) => {
-      if (this.commandInputDisabled()) return;
       if (this.state.view !== "command") {
         this.cancelView();
       } else {
@@ -176,7 +175,7 @@ export class CommandMenu extends Component {
 
   // term can be '~marzod' or '~marzod/testnet-meta'
   buildGoOption(term) {
-    let isShip = urbitOb.isShip(term.substr(1));
+    let isValidPatp = urbitOb.isValidPatp(term.substr(1));
     let isStation = isValidStation(term);
     let details = isStation && getStationDetails(term);
     // use collection description if it's a collection
@@ -191,7 +190,7 @@ export class CommandMenu extends Component {
       name: `go ${term}`,
       action: () => {
         let targetUrl;
-        if (isShip) {
+        if (isValidPatp) {
           targetUrl = profileUrl(term.substr(1))
           this.props.transitionTo(targetUrl);
         } else if (isStation) {
@@ -218,7 +217,7 @@ export class CommandMenu extends Component {
     return {
       name: `dm ${name}`,
       action: () => {
-        if (urbitOb.isShip(name.substr(1))) {
+        if (urbitOb.isValidPatp(name)) {
           let members = [this.props.api.authTokens.ship, name.substr(1)]
           let station = `~${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
           let stationDetails = getStationDetails(station);
@@ -257,7 +256,7 @@ export class CommandMenu extends Component {
     return [{
       name: "inbox",
       action: () => {
-        this.props.transitionTo('/~~');
+        this.props.transitionTo(LANDSCAPE_ROOT);
       },
       displayText: "inbox",
       helpText: "Go to the inbox",
@@ -271,7 +270,7 @@ export class CommandMenu extends Component {
     }, {
       name: "go",
       action: "go ~",
-      displayText: "go [~ship/stream]",
+      displayText: "go [~ship/chat]",
       helpText: "Go to <stream> on <~ship>",
     }, {
       name: "go",

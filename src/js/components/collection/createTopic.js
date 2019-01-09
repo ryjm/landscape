@@ -3,7 +3,7 @@ import { Button } from '/components/lib/button';
 import { getQueryParams, daToDate } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Elapsed } from '/components/lib/elapsed';
-import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
+import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS, HARDCODED_FORA } from '/lib/constants';
 import _ from 'lodash';
 import classnames from 'classnames';
 
@@ -23,9 +23,9 @@ export class TopicCreatePage extends Component {
   }
 
   componentDidMount() {
-    let path = `/circle/${this.state.details.namedCircle}/config-l/grams/-10`;
+    // let path = `/circle/${this.state.details.namedCircle}/config-l/grams/-10`;
 
-    this.props.api.bind(path, "PUT", this.state.details.hostship);
+    // this.props.api.bind(path, "PUT", this.state.details.hostship);
 
     if (this.state.editMode) {
       let metadataQuery = window.document.querySelectorAll('[name="urb-metadata"]')[0];
@@ -120,24 +120,39 @@ export class TopicCreatePage extends Component {
         return false;
       });
     } else {
-      this.props.pushCallback("circles", (rep) => {
-        this.props.storeReports([{
-          type: REPORT_PAGE_STATUS,
-          data: PAGE_STATUS_READY
-        }]);
+      this.props.pushCallback("circle.gram", (rep) => {
+        let isFora = rep.data.gam.aud[0] === HARDCODED_FORA;
+
+        let tacText = _.get(rep.data, "gam.sep.fat.tac.text", null);
+        let isNewPost = tacText && tacText === "new item";
+
+        let linMsg = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
+        let gramMetadata = linMsg && JSON.parse(linMsg);
+        let isYourNewPost = gramMetadata.owner === `~${api.authTokens.ship}`;
+
+        if (isNewPost && isYourNewPost) {
+          this.props.storeReports([{
+            type: REPORT_PAGE_STATUS,
+            data: PAGE_STATUS_READY
+          }]);
+
+          let topicStation = `${rep.data.gam.aud[0]}-${gramMetadata.date}`;
+          let stationDetails = getStationDetails(topicStation);
+          this.props.transitionTo(stationDetails.stationUrl);
+        }
 
         let station = `${rep.from.path.split('/')[2]}/${rep.data.cir}`;
-        let stationDetails = getStationDetails(station);
 
-        api.hall({
-          source: {
-            nom: 'inbox',
-            sub: true,
-            srs: [station]
-          }
-        })
 
-        this.props.transitionTo(stationDetails.stationUrl);
+        // api.hall({
+        //   source: {
+        //     nom: 'inbox',
+        //     sub: true,
+        //     srs: [station]
+        //   }
+        // })
+
+
       });
     }
   }
@@ -179,7 +194,7 @@ export class TopicCreatePage extends Component {
             <Button
               content="Publish"
               disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
-              classes="btn btn-sm btn-secondary mr-1"
+              classes="btn btn-secondary mr-1"
               action={this.createTopic}
               responseKey="circle.config.dif.full"
               pushCallback={this.props.pushCallback} />

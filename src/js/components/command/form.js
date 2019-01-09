@@ -61,6 +61,8 @@ export class CommandForm extends Component {
                    _.without(this.state.errorList, e.target.name)
                  : [...this.state.errorList, e.target.name]
     });
+
+    return true;
   }
 
   validateField(name, value) {
@@ -145,14 +147,15 @@ export class CommandForm extends Component {
           />
         </div>
         <Button
-          classes={`btn btn-sm btn-block`}
+          type="button"
+          classes={`btn btn-block`}
           action={this.props.cancel}
           focusChange={this.focusChange}
           disabled={this.state.status === STATUS_LOADING}
           content="Cancel"
           pushCallback={this.props.pushCallback}
         />
-        <div className="mt-2 ml-3">Note: All circles are public on the testnet while permissions are built</div>
+        <div className="mt-4 ml-3">Warning: Security has not been vetted for this testing period; assume only partial privacy.</div>
       </div>
     )
   }

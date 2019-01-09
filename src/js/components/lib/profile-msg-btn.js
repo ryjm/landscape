@@ -9,7 +9,7 @@ export class ProfileMsgBtn extends Component {
     let dmLink = `/~~/landscape/stream?station=${dmStation}`;
 
     return (
-      <a className="vanilla mt-10 btn btn-sm btn-primary inline-block" href={dmLink}>Message</a>
+      <a className="vanilla mt-10 btn btn-primary inline-block" href={dmLink}>Message</a>
     );
   }
 }

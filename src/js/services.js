@@ -1,5 +1,6 @@
 import { profileUrl, isDMStation } from '/lib/util';
 import { warehouse } from '/warehouse';
+import { LANDSCAPE_ROOT } from '/lib/constants';
 import { api } from '/api';
 
 export function getStationDetails(station) {
@@ -33,7 +34,7 @@ export function getStationDetails(station) {
 
   switch (ret.type) {
     case "aggregator-inbox":
-      ret.stationUrl = "/~~";
+      ret.stationUrl = LANDSCAPE_ROOT;
       ret.stationTitle = ret.cir;
       break;
     case "stream-chat":
@@ -54,6 +55,15 @@ export function getStationDetails(station) {
 
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
       ret.stationTitle = config && config.extConf ? config.extConf.name : "TBD";
+
+      if (config && config.extConf) {
+        ret.stationTitle = config.extConf.name;
+      }
+
+      if (config) {
+        ret.stationTitle = config.cap;
+      }
+
       break;
     case "collection-post":
       ret.collId = circleParts[1];
@@ -70,6 +80,52 @@ export function getStationDetails(station) {
   }
 
   return ret;
+}
+
+export function getSubscribedStations(ship, store) {
+  let inbox = store.messages.inbox;
+  let configs = store.configs;
+
+  // TODO: Maybe I need this?
+  // if (!inbox) return null;
+
+  let stationDetailList = inbox.src
+    .map((station) => {
+      if (!configs[station]) return null;
+      return getStationDetails(station)
+    })
+    .filter((station) => station !== null);
+
+  let ret = {
+    chatStations: stationDetailList.filter((d) => d.type === "stream-chat"),
+    collStations: stationDetailList.filter((d) => d.type === "collection-index"),
+    dmStations: stationDetailList.filter((d) => d.type === "stream-dm"),
+  };
+
+  let numSubs = ret.chatStations.length + ret.collStations.length;
+  let numDMs = ret.dmStations.length;
+
+  let numString = [];
+  if (numSubs > 0) numString.push(`${numSubs} subscriptions`);
+  if (numDMs > 0) numString.push(`${numDMs} DMs`);
+
+  ret.numString = numString.join(", ");
+
+  return ret;
+}
+
+/*
+  Does two things:
+    1) truncates partner "auds" in DM messages to just return one message for your own DM circle
+    2) split message's "aud" property into a separate message for each aud;
+*/
+export function pruneMessages(msgs) {
+  let gams = msgs.map(m => m.gam);
+  let msgAuds = _.flatMap(msgs.map(m => m.gam), m => Object.cloneByProperty(m, "aud"));
+  return msgAuds.filter(m => {
+    m.stationDetails = getStationDetails(m.aud[0]);
+    return (m.stationDetails.type !== "stream-dm" || m.stationDetails.host === api.authTokens.ship)
+  });
 }
 
 window.getStationDetails = getStationDetails

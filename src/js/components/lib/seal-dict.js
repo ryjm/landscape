@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { pour } from '/vendor/urb-sigils';
+import { pour } from '/vendor/sigils-1.2.5';
 import _ from 'lodash';
 
 const ReactSVGComponents = {
