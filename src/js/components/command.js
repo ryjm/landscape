@@ -85,7 +85,6 @@ export class CommandMenu extends Component {
     });
 
     Mousetrap.bind('esc', (e) => {
-      if (this.commandInputDisabled()) return;
       if (this.state.view !== "command") {
         this.cancelView();
       } else {
