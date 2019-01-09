@@ -4,7 +4,7 @@ import { Icon } from '/components/lib/icon';
 import { Elapsed } from '/components/lib/elapsed';
 import classnames from 'classnames';
 
-export class InboxListPage extends Component {
+export class InboxAllPage extends Component {
   constructor(props) {
     super(props);
   }

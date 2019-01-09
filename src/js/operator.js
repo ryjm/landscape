@@ -7,7 +7,7 @@ import { getStationDetails, pruneMessages } from '/services';
 import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 
-const LONGPOLL_TIMEOUT = 30000;
+const LONGPOLL_TIMEOUT = 15000;
 const LONGPOLL_TRYAGAIN = 30000;
 
 /**
@@ -42,14 +42,15 @@ const LONGPOLL_TRYAGAIN = 30000;
 export class UrbitOperator {
   constructor() {
     this.seqn = 1;
+    this.disconnectTimer = null;
   }
 
   start() {
     if (api.authTokens) {
-      this.runPoll();
       this.initializeLandscape();
       this.bindShortcuts();
       this.setCleanupTasks();
+      this.refreshPoll();
     } else {
       console.error("~~~ ERROR: Must set api.authTokens before operation ~~~");
     }
@@ -263,6 +264,26 @@ export class UrbitOperator {
     // this.bind("/circle/inbox/grams/0", "DELETE");
   }
 
+  refreshPoll() {
+    if (this.disconnectTimer) clearTimeout(this.disconnectTimer);
+
+    this.disconnectTimer = setTimeout(() => {
+      warehouse.storeReports([{
+        type: REPORT_PAGE_STATUS,
+        data: PAGE_STATUS_DISCONNECTED
+      }]);
+    }, LONGPOLL_TIMEOUT);
+
+    if (warehouse.store.views.transition === PAGE_STATUS_DISCONNECTED) {
+      warehouse.storeReports([{
+        type: REPORT_PAGE_STATUS,
+        data: PAGE_STATUS_READY
+      }]);
+    }
+
+    this.runPoll();
+  }
+
   runPoll() {
     console.log('fetching... ', this.seqn);
 
@@ -286,21 +307,9 @@ export class UrbitOperator {
         return res.json();
       })
       .then(data => {
-        // warehouse.storeReports([{
-        //   type: REPORT_PAGE_STATUS,
-        //   data: PAGE_STATUS_READY
-        // }]);
-
-        // clearTimeout(disconnectedTimeout);
-
         if (data.beat) {
           console.log('beat');
-          this.runPoll();
-        // } else if (data.type === "quit") {
-        //   console.log("rebinding: ", data);
-        //   api.bind(data.from.path, "PUT", data.from.ship, data.from.appl);
-        //   this.seqn++;
-        //   this.runPoll();
+          this.refreshPoll();
         } else {
           console.log("new server data: ", data);
 
@@ -309,22 +318,14 @@ export class UrbitOperator {
           }
 
           this.seqn++;
-          this.runPoll();
+          this.refreshPoll();
         }
       })
       .catch(error => {
         console.error('error = ', error);
-        // warehouse.storeReports([{
-        //   type: REPORT_PAGE_STATUS,
-        //   data: PAGE_STATUS_DISCONNECTED
-        // }]);
-        //
-        // clearTimeout(disconnectedTimeout);
-
-        // TODO: Make this reconnect automatically
-        // setTimeout(() => {
-        //   this.runPoll();
-        // }, LONGPOLL_TRYAGAIN);
+        setTimeout(() => {
+          this.runPoll();
+        }, LONGPOLL_TRYAGAIN);
       });
   }
 }

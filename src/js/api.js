@@ -73,21 +73,25 @@ class UrbitApi {
     });
 
     if (message) {
-      let audInboxes = aud.map((aud) => `~${aud}/i`);
-      let inviteMessage = {
-        aud: audInboxes,
-        ses: [{
-          inv: {
-            inv: true,
-            cir: `~${this.authTokens.ship}/${nom}`
-          }
-        }]
-      };
-
-      this.hall({
-        phrase: inviteMessage
-      });
+      this.invite(nom, aud);
     }
+  }
+
+  invite(nom, aud) {
+    let audInboxes = aud.map((aud) => `~${aud}/i`);
+    let inviteMessage = {
+      aud: audInboxes,
+      ses: [{
+        inv: {
+          inv: true,
+          cir: `~${this.authTokens.ship}/${nom}`
+        }
+      }]
+    };
+
+    this.hall({
+      phrase: inviteMessage
+    });
   }
 
   message(aud, words) {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { InboxRecentPage } from '/components/inbox/recent';
-import { InboxListPage } from '/components/inbox/list';
+import { InboxAllPage } from '/components/inbox/all';
 import classnames from 'classnames';
 
 export class InboxPage extends Component {
@@ -14,7 +14,7 @@ export class InboxPage extends Component {
     if (this.props.store.views.inbox === "inbox-recent") {
       content = <InboxRecentPage {...this.props} />;
     } else if (this.props.store.views.inbox === "inbox-list") {
-      content = <InboxListPage {...this.props} />;
+      content = <InboxAllPage {...this.props} />;
     }
 
     return (

@@ -54,6 +54,7 @@ export class MessagesReducer {
             store.messages.inbox.src = [...store.messages.inbox.src, ...rep.data.inbox.config.src];
             store.messages.inbox.config = rep.data.inbox.config;
             this.processMessages(rep.data.inbox.messages, store);
+            this.processMessages(rep.data.invites, store);
             this.storeInboxMessages(store);
           } else {
             console.log("WEIRD: no inbox property in landscape.prize?")
