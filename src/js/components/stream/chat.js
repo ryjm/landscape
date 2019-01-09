@@ -17,16 +17,8 @@ export class ChatPage extends Component {
     this.presence = false;
 
     // // TODO: This is bad. Issue is that queryParams aren't being loaded properly
-    let station = props.queryParams.station || "~zod/null";
-
-    let circle = station.split("/")[1];
-    let host = station.split("/")[0].substr(1);
 
     this.state = {
-      station,
-      circle,
-      host,
-      placeholder: `Send a message to /${circle}`,
       message: "",
       invitee: "",
       numMessages: 0,
@@ -70,16 +62,20 @@ export class ChatPage extends Component {
 
     _.pullAt(state.pendingMessages, clearIndexes);
 
-    // if (isDMStation(this.state.station)) {
-    //   let msgs = prevProps.store.messages.stations[this.state.station];
-    //   let msgIds = msgs.map(m => m.uid);
-    //   let seenIds = this.props.localGet('dms-seen');
-    //   let newSeenMsgIds = _.uniq([...msgIds, ...seenIds]);
-    //   this.props.localSet('dms-seen', newSeenMsgIds);
-    // }
+    let station = props.queryParams.station || null;
+    let circle, host;
+
+    if (station) {
+      circle = station.split("/")[1];
+      host = station.split("/")[0].substr(1);
+    }
 
     return {
       ...state,
+      station,
+      circle,
+      host,
+      placeholder: `Send a message to /${circle}`,
       pendingMessages: state.pendingMessages,
     }
   }
@@ -403,9 +399,6 @@ export class ChatPage extends Component {
       let msgIds = msgs.map(m => m.uid);
       let seenIds = this.props.localGet('dms-seen');
       let newSeenMsgIds = _.uniq([...msgIds, ...seenIds]);
-
-      console.log('newSeenMsgIds = ', newSeenMsgIds);
-
       this.props.localSet('dms-seen', newSeenMsgIds);
 
       if (seenIds.length !== newSeenMsgIds.length) {
@@ -419,7 +412,8 @@ export class ChatPage extends Component {
 
   render() {
     // TODO: This is bad. Issue is that props aren't being loaded properly
-    if (this.state.station === "~zod/null") return null;
+
+    if (!this.state.station) return null;
 
     let messages = this.props.store.messages.stations[this.state.station] || [];
 
