@@ -46,6 +46,13 @@
   font-size: 9px;
   line-height: 9px;
   text-align: center;
+
+  transition: background-color 1s;
+}
+
+.header-notifications-flash {
+  background-color: #6FDC74;
+  transition: background-color 1s;
 }
 
 .page-status {

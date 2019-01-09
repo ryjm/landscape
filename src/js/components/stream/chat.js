@@ -90,6 +90,8 @@ export class ChatPage extends Component {
   }
 
   componentDidMount() {
+    if (!this.state.station) return null;
+
     if (isDMStation(this.state.station)) {
       let cir = this.state.station.split("/")[1];
       this.props.api.hall({
