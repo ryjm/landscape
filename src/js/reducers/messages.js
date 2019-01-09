@@ -75,6 +75,7 @@ export class MessagesReducer {
         }
 
         case "dm.clear": {
+          store.messages.notifications = store.messages.notifications.filter(n => !rep.data.includes(n.uid));
           break;
         }
       }

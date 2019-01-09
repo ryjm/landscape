@@ -70,6 +70,14 @@ export class ChatPage extends Component {
 
     _.pullAt(state.pendingMessages, clearIndexes);
 
+    // if (isDMStation(this.state.station)) {
+    //   let msgs = prevProps.store.messages.stations[this.state.station];
+    //   let msgIds = msgs.map(m => m.uid);
+    //   let seenIds = this.props.localGet('dms-seen');
+    //   let newSeenMsgIds = _.uniq([...msgIds, ...seenIds]);
+    //   this.props.localSet('dms-seen', newSeenMsgIds);
+    // }
+
     return {
       ...state,
       pendingMessages: state.pendingMessages,
@@ -390,11 +398,33 @@ export class ChatPage extends Component {
     )
   }
 
+  setSeenDms(msgs) {
+    if (isDMStation(this.state.station) && msgs) {
+      let msgIds = msgs.map(m => m.uid);
+      let seenIds = this.props.localGet('dms-seen');
+      let newSeenMsgIds = _.uniq([...msgIds, ...seenIds]);
+
+      console.log('newSeenMsgIds = ', newSeenMsgIds);
+
+      this.props.localSet('dms-seen', newSeenMsgIds);
+
+      if (seenIds.length !== newSeenMsgIds.length) {
+        this.props.storeReports([{
+          type: 'dm.clear',
+          data: newSeenMsgIds
+        }]);
+      }
+    }
+  }
+
   render() {
     // TODO: This is bad. Issue is that props aren't being loaded properly
     if (this.state.station === "~zod/null") return null;
 
     let messages = this.props.store.messages.stations[this.state.station] || [];
+
+    this.setSeenDms(messages);
+
     messages = [...messages, ...this.state.pendingMessages];
 
     this.setPresence(this.state.station);

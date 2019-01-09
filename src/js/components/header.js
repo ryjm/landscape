@@ -355,6 +355,13 @@ export class Header extends Component {
       'text-mono': headerData.title && headerData.title.style === "mono"
     })
 
+    let notifications = this.props.store.messages.notifications;
+    let notificationHref = null;
+
+    if (notifications.length > 0) {
+      notificationHref = notifications[0].stationDetails.stationUrl;
+    }
+
     return (
       <div className="container header-container">
         <div onClick={this.reconnectPolling} className={loadingClass}></div>
@@ -367,7 +374,9 @@ export class Header extends Component {
         <div className="row align-center header-mainrow">
           <div className="flex-col-1 flex justify-end">
             {this.props.store.messages.notifications.length > 0 &&
-              <div className="header-notifications text-mono text-700">{this.props.store.messages.notifications.length}</div>
+              <a className="vanilla" href={notificationHref}>
+                <div className="header-notifications text-mono text-700">{this.props.store.messages.notifications.length}</div>
+              </a>
             }
           </div>
           <div className="flex-col-1 flex space-between align-center">

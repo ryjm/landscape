@@ -51,6 +51,8 @@ export class Root extends Component {
           storeReports: this.props.storeReports,
           pushCallback: this.props.pushCallback,
           transitionTo: this.props.transitionTo,
+          localGet: this.props.localGet,
+          localSet: this.props.localSet,
           queryParams: getQueryParams(),
         }, propsObj));
       }
@@ -131,6 +133,8 @@ export class Root extends Component {
         storeReports={this.props.storeReports}
         pushCallback={this.props.pushCallback}
         transitionTo={this.props.transitionTo}
+        localSet={this.props.localSet}
+        localGet={this.props.localGet}
         runPoll={this.props.runPoll}
       />
     );

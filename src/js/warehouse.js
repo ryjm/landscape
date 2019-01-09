@@ -40,6 +40,7 @@ const REPORT_KEYS = [
   'circle.read',
   'views.streamActive',
   'dm.new',
+  'dm.clear',
   REPORT_PAGE_STATUS,
   REPORT_NAVIGATE,
         // unused events

@@ -96,21 +96,16 @@ export class UrbitOperator {
 
   notifyDMs(msgs) {
     let prunedMsgs = pruneMessages(msgs);
-    let dmMsgs = prunedMsgs
+    let seenDms = warehouse.localGet('dms-seen');
+
+    let newDms = prunedMsgs
                   .filter(m => {
                     let isDm = m.stationDetails.type === "stream-dm";
                     let fromOther = m.aud !== api.authTokens.ship;
+                    let unseen = !seenDms.includes(m.uid);
 
-                    return isDm && fromOther;
-                  })
-                  .map(m => m.uid);
-
-    let seenDms = warehouse.localGet('dms-seen');
-    let newDms = _.difference(dmMsgs, seenDms);
-
-    console.log('dmMsgs = ', dmMsgs);
-    console.log('seenDms = ', seenDms);
-    console.log('newDms = ', newDms);
+                    return isDm && fromOther && unseen;
+                  });
 
     if (newDms.length > 0) {
       warehouse.storeReports([{
