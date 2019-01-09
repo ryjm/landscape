@@ -129,7 +129,6 @@ export class InboxRecentPage extends Component {
       let stationClass = classnames({
         'text-mono text-700': !section.stationDetails.type.includes("collection"),
         'text-heading text-600': section.stationDetails.type.includes("collection"),
-        // 'text-600': true
       });
 
       return (
@@ -215,10 +214,39 @@ export class InboxRecentPage extends Component {
     return sections;
   }
 
+  buildInvites() {
+    let invites = this.props.store.messages.stations[`~${this.props.api.authTokens.ship}/i`];
+    if (!invites || invites.length === 0) return null;
+    let inviteMessageElems = invites.map(i => {
+      let inviteDetails = getMessageContent(i);
+
+      return (
+        <Message
+         details={inviteDetails}
+         api={this.props.api}
+         storeReports={this.props.storeReports}
+         pushCallback={this.props.pushCallback}
+         transitionTo={this.props.transitionTo} />
+      )
+    });
+
+    return (
+      <div className="inbox-invites">
+        {inviteMessageElems}
+      </div>
+    )
+  }
+
   render() {
     const sections = this.getSectionData();
     const sectionElems = this.buildSections(sections);
+    const inviteElems = this.buildInvites();
 
-    return sectionElems;
+    return (
+      <React.Fragment>
+        {inviteElems}
+        {sectionElems}
+      </React.Fragment>
+    )
   }
 }
