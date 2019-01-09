@@ -59,7 +59,6 @@ export class MessagesReducer {
             console.log("WEIRD: no inbox property in landscape.prize?")
           }
 
-          //
           // if (fromInbox) {
           //   if (rep.data.add) {
           //     store.messages.inbox.src = [...store.messages.inbox.src, rep.data.src];
@@ -71,7 +70,12 @@ export class MessagesReducer {
           break;
 
         case "dm.new": {
-          
+          store.messages.notifications = [...store.messages.notifications, ...rep.data];
+          break;
+        }
+
+        case "dm.clear": {
+          break;
         }
       }
     });

@@ -50,6 +50,15 @@ export class ConfigsReducer {
           store.configs[rep.data.station].lastReadNum = rep.data.lastReadNum;
           break;
 
+        case "circle.config":
+          let readChange = _.get(rep.data, 'dif.read', null);
+
+          if (readChange) {
+            store.configs[rep.data.cir] = {...store.configs[rep.data.cir], red: readChange};
+          }
+        
+          break;
+
         case "landscape.prize":
           rep.data.circles.forEach(c => {
             store.configs[c.circle] = c.config || {};

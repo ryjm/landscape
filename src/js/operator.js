@@ -94,30 +94,55 @@ export class UrbitOperator {
     });
   }
 
+  notifyDMs(msgs) {
+    let prunedMsgs = pruneMessages(msgs);
+    let dmMsgs = prunedMsgs
+                  .filter(m => {
+                    let isDm = m.stationDetails.type === "stream-dm";
+                    let fromOther = m.aud !== api.authTokens.ship;
+
+                    return isDm && fromOther;
+                  })
+                  .map(m => m.uid);
+
+    let seenDms = warehouse.localGet('dms-seen');
+    let newDms = _.difference(dmMsgs, seenDms);
+
+    console.log('dmMsgs = ', dmMsgs);
+    console.log('seenDms = ', seenDms);
+    console.log('newDms = ', newDms);
+
+    if (newDms.length > 0) {
+      warehouse.storeReports([{
+        type: 'dm.new',
+        data: newDms
+      }]);
+    }
+
+    return false;
+  }
+
   initializeLandscape() {
     this.initializeLocalStorage();
 
     api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections');
 
-    warehouse.pushCallback(['circle.gram', 'circle.nes'], (rep) => {
-      let msgs = rep.type === "circle.gram" ? [rep.data] : rep.data;
-      let prunedMsgs = pruneMessages(msgs);
-      let dmMsgs = prunedMsgs.filter(m => {
-        let isDm = m.stationDetails.type === "stream-dm";
-        let fromOther = m.aud !== api.authTokens.ship;
+    warehouse.pushCallback(['circle.gram', 'circle.nes', 'landscape.prize'], (rep) => {
+      let msgs = [];
 
-        return isDm && fromOther;
-      });
-
-      let seenDms = warehouse.localGet('dms-seen');
-      let newDms = _.difference(dmMsgs, seenDms);
-
-      if (newDms.length > 0) {
-        warehouse.storeReports([{
-          type: 'dm.new',
-          data: newDms
-        }]);
+      switch (rep.type) {
+        case "circle.gram":
+          msgs = [rep.data];
+          break;
+        case "circle.nes":
+          msgs = rep.data;
+          break;
+        case "landscape.prize":
+          msgs = rep.data.inbox.messages;
+          break;
       }
+
+      this.notifyDMs(msgs);
 
       return false;
     });

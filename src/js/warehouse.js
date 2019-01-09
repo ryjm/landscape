@@ -177,7 +177,7 @@ class UrbitWarehouse {
     } else if (_.isArray(key)) {
       key.forEach(k => {
         this.reports[k].callbacks.push(callback);
-      })
+      });
     }
   }
 
