@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Mousetrap from 'mousetrap';
+import { PageStatus } from '/components/lib/page-status';
 import { CommandHelpItem } from '/components/command/help-item';
 import { Icon } from '/components/lib/icon';
-import { isDMStation, isValidStation, profileUrl, getLoadingClass } from '/lib/util';
+import { isDMStation, isValidStation, profileUrl } from '/lib/util';
 import { getStationDetails } from '/services';
 import { CommandFormCollectionCreate } from '/components/command/form/collection-create';
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
@@ -412,7 +413,7 @@ export class CommandMenu extends Component {
   }
 
   render() {
-    let view, placeholder, loadingClass, commandInputDisabled;
+    let view, placeholder, commandInputDisabled;
 
     if (this.state.view === "command") {
       placeholder = this.getPlaceholder();
@@ -438,11 +439,15 @@ export class CommandMenu extends Component {
     }
 
     commandInputDisabled = this.commandInputDisabled();
-    loadingClass = getLoadingClass(this.props.store.views.transition);
 
     return (
       <div className="container command-page">
-        <div className={loadingClass}></div>
+        <PageStatus
+          transition={this.props.store.views.transition}
+          usership={this.props.api.authTokens.ship}
+          runPoll={this.props.runPoll}
+          storeReports={this.props.storeReports}
+        />
         <div className="row command-row">
           <div className="flex-col-1"></div>
           <div className="flex-col-1 justify-start" onClick={this.closeMenu}>

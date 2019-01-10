@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Icon } from '/components/lib/icon';
-import { getQueryParams, profileUrl, getLoadingClass, dateToDa } from '/lib/util';
+import { getQueryParams, profileUrl, dateToDa } from '/lib/util';
 import { getStationDetails } from '/services';
 import { Button } from '/components/lib/button';
-import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING, LANDSCAPE_ROOT } from '/lib/constants';
+import { PageStatus } from '/components/lib/page-status';
+import { REPORT_PAGE_STATUS, REPORT_NAVIGATE, PAGE_STATUS_TRANSITIONING, PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, PAGE_STATUS_RECONNECTING, PAGE_STATUS_DISCONNECTED, LANDSCAPE_ROOT } from '/lib/constants';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -13,7 +14,6 @@ export class Header extends Component {
 
     this.toggleSubscribe = this.toggleSubscribe.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
-    this.reconnectPolling = this.reconnectPolling.bind(this);
     this.handleHeaderAction = this.handleHeaderAction.bind(this);
   }
 
@@ -41,14 +41,6 @@ export class Header extends Component {
       type: "menu.toggle",
       data: {open: true}
     }]);
-  }
-
-  reconnectPolling() {
-    this.props.storeReports([{
-      type: REPORT_PAGE_STATUS,
-      data: PAGE_STATUS_RECONNECTING
-    }]);
-    this.props.runPoll();
   }
 
   getStationHeaderData(station) {
@@ -342,13 +334,12 @@ export class Header extends Component {
 
   buildHeaderContent(headerData) {
     let actions, subscribeClass, subscribeLabel, breadcrumbsElem, headerClass,
-      loadingClass, headerCarpet;
+      headerCarpet;
 
     actions = this.buildHeaderActions(headerData);
     breadcrumbsElem = this.buildHeaderBreadcrumbs(headerData);
     headerCarpet = this.buildHeaderCarpet(headerData);
 
-    loadingClass = getLoadingClass(this.props.store.views.transition);
     headerClass = classnames({
       'flex-col-x': true,
       'header-title': true,
@@ -357,7 +348,6 @@ export class Header extends Component {
 
     return (
       <div className="container header-container">
-        <div onClick={this.reconnectPolling} className={loadingClass}></div>
         <div className="row">
           <div className="flex-col-2"></div>
           <div className="flex-col-x header-breadcrumbs">
@@ -385,6 +375,12 @@ export class Header extends Component {
         <div className="row header-carpet">
           {headerCarpet}
         </div>
+        <PageStatus
+          transition={this.props.store.views.transition}
+          usership={this.props.api.authTokens.ship}
+          runPoll={this.props.runPoll}
+          storeReports={this.props.storeReports}
+        />
       </div>
     )
   }

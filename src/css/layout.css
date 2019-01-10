@@ -33,6 +33,15 @@
   text-transform: capitalize;
 }
 
+.header-pending-panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 8px 16px;
+  background: black;
+  color: white;
+}
+
 .header-notifications {
   width: 14px;
   height: 14px;
@@ -65,6 +74,12 @@
   width: 18px;
 
   background-color: #999;
+}
+
+.header-pending-panel .page-status {
+  position: relative;
+  right: 7px;
+  top: 1px;
 }
 
 .page-status::after {
@@ -108,12 +123,6 @@
   background-color: #FEBC98;
 }
 
-.sidebar {
-  position: absolute;
-  right: 24rem;
-  top: 48rem;
-}
-
 /*
   Grid?
 
@@ -153,6 +162,10 @@
   flex-basis: 400px;
   padding-right: 0.5rem;
   padding-left: 0.5rem;
+}
+
+.flex-offset-1 {
+  margin-left: 84px;
 }
 
 .flex-offset-2 {
