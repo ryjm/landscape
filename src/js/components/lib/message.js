@@ -8,7 +8,7 @@ export class Message extends Component {
   constructor(props) {
     super(props);
 
-    this.acceptInvite = this.acceptInvite.bind(this);
+    this.respondInvite = this.respondInvite.bind(this);
   }
 
   buildPostTitle(messageDetails) {
@@ -45,35 +45,69 @@ export class Message extends Component {
     });
   }
 
-  acceptInvite(actionData) {
-    if (actionData.response === "no") {
-      return;
+  respondInvite(actionData) {
+    if (actionData.response === true) {
+      this.subStation(actionData.msgDetails.content.cir);
     }
 
-    if (isDMStation(actionData.station)) {
-      console.log('~~~ ERROR: dm station invites should be automatically accepted ~~~');
-    } else {
-      this.subStation(actionData.station);
+    this.updateInvite(actionData.msgDetails, actionData.response);
+  }
+
+  updateInvite(msgDetails, resp) {
+    let tagstring = resp ? "Accept" : "Decline";
+
+    let msg = {
+      aud: [`~${this.props.api.authTokens.ship}/i`],
+      ses: [{
+        ire: {
+          top: msgDetails.msg.uid,
+          sep: {
+            lin: {
+              msg: `${tagstring} ${msgDetails.msg.sep.inv.cir}`,
+              pat: false
+            }
+          }
+        }
+      }]
     }
+
+    api.hall({
+      phrase: msg
+    });
   }
 
   render() {
     if (this.props.details.type === "text") {
       return this.buildPostTitle(this.props.details);
     } else if (this.props.details.type === "inv") {
-      return (
-        <div className="invite">
-          <span className="text-body">invite to {this.props.details.content.cir}...</span>
-          <Button
-            classes="btn btn-primary accept"
-            action={this.acceptInvite}
-            actionData={{station: this.props.details.content, response: "yes"}}
-            pushCallback={this.props.pushCallback}
-            responseKey="circle.config.dif.full"
-            content="Yes"
-           />
+      let cir = this.props.details.content.cir.split('/')[1];
 
-          <button className="btn btn-secondary decline">No</button>
+      return (
+        <div className="row">
+          <div className="flex-offset-2 flex-col-3">
+            <a className="text-mono text-host-breadcrumb" href={`/~~/~${this.props.details.msg.aut}/==/web/landscape/profile`}>~{this.props.details.msg.aut}</a>
+            <span className="text-host-breadcrumb ml-2 mr-2">/</span>
+            <span className="text-mono text-700">{cir}</span>
+          </div>
+          <div className="flex-col-x">
+            <Button
+              classes="btn btn-sm btn-icon btn-primary"
+              action={this.respondInvite}
+              actionData={{msgDetails: this.props.details, response: true}}
+              pushCallback={this.props.pushCallback}
+              responseKey="circle.config.dif.full"
+              content="Yes"
+             />
+
+             <Button
+               classes="btn btn-sm btn-icon"
+               action={this.respondInvite}
+               actionData={{msgDetails: this.props.details, response: false}}
+               pushCallback={this.props.pushCallback}
+               responseKey="circle.config.dif.full"
+               content="No"
+              />
+          </div>
         </div>
       )
     } else if (this.props.details.type === "url") {

@@ -214,8 +214,7 @@ export class InboxRecentPage extends Component {
     return sections;
   }
 
-  buildInvites() {
-    let invites = this.props.store.messages.stations[`~${this.props.api.authTokens.ship}/i`];
+  buildInvites(invites) {
     if (!invites || invites.length === 0) return null;
     let inviteMessageElems = invites.map(i => {
       let inviteDetails = getMessageContent(i);
@@ -231,19 +230,37 @@ export class InboxRecentPage extends Component {
     });
 
     return (
-      <div className="inbox-invites">
+      <div className="inbox-invites mb-7">
         {inviteMessageElems}
       </div>
     )
   }
 
+  squashedInvites() {
+    let msgs = this.props.store.messages.stations[`~${this.props.api.authTokens.ship}/i`] || [];
+    let [invites, responses] = _.partition(msgs, m => _.get(m, 'sep.inv', null));
+    responses = responses.map(r => { return {uid: r.sep.ire.top} });
+    _.pullAllBy(invites, responses, 'uid');
+
+    return invites;
+  }
+
   render() {
     const sections = this.getSectionData();
     const sectionElems = this.buildSections(sections);
-    const inviteElems = this.buildInvites();
+
+    const invites = this.squashedInvites();
+    const inviteElems = this.buildInvites(invites);
 
     return (
       <React.Fragment>
+        {invites.length > 0 &&
+          <div className="row mt-3">
+            <div className="flex-offset-2 flex-col-x">
+              <h3 className="mb-1">Invites</h3>
+            </div>
+          </div>
+        }
         {inviteElems}
         {sectionElems}
       </React.Fragment>

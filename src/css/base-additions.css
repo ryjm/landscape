@@ -238,6 +238,16 @@ label {
   color: white;
 }
 
+.btn-sm {
+  font-size: 14px;
+  line-height: 20px;
+  padding: 2px 0;
+}
+
+.btn-icon {
+  width: 40px;
+}
+
 .btn:focus {
   text-decoration: underline;
 }

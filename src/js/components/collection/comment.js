@@ -84,7 +84,7 @@ export class CommentCreate extends Component {
           </textarea>
         </div>
         <Button
-          classes="btn btn-secondary collection-comment-content"
+          classes="btn btn-primary collection-comment-content"
           disabled={this.state.comment.length === 0 || this.state.status === STATUS_LOADING}
           action={this.createComment}
           responseKey="circle.gram"

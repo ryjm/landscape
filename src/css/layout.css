@@ -165,11 +165,11 @@
 }
 
 .flex-offset-1 {
-  margin-left: 84px;
+  margin-left: 80px;
 }
 
 .flex-offset-2 {
-  margin-left: 164px;
+  margin-left: 160px;
 }
 
 .flex-col-x {
@@ -178,9 +178,4 @@
 
   padding-right: 0.5rem;
   padding-left: 0.5rem;
-}
-
-/* TODO: This is obviously bad */
-.flex-offset-special {
-  margin-left: 160px;
 }

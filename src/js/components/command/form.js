@@ -137,7 +137,7 @@ export class CommandForm extends Component {
         <div className="mb-2">
           <Button
             name="sup"
-            classes={`btn btn-secondary mt-3`}
+            classes={`btn btn-primary mt-3 mb-2`}
             focusChange={this.focusChange}
             action={this.onSubmit}
             disabled={this.state.errorList.length > 0 || this.state.status === STATUS_LOADING}

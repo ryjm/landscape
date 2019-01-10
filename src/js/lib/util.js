@@ -285,6 +285,7 @@ export function getMessageContent(msg) {
     },
     'sep.inv': 'inv',
     'sep.lin.msg': 'lin',
+    'sep.ire': 'ire',
     'sep.url': 'url',
     'sep.exp': (msg) => {
       return {
@@ -318,3 +319,5 @@ export function getMessageContent(msg) {
 
   return ret;
 }
+
+window.getMessageContent = getMessageContent;
