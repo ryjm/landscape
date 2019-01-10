@@ -33,9 +33,9 @@
   text-transform: capitalize;
 }
 
-.header-error-panel {
+.header-pending-panel {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
   padding: 8px 16px;
   background: black;
@@ -76,7 +76,7 @@
   background-color: #999;
 }
 
-.header-error-panel .page-status {
+.header-pending-panel .page-status {
   position: relative;
   right: 7px;
   top: 1px;
@@ -162,6 +162,10 @@
   flex-basis: 400px;
   padding-right: 0.5rem;
   padding-left: 0.5rem;
+}
+
+.flex-offset-1 {
+  margin-left: 84px;
 }
 
 .flex-offset-2 {
