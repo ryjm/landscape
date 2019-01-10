@@ -104,10 +104,10 @@ export class ChatPage extends Component {
       data: this.state.station
     }]);
 
-    this.props.storeReports([{
-      type: REPORT_PAGE_STATUS,
-      data: PAGE_STATUS_PROCESSING
-    }]);
+    // this.props.storeReports([{
+    //   type: REPORT_PAGE_STATUS,
+    //   data: PAGE_STATUS_PROCESSING
+    // }]);
 
     // this.props.pushCallback("inbox.sources-loaded", rep => {
     //   this.intelligentlyBindGramRange([-20]);
@@ -178,6 +178,13 @@ export class ChatPage extends Component {
       type: REPORT_PAGE_STATUS,
       data: PAGE_STATUS_PROCESSING
     }])
+
+    setTimeout(() => {
+      warehouse.storeReports([{
+        type: REPORT_PAGE_STATUS,
+        data: PAGE_STATUS_READY
+      }]);
+    }, 3000);
 
     // this.intelligentlyBindGramRange([newNumMessages * -1, this.state.numMessages * -1])
     //   .then((res) => {

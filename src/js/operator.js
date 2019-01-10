@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 import { warehouse } from '/warehouse';
 import { isDMStation, getMessageContent } from '/lib/util';
 import { getStationDetails, pruneMessages } from '/services';
-import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
+import { REPORT_PAGE_STATUS, PAGE_STATUS_DISCONNECTED, PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, INBOX_MESSAGE_COUNT } from '/lib/constants';
 import urbitOb from 'urbit-ob';
 
 const LONGPOLL_TIMEOUT = 15000;
@@ -143,12 +143,24 @@ export class UrbitOperator {
       return false;
     });
 
-    warehouse.pushCallback(['landscape.prize'], (rep) => {
+    warehouse.pushCallback('landscape.prize', (rep) => {
       warehouse.storeReports([{
         type: REPORT_PAGE_STATUS,
         data: PAGE_STATUS_READY
       }]);
     });
+
+
+    // warehouse.pushCallback(REPORT_PAGE_STATUS, (rep) => {
+    //   if (rep.data === PAGE_STATUS_PROCESSING) {
+    //     setTimeout(() => {
+    //       warehouse.storeReports([{
+    //         type: REPORT_PAGE_STATUS,
+    //         data: PAGE_STATUS_READY
+    //       }]);
+    //     }, 3000)
+    //   }
+    // });
 
     // api.bind(`/circle/inbox/grams/-${INBOX_MESSAGE_COUNT}`, "PUT");
 
