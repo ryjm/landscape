@@ -10,6 +10,7 @@ export class Button extends Component {
     };
 
     this.onSubmit = this.onSubmit.bind(this);
+    this.focusChange = this.focusChange.bind(this);
   }
 
   onSubmit(e) {
@@ -26,6 +27,11 @@ export class Button extends Component {
     }
   }
 
+  focusChange(e) {
+    if (this.props.focusChange) this.props.focusChange(e);
+    return true;
+  }
+
   render() {
     let spinnerClass = (this.state.status !== STATUS_LOADING) ? "hide" : "btn-spinner";
 
@@ -37,7 +43,7 @@ export class Button extends Component {
         <button type="submit"
           className={this.props.classes}
           disabled={this.props.disabled}
-          onFocus={this.props.focusChange}>
+          onFocus={this.focusChange}>
 
           <span>{this.props.content}</span>
           <span className={spinnerClass}></span>

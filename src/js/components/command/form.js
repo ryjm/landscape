@@ -51,6 +51,8 @@ export class CommandForm extends Component {
     this.setState({
       focused: e.target.name
     });
+
+    return true;
   }
 
   onBlur(e) {
@@ -138,7 +140,6 @@ export class CommandForm extends Component {
           <Button
             name="sup"
             classes={`btn btn-primary mt-3 mb-2`}
-            focusChange={this.focusChange}
             action={this.onSubmit}
             disabled={this.state.errorList.length > 0 || this.state.status === STATUS_LOADING}
             content="Create →"
@@ -150,7 +151,6 @@ export class CommandForm extends Component {
           type="button"
           classes={`btn btn-block`}
           action={this.props.cancel}
-          focusChange={this.focusChange}
           disabled={this.state.status === STATUS_LOADING}
           content="Cancel"
           pushCallback={this.props.pushCallback}
