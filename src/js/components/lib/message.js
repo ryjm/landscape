@@ -91,12 +91,12 @@ export class Message extends Component {
           </div>
           <div className="flex-col-x">
             <Button
-              classes="btn btn-sm btn-icon btn-primary"
+              classes="btn btn-sm btn-icon btn-primary mr-1"
               action={this.respondInvite}
               actionData={{msgDetails: this.props.details, response: true}}
               pushCallback={this.props.pushCallback}
               responseKey="circle.config.dif.full"
-              content="Yes"
+              content="✓"
              />
 
              <Button
@@ -105,7 +105,7 @@ export class Message extends Component {
                actionData={{msgDetails: this.props.details, response: false}}
                pushCallback={this.props.pushCallback}
                responseKey="circle.config.dif.full"
-               content="No"
+               content="✗"
               />
           </div>
         </div>

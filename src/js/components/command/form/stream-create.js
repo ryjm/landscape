@@ -44,7 +44,7 @@ export class CommandFormStreamCreate extends Component {
           create: {
             nom: this.state.formData.name,
             des: "",
-            sec: "village"
+            sec: "channel"
           }
         });
 
@@ -63,21 +63,23 @@ export class CommandFormStreamCreate extends Component {
           });
 
           if (this.state.formData.invites.length > 0) {
-            let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim());
-            let audInboxes = inviteArray.map((aud) => `${aud}/i`);
-            let inviteMessage = {
-              aud: audInboxes,
-              ses: [{
-                inv: {
-                  inv: true,
-                  cir: station
-                }
-              }]
-            };
-
-            this.props.api.hall({
-              phrase: inviteMessage
-            });
+            let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim().substr(1));
+            api.permit(rep.data.cir, inviteArray, true);
+            //
+            // let audInboxes = inviteArray.map((aud) => `${aud}/i`);
+            // let inviteMessage = {
+            //   aud: audInboxes,
+            //   ses: [{
+            //     inv: {
+            //       inv: true,
+            //       cir: station
+            //     }
+            //   }]
+            // };
+            //
+            // this.props.api.hall({
+            //   phrase: inviteMessage
+            // });
           }
 
           this.props.transitionTo(details.stationUrl);
