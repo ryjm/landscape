@@ -238,7 +238,17 @@ export class InboxRecentPage extends Component {
 
   squashedInvites() {
     let msgs = this.props.store.messages.stations[`~${this.props.api.authTokens.ship}/i`] || [];
+
+    // Split invites from responses
     let [invites, responses] = _.partition(msgs, m => _.get(m, 'sep.inv', null));
+
+    // Filter out DM stations
+    invites = invites.filter(i => {
+      let msgContent = getMessageContent(i);
+      return !isDMStation(msgContent.content.cir);
+    })
+
+    // Match responses to invites
     responses = responses.map(r => { return {uid: r.sep.ire.top} });
     _.pullAllBy(invites, responses, 'uid');
 
@@ -251,6 +261,7 @@ export class InboxRecentPage extends Component {
 
     const invites = this.squashedInvites();
     const inviteElems = this.buildInvites(invites);
+
 
     return (
       <React.Fragment>

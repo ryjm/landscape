@@ -81,6 +81,9 @@ export class Message extends Component {
       return this.buildPostTitle(this.props.details);
     } else if (this.props.details.type === "inv") {
       let cir = this.props.details.content.cir.split('/')[1];
+      if (isDMStation(this.props.details.content.cir)) {
+        return null;
+      }
 
       return (
         <div className="row">
