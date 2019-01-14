@@ -164,6 +164,12 @@
   padding-left: 0.5rem;
 }
 
+.flex-col-6 {
+  flex-basis: 480px;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
 .flex-offset-1 {
   margin-left: 80px;
 }
