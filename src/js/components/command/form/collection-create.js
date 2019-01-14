@@ -56,6 +56,14 @@ export class CommandFormCollectionCreate extends Component {
           let station = `~${this.props.api.authTokens.ship}/${rep.data.cir}`;
           let details = getStationDetails(station);
 
+          this.props.api.hall({
+            source: {
+              nom: 'inbox',
+              sub: true,
+              srs: [station]
+            }
+          });
+
           let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim().substr(1));
           api.permit(rep.data.cir, inviteArray, true);
 

@@ -43,7 +43,7 @@ export class Message extends Component {
     }]);
 
     this.props.pushCallback("circle.config.dif.source", (rep) => {
-      this.props.transitionTo(`/~~/landscape/stream?station=${station}`);
+      this.props.transitionTo(stationDetails.stationUrl);
     });
   }
 
