@@ -155,7 +155,7 @@ export class CommandForm extends Component {
           content="Cancel"
           pushCallback={this.props.pushCallback}
         />
-        <div className="mt-4 ml-3">Warning: Security has not been vetted for this testing period; assume only partial privacy.</div>
+        <div className="mt-4 ml-3">Warning: Security has not been vetted for this testing period; assume only security through obscurity.</div>
       </div>
     )
   }

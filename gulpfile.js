@@ -87,9 +87,29 @@ gulp.task('urbit-copy', function () {
 });
 
 gulp.task('js-bundle-dev', gulp.series('jsx-transform', 'js-imports'));
-gulp.task('js-bundle-prod', gulp.series('jsx-transform', 'js-imports', 'js-minify'));
+gulp.task('js-bundle-prod', gulp.series('jsx-transform', 'js-imports', 'js-minify'))
 
-gulp.task('default', gulp.series(gulp.parallel('js-bundle-dev', 'css-bundle'), 'urbit-copy'));
+gulp.task('bundle-dev',
+  gulp.series(
+    gulp.parallel(
+      'css-bundle',
+      'js-bundle-dev'
+    ),
+    'urbit-copy'
+  )
+);
+
+gulp.task('bundle-prod',
+  gulp.series(
+    gulp.parallel(
+      'css-bundle',
+      'js-bundle-prod'
+    ),
+    'urbit-copy'
+  )
+);
+
+gulp.task('default', gulp.series('bundle-dev'));
 gulp.task('watch', gulp.series('default', function() {
   gulp.watch('src/**/*.js', gulp.parallel('js-bundle-dev'));
   gulp.watch('src/**/*.css', gulp.parallel('css-bundle'));
