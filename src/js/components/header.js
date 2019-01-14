@@ -109,7 +109,7 @@ export class Header extends Component {
 
         if (this.props.data.subtype === 'default') {
           actions = {
-            edit: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit`
+            edit: `/~~/${this.props.data.host}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit`
           }
         }
 
@@ -136,7 +136,7 @@ export class Header extends Component {
             defaultData.breadcrumbs[0],
             {
               display: this.props.data.collTitle,
-              href: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}`
+              href: `/~~/${this.props.data.host}/==/web/collections/${this.props.data.collId}`
             }
           ],
           actions
@@ -228,10 +228,20 @@ export class Header extends Component {
       case "collection-post-default":
         // <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-5 mr-2 text-timestamp" />
 
+        let ownerElem = null;
+
+        // TODO: I realize the redundancy in this conditional. God forgive me.
+        if (this.props.data.owner && headerData.type !== "collection-index-post") {
+          ownerElem = (
+            <a href={profileUrl(this.props.data.owner.substr(1))} className="vanilla text-mono mr-3 text-700 text-small">{this.props.data.owner}</a>
+          )
+        }
+
         return (
           <React.Fragment>
             <div className="flex-col-2"></div>
             <div className="flex-col-x">
+              {ownerElem}
               <span className="text-mono text-300 text-small">{this.props.data.dateCreated.slice(0, -6)}</span>
             </div>
           </React.Fragment>

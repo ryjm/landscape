@@ -94,6 +94,7 @@ export class Root extends Component {
 
     if (headerQuery.length > 0 && headerData.type) {
       headerData.owner = headerQuery[0].getAttribute('urb-owner');
+      headerData.host = headerQuery[0].getAttribute('urb-host');
       headerData.pageTitle = headerQuery[0].getAttribute('urb-name');
       headerData.dateCreated = headerQuery[0].getAttribute('urb-date-created');
       headerData.dateModified = headerQuery[0].getAttribute('urb-date-modified');
@@ -103,7 +104,7 @@ export class Root extends Component {
         headerData.title = headerData.pageTitle;
         headerData.collId = headerData.dateCreated;
         headerData.collTitle = headerData.title;
-        headerData.station = `${headerData.owner}/c-${headerData.collId}`;
+        headerData.station = `${headerData.host}/c-${headerData.collId}`;
       }
 
       if (headerData.type.includes("collection-post")) {
@@ -111,7 +112,7 @@ export class Root extends Component {
         headerData.collId = headerData.collPath.split("/")[3];
         headerData.collTitle = headerData.collId;
         headerData.postId = headerData.dateCreated;
-        headerData.station = `${headerData.owner}/c-${headerData.collId}-${headerData.postId}`;
+        headerData.station = `${headerData.host}/c-${headerData.collId}-${headerData.postId}`;
 
         let collCircle = `${headerData.owner}/c-${headerData.collId}`;
         let collConfig = warehouse.store.configs[collCircle];
