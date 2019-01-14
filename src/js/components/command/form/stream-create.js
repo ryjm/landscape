@@ -43,7 +43,7 @@ export class CommandFormStreamCreate extends Component {
         this.props.api.hall({
           create: {
             nom: this.state.formData.name,
-            des: "",
+            des: "chatroom",
             sec: "channel"
           }
         });

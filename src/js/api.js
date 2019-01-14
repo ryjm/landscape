@@ -109,6 +109,16 @@ class UrbitApi {
       phrase: msg
     });
   }
+
+  source(nom, sub) {
+    this.hall({
+      source: {
+        nom: "inbox",
+        sub: sub,
+        srs: [nom]
+      }
+    })
+  }
 }
 
 export let api = new UrbitApi();
