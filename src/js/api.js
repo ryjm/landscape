@@ -63,28 +63,64 @@ class UrbitApi {
     Special actions
   */
 
-  permit(nom, aud, message) {
+  permit(cir, aud, message) {
     this.hall({
       permit: {
-        nom: nom,
+        nom: cir,
         sis: aud,
         inv: true
       }
     });
 
     if (message) {
-      this.invite(nom, aud);
+      this.invite(cir, aud);
     }
   }
 
-  invite(nom, aud) {
+  permitCol(cir, aud, message, nom) {
+    this.hall({
+      permit: {
+        nom: cir,
+        sis: aud,
+        inv: true
+      }
+    });
+
+    if (message) {
+      this.inviteCol(cir, aud, nom);
+    }
+  }
+
+  invite(cir, aud) {
     let audInboxes = aud.map((aud) => `~${aud}/i`);
     let inviteMessage = {
       aud: audInboxes,
       ses: [{
         inv: {
           inv: true,
-          cir: `~${this.authTokens.ship}/${nom}`
+          cir: `~${this.authTokens.ship}/${cir}`
+        }
+      }]
+    };
+
+    this.hall({
+      phrase: inviteMessage
+    });
+  }
+
+  inviteCol(cir, aud, nom) {
+    let audInboxes = aud.map((aud) => `~${aud}/i`);
+    let inviteMessage = {
+      aud: audInboxes,
+      ses: [{
+        app: {
+          app: nom,
+          sep: {
+            inv: {
+              inv: true,
+              cir: `~${this.authTokens.ship}/${cir}`
+            }
+          }
         }
       }]
     };

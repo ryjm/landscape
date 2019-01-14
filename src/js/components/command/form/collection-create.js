@@ -65,7 +65,7 @@ export class CommandFormCollectionCreate extends Component {
           });
 
           let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim().substr(1));
-          api.permit(rep.data.cir, inviteArray, true);
+          api.permitCol(rep.data.cir, inviteArray, true, this.state.formData.name);
 
           this.props.transitionTo(details.stationUrl);
         });

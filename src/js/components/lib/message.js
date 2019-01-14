@@ -49,7 +49,7 @@ export class Message extends Component {
 
   respondInvite(actionData) {
     if (actionData.response === true) {
-      this.subStation(actionData.msgDetails.content.cir);
+      this.subStation(actionData.msgDetails.content.sta);
     }
 
     this.updateInvite(actionData.msgDetails, actionData.response);
@@ -65,7 +65,7 @@ export class Message extends Component {
           top: msgDetails.msg.uid,
           sep: {
             lin: {
-              msg: `${tagstring} ${msgDetails.msg.sep.inv.cir}`,
+              msg: `${tagstring} ${msgDetails.content.sta}`,
               pat: false
             }
           }
@@ -82,8 +82,7 @@ export class Message extends Component {
     if (this.props.details.type === "text") {
       return this.buildPostTitle(this.props.details);
     } else if (this.props.details.type === "inv") {
-      let cir = this.props.details.content.cir.split('/')[1];
-      if (isDMStation(this.props.details.content.cir)) {
+      if (isDMStation(this.props.details.content.sta)) {
         return null;
       }
 
@@ -92,7 +91,7 @@ export class Message extends Component {
           <div className="flex-offset-2 flex-col-4">
             <a className="text-mono text-host-breadcrumb" href={`/~~/~${this.props.details.msg.aut}/==/web/landscape/profile`}>~{this.props.details.msg.aut}</a>
             <span className="text-host-breadcrumb ml-2 mr-2">/</span>
-            <span className="text-mono text-700">{cir}</span>
+            <span className="text-mono text-700">{this.props.details.content.nom}</span>
           </div>
           <div className="flex-col-x">
             <Button

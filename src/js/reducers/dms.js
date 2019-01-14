@@ -44,8 +44,8 @@
 //     let inviteStations = [];
 //     msgs.forEach(msg => {
 //       let msgContent = getMessageContent(msg);
-//       if (msgContent.type === "inv" && isDMStation(msgContent.content.cir)) {
-//         inviteStations.push(msgContent.content.cir);
+//       if (msgContent.type === "inv" && isDMStation(msgContent.content.sta)) {
+//         inviteStations.push(msgContent.content.sta);
 //       }
 //     });
 //

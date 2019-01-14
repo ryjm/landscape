@@ -263,6 +263,37 @@ export function getMessageContent(msg) {
   const MESSAGE_TYPES = {
     'sep.app.sep.fat.sep.lin.msg': 'app',
     'sep.app.sep.lin.msg': 'app',
+    'sep.app.sep.inv': (msg) => {
+      let sta = msg.sep.app.sep.inv.cir;
+      let [hos, cir] = sta.split('/');
+
+      return {
+        type: 'inv',
+        msg: msg,
+        content: {
+          nom: msg.sep.app.app,
+          sta: sta,
+          hos: hos,
+          inv: msg.sep.app.sep.inv.inv
+        }
+      }
+    },
+    'sep.inv': (msg) => {
+      let sta = msg.sep.inv.cir;
+      let [hos, cir] = sta.split('/');
+
+      return {
+        type: 'inv',
+        msg: msg,
+        content: {
+          nom: cir,
+          inv: msg.sep.inv.inv,
+          hos,
+          sta,
+          cir
+        }
+      }
+    },
     'sep.fat': (msg) => {
       let type = msg.sep.fat.tac.text;
       let station = msg.aud[0];
@@ -283,7 +314,6 @@ export function getMessageContent(msg) {
         postUrl: `/~~/${jason.owner}/==/${jason.path.join('/')}`,
       }
     },
-    'sep.inv': 'inv',
     'sep.lin.msg': 'lin',
     'sep.ire': 'ire',
     'sep.url': 'url',

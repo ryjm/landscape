@@ -240,12 +240,16 @@ export class InboxRecentPage extends Component {
     let msgs = this.props.store.messages.stations[`~${this.props.api.authTokens.ship}/i`] || [];
 
     // Split invites from responses
-    let [invites, responses] = _.partition(msgs, m => _.get(m, 'sep.inv', null));
+    let [invites, responses] = _.partition(msgs, m => {
+      let streamInvite = _.get(m, 'sep.inv', null);
+      let collInvite = _.get(m, 'sep.app.sep.inv', null);
+      return streamInvite || collInvite;
+    });
 
     // Filter out DM stations
     invites = invites.filter(i => {
       let msgContent = getMessageContent(i);
-      return !isDMStation(msgContent.content.cir);
+      return !isDMStation(msgContent.content.sta);
     })
 
     // Match responses to invites
