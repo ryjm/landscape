@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { isDMStation, getMessageContent } from '/lib/util';
 import { Button } from '/components/lib/button';
+import { IconCheck } from '/components/lib/icons/icon-check';
+import { IconCross } from '/components/lib/icons/icon-cross';
 import { getStationDetails } from '/services';
 import { PAGE_STATUS_TRANSITIONING, REPORT_PAGE_STATUS } from '/lib/constants';
 
@@ -99,7 +101,7 @@ export class Message extends Component {
               actionData={{msgDetails: this.props.details, response: true}}
               pushCallback={this.props.pushCallback}
               responseKey="circle.config.dif.full"
-              content="✓"
+              content={IconCheck}
              />
 
              <Button
@@ -108,7 +110,7 @@ export class Message extends Component {
                actionData={{msgDetails: this.props.details, response: false}}
                pushCallback={this.props.pushCallback}
                responseKey="circle.config.dif.full"
-               content="✗"
+               content={IconCross}
               />
           </div>
         </div>

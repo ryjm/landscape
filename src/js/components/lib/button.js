@@ -34,6 +34,7 @@ export class Button extends Component {
 
   render() {
     let spinnerClass = (this.state.status !== STATUS_LOADING) ? "hide" : "btn-spinner";
+    let content = typeof(this.props.content) === "function"? React.createElement(this.props.content) : this.props.content;
 
     return (
       <form
@@ -45,7 +46,7 @@ export class Button extends Component {
           disabled={this.props.disabled}
           onFocus={this.focusChange}>
 
-          <span>{this.props.content}</span>
+          <span>{content}</span>
           <span className={spinnerClass}></span>
         </button>
       </form>
