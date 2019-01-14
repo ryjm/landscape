@@ -119,6 +119,16 @@ class UrbitApi {
       }
     })
   }
+
+  create(nom, priv) {
+    this.hall({
+      create: {
+        nom: nom,
+        des: "chatroom",
+        sec: priv ? "village" : "channel"
+      }
+    });
+  }
 }
 
 export let api = new UrbitApi();
