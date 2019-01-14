@@ -9,6 +9,7 @@ import { CommandFormCollectionCreate } from '/components/command/form/collection
 import { CommandFormStreamCreate } from '/components/command/form/stream-create';
 import { PAGE_STATUS_TRANSITIONING, STATUS_READY, LANDSCAPE_ROOT } from '/lib/constants';
 import urbitOb from 'urbit-ob';
+import _ from 'lodash';
 
 const DEFAULT_PLACEHOLDER = "type a command, page or ? for help";
 
@@ -218,8 +219,11 @@ export class CommandMenu extends Component {
     return {
       name: `dm ${name}`,
       action: () => {
-        if (urbitOb.isValidPatp(name)) {
-          let members = [this.props.api.authTokens.ship, name.substr(1)]
+        let aud = name.split(", ");
+        let audValid = aud.every(urbitOb.isValidPatp);
+
+        if (audValid) {
+          let members = [this.props.api.authTokens.ship, ...aud.map(a => a.substr(1))];
           let station = `~${this.props.api.authTokens.ship}/${members.sort().join(".")}`;
           let stationDetails = getStationDetails(station);
 
@@ -316,7 +320,7 @@ export class CommandMenu extends Component {
     let option;
 
     if (directive === "dm") {
-      let name = cmd.split(" ")[1];
+      let name = cmd.substr(3);
       option = this.buildDmOption(name);
     } else if (directive === "go") {
       let name = cmd.split(" ")[1];
