@@ -89,7 +89,7 @@ export class Message extends Component {
 
       return (
         <div className="row">
-          <div className="flex-offset-2 flex-col-3">
+          <div className="flex-offset-2 flex-col-4">
             <a className="text-mono text-host-breadcrumb" href={`/~~/~${this.props.details.msg.aut}/==/web/landscape/profile`}>~{this.props.details.msg.aut}</a>
             <span className="text-host-breadcrumb ml-2 mr-2">/</span>
             <span className="text-mono text-700">{cir}</span>
