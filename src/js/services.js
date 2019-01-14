@@ -54,7 +54,7 @@ export function getStationDetails(station) {
       ret.collId = circleParts[1];
 
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
-      ret.stationTitle = config && config.extConf ? config.extConf.name : "TBD";
+      ret.stationTitle = config && config.extConf ? config.extConf.name : ret.collId;
 
       if (config && config.extConf) {
         ret.stationTitle = config.extConf.name;
@@ -71,11 +71,11 @@ export function getStationDetails(station) {
 
       ret.parentCollectionUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
       ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
-      ret.stationTitle = config && config.extConf ? config.extConf.name : "TBD";
+      ret.stationTitle = config && config.extConf ? config.extConf.name : ret.collId;
 
       let collCircle = `~${ret.host}/c-${ret.collId}`;
       let collConfig = warehouse.store.configs[collCircle];
-      ret.collTitle = collConfig && collConfig.extConf ? collConfig.extConf.name : "TBD";
+      ret.collTitle = collConfig && collConfig.extConf ? collConfig.extConf.name : ret.collId;
       break;
   }
 

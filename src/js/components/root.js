@@ -109,13 +109,13 @@ export class Root extends Component {
       if (headerData.type.includes("collection-post")) {
         headerData.title = headerData.pageTitle;
         headerData.collId = headerData.collPath.split("/")[3];
-        headerData.collTitle = "TBD";
+        headerData.collTitle = headerData.collId;
         headerData.postId = headerData.dateCreated;
         headerData.station = `${headerData.owner}/c-${headerData.collId}-${headerData.postId}`;
 
         let collCircle = `${headerData.owner}/c-${headerData.collId}`;
         let collConfig = warehouse.store.configs[collCircle];
-        headerData.collTitle = collConfig && collConfig.extConf ? collConfig.extConf.name : "TBD";
+        headerData.collTitle = collConfig && collConfig.extConf ? collConfig.extConf.name : headerData.collId;
       }
 
       if (headerData.type === "stream-chat") {
