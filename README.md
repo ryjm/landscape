@@ -2,7 +2,7 @@
 
 Landscape is an agent for running cities on top of Arvo. 
 
-In English, it's a stripped-down 
+In English, it's a web application with basic chat and forum functionality.
 
 ## Running Landscape
 
