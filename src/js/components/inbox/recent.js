@@ -24,6 +24,7 @@
     dm:
 */
 
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Elapsed } from '/components/lib/elapsed';
 import { Message } from '/components/lib/message';
@@ -266,7 +267,6 @@ export class InboxRecentPage extends Component {
     const invites = this.squashedInvites();
     const inviteElems = this.buildInvites(invites);
 
-
     return (
       <React.Fragment>
         {invites.length > 0 &&
@@ -282,3 +282,11 @@ export class InboxRecentPage extends Component {
     )
   }
 }
+
+InboxRecentPage.propTypes = {
+  api: PropTypes.func,
+  store: PropTypes.object,
+  storeReports: PropTypes.func,
+  pushCallback: PropTypes.func,
+  transitionTo: PropTypes.func
+};

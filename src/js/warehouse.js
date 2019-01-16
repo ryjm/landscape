@@ -51,6 +51,37 @@ const REPORT_KEYS = [
   // 'circle.pes.rem',
 ]
 
+class Hoon {
+  static Atom(val) {
+    return typeof val === "number";
+  }
+
+  static Cell(val) {
+    return Array.isArray(val) && val.length === 2
+  }
+
+  static Noun(val) {
+    return Cell(val) || Atom(val);
+  }
+
+  static Term(val) {
+    return typeof val === "string"
+  }
+
+  static TermCell(val) {
+    return Cell(val) && Term(val[0]) && Term(val[1]);
+  }
+}
+
+class NewWarehouse {
+  constructor() {
+    this.store = {
+      name: [Hoon.Term, "John Doe"],
+      age: []
+    }
+  }
+}
+
 class UrbitWarehouse {
   constructor() {
     this.store = {

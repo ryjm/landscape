@@ -4,6 +4,8 @@ var cssnano = require('gulp-cssnano');
 var rollup = require('gulp-better-rollup');
 var sucrase = require('@sucrase/gulp-plugin');
 var minify = require('gulp-minify');
+var env = require('gulp-env');
+var shell = require('gulp-shell');
 
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
@@ -86,8 +88,24 @@ gulp.task('urbit-copy', function () {
   return ret;
 });
 
-gulp.task('js-bundle-dev', gulp.series('jsx-transform', 'js-imports'));
-gulp.task('js-bundle-prod', gulp.series('jsx-transform', 'js-imports', 'js-minify'))
+gulp.task('set-env-dev', function() {
+  env.set({
+    NODE_ENV: 'development'
+  });
+
+  return Promise.resolve();
+});
+
+gulp.task('set-env-prod', function() {
+  env.set({
+    NODE_ENV: 'production'
+  });
+
+  return Promise.resolve();
+});
+
+gulp.task('js-bundle-dev', gulp.series('set-env-dev', 'jsx-transform', 'js-imports'));
+gulp.task('js-bundle-prod', gulp.series('set-env-prod', 'jsx-transform', 'js-imports', 'js-minify'))
 
 gulp.task('bundle-dev',
   gulp.series(
