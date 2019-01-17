@@ -265,7 +265,9 @@ export class Header extends Component {
             <div className="flex-col-2"></div>
             <div className="flex-col-x text-heading text-squat">
               <a className={indexClass} href={`/~~/${this.props.data.owner}/==/web/landscape/profile`}>Profile</a>
-              <a className={settingsClass} href={`/~~/${this.props.data.owner}/==/web/landscape/profile/settings`}>Settings</a>
+              {this.props.data.owner.substr(1) === this.props.api.authTokens.ship &&
+                <a className={settingsClass} href={`/~~/${this.props.data.owner}/==/web/landscape/profile/settings`}>Settings</a>
+              }
             </div>
           </React.Fragment>
         );
