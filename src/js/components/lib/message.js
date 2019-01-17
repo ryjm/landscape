@@ -135,7 +135,14 @@ export class Message extends Component {
     } else if (['new item', 'edited item'].includes(this.props.details.type)) {
       return <span className="text-body" dangerouslySetInnerHTML={{__html: this.props.details.snip}}></span>
     } else if (this.props.details.type === "lin") {
-      return <span className="text-body">{this.props.details.content}</span>
+      return (
+        <span className="text-body">
+          {this.props.replyTo &&
+            <span className="text-gray">[replying to ~{this.props.replyTo}] </span>
+          }
+          <span>{this.props.details.content}</span>
+        </span>
+      )
     }
 
     return <span className="text-mono">{'<unknown message type>'}</span>;

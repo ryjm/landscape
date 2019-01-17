@@ -377,7 +377,15 @@ export class ChatPage extends Component {
         </React.Fragment>
       )
     } else {
-      contentElem = <Message details={details}></Message>
+      let replyTo;
+
+      if (details.replyUid) {
+        let messages = this.props.store.messages.stations[this.state.station] || [];
+        let op = _.find(messages, {uid: details.replyUid});
+        replyTo = op && op.aut;
+      }
+
+      contentElem = <Message details={details} replyTo={replyTo}></Message>
     }
 
     return (

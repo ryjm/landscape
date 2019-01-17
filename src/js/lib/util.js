@@ -315,6 +315,14 @@ export function getMessageContent(msg) {
       }
     },
     'sep.lin.msg': 'lin',
+    'sep.ire.sep.lin': (msg) => {
+      return {
+        type: "lin",
+        msg: msg,
+        content: msg.sep.ire.sep.lin.msg,
+        replyUid: msg.sep.ire.top
+      }
+    },
     'sep.ire': 'ire',
     'sep.url': 'url',
     'sep.exp': (msg) => {

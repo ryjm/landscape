@@ -165,6 +165,27 @@ class UrbitApi {
       }
     });
   }
+
+  ire(aud, uid, msg) {
+    let message = {
+      aud: aud,
+      ses: [{
+        ire: {
+          top: uid,
+          sep: {
+            lin: {
+              msg: msg,
+              pat: false
+            }
+          }
+        }
+      }]
+    }
+
+    this.hall({
+      phrase: message
+    })
+  }
 }
 
 export let api = new UrbitApi();
