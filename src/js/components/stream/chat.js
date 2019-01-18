@@ -23,15 +23,11 @@ export class ChatPage extends Component {
       lastBatchRequested: 0,
       scrollLocked: true,
       pendingMessages: [],
-      // dmStationCreated: false,
       activatedMsg: {
         dateGroup: null,  // TODO: What's a good "0" value for Dates?
         date: null
       }
     };
-
-    this.messageChange = this.messageChange.bind(this);
-    this.messageSubmit = this.messageSubmit.bind(this);
 
     this.inviteChange = this.inviteChange.bind(this);
     this.inviteSubmit = this.inviteSubmit.bind(this);
@@ -43,7 +39,6 @@ export class ChatPage extends Component {
     this.buildMessage = this.buildMessage.bind(this);
 
     this.scrollbarRef = React.createRef();
-    this.textareaRef = React.createRef();
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -78,15 +73,6 @@ export class ChatPage extends Component {
     }
   }
 
-  bindShortcuts() {
-    Mousetrap(this.textareaRef.current).bind('enter', e => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      this.messageSubmit(e);
-    });
-  }
-
   componentDidMount() {
     if (!this.state.station) return null;
 
@@ -114,7 +100,6 @@ export class ChatPage extends Component {
     // });
 
     this.scrollIfLocked();
-    this.bindShortcuts();
   }
 
   componentWillUnmount() {
@@ -220,67 +205,18 @@ export class ChatPage extends Component {
     }
   }
 
-  messageChange(event) {
-    this.setState({message: event.target.value});
-  }
+  // messageChange(event) {
+  //   this.setState({message: event.target.value});
+  // }
 
   inviteChange(event) {
     this.setState({invitee: event.target.value});
   }
 
-  messageSubmit() {
-    let aud, sep;
-    let wen = Date.now();
-    let uid = uuid();
-    let aut = this.props.api.authTokens.ship;
-
-    let config = this.props.store.configs[this.state.station];
-
-    if (isDMStation(this.state.station)) {
-      aud = this.state.station
-        .split("/")[1]
-        .split(".")
-        .map((mem) => `~${mem}/${this.state.circle}`);
-
-    } else {
-      aud = [this.state.station];
-    }
-
-    if (isUrl(this.state.message)) {
-      sep = {
-        url: this.state.message
-      }
-    } else {
-      sep = {
-        lin: {
-          msg: this.state.message,
-          pat: false
-        }
-      }
-    }
-
-    let message = {
-      uid,
-      aut,
-      wen,
-      aud,
-      sep,
-    };
-
-    this.props.api.hall({
-      convey: [message]
-    });
-
+  setPendingMessage(message) {
     this.setState({
-      message: "",
       pendingMessages: this.state.pendingMessages.concat({...message, pending: true})
     });
-
-    // TODO:  Push to end of event queue to let pendingMessages render before scrolling
-    //        There's probably a better way to do this
-    setTimeout(() => {
-      if (this.scrollbarRef.current) this.scrollbarRef.current.scrollToBottom();
-    })
   }
 
   inviteSubmit(event) {
@@ -459,17 +395,133 @@ export class ChatPage extends Component {
             </a>
           </div>
           <div className="flex-col-x">
-            <form>
-              <textarea className="chat-input-field"
-                resize="none"
-                ref={this.textareaRef}
-                placeholder={this.state.placeholder}
-                value={this.state.message}
-                onChange={this.messageChange} />
-            </form>
+            <ChatInput
+              station={this.state.station}
+              api={this.props.api}
+              store={this.props.store}
+              circle={this.state.circle}
+              placeholder={this.state.placeholder}
+              setPendingMessage={this.setPendingMessage.bind(this)}
+              scrollbarRef={this.scrollbarRef} />
           </div>
         </div>
       </div>
+    )
+  }
+}
+
+class ChatInput extends Component {
+
+  /*
+    Props:
+      - station
+      - api
+      - store
+      - circle
+      - placeholder
+      - setPendingMessage
+      - scrollbarRef
+  */
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      message: ""
+    };
+
+    this.textareaRef = React.createRef();
+
+    this.messageSubmit = this.messageSubmit.bind(this);
+    this.messageChange = this.messageChange.bind(this);
+  }
+
+  componentDidMount() {
+    this.bindShortcuts();
+  }
+
+  bindShortcuts() {
+    Mousetrap(this.textareaRef.current).bind('enter', e => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.messageSubmit(e);
+    });
+  }
+
+  messageChange(event) {
+    this.setState({message: event.target.value});
+  }
+
+  messageSubmit() {
+    console.log('starting message submit');
+    let aud, sep;
+    let wen = Date.now();
+    let uid = uuid();
+    let aut = this.props.api.authTokens.ship;
+
+    let config = this.props.store.configs[this.state.station];
+
+    if (isDMStation(this.props.station)) {
+      aud = this.props.station
+        .split("/")[1]
+        .split(".")
+        .map((mem) => `~${mem}/${this.props.circle}`);
+
+    } else {
+      aud = [this.props.station];
+    }
+
+    if (isUrl(this.state.message)) {
+      sep = {
+        url: this.state.message
+      }
+    } else {
+      sep = {
+        lin: {
+          msg: this.state.message,
+          pat: false
+        }
+      }
+    }
+
+    let message = {
+      uid,
+      aut,
+      wen,
+      aud,
+      sep,
+    };
+
+    this.props.api.hall({
+      convey: [message]
+    });
+
+    this.props.setPendingMessage(message);
+
+    console.log('ending message submit');
+
+    this.setState({
+      message: ""
+    });
+
+    // TODO:  Push to end of event queue to let pendingMessages render before scrolling
+    //        There's probably a better way to do this
+    setTimeout(() => {
+      if (this.props.scrollbarRef.current) this.props.scrollbarRef.current.scrollToBottom();
+    })
+  }
+
+  render() {
+    return (
+      <form>
+        <textarea className="chat-input-field"
+          resize="none"
+          ref={this.textareaRef}
+          placeholder={this.props.placeholder}
+          value={this.state.message}
+          onChange={this.messageChange} />
+      </form>
     )
   }
 }
