@@ -128,7 +128,7 @@ export class TopicCreatePage extends Component {
 
         let linMsg = _.get(rep.data, "gam.sep.fat.sep.lin.msg", null);
         let gramMetadata = linMsg && JSON.parse(linMsg);
-        let isYourNewPost = gramMetadata.owner === `~${api.authTokens.ship}`;
+        let isYourNewPost = gramMetadata.author === `~${api.authTokens.ship}`;
 
         if (isNewPost && isYourNewPost) {
           this.props.storeReports([{

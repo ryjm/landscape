@@ -72,7 +72,7 @@ export class Root extends Component {
     //   urb-show="default"
     //   urb-path="/web/collections/~2018.8.28..19.59.32..0013/~2018.8.28..21.49.27..6131"
     //   urb-name="New post yet again"
-    //   urb-owner="~zod"
+    //   urb-author="~zod"
     //   urb-date-created="~2018.8.28..21.49.27..6131"
     //   urb-last-modified="~2018.8.28..21.49.27..6131"
     //   urb-content-type="blog"
@@ -93,7 +93,7 @@ export class Root extends Component {
     }
 
     if (headerQuery.length > 0 && headerData.type) {
-      headerData.owner = headerQuery[0].getAttribute('urb-owner');
+      headerData.author = headerQuery[0].getAttribute('urb-author');
       headerData.host = headerQuery[0].getAttribute('urb-host');
       headerData.pageTitle = headerQuery[0].getAttribute('urb-name');
       headerData.dateCreated = headerQuery[0].getAttribute('urb-date-created');
@@ -114,7 +114,7 @@ export class Root extends Component {
         headerData.postId = headerData.dateCreated;
         headerData.station = `${headerData.host}/c-${headerData.collId}-${headerData.postId}`;
 
-        let collCircle = `${headerData.owner}/c-${headerData.collId}`;
+        let collCircle = `${headerData.author}/c-${headerData.collId}`;
         let collConfig = warehouse.store.configs[collCircle];
         headerData.collTitle = collConfig && collConfig.extConf ? collConfig.extConf.name : headerData.collId;
       }

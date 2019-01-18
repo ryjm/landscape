@@ -86,9 +86,9 @@ export class Header extends Component {
         defaultData = this.getStationHeaderData(this.props.data.station);
 
         actions = {
-          write: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=post`,
+          write: `/~~/${this.props.data.author}/==/web/collections/${this.props.data.collId}?show=post`,
           subscribe: null,
-          details: `/~~/${this.props.data.owner}/==/web/collections/${this.props.data.collId}?show=details`,
+          details: `/~~/${this.props.data.author}/==/web/collections/${this.props.data.collId}?show=details`,
         }
 
         headerData = {
@@ -147,8 +147,8 @@ export class Header extends Component {
         headerData = {
           icon: 'icon-sig',
           title: {
-            display: this.props.data.owner.substr(1),
-            href: profileUrl(this.props.data.owner.substr(1)),
+            display: this.props.data.author.substr(1),
+            href: profileUrl(this.props.data.author.substr(1)),
             style: "mono"
           }
         }
@@ -228,12 +228,12 @@ export class Header extends Component {
       case "collection-post-default":
         // <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-5 mr-2 text-timestamp" />
 
-        let ownerElem = null;
+        let authorElem = null;
 
         // TODO: I realize the redundancy in this conditional. God forgive me.
-        if (this.props.data.owner && headerData.type !== "collection-index-post") {
-          ownerElem = (
-            <a href={profileUrl(this.props.data.owner.substr(1))} className="vanilla text-mono mr-3 text-700 text-small">{this.props.data.owner}</a>
+        if (this.props.data.author && headerData.type !== "collection-index-post") {
+          authorElem = (
+            <a href={profileUrl(this.props.data.author.substr(1))} className="vanilla text-mono mr-3 text-700 text-small">{this.props.data.author}</a>
           )
         }
 
@@ -241,7 +241,7 @@ export class Header extends Component {
           <React.Fragment>
             <div className="flex-col-2"></div>
             <div className="flex-col-x">
-              {ownerElem}
+              {authorElem}
               <span className="text-mono text-300 text-small">{this.props.data.dateCreated.slice(0, -6)}</span>
             </div>
           </React.Fragment>
@@ -264,9 +264,9 @@ export class Header extends Component {
           <React.Fragment>
             <div className="flex-col-2"></div>
             <div className="flex-col-x text-heading text-squat">
-              <a className={indexClass} href={`/~~/${this.props.data.owner}/==/web/landscape/profile`}>Profile</a>
-              {this.props.data.owner.substr(1) === this.props.api.authTokens.ship &&
-                <a className={settingsClass} href={`/~~/${this.props.data.owner}/==/web/landscape/profile/settings`}>Settings</a>
+              <a className={indexClass} href={`/~~/${this.props.data.author}/==/web/landscape/profile`}>Profile</a>
+              {this.props.data.author.substr(1) === this.props.api.authTokens.ship &&
+                <a className={settingsClass} href={`/~~/${this.props.data.author}/==/web/landscape/profile/settings`}>Settings</a>
               }
             </div>
           </React.Fragment>

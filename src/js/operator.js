@@ -177,7 +177,7 @@ export class UrbitOperator {
       // Any message comes in to the /i circle
 
 
-    // first step: bind to owner's circles
+    // first step: bind to author's circles
     // api.bind(`/circles/~${api.authTokens.ship}`, "PUT");
     //
     // warehouse.pushCallback('circles', rep => {
