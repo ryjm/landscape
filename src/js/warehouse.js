@@ -7,6 +7,7 @@ import { CirclesReducer } from '/reducers/circles';
 // import { PublicReducer } from '/reducers/public';
 import { router } from '/router';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
+import urbitOb from 'urbit-ob';
 
 const REPORT_KEYS = [
   'landscape.prize',
@@ -64,6 +65,10 @@ class Hoon {
     return Cell(val) || Atom(val);
   }
 
+  static PatP(val) {
+    return urbitOb.isValidPatp(val);
+  }
+
   static Term(val) {
     return typeof val === "string"
   }
@@ -73,42 +78,21 @@ class Hoon {
   }
 }
 
-class NewWarehouse {
-  constructor() {
-    this.store = {
-      name: [Hoon.Term, "John Doe"],
-      age: []
-    }
-  }
-}
+// class NewWarehouse {
+//   constructor() {
+//     this.store = {
+//       name: [Hoon.Term, "John Doe"],
+//       age: [Hoon.Atom, 24]
+//     }
+//   }
+// }
 
 class UrbitWarehouse {
   constructor() {
     this.store = {
-      messages: {
-        inbox: {
-          src: [],
-          messages: [],
-          config: {}
-        },
-        notifications: [],
-        stations: {}
-      },
-      configs: {},
-      views: {
-        transition: PAGE_STATUS_PROCESSING,
-        inbox: "inbox-recent",
-        activeStream: null,
-      },
-      reads: {},
-      names: {},
-      public: {},
-      circles: [],
-      dms: {
-        stored: false,
-        stations: []
-      },
-    };
+      name: [Hoon.Term, "John Doe"],
+      age: [Hoon.Atom, 24]
+    }
 
     this.reports = this.buildReports();
 
@@ -224,5 +208,9 @@ class UrbitWarehouse {
   }
 }
 
-export let warehouse = new UrbitWarehouse();
+let warehouse = new UrbitWarehouse();
+export {
+  warehouse,
+  UrbitWarehouse
+}
 window.warehouse = warehouse;
