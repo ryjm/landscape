@@ -66,12 +66,12 @@ export class SealDict {
     this.dict = {};
   }
 
-  getSuffix(patp) {
-    return patp.length === 3 ? patp : patp.substr(-3, 3);
+  getPrefix(patp) {
+    return patp.length === 3 ? patp : patp.substr(0, 3);
   }
 
-  getSeal(patp, size, suffix) {
-    let sigilShip = suffix ? this.getSuffix(patp) : patp;
+  getSeal(patp, size, prefix) {
+    let sigilShip = prefix ? this.getPrefix(patp) : patp;
     let key = `${sigilShip}+${size}`;
 
     if (!this.dict[key]) {
