@@ -214,8 +214,7 @@ export class Header extends Component {
         });
         return (
           <React.Fragment>
-            <div className="flex-col-2"></div>
-            <div className="flex-col-x text-heading text-squat">
+            <div className="flex-col-x flex-offset-1 text-heading text-squat">
               <a className={recentClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-recent') }}>Recent</a>
               <a className={listClass} onClick={() => { this.navigateSubpage('inbox', 'inbox-list') }}>All</a>
             </div>
@@ -239,7 +238,6 @@ export class Header extends Component {
 
         return (
           <React.Fragment>
-            <div className="flex-col-2"></div>
             <div className="flex-col-x">
               {authorElem}
               <span className="text-mono text-300 text-small">{this.props.data.dateCreated.slice(0, -6)}</span>
@@ -262,8 +260,7 @@ export class Header extends Component {
         });
         return (
           <React.Fragment>
-            <div className="flex-col-2"></div>
-            <div className="flex-col-x text-heading text-squat">
+            <div className="flex-col-x flex-offset-1 text-heading text-squat">
               <a className={indexClass} href={`/~~/${this.props.data.author}/==/web/landscape/profile`}>Profile</a>
               {this.props.data.author.substr(1) === this.props.api.authTokens.ship &&
                 <a className={settingsClass} href={`/~~/${this.props.data.author}/==/web/landscape/profile/settings`}>Settings</a>
@@ -361,19 +358,20 @@ export class Header extends Component {
     return (
       <div className="container header-container">
         <div className="row">
-          <div className="flex-col-2"></div>
-          <div className="flex-col-x header-breadcrumbs">
+          <div className="flex-offset-1 flex-col-x header-breadcrumbs">
             {breadcrumbsElem}
           </div>
         </div>
-        <div className="row align-center header-mainrow">
+        <div className="row align-center">
           <div className="flex-col-1 flex justify-end">
             <HeaderNotification
               notifications={this.props.store.messages.notifications}
               pushCallback={this.props.pushCallback}
             />
           </div>
-          <div className="flex-col-1 flex space-between align-center">
+        </div>
+        <div className="row align-center header-mainrow">
+         <div className="flex-col-1 flex space-between align-center">
             <a onClick={this.toggleMenu}>
               <Icon type="icon-panini" />
             </a>

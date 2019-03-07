@@ -331,7 +331,7 @@ export class ChatPage extends Component {
            data-date-group={msg.dateGroup}
            onMouseEnter={this.mouseenterActivate}
            onMouseLeave={this.mouseleaveActivate}>
-        <div className="flex-col-2 flex align-center justify-end">
+        <div className="flex-col-1 flex align-center justify-end">
           {msg.printship &&
             <a className="vanilla chat-sigil" href={prettyShip(msg.aut)[1]}>
               {sealDict.getSeal(msg.aut, 18, true)}
@@ -389,7 +389,7 @@ export class ChatPage extends Component {
           {chatMessages}
         </Scrollbars>
         <div className="row mt-3 flex-chat-input">
-          <div className="flex-col-2 flex justify-end">
+          <div className="flex-col-1 flex justify-end">
             <a className="vanilla chat-sigil" href={prettyShip(api.authTokens.ship)[1]}>
               {sealDict.getSeal(api.authTokens.ship, 18, true)}
             </a>
