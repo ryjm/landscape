@@ -88,7 +88,7 @@ export class InboxRecentPage extends Component {
                     <Icon type='icon-collection-post' label={true}/>
                   }
                 </div>
-                <div className="flex-col-x">
+                <div className="flex-offset-1 flex-col-x">
                   {messageDetails.postUrl &&
                     <a className="text-heading text-500"
                       href={messageDetails.postUrl}>
@@ -99,8 +99,7 @@ export class InboxRecentPage extends Component {
                 <div className="flex-col-3"></div>
               </div>
               <div className="row">
-                <div className="flex-col-2"></div>
-                <div className={`flex-col-x ${isPostUpdate ? 'mt-1' : 'mt-3'}`}>
+                <div className={`flex-offset-1 flex-col-x ${isPostUpdate ? 'mt-1' : 'mt-3'}`}>
                   <a className="vanilla text-mono text-small text-700" href={prettyShip(msg.aut)[1]}>{prettyShip(`~${msg.aut}`)[0]}</a>
                 </div>
                 <div className="flex-col-3"></div>
@@ -108,8 +107,7 @@ export class InboxRecentPage extends Component {
             </React.Fragment>
           }
           <div className="row">
-            <div className="flex-col-2"></div>
-            <div className="flex-col-x">
+            <div className="flex-offset-1 flex-col-x">
               <Message details={messageDetails} api={this.props.api} storeReports={this.props.storeReports} pushCallback={this.props.pushCallback} transitionTo={this.props.transitionTo}></Message>
             </div>
             <div className="flex-col-3"></div>
@@ -135,8 +133,7 @@ export class InboxRecentPage extends Component {
         <div className="mt-4 mb-6" key={i}>
           {section.stationDetails.type !== "stream-dm" &&
             <div className="row">
-              <div className="flex-col-2"></div>
-              <div className="flex-col-x">
+              <div className="flex-offset-1 flex-col-x">
                 <a href={section.stationDetails.hostProfileUrl} className="text-host-breadcrumb">~{section.stationDetails.host}</a>
                 <span className="text-host-breadcrumb ml-2 mr-2">/</span>
               </div>
@@ -144,7 +141,7 @@ export class InboxRecentPage extends Component {
             </div>
           }
           <div className="row align-center">
-            <div className="flex-col-2 flex justify-end">
+            <div className="flex-col-1 flex justify-end">
               <Icon type={section.icon} label={true}/>
             </div>
             <div className="flex-col-x">
@@ -271,7 +268,7 @@ export class InboxRecentPage extends Component {
       <React.Fragment>
         {invites.length > 0 &&
           <div className="row mt-3">
-            <div className="flex-offset-2 flex-col-x">
+            <div className="flex-offset-1 flex-col-x">
               <h3 className="mb-1">Invites</h3>
             </div>
           </div>

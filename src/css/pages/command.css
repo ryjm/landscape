@@ -16,11 +16,6 @@
   margin-bottom: 27px;
 }
 
-.command-options, .command-input-placeholder-wrapper {
-  margin-left: -9px;
-  width: calc(100% + 9px);
-}
-
 input.command-menu-input, .command-input-placeholder-wrapper {
   position: relative;
   border: none;

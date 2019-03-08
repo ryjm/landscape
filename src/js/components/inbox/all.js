@@ -32,7 +32,7 @@ export class InboxAllPage extends Component {
 
       return (
         <div key={stationDetails.station} className="mt-3 row align-center">
-          <div className="text-mono flex-col-3 flex-offset-2">
+          <div className="text-mono flex-col-3 flex-offset-1">
             {stationDetails.type !== "stream-dm" &&
               <React.Fragment>
                 <a className="text-host-breadcrumb" href={stationDetails.hostProfileUrl}>
@@ -83,7 +83,7 @@ export class InboxAllPage extends Component {
       return (
         <div className="mt-4 mb-17">
           <div className="row">
-            <div className="flex-col-2 flex justify-end align-center">
+            <div className="flex-col-1 flex justify-end align-center">
               <Icon type={s.icon} label={true} />
             </div>
             <div className="flex-col-x">
