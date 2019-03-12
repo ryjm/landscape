@@ -146,6 +146,7 @@ export class Root extends Component {
       <div>
         <div className="container header-container">
           <div className="row">
+            <div className="flex-col-2"></div>
             <div className="flex-col-x header-breadcrumbs"></div>
           </div>
           <div className="row align-center header-mainrow">
