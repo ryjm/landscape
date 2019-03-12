@@ -453,6 +453,7 @@ export class CommandMenu extends Component {
           storeReports={this.props.storeReports}
         />
         <div className="row command-row">
+          <div className="flex-col-1"></div>
           <div className="flex-col-1 justify-start" onClick={this.closeMenu}>
             <Icon type="icon-x" />
           </div>
@@ -472,7 +473,8 @@ export class CommandMenu extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="flex-offset-1 flex-col-x command-options">
+          <div className="flex-col-2"></div>
+          <div className="flex-col-x command-options">
             {view}
           </div>
         </div>
