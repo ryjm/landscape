@@ -72,7 +72,7 @@ export class SealDict {
 
   getSeal(patp, size, prefix) {
     if (patp.length > 13) {
-      patp = "zod";
+      patp = "tiz";
     }
 
     let sigilShip = prefix ? this.getPrefix(patp) : patp;
