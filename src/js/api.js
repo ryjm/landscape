@@ -10,28 +10,26 @@ class UrbitApi {
   }
 
   // keep default bind to hall, since its bind procedure more complex for now AA
-  bind(path, method, ship = this.authTokens.ship, appl = "hall") {
+  bind(path, method, ship = this.authTokens.ship, appl = "hall", success, fail) {
     console.log('binding to ...', appl, ", path: ", path, ", as ship: ", ship, ", by method: ", method);
     this.bindPaths = _.uniq([...this.bindPaths, path]);
 
-    return new Promise((resolve, reject) => {
-      window.urb.subscribe(ship, appl, path, 
-        (err) => {
-          reject(err);
-        },
-        (event) => {
-          resolve({
-            data: event,
-            from: {
-              ship,
-              path
-            }
-          });
-        },
-        (quit) => {
-          reject(err);
+    window.urb.subscribe(ship, appl, path, 
+      (err) => {
+        fail(err);
+      },
+      (event) => {
+        success({
+          data: event,
+          from: {
+            ship,
+            path
+          }
         });
-    });
+      },
+      (quit) => {
+        fail(err);
+      });
   }
 
   hall(data) {

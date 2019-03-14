@@ -120,9 +120,9 @@ export class UrbitOperator {
   initializeLandscape() {
     this.initializeLocalStorage();
 
-    api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections')
-      .then(this.handleEvent.bind(this))
-      .catch(this.handleError.bind(this));
+    api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections',
+      this.handleEvent.bind(this),
+      this.handleError.bind(this));
 
     warehouse.pushCallback(['circle.gram', 'circle.nes', 'landscape.prize'], (rep) => {
       let msgs = [];
@@ -153,7 +153,7 @@ export class UrbitOperator {
   }
 
   handleEvent(diff) {
-    console.log(diff);
+    console.log('handleEvent', diff);
     if (warehouse.store.views.transition === PAGE_STATUS_DISCONNECTED) {
       warehouse.storeReports([{
         type: REPORT_PAGE_STATUS,
@@ -182,10 +182,9 @@ export class UrbitOperator {
     }, LONGPOLL_TIMEOUT);*/
 
     console.log(err);
-
-    api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections')
-      .then(this.handleEvent.bind(this))
-      .catch(this.handleError.bind(this));
+    api.bind(`/primary`, "PUT", api.authTokens.ship, 'collections',
+      this.handleEvent.bind(this),
+      this.handleError.bind(this));
   }
 }
 

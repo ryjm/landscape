@@ -46484,28 +46484,26 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  }
 
 	  // keep default bind to hall, since its bind procedure more complex for now AA
-	  bind(path, method, ship = this.authTokens.ship, appl = "hall") {
+	  bind(path, method, ship = this.authTokens.ship, appl = "hall", success, fail) {
 	    console.log('binding to ...', appl, ", path: ", path, ", as ship: ", ship, ", by method: ", method);
 	    this.bindPaths = lodash.uniq([...this.bindPaths, path]);
 
-	    return new Promise((resolve, reject) => {
-	      window.urb.subscribe(ship, appl, path, 
-	        (err) => {
-	          reject(err);
-	        },
-	        (event) => {
-	          resolve({
-	            data: event,
-	            from: {
-	              ship,
-	              path
-	            }
-	          });
-	        },
-	        (quit) => {
-	          reject(err);
+	    window.urb.subscribe(ship, appl, path, 
+	      (err) => {
+	        fail(err);
+	      },
+	      (event) => {
+	        success({
+	          data: event,
+	          from: {
+	            ship,
+	            path
+	          }
 	        });
-	    });
+	      },
+	      (quit) => {
+	        fail(err);
+	      });
 	  }
 
 	  hall(data) {
@@ -46666,6 +46664,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	class MessagesReducer {
 	  reduce(reports, store) {
+	    console.log('message reduce', reports);
 	    reports.forEach((rep) => {
 	      let fromCircle = rep.from && rep.from.path.split("/")[2];
 	      let fromInbox = fromCircle === "inbox";
@@ -46853,6 +46852,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	class ConfigsReducer {
 	  reduce(reports, store) {
+	    console.log('configs reduce', reports);
 	    reports.forEach(rep => {
 	      let stationName;
 	      let stations = {};
@@ -47347,9 +47347,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  initializeLandscape() {
 	    this.initializeLocalStorage();
 
-	    api$1.bind(`/primary`, "PUT", api$1.authTokens.ship, 'collections')
-	      .then(this.handleEvent.bind(this))
-	      .catch(this.handleError.bind(this));
+	    api$1.bind(`/primary`, "PUT", api$1.authTokens.ship, 'collections',
+	      this.handleEvent.bind(this),
+	      this.handleError.bind(this));
 
 	    warehouse$1.pushCallback(['circle.gram', 'circle.nes', 'landscape.prize'], (rep) => {
 	      let msgs = [];
@@ -47380,7 +47380,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  }
 
 	  handleEvent(diff) {
-	    console.log(diff);
+	    console.log('handleEvent', diff);
 	    if (warehouse$1.store.views.transition === PAGE_STATUS_DISCONNECTED) {
 	      warehouse$1.storeReports([{
 	        type: REPORT_PAGE_STATUS,
@@ -47409,10 +47409,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    }, LONGPOLL_TIMEOUT);*/
 
 	    console.log(err);
-
-	    api$1.bind(`/primary`, "PUT", api$1.authTokens.ship, 'collections')
-	      .then(this.handleEvent.bind(this))
-	      .catch(this.handleError.bind(this));
+	    api$1.bind(`/primary`, "PUT", api$1.authTokens.ship, 'collections',
+	      this.handleEvent.bind(this),
+	      this.handleError.bind(this));
 	  }
 	}
 
@@ -59624,13 +59623,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    const invites = this.squashedInvites();
 	    const inviteElems = this.buildInvites(invites);
 
+	    console.log(sections);
 
 	    return (
-	      react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$d, lineNumber: 271}}
+	      react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$d, lineNumber: 272}}
 	        , invites.length > 0 &&
-	          react.createElement('div', { className: "row mt-3" , __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 273}}
-	            , react.createElement('div', { className: "flex-offset-2 flex-col-x" , __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 274}}
-	              , react.createElement('h3', { className: "mb-1", __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 275}}, "Invites")
+	          react.createElement('div', { className: "row mt-3" , __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 274}}
+	            , react.createElement('div', { className: "flex-offset-2 flex-col-x" , __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 275}}
+	              , react.createElement('h3', { className: "mb-1", __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 276}}, "Invites")
 	            )
 	          )
 	        
@@ -82863,7 +82863,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    let json = data.data;
 
 	    reportTypes.forEach((type) => {
+	      console.log(type);
 	      let reportData = lodash.get(json, type, null);
+	      console.log(reportData);
 
 	      let hasContent = (
 	        (lodash.isArray(reportData) && lodash.isEmpty(reportData)) ||
@@ -82876,6 +82878,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        // fragments don't contain all the data we need
 	        reportData = lodash.get(json, this.reports[type].dataKey, null);
 
+	        console.log(type);
 	        newReports.push({
 	          type: type,
 	          data: reportData,
