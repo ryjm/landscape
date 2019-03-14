@@ -17,3 +17,36 @@ Landscape is automatically packaged with your ship when you instantiate it. Just
 ## Developing Landscape 
 
 Our internal frontend development guide, Kamaji, will be published soon. Stay tuned.
+
+### Quick start
+
+Create a `.urbitrc` file in this directory like so:
+
+```
+module.exports = {
+    URBIT_PIERS: [
+      "/path/to/fakezod/home"
+    ]
+};
+```
+
+You'll need `npm` installed. Then:
+
+```
+npm install
+gulp watch
+```
+
+Whenever you change some landscape source code, this will recompile the code and
+copy the updated version into your fakezod pier.
+
+### NixOS dev
+
+If on NixOS, try:
+
+```
+nix-shell -p nodejs-8_x
+npm install
+export PATH=./node_modules/.bin/:$PATH
+gulp watch
+```
