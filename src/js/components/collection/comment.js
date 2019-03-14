@@ -72,7 +72,7 @@ export class CommentCreate extends Component {
       <div>
         <div className="flex align-top">
           <div className="mr-2 mt-3">
-            <Sigil ship={`~${this.props.api.authTokens.ship}`} size="18" />
+            <Sigil ship={`~${this.props.api.authTokens.ship}`} size="18" prefix="true"/>
           </div>
           <textarea
             value={this.state.comment}

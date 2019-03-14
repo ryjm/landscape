@@ -150,7 +150,7 @@
                 =urb-component  "Sigil"
                 =urb-ship       "{(trip author)}"
                 =urb-size       "18"
-                =urb-suffix     "true";
+                =urb-prefix     "true";
               ;div
                 ;a.vanilla.text-mono.text-small.text-700.mr-4
                   =href  "/~~/{(trip host)}/==/web/landscape/profile"
