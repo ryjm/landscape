@@ -109,10 +109,11 @@ class UrbitWarehouse {
     return reports;
   }
 
-  storePollResponse(pollResponse) {
+  storePollResponse(data) {
+    console.log('pollresp', data);
     let newReports = [];
     let reportTypes = Object.keys(this.reports);
-    let json = pollResponse.data.json;
+    let json = data.data;
 
     reportTypes.forEach((type) => {
       let reportData = _.get(json, type, null);
@@ -131,7 +132,7 @@ class UrbitWarehouse {
         newReports.push({
           type: type,
           data: reportData,
-          from: pollResponse.from
+          from: data.from
         });
       }
     });

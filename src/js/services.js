@@ -38,8 +38,8 @@ export function getStationDetails(station) {
       ret.stationTitle = ret.cir;
       break;
     case "stream-chat":
-      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
-      ret.stationDetailsUrl = `/~~/landscape/stream/details?station=${station}`;
+      ret.stationUrl = `/~landscape/stream?station=${station}`;
+      ret.stationDetailsUrl = `/~landscape/stream/details?station=${station}`;
       ret.stationTitle = ret.cir;
       break;
     case "stream-dm":
@@ -48,7 +48,7 @@ export function getStationDetails(station) {
         .filter((mem) => mem !== api.authTokens.ship)
         .map((mem) => `~${mem}`)
         .join(", ");;
-      ret.stationUrl = `/~~/landscape/stream?station=${station}`;
+      ret.stationUrl = `/~landscape/stream?station=${station}`;
       break;
     case "collection-index":
       ret.collId = circleParts[1];

@@ -225,11 +225,11 @@ export function foreignUrl(shipName, own, urlFrag) {
 // shorten comet names
 export function prettyShip(ship) {
   const sp = ship.split('-');
-  return [sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship, ship[0] === '~' ? `/~~/${ship}/==/web/landscape/profile` : `/~~/~${ship}/==/web/landscape/profile`];
+  return [sp.length == 9 ? `${sp[0]}_${sp[8]}`: ship, ship[0] === '~' ? `/~landscape/profile/${ship}` : `/~landscape/profile/~${ship}`];
 }
 
 export function profileUrl(ship) {
-  return `/~~/~${ship}/==/web/landscape/profile`;
+  return `/~landscape/profile/~${ship}`;
 }
 
 export function isDMStation(station) {

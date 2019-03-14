@@ -14,19 +14,23 @@ class UrbitApi {
     console.log('binding to ...', appl, ", path: ", path, ", as ship: ", ship, ", by method: ", method);
     this.bindPaths = _.uniq([...this.bindPaths, path]);
 
-    const params = {
-      appl,
-      mark: "json",
-      oryx: this.authTokens.oryx,
-      ship: ship,
-      path: path,
-      wire: path
-    };
-
-    return fetch(`/~/is/~${ship}/${appl}${path}.json?${method}`, {
-      credentials: "same-origin",
-      method: "POST",
-      body: JSON.stringify(params)
+    return new Promise((resolve, reject) => {
+      window.urb.subscribe(ship, appl, path, 
+        (err) => {
+          reject(err);
+        },
+        (event) => {
+          resolve({
+            data: event,
+            from: {
+              ship,
+              path
+            }
+          });
+        },
+        (quit) => {
+          reject(err);
+        });
     });
   }
 
@@ -43,19 +47,14 @@ class UrbitApi {
   }
 
   action(appl, mark, data) {
-    const params = {
-      appl,
-      mark,
-      oryx: this.authTokens.oryx,
-      ship: this.authTokens.ship,
-      wire: "/",
-      xyro: data
-    };
-
-    fetch(`/~/to/${appl}/${mark}`, {
-      credentials: "same-origin",
-      method: "POST",
-      body: JSON.stringify(params)
+    return new Promise((resolve, reject) => {
+      window.urb.poke(ship, appl, mark, data,
+        (json) => {
+          resolve(json);
+        }, 
+        (err) => {
+          reject(err);
+        });
     });
   }
 

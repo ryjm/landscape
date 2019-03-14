@@ -248,26 +248,17 @@ export class Header extends Component {
         );
         break;
       case "header-profile":
-        let onSettingsPage = window.location.href.includes("settings");
         let indexClass = classnames({
           'vanilla': true,
           'mr-8': true,
           'inbox-link': true,
-          'inbox-link-active': !onSettingsPage,
-        });
-        let settingsClass = classnames({
-          'vanilla': true,
-          'inbox-link': true,
-          'inbox-link-active': onSettingsPage,
+          'inbox-link-active': true,
         });
         return (
           <React.Fragment>
             <div className="flex-col-2"></div>
             <div className="flex-col-x text-heading text-squat">
               <a className={indexClass} href={`/~~/${this.props.data.author}/==/web/landscape/profile`}>Profile</a>
-              {this.props.data.author.substr(1) === this.props.api.authTokens.ship &&
-                <a className={settingsClass} href={`/~~/${this.props.data.author}/==/web/landscape/profile/settings`}>Settings</a>
-              }
             </div>
           </React.Fragment>
         );
@@ -390,7 +381,6 @@ export class Header extends Component {
         <PageStatus
           transition={this.props.store.views.transition}
           usership={this.props.api.authTokens.ship}
-          runPoll={this.props.runPoll}
           storeReports={this.props.storeReports}
         />
       </div>
