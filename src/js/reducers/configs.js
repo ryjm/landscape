@@ -2,6 +2,7 @@ import { isAggregator } from '/lib/util';
 
 export class ConfigsReducer {
   reduce(reports, store) {
+    console.log('configs reduce', reports);
     reports.forEach(rep => {
       let stationName;
       let stations = {};

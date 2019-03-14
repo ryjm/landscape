@@ -116,7 +116,9 @@ class UrbitWarehouse {
     let json = data.data;
 
     reportTypes.forEach((type) => {
+      console.log(type);
       let reportData = _.get(json, type, null);
+      console.log(reportData);
 
       let hasContent = (
         (_.isArray(reportData) && _.isEmpty(reportData)) ||
@@ -129,6 +131,7 @@ class UrbitWarehouse {
         // fragments don't contain all the data we need
         reportData = _.get(json, this.reports[type].dataKey, null);
 
+        console.log(type);
         newReports.push({
           type: type,
           data: reportData,
