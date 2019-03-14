@@ -136,7 +136,6 @@ export class Root extends Component {
         transitionTo={this.props.transitionTo}
         localSet={this.props.localSet}
         localGet={this.props.localGet}
-        runPoll={this.props.runPoll}
       />
     );
   }

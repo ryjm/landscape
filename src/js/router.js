@@ -35,7 +35,6 @@ class UrbitRouter {
         localSet={warehouse.localSet}
         localGet={warehouse.localGet}
         transitionTo={this.transitionTo}
-        runPoll={operator.runPoll.bind(operator)}
         scaffold={this.scaffold} />
     )
 

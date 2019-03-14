@@ -8,14 +8,15 @@
     ;meta
       =name     "viewport"
       =content  "width=device-width, initial-scale=1, shrink-to-fit=no";
-    ;link(rel "stylesheet", href "/~~/landscape/css/index.css");
+    ;link(rel "stylesheet", href "/~landscape/css.css");
   ==
 ::
   ;body
     ;div#root
       ;+  inner
     ==
-    ;script@"/~~/landscape/js/index.js";
+    ;script@"/~/channel/channel.js";
+    ;script@"/modulo/session.js";
+    ;script@"/~landscape/js.js";
   ==
-::
 ==

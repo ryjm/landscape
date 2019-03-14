@@ -16,15 +16,15 @@ console.log('app running');
   host    :    zod
 */
 
-fetch('/~/auth.json',{credentials: "same-origin"}).then((res) => {
-  return res.json();
-})
-.then((authTokens) => {
-  api.setAuthTokens(authTokens);
+console.log(window.urb);
+console.log(window.ship);
 
-  router.start();
-  operator.start();
+api.setAuthTokens({
+  ship: window.ship
 });
+
+router.start();
+operator.start();
 
 window.util = util;
 window._ = _;

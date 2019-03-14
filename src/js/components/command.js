@@ -449,7 +449,6 @@ export class CommandMenu extends Component {
         <PageStatus
           transition={this.props.store.views.transition}
           usership={this.props.api.authTokens.ship}
-          runPoll={this.props.runPoll}
           storeReports={this.props.storeReports}
         />
         <div className="row command-row">
