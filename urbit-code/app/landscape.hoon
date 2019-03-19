@@ -29,12 +29,11 @@
 +$  card
   $%  [%poke wire dock poke]
       [%http-response =http-event:http]
-
     ==
-  +$  poke
-    $%  [%modulo-bind app=term]
-        [%modulo-unbind app=term]
-    ==
++$  poke
+  $%  [%modulo-bind app=term]
+      [%modulo-unbind app=term]
+  ==
 --
 ::
 |_  [bol=bowl:gall sta=@t]
@@ -45,7 +44,6 @@
 ++  prep
   |=  old=(unit @t)
   ^-  (quip move _this)
-  ~&  %prep
   :-  [ost.bol %poke / [our.bol %modulo] [%modulo-bind %landscape]]~
   ?~  old
     this
@@ -66,30 +64,36 @@
     =/  index-html=octs  (manx-to-octs (index inbox))
     [[ost.bol %http-response (html-response index-html)]~ this]
     ::
-    [%css *]
-      [[ost.bol %http-response (css-response style)]~ this]
-    [%js *]
-      [[ost.bol %http-response (js-response script)]~ this]
-    [%profile @t *]
-      =/  profile-html=octs
-        (manx-to-octs (index (profile i.t.t.site.request-line)))
-      [[ost.bol %http-response (html-response profile-html)]~ this]
-    [%stream *]
-      =/  stream-html=octs  (manx-to-octs (index stream))
-      [[ost.bol %http-response (html-response stream-html)]~ this]
-    [%collections @t @t *]
+      [%css *]
+    [[ost.bol %http-response (css-response style)]~ this]
+    ::
+      [%js *]
+    [[ost.bol %http-response (js-response script)]~ this]
+    ::
+      [%profile @t *]
+    =/  profile-html=octs
+      (manx-to-octs (index (profile i.t.t.site.request-line)))
+    [[ost.bol %http-response (html-response profile-html)]~ this]
+    ::
+      [%stream *]
+    =/  stream-html=octs  (manx-to-octs (index stream))
+    [[ost.bol %http-response (html-response stream-html)]~ this]
+    ::
+      [%collections @t @t *]
     =/  shp/@p  (slav %p i.t.t.site.request-line)
     =/  col/@da   (slav %da i.t.t.t.site.request-line)
     =*  tal  t.t.t.t.site.request-line
+    ::  top level collection
+    ::
     ?:  ?=(~ tal)
-      :: top level collection
       =/  top-html=octs  (manx-to-octs (index (coll-elem shp col ~)))
       [[ost.bol %http-response (html-response top-html)]~ this]
+    :: make a new post, or view an old one
+    ::
     ?:  ?=([@t ~] tal)
-      :: make a new post, or view an old one
+      ::  make a new post
+      ::
       ?:  =(-.tal 'new')
-        ::  make a new post
-        ::
         =/  new-html=octs  (manx-to-octs (index (coll-new shp col)))
         [[ost.bol %http-response (html-response new-html)]~ this]
       ::  view a post
