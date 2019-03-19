@@ -3,6 +3,10 @@
   ::
 /?  309
 /+  collections, cram
+/=  coll-new
+  /:  /===/app/landscape/collections/new  /!noun/
+/=  coll-edit
+  /:  /===/app/landscape/collections/edit  /!noun/
 /=  cols
   /^  collection:collections
   /;  |=  a=(map knot item:collections)
@@ -10,7 +14,10 @@
   /:  /===/web/collections  /_  /collections-item/
 ::
 ::
-|=  [shp=@p col=@da pos=(unit @da)]
+|%
++$  post-page  [p=@da q=?(%default %edit)]
+--
+|=  [shp=@p col=@da pos=(unit post-page)]
 ^-  manx
 =/  itm=(unit item:collections)  (~(get by data.cols) (scot %da col))
 ?~  itm
@@ -42,7 +49,7 @@
   ::
   ::
     ?>  ?=(%collection -.itm)
-    =/  posttt=(unit item:collections)  (~(get by data.col.itm) (scot %da u.pos))
+    =/  posttt=(unit item:collections)  (~(get by data.col.itm) (scot %da p.u.pos))
     ?~  posttt
       ;div: Invalid collection
     ?>  ?=(%both -.u.posttt)
@@ -52,7 +59,15 @@
       ;div.flex-col-x
         ;div.collection-index
           ;+  (meta-to-elem u.posttt)
-          ;+  (both-to-elem col.u.posttt raw.u.posttt)
+          ;+  
+            ?-    q.u.pos 
+                %default  
+              (both-to-elem col.u.posttt raw.u.posttt)
+            ::
+                %edit
+              =/  dat  data.raw.u.posttt
+              (coll-edit shp col p.u.pos dat)
+            ==
         ==
       ==
       ;div.flex-col-2;
