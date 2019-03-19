@@ -116,9 +116,7 @@ class UrbitWarehouse {
     let json = data.data;
 
     reportTypes.forEach((type) => {
-      console.log(type);
       let reportData = _.get(json, type, null);
-      console.log(reportData);
 
       let hasContent = (
         (_.isArray(reportData) && _.isEmpty(reportData)) ||

@@ -312,7 +312,7 @@ export function getMessageContent(msg) {
         date: jason.date,
         path: jason.path,
         postTitle: jason.name,
-        postUrl: `/~~/${jason.host}/==/${jason.path.join('/')}`,
+        postUrl: `/~landscape/collections/${jason.host}/${jason.path.slice(2).join('/')}`,
       }
     },
     'sep.lin.msg': 'lin',

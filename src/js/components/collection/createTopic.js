@@ -40,10 +40,10 @@ export class TopicCreatePage extends Component {
     let details = {};
 
     if (editMode) {
-      details.clayPath = props.claypath.split('/').slice(1);
+      details.clayPath = props.claypath;
       details.hostship = props.ship.substr(1);
-      details.circle = `~${details.hostship}/c${[''].concat(details.clayPath.slice(2, -1)).join('-')}`;
-      details.namedCircle = "c".concat([''].concat(details.clayPath.slice(2, -1)).join('-'));
+      details.circle = `~${details.hostship}/c${[''].concat([details.clayPath]).join('-')}`;
+      details.namedCircle = "c".concat([''].concat([details.clayPath]).join('-'));
       details.lastedit = props.lastedit;
       details.title = details.clayPath.slice(-1)[0];
       details.body = props.content;
@@ -53,10 +53,10 @@ export class TopicCreatePage extends Component {
 //      details.collId = stationDetails.collId;
 //      details.hostship = stationDetails.host;
 //      details.cir = stationDetails.cir;
-      details.clayPath = props.claypath.split('/').slice(1);
+      details.clayPath = props.claypath;
       details.hostship = props.ship.substr(1);
-      details.circle = `~${details.hostship}/c${[''].concat(details.clayPath.slice(2)).join('-')}`;
-      details.namedCircle = "c".concat([''].concat(details.clayPath.slice(2, -1)).join('-'));
+      details.circle = `~${details.hostship}/c${[''].concat([details.clayPath]).join('-')}`;
+      details.namedCircle = "c".concat([''].concat([details.clayPath]).join('-'));
     }
 
     return details;
@@ -72,7 +72,7 @@ export class TopicCreatePage extends Component {
         desk: 'home',
         acts: [{
           post: {
-            path: '/' + details.clayPath.join('/'), // TODO: should be web/collections/~2018.9.11..17.41.40..6823/~2018.9.11..20.21.42..607c
+            path: '/web/collections/' + details.clayPath, // TODO: should be web/collections/~2018.9.11..17.41.40..6823/~2018.9.11..20.21.42..607c
             name: this.state.title,
             comments: true,  // XX TODO Get this value from user or parent
             type: 'blog',
@@ -87,7 +87,7 @@ export class TopicCreatePage extends Component {
         desk: 'home',
         acts: [{
           post: {
-            path: '/' + details.clayPath.join('/'),
+            path: '/web/collections/' + details.clayPath,
             name: this.state.title,
             comments: true,  // XX TODO Get this value from user or parent
             type: 'blog',
@@ -113,7 +113,7 @@ export class TopicCreatePage extends Component {
             data: PAGE_STATUS_READY
           }]);
 
-          this.props.transitionTo(`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`);
+          this.props.transitionTo(`/~landscape/collections/~${details.hostship}/${details.clayPath}`);
           return true;
         }
 
@@ -199,7 +199,7 @@ export class TopicCreatePage extends Component {
               responseKey="circle.config.dif.full"
               pushCallback={this.props.pushCallback} />
             <a
-              href={`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`}
+              href={`/~landscape/collections/~${details.hostship}/${details.clayPath}`}
               disabled={this.props.store.views.transition !== PAGE_STATUS_READY}
               className="vanilla btn btn-default">
               Cancel</a>

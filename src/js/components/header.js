@@ -61,6 +61,7 @@ export class Header extends Component {
   }
 
   getHeaderData(type) {
+    console.log('getHeaderData type', type);
     let headerData = {};
     let defaultData;
     let actions = {};
@@ -86,9 +87,8 @@ export class Header extends Component {
         defaultData = this.getStationHeaderData(this.props.data.station);
 
         actions = {
-          write: `/~~/${this.props.data.author}/==/web/collections/${this.props.data.collId}?show=post`,
+          write: `/~landscape/collections/${this.props.data.author}/${this.props.data.collId}/new`,
           subscribe: null,
-          details: `/~~/${this.props.data.author}/==/web/collections/${this.props.data.collId}?show=details`,
         }
 
         headerData = {
@@ -109,7 +109,7 @@ export class Header extends Component {
 
         if (this.props.data.subtype === 'default') {
           actions = {
-            edit: `/~~/${this.props.data.host}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit`
+            edit: `/~landscape/collections/${this.props.data.host}/${this.props.data.collId}/${this.props.data.postId}/edit`
           }
         }
 
@@ -128,6 +128,9 @@ export class Header extends Component {
           }
         }
 
+        console.log('host', this.props.data.host);
+        console.log('collID', this.props.data.collId);
+
         headerData = {
           ...defaultData,
           icon,
@@ -136,7 +139,7 @@ export class Header extends Component {
             defaultData.breadcrumbs[0],
             {
               display: this.props.data.collTitle,
-              href: `/~~/${this.props.data.host}/==/web/collections/${this.props.data.collId}`
+              href: `/~landscape/collections/${this.props.data.host}/${this.props.data.collId}`
             }
           ],
           actions
@@ -258,7 +261,7 @@ export class Header extends Component {
           <React.Fragment>
             <div className="flex-col-2"></div>
             <div className="flex-col-x text-heading text-squat">
-              <a className={indexClass} href={`/~~/${this.props.data.author}/==/web/landscape/profile`}>Profile</a>
+              <a className={indexClass} href={`/~landscape/collections/${this.props.data.author}/profile`}>Profile</a>
             </div>
           </React.Fragment>
         );

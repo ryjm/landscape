@@ -4,6 +4,7 @@ import { LANDSCAPE_ROOT } from '/lib/constants';
 import { api } from '/api';
 
 export function getStationDetails(station) {
+  console.log(station);
   let host = station.split("/")[0].substr(1);
   let config = warehouse.store.configs[station];
 
@@ -53,7 +54,7 @@ export function getStationDetails(station) {
     case "collection-index":
       ret.collId = circleParts[1];
 
-      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
+      ret.stationUrl = `/~landscape/collections/~${ret.host}/${ret.collId}`;
       ret.stationTitle = config && config.extConf ? config.extConf.name : ret.collId;
 
       if (config && config.extConf) {
@@ -68,9 +69,10 @@ export function getStationDetails(station) {
     case "collection-post":
       ret.collId = circleParts[1];
       ret.postId = circleParts[2];
+      ret.stationUrl = `/~landscape/collections/~${ret.host}/${ret.collId}`;
 
-      ret.parentCollectionUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
-      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
+      ret.parentCollectionUrl = `/~landscape/collections/~${ret.host}/${ret.collId}`;
+      ret.parentCollectionUrl = `/~landscape/collections/~${ret.host}/${ret.collId}/${ret.postId}`;
       ret.stationTitle = config && config.extConf ? config.extConf.name : ret.collId;
 
       let collCircle = `~${ret.host}/c-${ret.collId}`;

@@ -15,6 +15,12 @@
   /:  /===/app/landscape/inbox  /!noun/
 /=  stream
   /:  /===/app/landscape/stream  /!noun/
+/=  coll-elem
+  /:  /===/app/landscape/collections/elem  /!noun/
+/=  coll-new
+  /:  /===/app/landscape/collections/new   /!noun/
+/=  coll-edit
+  /:  /===/app/landscape/collections/edit  /!noun/
 ::
 |%
 :: +move: output effect
@@ -89,7 +95,7 @@
                 [%start [200 ['content-type' 'application/javascript']~] [~ script] %.y]
             ==
         ==
-      [%profile who=@t *]
+      [%profile @t *]
         =/  profile-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (profile i.t.t.site.request-line)))))
         :_  this
         :~  ^-  move
@@ -107,5 +113,73 @@
               [%start [200 ['content-type' 'text/html']~] [~ stream-html] %.y]
           ==
       ==
+      [%collections @t @t *]
+      =/  shp/@p  (slav %p i.t.t.site.request-line)
+      =/  col/@da   (slav %da i.t.t.t.site.request-line)
+      =*  tal  t.t.t.t.site.request-line
+      ~&  ship+shp
+      ~&  col+col
+      ~&  tal+tal
+      ?:  ?=(~ tal)
+        ~&  %toplevel^col
+        :: top level collection
+        =/  top-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-elem shp col ~)))))
+        :_  this
+        :~  ^-  move
+            :-  ost.bol
+            :*  %http-response
+                [%start [200 ['content-type' 'text/html']~] [~ top-html] %.y]
+            ==
+        ==
+      ?:  ?=([@t ~] tal)
+        :: make a new post, or view an old one
+        ~&  new-or-old+col
+        ?:  =(-.tal 'new')
+          ::  make a new post
+          ::
+          ~&  'new'
+          =/  new-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-new shp col)))))
+          :_  this
+          :~  ^-  move
+              :-  ost.bol
+              :*  %http-response
+                  [%start [200 ['content-type' 'text/html']~] [~ new-html] %.y]
+              ==
+          ==
+        ::  view a post
+        ::
+        =/  pos=@da  (slav %da i.tal)
+        =/  post-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-elem shp col `pos)))))
+        :_  this
+        :~  ^-  move
+            :-  ost.bol
+            :*  %http-response
+                [%start [200 ['content-type' 'text/html']~] [~ post-html] %.y]
+            ==
+        ==
+      ::  edit a post
+      ::
+      ?:  ?=([@t @t ~] tal)
+        ~&  edit+tal
+        ?:  =(+<.tal 'edit')
+
+          =/  pos=@da  (slav %da i.tal)
+          =/  ver=cass:clay  .^(cass:clay %cw /===)
+          ~&  pos+pos
+          ~&  ver+ver
+          =/  dat=@t  'asdf'
+          ::=/  dat=@t  .^(@t %cx /(scot %p our.bol)/home/(scot %ud ud.ver)/web/collections/(scot %da col)/(scot %da pos))
+          ~&  edit-dat+dat
+          =/  edit-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-edit shp col pos dat)))))
+          :: edit a post
+          :_  this
+          :~  ^-  move
+              :-  ost.bol
+              :*  %http-response
+                  [%start [200 ['content-type' 'text/html']~] [~ edit-html] %.y]
+              ==
+          ==
+        [~ this]
+      [~ this]
     ==
 --
