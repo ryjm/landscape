@@ -79,7 +79,6 @@ export class Root extends Component {
     //   urb-structure-type="collection-post">
 
     let headerQuery = tempDOM.querySelectorAll('[name="urb-metadata"]');
-    console.log(headerQuery);
     let headerData = {
       type: "default"
     }
@@ -100,7 +99,6 @@ export class Root extends Component {
       headerData.dateCreated = headerQuery[0].getAttribute('urb-date-created');
       headerData.dateModified = headerQuery[0].getAttribute('urb-date-modified');
       headerData.collPath = headerQuery[0].getAttribute('urb-path');
-      console.log('collPath', headerData.collPath);
 
       if (headerData.type.includes("collection-index")) {
         headerData.title = headerData.pageTitle;

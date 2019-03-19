@@ -68,12 +68,13 @@ export class TopicCreatePage extends Component {
     let details = this.getDetails();
 
     if (this.state.editMode) {
+      let postPath = window.location.pathname.split('/')[5];
       dat = {
         ship: details.hostship,
         desk: 'home',
         acts: [{
           post: {
-            path: '/web/collections/' + details.clayPath, // TODO: should be web/collections/~2018.9.11..17.41.40..6823/~2018.9.11..20.21.42..607c
+            path: '/web/collections/' + details.clayPath + '/' + postPath, // TODO: should be web/collections/~2018.9.11..17.41.40..6823/~2018.9.11..20.21.42..607c
             name: this.state.title,
             comments: true,  // XX TODO Get this value from user or parent
             type: 'blog',

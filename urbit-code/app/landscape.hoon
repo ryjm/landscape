@@ -19,9 +19,6 @@
   /:  /===/app/landscape/collections/elem  /!noun/
 /=  coll-new
   /:  /===/app/landscape/collections/new   /!noun/
-/=  coll-edit
-  /:  /===/app/landscape/collections/edit  /!noun/
-!:
 ::
 |%
 :: +move: output effect
@@ -38,146 +35,78 @@
     $%  [%modulo-bind app=term]
         [%modulo-unbind app=term]
     ==
-  --
-  ::
-  |_  [bol=bowl:gall sta=@t]
-  ::
-  ++  this  .
-  ::
-  ++  poke-noun
-    |=  asd=*
-    ^-  (quip move _this)
-  ::  =/  ver  .^(cass:clay %cw (en-beam:format [byk.bol(r [ /]))
-    
-  ::  ~&  ver
-    =/  scr  .^(@t %cx (en-beam:format [byk.bol(r [%da now.bol]) /udon/static/web]))
-    ~&  scr+scr
-    [~ this]
-  ++  prep
-    |=  old=(unit @t)
-    ^-  (quip move _this)
-    ~&  %prep
-    :-  [ost.bol %poke / [our.bol %modulo] [%modulo-bind %landscape]]~
-    ?~  old
-      this
-    this(sta u.old)
-  ::
-  ++  poke-handle-http-request
-    %-  (require-authorization ost.bol move this)
-    |=  =inbound-request:http-server
-    ^-  (quip move _this)
-    =+  request-line=(parse-request-line url.request.inbound-request)
-    =+  back-path=(flop site.request-line)
-    =/  name=@t
-      ?~  back-path
-        'World'
-      i.back-path
-    ?<  ?=(~ site.request-line)
-    ?+  t.site.request-line
-      =/  index-html=octs  (as-octs:mimes:html (crip (en-xml:html (index inbox))))
-      :_  this
-      :~  ^-  move
-          :-  ost.bol
-          :*  %http-response
-              [%start [200 ['content-type' 'text/html']~] [~ index-html] %.y]
-          ==
-      ==
-      [%css *]
-        :_  this
-        :~  ^-  move
-            :-  ost.bol
-            :*  %http-response
-                [%start [200 ['content-type' 'text/css']~] [~ style] %.y]
-            ==
-        ==
-      [%js *]
-        :_  this
-        :~  ^-  move
-            :-  ost.bol
-            :*  %http-response
-                [%start [200 ['content-type' 'application/javascript']~] [~ script] %.y]
-            ==
-        ==
-      [%profile @t *]
-        =/  profile-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (profile i.t.t.site.request-line)))))
-        :_  this
-        :~  ^-  move
-            :-  ost.bol
-            :*  %http-response
-                [%start [200 ['content-type' 'text/html']~] [~ profile-html] %.y]
-            ==
-        ==
-      [%stream *]
-      =/  stream-html=octs  (as-octs:mimes:html (crip (en-xml:html (index stream))))
-      :_  this
-      :~  ^-  move
-          :-  ost.bol
-          :*  %http-response
-              [%start [200 ['content-type' 'text/html']~] [~ stream-html] %.y]
-          ==
-      ==
-      [%collections @t @t *]
-      =/  shp/@p  (slav %p i.t.t.site.request-line)
-      =/  col/@da   (slav %da i.t.t.t.site.request-line)
-      =*  tal  t.t.t.t.site.request-line
-      ~&  ship+shp
-      ~&  col+col
-      ~&  tal+tal
-      ?:  ?=(~ tal)
-        ~&  %toplevel^col
-        :: top level collection
-        =/  top-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-elem shp col ~)))))
-        :_  this
-        :~  ^-  move
-            :-  ost.bol
-            :*  %http-response
-                [%start [200 ['content-type' 'text/html']~] [~ top-html] %.y]
-            ==
-        ==
-      ?:  ?=([@t ~] tal)
-        :: make a new post, or view an old one
-        ~&  new-or-old+col
-        ?:  =(-.tal 'new')
-          ::  make a new post
-          ::
-          ~&  'new'
-          =/  new-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-new shp col)))))
-          :_  this
-          :~  ^-  move
-              :-  ost.bol
-              :*  %http-response
-                  [%start [200 ['content-type' 'text/html']~] [~ new-html] %.y]
-              ==
-          ==
-        ::  view a post
+--
+::
+|_  [bol=bowl:gall sta=@t]
+::
+
+++  this  .
+::
+++  prep
+  |=  old=(unit @t)
+  ^-  (quip move _this)
+  ~&  %prep
+  :-  [ost.bol %poke / [our.bol %modulo] [%modulo-bind %landscape]]~
+  ?~  old
+    this
+  this(sta u.old)
+::
+++  poke-handle-http-request
+  %-  (require-authorization ost.bol move this)
+  |=  =inbound-request:http-server
+  ^-  (quip move _this)
+  =+  request-line=(parse-request-line url.request.inbound-request)
+  =+  back-path=(flop site.request-line)
+  =/  name=@t
+    ?~  back-path
+      !!
+    i.back-path
+  ?<  ?=(~ site.request-line)
+  ?+  t.site.request-line
+    =/  index-html=octs  (manx-to-octs (index inbox))
+    [[ost.bol %http-response (html-response index-html)]~ this]
+    ::
+    [%css *]
+      [[ost.bol %http-response (css-response style)]~ this]
+    [%js *]
+      [[ost.bol %http-response (js-response script)]~ this]
+    [%profile @t *]
+      =/  profile-html=octs
+        (manx-to-octs (index (profile i.t.t.site.request-line)))
+      [[ost.bol %http-response (html-response profile-html)]~ this]
+    [%stream *]
+      =/  stream-html=octs  (manx-to-octs (index stream))
+      [[ost.bol %http-response (html-response stream-html)]~ this]
+    [%collections @t @t *]
+    =/  shp/@p  (slav %p i.t.t.site.request-line)
+    =/  col/@da   (slav %da i.t.t.t.site.request-line)
+    =*  tal  t.t.t.t.site.request-line
+    ?:  ?=(~ tal)
+      :: top level collection
+      =/  top-html=octs  (manx-to-octs (index (coll-elem shp col ~)))
+      [[ost.bol %http-response (html-response top-html)]~ this]
+    ?:  ?=([@t ~] tal)
+      :: make a new post, or view an old one
+      ?:  =(-.tal 'new')
+        ::  make a new post
         ::
-        =/  pos=[@da ?(%default %edit)]  
-          [(slav %da i.tal) %default]
-        =/  post-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-elem shp col `pos)))))
-        :_  this
-        :~  ^-  move
-            :-  ost.bol
-            :*  %http-response
-                [%start [200 ['content-type' 'text/html']~] [~ post-html] %.y]
-            ==
-        ==
-      ::  edit a post
+        =/  new-html=octs  (manx-to-octs (index (coll-new shp col)))
+        [[ost.bol %http-response (html-response new-html)]~ this]
+      ::  view a post
       ::
-      ?:  ?=([@t @t ~] tal)
-        ~&  edit+tal
-        ?:  =(+<.tal 'edit')
-          =/  pos=[@da ?(%default %edit)]  
-            [(slav %da i.tal) %edit]
-          =/  edit-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-elem shp col `pos)))))
-          :: edit a post
-          :_  this
-          :~  ^-  move
-              :-  ost.bol
-              :*  %http-response
-                  [%start [200 ['content-type' 'text/html']~] [~ edit-html] %.y]
-              ==
-          ==
-        [~ this]
+      =/  pos=[@da ?(%default %edit)]  
+        [(slav %da i.tal) %default]
+      =/  post-html=octs  (manx-to-octs (index (coll-elem shp col `pos)))
+      [[ost.bol %http-response (html-response post-html)]~ this]
+    ::  edit a post
+    ::
+    ?:  ?=([@t @t ~] tal)
+      ?:  =(+<.tal 'edit')
+        =/  pos=[@da ?(%default %edit)]  
+          [(slav %da i.tal) %edit]
+        =/  edit-html=octs  (manx-to-octs (index (coll-elem shp col `pos)))
+        [[ost.bol %http-response (html-response edit-html)]~ this]
       [~ this]
-    ==
+    [~ this]
+  ==
 --
