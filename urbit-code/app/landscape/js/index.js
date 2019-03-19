@@ -66899,11 +66899,12 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  constructor(props) {
 	    super(props);
 
+	    let editMode = window.location.href.includes('edit');
 	    this.state = {
-	      editMode: props.show === "edit",
+	      editMode: editMode,
 	      title: "",
 	      topicContent: props.content ? props.content : '',
-	      details: this.getDetails(props, props.show === "edit")
+	      details: this.getDetails(props, editMode)
 	    };
 
 	    this.createTopic = this.createTopic.bind(this);
@@ -67059,35 +67060,35 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    let details = this.getDetails();
 
 	    return (
-	        react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$i, lineNumber: 176}}
-	          , react.createElement('h3', { className: "text-500", __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 177}}, "Title")
+	        react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$i, lineNumber: 177}}
+	          , react.createElement('h3', { className: "text-500", __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 178}}, "Title")
 	          , react.createElement('input', {
 	            type: "text",
 	            name: "title",
 	            className: `h3 mt-0 mb-0 text-500 collection-title ${this.state.title.length > 0 && 'collection-value-filled'}`,
 	            value: this.state.title,
 	            onChange: this.valueChange,
-	            disabled: this.props.store.views.transition !== PAGE_STATUS_READY, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 178}} )
-	          , react.createElement('h3', { className: "text-500 mt-6" , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 185}}, "Post")
+	            disabled: this.props.store.views.transition !== PAGE_STATUS_READY, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 179}} )
+	          , react.createElement('h3', { className: "text-500 mt-6" , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 186}}, "Post")
 	          , react.createElement('textarea', {
 	            className: `collection-post-edit mb-6 ${this.state.topicContent.length > 0 && 'collection-value-filled'}`,
 	            name: "topicContent",
 	            disabled: this.props.store.views.transition !== PAGE_STATUS_READY,
 	            value: this.state.topicContent,
-	            onChange: this.valueChange, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 186}}
+	            onChange: this.valueChange, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 187}}
 	            )
-	          , react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$i, lineNumber: 193}}
+	          , react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$i, lineNumber: 194}}
 	            , react.createElement(Button, {
 	              content: "Publish",
 	              disabled: this.props.store.views.transition !== PAGE_STATUS_READY,
 	              classes: "btn btn-primary mr-1"  ,
 	              action: this.createTopic,
 	              responseKey: "circle.config.dif.full",
-	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 194}} )
+	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 195}} )
 	            , react.createElement('a', {
 	              href: `/~landscape/collections/~${details.hostship}/${details.clayPath}`,
 	              disabled: this.props.store.views.transition !== PAGE_STATUS_READY,
-	              className: "vanilla btn btn-default"  , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 201}}, "Cancel"
+	              className: "vanilla btn btn-default"  , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 202}}, "Cancel"
 	              )
 	          )
 	        )

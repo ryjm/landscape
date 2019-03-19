@@ -11,11 +11,12 @@ export class TopicCreatePage extends Component {
   constructor(props) {
     super(props);
 
+    let editMode = window.location.href.includes('edit');
     this.state = {
-      editMode: props.show === "edit",
+      editMode: editMode,
       title: "",
       topicContent: props.content ? props.content : '',
-      details: this.getDetails(props, props.show === "edit")
+      details: this.getDetails(props, editMode)
     };
 
     this.createTopic = this.createTopic.bind(this);

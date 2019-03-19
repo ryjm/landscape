@@ -21,6 +21,7 @@
   /:  /===/app/landscape/collections/new   /!noun/
 /=  coll-edit
   /:  /===/app/landscape/collections/edit  /!noun/
+!:
 ::
 |%
 :: +move: output effect
@@ -44,12 +45,14 @@
   ++  this  .
   ::
   ++  poke-noun
-    |=  asd=?(%bind %unbind)
+    |=  asd=*
     ^-  (quip move _this)
-    :_  this
-    ?:  =(%bind asd)
-      [ost.bol %poke / [our.bol %modulo] `poke`[%modulo-bind %landscape]]~
-    [ost.bol %poke / [our.bol %modulo] `poke`[%modulo-unbind %landscape]]~
+  ::  =/  ver  .^(cass:clay %cw (en-beam:format [byk.bol(r [ /]))
+    
+  ::  ~&  ver
+    =/  scr  .^(@t %cx (en-beam:format [byk.bol(r [%da now.bol]) /udon/static/web]))
+    ~&  scr+scr
+    [~ this]
   ++  prep
     |=  old=(unit @t)
     ^-  (quip move _this)
@@ -148,7 +151,8 @@
           ==
         ::  view a post
         ::
-        =/  pos=@da  (slav %da i.tal)
+        =/  pos=[@da ?(%default %edit)]  
+          [(slav %da i.tal) %default]
         =/  post-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-elem shp col `pos)))))
         :_  this
         :~  ^-  move
@@ -162,15 +166,9 @@
       ?:  ?=([@t @t ~] tal)
         ~&  edit+tal
         ?:  =(+<.tal 'edit')
-
-          =/  pos=@da  (slav %da i.tal)
-          =/  ver=cass:clay  .^(cass:clay %cw /===)
-          ~&  pos+pos
-          ~&  ver+ver
-          =/  dat=@t  'asdf'
-          ::=/  dat=@t  .^(@t %cx /(scot %p our.bol)/home/(scot %ud ud.ver)/web/collections/(scot %da col)/(scot %da pos))
-          ~&  edit-dat+dat
-          =/  edit-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-edit shp col pos dat)))))
+          =/  pos=[@da ?(%default %edit)]  
+            [(slav %da i.tal) %edit]
+          =/  edit-html=octs  (as-octs:mimes:html (crip (en-xml:html (index (coll-elem shp col `pos)))))
           :: edit a post
           :_  this
           :~  ^-  move
