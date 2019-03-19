@@ -17,11 +17,7 @@ export class CommentCreate extends Component {
     let topLevelColl = loc[4];
     let collPost = loc[5];
 
-    console.log(topLevelColl, collPost);
     this.clayPath = '/web/collections/' + topLevelColl + '/' + collPost;
-
-    console.log('loc', loc);
-    console.log('clayPath', this.clayPath);
   }
 
   createComment() {

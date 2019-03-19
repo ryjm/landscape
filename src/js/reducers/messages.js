@@ -4,7 +4,6 @@ import { INBOX_MESSAGE_COUNT } from '/lib/constants';
 
 export class MessagesReducer {
   reduce(reports, store) {
-    console.log('message reduce', reports);
     reports.forEach((rep) => {
       let fromCircle = rep.from && rep.from.path.split("/")[2];
       let fromInbox = fromCircle === "inbox";

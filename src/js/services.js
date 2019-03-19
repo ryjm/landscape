@@ -4,7 +4,6 @@ import { LANDSCAPE_ROOT } from '/lib/constants';
 import { api } from '/api';
 
 export function getStationDetails(station) {
-  console.log(station);
   let host = station.split("/")[0].substr(1);
   let config = warehouse.store.configs[station];
 

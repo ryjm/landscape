@@ -110,7 +110,6 @@ class UrbitWarehouse {
   }
 
   storePollResponse(data) {
-    console.log('pollresp', data);
     let newReports = [];
     let reportTypes = Object.keys(this.reports);
     let json = data.data;
@@ -129,7 +128,6 @@ class UrbitWarehouse {
         // fragments don't contain all the data we need
         reportData = _.get(json, this.reports[type].dataKey, null);
 
-        console.log(type);
         newReports.push({
           type: type,
           data: reportData,

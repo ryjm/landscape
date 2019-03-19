@@ -61,7 +61,6 @@ export class Header extends Component {
   }
 
   getHeaderData(type) {
-    console.log('getHeaderData type', type);
     let headerData = {};
     let defaultData;
     let actions = {};
@@ -127,9 +126,6 @@ export class Header extends Component {
             href: "javascript:void(0)"
           }
         }
-
-        console.log('host', this.props.data.host);
-        console.log('collID', this.props.data.collId);
 
         headerData = {
           ...defaultData,

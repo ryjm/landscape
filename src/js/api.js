@@ -33,7 +33,6 @@ class UrbitApi {
   }
 
   hall(data) {
-    console.log('yall data', data);
     this.action("hall", "hall-action", data);
   }
 
@@ -46,7 +45,6 @@ class UrbitApi {
   }
 
   action(appl, mark, data) {
-    console.log();
     return new Promise((resolve, reject) => {
       window.urb.poke(ship, appl, mark, data,
         (json) => {
@@ -92,7 +90,6 @@ class UrbitApi {
 
   invite(cir, aud) {
     let audInboxes = aud.map((aud) => `~${aud}/i`);
-    console.log(cir, aud);
     let inviteMessage = {
       aud: audInboxes,
       ses: [{
