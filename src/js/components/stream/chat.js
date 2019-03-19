@@ -3,7 +3,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Message } from '/components/lib/message';
-import { prettyShip, getMessageContent, isUrl, uuid, isDMStation, dateToDa } from '/lib/util';
+import { prettyShip, getMessageContent, isUrl, makeLocal, uuid, isDMStation, dateToDa } from '/lib/util';
 import { sealDict } from '/components/lib/seal-dict';
 import { Elapsed } from '/components/lib/elapsed';
 import { PAGE_STATUS_PROCESSING, PAGE_STATUS_READY, REPORT_PAGE_STATUS } from '/lib/constants';
@@ -454,13 +454,16 @@ class ChatInput extends Component {
   }
 
   messageSubmit() {
-    console.log('starting message submit');
+    console.log('starting message submit!');
     let aud, sep;
     let wen = Date.now();
     let uid = uuid();
     let aut = this.props.api.authTokens.ship;
 
     let config = this.props.store.configs[this.state.station];
+    let localizedUrl = makeLocal(this.state.message);
+
+    console.log('localized', localizedUrl);
 
     if (isDMStation(this.props.station)) {
       aud = this.props.station
@@ -472,9 +475,9 @@ class ChatInput extends Component {
       aud = [this.props.station];
     }
 
-    if (isUrl(this.state.message)) {
+    if (isUrl(this.state.message) || this.state.message !== localizedUrl) {
       sep = {
-        url: this.state.message
+        url: localizedUrl
       }
     } else {
       sep = {
