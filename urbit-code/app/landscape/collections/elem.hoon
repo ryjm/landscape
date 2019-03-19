@@ -3,88 +3,61 @@
   ::
 /?  309
 /+  collections, cram
-/=  gas  /$  fuel:html
-/=  itm  /collections-web-item/
+/=  cols
+  /^  collection:collections
+  /;  |=  a=(map knot item:collections)
+      [*config:collections a]
+  /:  /===/web/collections  /_  /collections-item/
 ::
 ::
-/=  collection-post
-  /:  /===/web/landscape/collections/post      /!noun/
-::
-=<  (item-to-elem itm)
+|=  [shp=@p col=@da pos=(unit @da)]
+^-  manx
+=/  itm=(unit item:collections)  (~(get by data.cols) (scot %da col))
+?~  itm
+  ;div: Invalid collection
+=<  (item-to-elem u.itm)
 |%
 ++  item-to-elem
   !:
   |=  itm=item:collections
-  ^-  manx
-  ?<  =(/collections/web s.bem.gas)
-  =/  sho  (fall (~(get by qix.gas) %show) %default)
-  ;div.container
-    ;+
-      ?+    -.itm  !!
-          %error  ;div: 404
-        ::
-          %collection
-        ?+    sho  !!
-        ::
-            %default
-          ;div.row
-            ;div.flex-col-2;
-            ;div.flex-col-x
-              ;div.collection-index
-                ;+  (meta-to-elem itm sho)
-                ;+  (collection-to-elem col.itm)
-              ==
-            ==
-            ;+  ?:  =(type.meta.col.itm %blog)
-                  ;div.flex-col-5;
-                ?:  =(type.meta.col.itm %fora)
-                  ;div.flex-col-4;
-                ;div.flex-col-4;
-          ==
-        ::
-            %post
-          ;div.row
-            ;div.flex-col-2;
-            ;div.flex-col-x
-              ;div.collection-index
-                ;+  (meta-to-elem itm sho)
-                ;+  (collection-post ~ (flop s.bem.gas))
-              ==
-            ==
-            ;div.flex-col-2;
+  ?~  pos
+    ?>  ?=(%collection -.itm)
+    ^-  manx
+    ;div.container
+      ;div.row
+        ;div.flex-col-2;
+        ;div.flex-col-x
+          ;div.collection-index
+            ;+  (meta-to-elem itm)
+            ;+  (collection-to-elem col.itm)
           ==
         ==
-::        %raw
-      ::
-          %both
-        ?+    sho  !!
-        ::
-            %default
-          ;div.row
-            ;div.flex-col-2;
-            ;div.flex-col-x
-              ;div.collection-index
-                ;+  (meta-to-elem itm sho)
-                ;+  (both-to-elem col.itm raw.itm)
-              ==
-            ==
-            ;div.flex-col-3;
-          ==
-        ::
-            %edit
-          ;div.row
-            ;div.flex-col-2;
-            ;div.flex-col-x
-              ;div.collection-index
-                ;+  (meta-to-elem itm sho)
-                ;+  (collection-post `raw.itm (flop s.bem.gas))
-              ==
-            ==
-            ;div.flex-col-2;
-          ==
+        ;+  ?:  =(type.meta.col.itm %blog)
+              ;div.flex-col-5;
+            ?:  =(type.meta.col.itm %fora)
+              ;div.flex-col-4;
+            ;div.flex-col-4;
+      ==
+    ==
+  ::
+  ::
+    ?>  ?=(%collection -.itm)
+    =/  posttt=(unit item:collections)  (~(get by data.col.itm) (scot %da u.pos))
+    ?~  posttt
+      ;div: Invalid collection
+    ?>  ?=(%both -.u.posttt)
+    ^-  manx
+    ;div.row
+      ;div.flex-col-2;
+      ;div.flex-col-x
+        ;div.collection-index
+          ;+  (meta-to-elem u.posttt)
+          ;+  (both-to-elem col.u.posttt raw.u.posttt)
         ==
       ==
-  ==
+      ;div.flex-col-2;
+    ==
+::
 ++  collection-to-elem
   |=  col=collection:collections
   ^-  manx
@@ -111,7 +84,7 @@
   ^-  manx
   =/  elm  elm:(static:cram (ream data.raw))
   =/  ht  (hedtal:collections +.elm)
-  =/  title  (fall (~(get by meta.raw) %name) -.s.bem.gas)
+  =/  title  (fall (~(get by meta.raw) %name) /spur)
   =/  date   (fall (~(get by meta.raw) %date-created) 'missing date')
   =/  author  (fall (~(get by meta.raw) %author) 'anonymous')
   ::
@@ -169,8 +142,8 @@
       ::
       ;div
         =urb-component  "CommentCreate"
-        =urb-pax        "{<(flop s.bem.gas)>}"
-        =urb-ship       "{(scow %p p.bem.gas)}";
+        =urb-pax        "{<(flop /spur)>}"
+        =urb-ship       "{<shp>}";
     ==
   ==
 ::
@@ -191,7 +164,7 @@
   ^-  manx
   ?-    -.itm
       %error
-    ;div: 404
+    ;div: Invalid collection
       %collection
     (collection-to-snip nom col.itm)
       %raw
@@ -204,7 +177,7 @@
   |=  [nom=knot col=collection:collections]
   ^-  manx
   =/  lnk=tape
-    "/~~/{(scow %p p.full-path.meta.col)}/=={(spud (flop (slag 1 s.full-path.meta.col)))}"
+    "/~landscape/collections/{<shp>}/{(scow %p p.full-path.meta.col)}/{(spud (flop (slag 1 s.full-path.meta.col)))}"
   ;div
     ;div.collection-date: {<date-created.meta.col>}
     ;h2.mt-0.mb-0
@@ -229,7 +202,7 @@
   =/  date   (fall (~(get by meta.raw) %date-created) 'missing date')
   =/  author  (fall (~(get by meta.raw) %author) 'anonymous')
   =/  lnk=tape
-    "/~~/{(scow %p p.bem.gas)}/=={(spud (flop s.bem.gas))}/{(trip nom)}"
+    "/~landscape/collections/{<shp>}/{(scow %da col)}/{(trip nom)}"
   ::
   ;div
     ;div.collection-date: {(trip date)}
@@ -253,7 +226,7 @@
     (scag 5 c.elm)
   =/  title  (fall (~(get by meta.raw) %name) nom)
   =/  lnk=tape
-    "/~~/{(scow %p p.bem.gas)}/=={(spud (flop s.bem.gas))}/{(trip nom)}"
+    "/~landscape/collections/{<shp>}/{(scow %da ^col)}/{(trip nom)}"
   ::
   ;div
     ;div.collection-date: {<date-created.meta.col>}
@@ -274,13 +247,11 @@
   ==
 ::
 ++  meta-to-elem
-  |=  [itm=item:collections sho=@tas]
+  |=  itm=item:collections
   ^-  manx
   =/  mat=mart
     :~  [%type "hidden"]
         [%name "urb-metadata"]
-        [%urb-show (trip sho)]
-        [%urb-path (spud (flop s.bem.gas))]
     ==
   :_  ~
   :-  %input
@@ -297,6 +268,8 @@
         [%urb-last-modified (scow %da last-modified.met)]
         [%urb-content-type (trip type.met)]
         [%urb-structure-type "collection-index"]
+        [%urb-path (spud /web/collections/(scot %da date-created.meta.col.itm))]
+        [%urb-show "default"]
     ==
       %raw
     =/  met  ~(got by meta.raw.itm)
@@ -307,6 +280,8 @@
         [%urb-last-modified (trip (met %last-modified))]
         [%urb-content-type (trip (met %type))]
         [%urb-structure-type "collection-post"]
+        [%urb-path (spud (flop /web/collections/raw))]
+        [%urb-show "default"]
     ==
       %both
     =/  met  ~(got by meta.raw.itm)
@@ -317,6 +292,8 @@
         [%urb-last-modified (trip (met %last-modified))]
         [%urb-content-type (trip (met %type))]
         [%urb-structure-type "collection-post"]
+        [%urb-path (spud (flop /web/collections/both))]
+        [%urb-show "default"]
     ==
   ==
 --

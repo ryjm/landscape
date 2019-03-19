@@ -266,8 +266,6 @@ export class InboxRecentPage extends Component {
     const invites = this.squashedInvites();
     const inviteElems = this.buildInvites(invites);
 
-    console.log(sections);
-
     return (
       <React.Fragment>
         {invites.length > 0 &&

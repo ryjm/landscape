@@ -38,7 +38,7 @@ export class CommandFormCollectionCreate extends Component {
         }]);
 
         let dat = {
-          ship: this.props.api.authTokens.ship,
+          ship: window.ship,
           desk: 'home',
           acts: [{
             collection: {
@@ -53,7 +53,7 @@ export class CommandFormCollectionCreate extends Component {
         }
         this.props.api.coll(dat);
         this.props.pushCallback("circles", (rep) => {
-          let station = `~${this.props.api.authTokens.ship}/${rep.data.cir}`;
+          let station = `~${window.ship}/${rep.data.cir}`;
           let details = getStationDetails(station);
 
           this.props.api.hall({
@@ -65,8 +65,11 @@ export class CommandFormCollectionCreate extends Component {
           });
 
           let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim().substr(1));
-          api.permitCol(rep.data.cir, inviteArray, true, this.state.formData.name);
-
+          inviteArray = inviteArray.filter(Boolean);
+          if (inviteArray.length > 0) {
+            api.permitCol(rep.data.cir, inviteArray, true, this.state.formData.name);
+          }
+          
           this.props.transitionTo(details.stationUrl);
         });
       }

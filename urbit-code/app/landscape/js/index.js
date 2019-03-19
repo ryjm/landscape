@@ -46405,7 +46405,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        date: jason.date,
 	        path: jason.path,
 	        postTitle: jason.name,
-	        postUrl: `/~~/${jason.host}/==/${jason.path.join('/')}`,
+	        postUrl: `/~landscape/collections/${jason.host}/${jason.path.slice(2).join('/')}`,
 	      }
 	    },
 	    'sep.lin.msg': 'lin',
@@ -46501,12 +46501,13 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          }
 	        });
 	      },
-	      (quit) => {
+	      (err) => {
 	        fail(err);
 	      });
 	  }
 
 	  hall(data) {
+	    console.log('yall data', data);
 	    this.action("hall", "hall-action", data);
 	  }
 
@@ -46519,6 +46520,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  }
 
 	  action(appl, mark, data) {
+	    console.log();
 	    return new Promise((resolve, reject) => {
 	      window.urb.poke(ship, appl, mark, data,
 	        (json) => {
@@ -46564,12 +46566,13 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	  invite(cir, aud) {
 	    let audInboxes = aud.map((aud) => `~${aud}/i`);
+	    console.log(cir, aud);
 	    let inviteMessage = {
 	      aud: audInboxes,
 	      ses: [{
 	        inv: {
 	          inv: true,
-	          cir: `~${this.authTokens.ship}/${cir}`
+	          cir: `~${window.ship}/${cir}`
 	        }
 	      }]
 	    };
@@ -46589,7 +46592,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          sep: {
 	            inv: {
 	              inv: true,
-	              cir: `~${this.authTokens.ship}/${cir}`
+	              cir: `~${window.ship}/${cir}`
 	            }
 	          }
 	        }
@@ -47002,6 +47005,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	}
 
 	function getStationDetails(station) {
+	  console.log(station);
 	  let host = station.split("/")[0].substr(1);
 	  let config = warehouse$1.store.configs[station];
 
@@ -47050,7 +47054,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    case "collection-index":
 	      ret.collId = circleParts[1];
 
-	      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
+	      ret.stationUrl = `/~landscape/collections/~${ret.host}/${ret.collId}`;
 	      ret.stationTitle = config && config.extConf ? config.extConf.name : ret.collId;
 
 	      if (config && config.extConf) {
@@ -47065,9 +47069,10 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    case "collection-post":
 	      ret.collId = circleParts[1];
 	      ret.postId = circleParts[2];
+	      ret.stationUrl = `/~landscape/collections/~${ret.host}/${ret.collId}`;
 
-	      ret.parentCollectionUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}`;
-	      ret.stationUrl = `/~~/~${ret.host}/==/web/collections/${ret.collId}/${ret.postId}`;
+	      ret.parentCollectionUrl = `/~landscape/collections/~${ret.host}/${ret.collId}`;
+	      ret.parentCollectionUrl = `/~landscape/collections/~${ret.host}/${ret.collId}/${ret.postId}`;
 	      ret.stationTitle = config && config.extConf ? config.extConf.name : ret.collId;
 
 	      let collCircle = `~${ret.host}/c-${ret.collId}`;
@@ -47694,6 +47699,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  }
 
 	  getHeaderData(type) {
+	    console.log('getHeaderData type', type);
 	    let headerData = {};
 	    let defaultData;
 	    let actions = {};
@@ -47719,9 +47725,8 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        defaultData = this.getStationHeaderData(this.props.data.station);
 
 	        actions = {
-	          write: `/~~/${this.props.data.author}/==/web/collections/${this.props.data.collId}?show=post`,
+	          write: `/~landscape/collections/${this.props.data.author}/${this.props.data.collId}/new`,
 	          subscribe: null,
-	          details: `/~~/${this.props.data.author}/==/web/collections/${this.props.data.collId}?show=details`,
 	        };
 
 	        headerData = {
@@ -47742,7 +47747,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	        if (this.props.data.subtype === 'default') {
 	          actions = {
-	            edit: `/~~/${this.props.data.host}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit`
+	            edit: `/~landscape/collections/${this.props.data.host}/${this.props.data.collId}/${this.props.data.postId}/edit`
 	          };
 	        }
 
@@ -47761,6 +47766,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          };
 	        }
 
+	        console.log('host', this.props.data.host);
+	        console.log('collID', this.props.data.collId);
+
 	        headerData = {
 	          ...defaultData,
 	          icon,
@@ -47769,7 +47777,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	            defaultData.breadcrumbs[0],
 	            {
 	              display: this.props.data.collTitle,
-	              href: `/~~/${this.props.data.host}/==/web/collections/${this.props.data.collId}`
+	              href: `/~landscape/collections/${this.props.data.host}/${this.props.data.collId}`
 	            }
 	          ],
 	          actions
@@ -47846,11 +47854,11 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          'inbox-link-active': warehouse.store.views.inbox === "inbox-list",
 	        });
 	        return (
-	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 216}}
-	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 217}})
-	            , react.createElement('div', { className: "flex-col-x text-heading text-squat"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 218}}
-	              , react.createElement('a', { className: recentClass, onClick: () => { this.navigateSubpage('inbox', 'inbox-recent'); }, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 219}}, "Recent")
-	              , react.createElement('a', { className: listClass, onClick: () => { this.navigateSubpage('inbox', 'inbox-list'); }, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 220}}, "All")
+	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 219}}
+	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 220}})
+	            , react.createElement('div', { className: "flex-col-x text-heading text-squat"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 221}}
+	              , react.createElement('a', { className: recentClass, onClick: () => { this.navigateSubpage('inbox', 'inbox-recent'); }, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 222}}, "Recent")
+	              , react.createElement('a', { className: listClass, onClick: () => { this.navigateSubpage('inbox', 'inbox-list'); }, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 223}}, "All")
 	            )
 	          )
 	        );
@@ -47866,16 +47874,16 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        // TODO: I realize the redundancy in this conditional. God forgive me.
 	        if (this.props.data.author && headerData.type !== "collection-index-post") {
 	          authorElem = (
-	            react.createElement('a', { href: profileUrl(this.props.data.author.substr(1)), className: "vanilla text-mono mr-3 text-700 text-small"    , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 236}}, this.props.data.author)
+	            react.createElement('a', { href: profileUrl(this.props.data.author.substr(1)), className: "vanilla text-mono mr-3 text-700 text-small"    , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 239}}, this.props.data.author)
 	          );
 	        }
 
 	        return (
-	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 241}}
-	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 242}})
-	            , react.createElement('div', { className: "flex-col-x", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 243}}
+	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 244}}
+	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 245}})
+	            , react.createElement('div', { className: "flex-col-x", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 246}}
 	              , authorElem
-	              , react.createElement('span', { className: "text-mono text-300 text-small"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 245}}, this.props.data.dateCreated.slice(0, -6))
+	              , react.createElement('span', { className: "text-mono text-300 text-small"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 248}}, this.props.data.dateCreated.slice(0, -6))
 	            )
 	          )
 	        );
@@ -47888,10 +47896,10 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          'inbox-link-active': true,
 	        });
 	        return (
-	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 258}}
-	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 259}})
-	            , react.createElement('div', { className: "flex-col-x text-heading text-squat"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 260}}
-	              , react.createElement('a', { className: indexClass, href: `/~~/${this.props.data.author}/==/web/landscape/profile`, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 261}}, "Profile")
+	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 261}}
+	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 262}})
+	            , react.createElement('div', { className: "flex-col-x text-heading text-squat"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 263}}
+	              , react.createElement('a', { className: indexClass, href: `/~landscape/collections/${this.props.data.author}/profile`, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 264}}, "Profile")
 	            )
 	          )
 	        );
@@ -47903,9 +47911,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    if (headerData.breadcrumbs) {
 	      return headerData.breadcrumbs.map(({display, href}, i) => {
 	        return (
-	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 273}}
-	            , react.createElement('a', { className: "text-host-breadcrumb", key: display, href: href, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 274}}, display)
-	            , react.createElement('span', { className: "text-host-breadcrumb text-600 ml-2 mr-2"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 275}}, "/")
+	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 276}}
+	            , react.createElement('a', { className: "text-host-breadcrumb", key: display, href: href, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 277}}, display)
+	            , react.createElement('span', { className: "text-host-breadcrumb text-600 ml-2 mr-2"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 278}}, "/")
 	          )
 	        )
 	      })
@@ -47942,7 +47950,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	        switch (key) {
 	          case "details":
-	            labelElem = (react.createElement(Icon, { type: "icon-ellipsis", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 312}} ));
+	            labelElem = (react.createElement(Icon, { type: "icon-ellipsis", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 315}} ));
 	            return null;  // Remove "details" page for now
 	            break;
 	          case "subscribe":
@@ -47950,16 +47958,16 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	            return null;  // Remove "subscribe" action for now
 	            break;
 	          case "write":
-	            lusElem = key === "write" ? (react.createElement(Icon, { type: "icon-lus", label: true, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 320}} )) : null;
+	            lusElem = key === "write" ? (react.createElement(Icon, { type: "icon-lus", label: true, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 323}} )) : null;
 	            break;
 	        }
 
 	        // TODO: No idea why .key and .href aren't showing up in the attributes
 	        // in currentTarget when you click this. Bad javascript, bad!
 	        return (
-	          react.createElement('a', { key: key, href: value, onClick: this.handleHeaderAction, 'data-key': key, className: "header-link mr-6 flex align-center"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 327}}
+	          react.createElement('a', { key: key, href: value, onClick: this.handleHeaderAction, 'data-key': key, className: "header-link mr-6 flex align-center"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 330}}
 	            , lusElem
-	            , react.createElement('span', {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 329}}, labelElem)
+	            , react.createElement('span', {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 332}}, labelElem)
 	          )
 	        );
 	      })
@@ -47983,38 +47991,38 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    });
 
 	    return (
-	      react.createElement('div', { className: "container header-container" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 353}}
-	        , react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 354}}
-	          , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 355}})
-	          , react.createElement('div', { className: "flex-col-x header-breadcrumbs" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 356}}
+	      react.createElement('div', { className: "container header-container" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 356}}
+	        , react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 357}}
+	          , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 358}})
+	          , react.createElement('div', { className: "flex-col-x header-breadcrumbs" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 359}}
 	            , breadcrumbsElem
 	          )
 	        )
-	        , react.createElement('div', { className: "row align-center header-mainrow"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 360}}
-	          , react.createElement('div', { className: "flex-col-1 flex justify-end"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 361}}
+	        , react.createElement('div', { className: "row align-center header-mainrow"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 363}}
+	          , react.createElement('div', { className: "flex-col-1 flex justify-end"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 364}}
 	            , react.createElement(HeaderNotification, {
 	              notifications: this.props.store.messages.notifications,
-	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 362}}
+	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 365}}
 	            )
 	          )
-	          , react.createElement('div', { className: "flex-col-1 flex space-between align-center"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 367}}
-	            , react.createElement('a', { onClick: this.toggleMenu, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 368}}
-	              , react.createElement(Icon, { type: "icon-panini", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 369}} )
+	          , react.createElement('div', { className: "flex-col-1 flex space-between align-center"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 370}}
+	            , react.createElement('a', { onClick: this.toggleMenu, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 371}}
+	              , react.createElement(Icon, { type: "icon-panini", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 372}} )
 	            )
-	            , react.createElement(Icon, { type: headerData.icon, label: true, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 371}} )
+	            , react.createElement(Icon, { type: headerData.icon, label: true, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 374}} )
 	          )
-	          , react.createElement('h1', { className: headerClass, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 373}}
-	            , react.createElement('a', { href: headerData.title.href, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 374}}, headerData.title.display)
+	          , react.createElement('h1', { className: headerClass, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 376}}
+	            , react.createElement('a', { href: headerData.title.href, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 377}}, headerData.title.display)
 	          )
 	          , actions
 	        )
-	        , react.createElement('div', { className: "row header-carpet" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 378}}
+	        , react.createElement('div', { className: "row header-carpet" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 381}}
 	          , headerCarpet
 	        )
 	        , react.createElement(PageStatus, {
 	          transition: this.props.store.views.transition,
 	          usership: this.props.api.authTokens.ship,
-	          storeReports: this.props.storeReports, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 381}}
+	          storeReports: this.props.storeReports, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 384}}
 	        )
 	      )
 	    )
@@ -48068,10 +48076,10 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    }
 
 	    return (
-	      react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 438}}
+	      react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 441}}
 	        , this.props.notifications.length > 0 &&
-	          react.createElement('a', { className: "vanilla", href: notificationHref, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 440}}
-	            , react.createElement('div', { className: `header-notifications text-mono text-700 ${this.state.notificationClass}`, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 441}}, this.props.notifications.length)
+	          react.createElement('a', { className: "vanilla", href: notificationHref, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 443}}
+	            , react.createElement('div', { className: `header-notifications text-mono text-700 ${this.state.notificationClass}`, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 444}}, this.props.notifications.length)
 	          )
 	        
 	      )
@@ -59623,14 +59631,12 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    const invites = this.squashedInvites();
 	    const inviteElems = this.buildInvites(invites);
 
-	    console.log(sections);
-
 	    return (
-	      react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$d, lineNumber: 272}}
+	      react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$d, lineNumber: 270}}
 	        , invites.length > 0 &&
-	          react.createElement('div', { className: "row mt-3" , __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 274}}
-	            , react.createElement('div', { className: "flex-offset-2 flex-col-x" , __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 275}}
-	              , react.createElement('h3', { className: "mb-1", __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 276}}, "Invites")
+	          react.createElement('div', { className: "row mt-3" , __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 272}}
+	            , react.createElement('div', { className: "flex-offset-2 flex-col-x" , __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 273}}
+	              , react.createElement('h3', { className: "mb-1", __self: this, __source: {fileName: _jsxFileName$d, lineNumber: 274}}, "Invites")
 	            )
 	          )
 	        
@@ -66922,10 +66928,10 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    let details = {};
 
 	    if (editMode) {
-	      details.clayPath = props.claypath.split('/').slice(1);
+	      details.clayPath = props.claypath;
 	      details.hostship = props.ship.substr(1);
-	      details.circle = `~${details.hostship}/c${[''].concat(details.clayPath.slice(2, -1)).join('-')}`;
-	      details.namedCircle = "c".concat([''].concat(details.clayPath.slice(2, -1)).join('-'));
+	      details.circle = `~${details.hostship}/c${[''].concat([details.clayPath]).join('-')}`;
+	      details.namedCircle = "c".concat([''].concat([details.clayPath]).join('-'));
 	      details.lastedit = props.lastedit;
 	      details.title = details.clayPath.slice(-1)[0];
 	      details.body = props.content;
@@ -66935,10 +66941,10 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	//      details.collId = stationDetails.collId;
 	//      details.hostship = stationDetails.host;
 	//      details.cir = stationDetails.cir;
-	      details.clayPath = props.claypath.split('/').slice(1);
+	      details.clayPath = props.claypath;
 	      details.hostship = props.ship.substr(1);
-	      details.circle = `~${details.hostship}/c${[''].concat(details.clayPath.slice(2)).join('-')}`;
-	      details.namedCircle = "c".concat([''].concat(details.clayPath.slice(2, -1)).join('-'));
+	      details.circle = `~${details.hostship}/c${[''].concat([details.clayPath]).join('-')}`;
+	      details.namedCircle = "c".concat([''].concat([details.clayPath]).join('-'));
 	    }
 
 	    return details;
@@ -66954,7 +66960,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        desk: 'home',
 	        acts: [{
 	          post: {
-	            path: '/' + details.clayPath.join('/'), // TODO: should be web/collections/~2018.9.11..17.41.40..6823/~2018.9.11..20.21.42..607c
+	            path: '/web/collections/' + details.clayPath, // TODO: should be web/collections/~2018.9.11..17.41.40..6823/~2018.9.11..20.21.42..607c
 	            name: this.state.title,
 	            comments: true,  // XX TODO Get this value from user or parent
 	            type: 'blog',
@@ -66969,7 +66975,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        desk: 'home',
 	        acts: [{
 	          post: {
-	            path: '/' + details.clayPath.join('/'),
+	            path: '/web/collections/' + details.clayPath,
 	            name: this.state.title,
 	            comments: true,  // XX TODO Get this value from user or parent
 	            type: 'blog',
@@ -66994,7 +67000,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	            data: PAGE_STATUS_READY
 	          }]);
 
-	          this.props.transitionTo(`/~~/~${details.hostship}/==/${details.clayPath.join('/')}`);
+	          this.props.transitionTo(`/~landscape/collections/~${details.hostship}/${details.clayPath}`);
 	          return true;
 	        }
 
@@ -67079,7 +67085,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	              responseKey: "circle.config.dif.full",
 	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 194}} )
 	            , react.createElement('a', {
-	              href: `/~~/~${details.hostship}/==/${details.clayPath.join('/')}`,
+	              href: `/~landscape/collections/~${details.hostship}/${details.clayPath}`,
 	              disabled: this.props.store.views.transition !== PAGE_STATUS_READY,
 	              className: "vanilla btn btn-default"  , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 201}}, "Cancel"
 	              )
@@ -67109,29 +67115,23 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	      comment: '',
 	      status: STATUS_READY
 	    };
-	    let loc = window.location.pathname;
+	    let loc = window.location.pathname.split('/');
 
-	    let locList = loc.split('/').slice(1);
+	    let topLevelColl = loc[4];
+	    let collPost = loc[5];
 
-	    if (locList[0] == '~~') {
-	      locList.shift();
-	    }
+	    console.log(topLevelColl, collPost);
+	    this.clayPath = '/web/collections/' + topLevelColl + '/' + collPost;
 
-	    this.pageShip = (locList[1] == '==') ?
-	      locList[0].slice(1) :
-	      `${props.api.authTokens.ship}`;
-
-	    this.clayPath = loc.includes("/==/web") ?
-	      '/' + locList.slice(2).join('/') :
-	      '/web/' + locList.join('/');
-
+	    console.log('loc', loc);
+	    console.log('clayPath', this.clayPath);
 	  }
 
 	  createComment() {
 	    this.setState({ status: STATUS_LOADING });
 
 	    this.props.api.coll({
-	      ship: this.pageShip,
+	      ship: window.ship,
 	      desk: 'home',
 	      acts: [{
 	        comment: {
@@ -67148,7 +67148,6 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	    this.props.pushCallback("circle.gram", (rep) => {
 	      this.setState({ comment: '', status: STATUS_READY});
-	      // this.props.transitionTo(this.pageShip == this.props.api.authTokens.ship ? `/~~/collections/${this.props.coll}/${this.props.top}` : `/~~/${this.pageShip}/==/web/collections/${this.props.coll}/${this.props.top}`)
 	      this.props.transitionTo(window.location.pathname); // any reason we shouldnt do this?
 	    });
 	  }
@@ -67166,10 +67165,10 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	  render() {
 	    return (
-	      react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$j, lineNumber: 72}}
-	        , react.createElement('div', { className: "flex align-top" , __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 73}}
-	          , react.createElement('div', { className: "mr-2 mt-3" , __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 74}}
-	            , react.createElement(Sigil, { ship: `~${this.props.api.authTokens.ship}`, size: "18", __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 75}} )
+	      react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$j, lineNumber: 65}}
+	        , react.createElement('div', { className: "flex align-top" , __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 66}}
+	          , react.createElement('div', { className: "mr-2 mt-3" , __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 67}}
+	            , react.createElement(Sigil, { ship: `~${this.props.api.authTokens.ship}`, size: "18", __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 68}} )
 	          )
 	          , react.createElement('textarea', {
 	            value: this.state.comment,
@@ -67177,7 +67176,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	            name: "comment",
 	            className: "comment-edit mb-4" ,
 	            disabled: this.state.status === STATUS_LOADING,
-	            placeholder: "", __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 77}}
+	            placeholder: "", __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 70}}
 	          )
 	        )
 	        , react.createElement(Button, {
@@ -67186,7 +67185,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          action: this.createComment,
 	          responseKey: "circle.gram",
 	          pushCallback: this.props.pushCallback,
-	          content: "Add comment" , __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 86}} )
+	          content: "Add comment" , __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 79}} )
 	      )
 	    )
 	  }
@@ -73148,7 +73147,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	var OS_CODE = 0x03; // Unix :) . Don't detect, use this default.
 
-	function err$1(strm, errorCode) {
+	function err(strm, errorCode) {
 	  strm.msg = msg[errorCode];
 	  return errorCode;
 	}
@@ -74322,7 +74321,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  var s;
 
 	  if (!strm || !strm.state) {
-	    return err$1(strm, Z_STREAM_ERROR);
+	    return err(strm, Z_STREAM_ERROR);
 	  }
 
 	  strm.total_in = strm.total_out = 0;
@@ -74378,7 +74377,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  if (memLevel < 1 || memLevel > MAX_MEM_LEVEL || method !== Z_DEFLATED ||
 	    windowBits < 8 || windowBits > 15 || level < 0 || level > 9 ||
 	    strategy < 0 || strategy > Z_FIXED$1) {
-	    return err$1(strm, Z_STREAM_ERROR);
+	    return err(strm, Z_STREAM_ERROR);
 	  }
 
 
@@ -74439,7 +74438,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	  if (!strm || !strm.state ||
 	    flush > Z_BLOCK || flush < 0) {
-	    return strm ? err$1(strm, Z_STREAM_ERROR) : Z_STREAM_ERROR;
+	    return strm ? err(strm, Z_STREAM_ERROR) : Z_STREAM_ERROR;
 	  }
 
 	  s = strm.state;
@@ -74447,7 +74446,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  if (!strm.output ||
 	    (!strm.input && strm.avail_in !== 0) ||
 	    (s.status === FINISH_STATE && flush !== Z_FINISH)) {
-	    return err$1(strm, (strm.avail_out === 0) ? Z_BUF_ERROR : Z_STREAM_ERROR);
+	    return err(strm, (strm.avail_out === 0) ? Z_BUF_ERROR : Z_STREAM_ERROR);
 	  }
 
 	  s.strm = strm; /* just in case */
@@ -74670,12 +74669,12 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	     */
 	  } else if (strm.avail_in === 0 && rank(flush) <= rank(old_flush) &&
 	    flush !== Z_FINISH) {
-	    return err$1(strm, Z_BUF_ERROR);
+	    return err(strm, Z_BUF_ERROR);
 	  }
 
 	  /* User must not provide more input after the first FINISH: */
 	  if (s.status === FINISH_STATE && strm.avail_in !== 0) {
-	    return err$1(strm, Z_BUF_ERROR);
+	    return err(strm, Z_BUF_ERROR);
 	  }
 
 	  /* Start a new block or continue the current one.
@@ -74783,12 +74782,12 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    status !== BUSY_STATE &&
 	    status !== FINISH_STATE
 	  ) {
-	    return err$1(strm, Z_STREAM_ERROR);
+	    return err(strm, Z_STREAM_ERROR);
 	  }
 
 	  strm.state = null;
 
-	  return status === BUSY_STATE ? err$1(strm, Z_DATA_ERROR) : Z_OK;
+	  return status === BUSY_STATE ? err(strm, Z_DATA_ERROR) : Z_OK;
 	}
 
 	/* Not implemented
@@ -81787,7 +81786,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        }]);
 
 	        let dat = {
-	          ship: this.props.api.authTokens.ship,
+	          ship: window.ship,
 	          desk: 'home',
 	          acts: [{
 	            collection: {
@@ -81802,7 +81801,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        };
 	        this.props.api.coll(dat);
 	        this.props.pushCallback("circles", (rep) => {
-	          let station = `~${this.props.api.authTokens.ship}/${rep.data.cir}`;
+	          let station = `~${window.ship}/${rep.data.cir}`;
 	          let details = getStationDetails(station);
 
 	          this.props.api.hall({
@@ -81814,8 +81813,11 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          });
 
 	          let inviteArray = this.state.formData.invites.trim().split("\n").map(t => t.trim().substr(1));
-	          api.permitCol(rep.data.cir, inviteArray, true, this.state.formData.name);
-
+	          inviteArray = inviteArray.filter(Boolean);
+	          if (inviteArray.length > 0) {
+	            api.permitCol(rep.data.cir, inviteArray, true, this.state.formData.name);
+	          }
+	          
 	          this.props.transitionTo(details.stationUrl);
 	        });
 	      }
@@ -81832,7 +81834,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	              storeReports: this.props.storeReports,
 	              transitionTo: this.props.transitionTo,
 	              form: form,
-	              cancel: this.props.cancel, __self: this, __source: {fileName: _jsxFileName$p, lineNumber: 79}}
+	              cancel: this.props.cancel, __self: this, __source: {fileName: _jsxFileName$p, lineNumber: 82}}
 	            ));
 
 	  }
@@ -82483,6 +82485,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    //   urb-structure-type="collection-post">
 
 	    let headerQuery = tempDOM.querySelectorAll('[name="urb-metadata"]');
+	    console.log(headerQuery);
 	    let headerData = {
 	      type: "default"
 	    };
@@ -82503,6 +82506,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	      headerData.dateCreated = headerQuery[0].getAttribute('urb-date-created');
 	      headerData.dateModified = headerQuery[0].getAttribute('urb-date-modified');
 	      headerData.collPath = headerQuery[0].getAttribute('urb-path');
+	      console.log('collPath', headerData.collPath);
 
 	      if (headerData.type.includes("collection-index")) {
 	        headerData.title = headerData.pageTitle;
@@ -82513,7 +82517,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	      if (headerData.type.includes("collection-post")) {
 	        headerData.title = headerData.pageTitle;
-	        headerData.collId = headerData.collPath.split("/")[3];
+	        headerData.collId = window.location.pathname.split('/')[4];
 	        headerData.collTitle = headerData.collId;
 	        headerData.postId = headerData.dateCreated;
 	        headerData.station = `${headerData.host}/c-${headerData.collId}-${headerData.postId}`;
@@ -82539,40 +82543,40 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        pushCallback: this.props.pushCallback,
 	        transitionTo: this.props.transitionTo,
 	        localSet: this.props.localSet,
-	        localGet: this.props.localGet, __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 130}}
+	        localGet: this.props.localGet, __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 132}}
 	      )
 	    );
 	  }
 
 	  onboardingPage() {
 	    return (
-	      react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$s, lineNumber: 145}}
-	        , react.createElement('div', { className: "container header-container" , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 146}}
-	          , react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 147}}
-	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 148}})
-	            , react.createElement('div', { className: "flex-col-x header-breadcrumbs" , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 149}})
+	      react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$s, lineNumber: 147}}
+	        , react.createElement('div', { className: "container header-container" , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 148}}
+	          , react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 149}}
+	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 150}})
+	            , react.createElement('div', { className: "flex-col-x header-breadcrumbs" , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 151}})
 	          )
-	          , react.createElement('div', { className: "row align-center header-mainrow"  , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 151}}
-	            , react.createElement('h1', { className: "flex-offset-2 flex-col-x header-title"  , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 152}}, "Welcome")
+	          , react.createElement('div', { className: "row align-center header-mainrow"  , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 153}}
+	            , react.createElement('h1', { className: "flex-offset-2 flex-col-x header-title"  , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 154}}, "Welcome")
 	          )
-	          , react.createElement('div', { className: "row header-carpet" , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 154}}
+	          , react.createElement('div', { className: "row header-carpet" , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 156}}
 	          )
 	        )
 
-	        , react.createElement('div', { className: "container", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 158}}
-	          , react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 159}}
-	            , react.createElement('div', { className: "flex-offset-2 flex-col-6" , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 160}}
-	              , react.createElement('p', { className: "mb-5", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 161}}, "This is Landscape, an agent for creating cities on top of Arvo."           )
-	              , react.createElement('p', { className: "mb-5", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 162}}, "Currently, we’re running a few experimental cities that are invite-only. If you’re running a planet or a star and would like to join, you’ll need to request access."                           )
-	              , react.createElement('p', { className: "mb-5", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 163}}, "Our cities are limited in size and limited to planets or above. To request access, send an email to "                   , react.createElement('span', { className: "text-mono", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 163}}, "support@urbit.org"))
-	              , react.createElement('p', { className: "mb-7", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 164}}, "In the meantime, check out the "      , react.createElement('a', { href: "https://urbit.org/docs", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 164}}, "docs"), " and start exploring."   )
+	        , react.createElement('div', { className: "container", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 160}}
+	          , react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 161}}
+	            , react.createElement('div', { className: "flex-offset-2 flex-col-6" , __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 162}}
+	              , react.createElement('p', { className: "mb-5", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 163}}, "This is Landscape, an agent for creating cities on top of Arvo."           )
+	              , react.createElement('p', { className: "mb-5", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 164}}, "Currently, we’re running a few experimental cities that are invite-only. If you’re running a planet or a star and would like to join, you’ll need to request access."                           )
+	              , react.createElement('p', { className: "mb-5", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 165}}, "Our cities are limited in size and limited to planets or above. To request access, send an email to "                   , react.createElement('span', { className: "text-mono", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 165}}, "support@urbit.org"))
+	              , react.createElement('p', { className: "mb-7", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 166}}, "In the meantime, check out the "      , react.createElement('a', { href: "https://urbit.org/docs", __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 166}}, "docs"), " and start exploring."   )
 	              , react.createElement('button', {
 	                type: "button",
 	                className: "btn btn-primary" ,
 	                onClick: (e) => {
 	                  this.props.localSet('landscape-onboarding', true);
 	                  this.forceUpdate();
-	                }, __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 165}}, "Okay!"
+	                }, __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 167}}, "Okay!"
 
 	              )
 	            )
@@ -82596,14 +82600,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          store: this.props.store,
 	          storeReports: this.props.storeReports,
 	          pushCallback: this.props.pushCallback,
-	          transitionTo: this.props.transitionTo, __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 190}}
+	          transitionTo: this.props.transitionTo, __self: this, __source: {fileName: _jsxFileName$s, lineNumber: 192}}
 	        )
 	      );
 	    } else {
 	      let parser = new DOMParser();
 	      let tempDOM = parser.parseFromString(this.props.scaffold, "text/html");
 	      content = (
-	        react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$s, lineNumber: 202}}
+	        react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$s, lineNumber: 204}}
 	          , this.loadHeader(tempDOM)
 	          , this.reactify()
 	        )
@@ -82863,9 +82867,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    let json = data.data;
 
 	    reportTypes.forEach((type) => {
-	      console.log(type);
 	      let reportData = lodash.get(json, type, null);
-	      console.log(reportData);
 
 	      let hasContent = (
 	        (lodash.isArray(reportData) && lodash.isEmpty(reportData)) ||
