@@ -65,6 +65,7 @@ export class Header extends Component {
     let defaultData;
     let actions = {};
 
+    console.log(type);
     switch (type) {
       case "stream-chat":
         defaultData = this.getStationHeaderData(this.props.data.station);
@@ -389,6 +390,7 @@ export class Header extends Component {
   render() {
     let type = (this.props.data.type) ? this.props.data.type : "header-default";
 
+    console.log(type);
     // TODO: This is an ugly hack until we fix queryParams
     if (["stream-chat", "header-stream-dm", "collection-edit"].includes(type) && !getQueryParams().station) {
       return null;

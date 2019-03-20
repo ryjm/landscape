@@ -100,11 +100,11 @@
       ::  make a new post
       ::
       ?:  =(-.tal 'new')
-        =/  new-html=octs  (manx-to-octs (index (coll-new shp col)))
+        =/  new-html=octs  (manx-to-octs (index (coll-elem shp col `[*@da %new])))
         [[ost.bol %http-response (html-response new-html)]~ this]
       ::  view a post
       ::
-      =/  pos=[@da ?(%default %edit)]  
+      =/  pos=[@da ?(%default %edit %new)]
         [(slav %da i.tal) %default]
       =/  post-html=octs  (manx-to-octs (index (coll-elem shp col `pos)))
       [[ost.bol %http-response (html-response post-html)]~ this]
@@ -112,7 +112,7 @@
     ::
     ?:  ?=([@t @t ~] tal)
       ?:  =(+<.tal 'edit')
-        =/  pos=[@da ?(%default %edit)]  
+        =/  pos=[@da ?(%default %edit %new)]
           [(slav %da i.tal) %edit]
         =/  edit-html=octs  (manx-to-octs (index (coll-elem shp col `pos)))
         [[ost.bol %http-response (html-response edit-html)]~ this]

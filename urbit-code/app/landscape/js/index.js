@@ -42999,10 +42999,13 @@
 	});
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var require$$1 = getCjsExportFromNamespace(bufferEs6);
 
 =======
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+>>>>>>> a6216f1... Style fixes
 	var bn = createCommonjsModule(function (module) {
 	(function (module, exports) {
 
@@ -43056,10 +43059,14 @@
 	  var Buffer;
 	  try {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	    Buffer = require$$1.Buffer;
 =======
 	    Buffer = bufferEs6.Buffer;
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	    Buffer = bufferEs6.Buffer;
+>>>>>>> a6216f1... Style fixes
 	  } catch (e) {
 	  }
 
@@ -48811,6 +48818,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    let defaultData;
 	    let actions = {};
 
+	    console.log(type);
 	    switch (type) {
 	      case "stream-chat":
 	        defaultData = this.getStationHeaderData(this.props.data.station);
@@ -48958,11 +48966,11 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          'inbox-link-active': warehouse.store.views.inbox === "inbox-list",
 	        });
 	        return (
-	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 215}}
-	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 216}})
-	            , react.createElement('div', { className: "flex-col-x text-heading text-squat"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 217}}
-	              , react.createElement('a', { className: recentClass, onClick: () => { this.navigateSubpage('inbox', 'inbox-recent'); }, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 218}}, "Recent")
-	              , react.createElement('a', { className: listClass, onClick: () => { this.navigateSubpage('inbox', 'inbox-list'); }, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 219}}, "All")
+	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 216}}
+	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 217}})
+	            , react.createElement('div', { className: "flex-col-x text-heading text-squat"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 218}}
+	              , react.createElement('a', { className: recentClass, onClick: () => { this.navigateSubpage('inbox', 'inbox-recent'); }, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 219}}, "Recent")
+	              , react.createElement('a', { className: listClass, onClick: () => { this.navigateSubpage('inbox', 'inbox-list'); }, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 220}}, "All")
 	            )
 	          )
 	        );
@@ -48978,16 +48986,16 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	        // TODO: I realize the redundancy in this conditional. God forgive me.
 	        if (this.props.data.author && headerData.type !== "collection-index-post") {
 	          authorElem = (
-	            react.createElement('a', { href: profileUrl(this.props.data.author.substr(1)), className: "vanilla text-mono mr-3 text-700 text-small"    , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 235}}, this.props.data.author)
+	            react.createElement('a', { href: profileUrl(this.props.data.author.substr(1)), className: "vanilla text-mono mr-3 text-700 text-small"    , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 236}}, this.props.data.author)
 	          );
 	        }
 
 	        return (
-	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 240}}
-	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 241}})
-	            , react.createElement('div', { className: "flex-col-x", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 242}}
+	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 241}}
+	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 242}})
+	            , react.createElement('div', { className: "flex-col-x", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 243}}
 	              , authorElem
-	              , react.createElement('span', { className: "text-mono text-300 text-small"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 244}}, this.props.data.dateCreated.slice(0, -6))
+	              , react.createElement('span', { className: "text-mono text-300 text-small"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 245}}, this.props.data.dateCreated.slice(0, -6))
 	            )
 	          )
 	        );
@@ -49000,10 +49008,10 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	          'inbox-link-active': true,
 	        });
 	        return (
-	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 257}}
-	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 258}})
-	            , react.createElement('div', { className: "flex-col-x text-heading text-squat"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 259}}
-	              , react.createElement('a', { className: indexClass, href: `/~landscape/collections/${this.props.data.author}/profile`, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 260}}, "Profile")
+	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 258}}
+	            , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 259}})
+	            , react.createElement('div', { className: "flex-col-x text-heading text-squat"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 260}}
+	              , react.createElement('a', { className: indexClass, href: `/~landscape/collections/${this.props.data.author}/profile`, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 261}}, "Profile")
 	            )
 	          )
 	        );
@@ -49015,9 +49023,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    if (headerData.breadcrumbs) {
 	      return headerData.breadcrumbs.map(({display, href}, i) => {
 	        return (
-	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 272}}
-	            , react.createElement('a', { className: "text-host-breadcrumb", key: display, href: href, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 273}}, display)
-	            , react.createElement('span', { className: "text-host-breadcrumb text-600 ml-2 mr-2"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 274}}, "/")
+	          react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 273}}
+	            , react.createElement('a', { className: "text-host-breadcrumb", key: display, href: href, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 274}}, display)
+	            , react.createElement('span', { className: "text-host-breadcrumb text-600 ml-2 mr-2"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 275}}, "/")
 	          )
 	        )
 	      })
@@ -49054,7 +49062,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	        switch (key) {
 	          case "details":
-	            labelElem = (react.createElement(Icon, { type: "icon-ellipsis", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 311}} ));
+	            labelElem = (react.createElement(Icon, { type: "icon-ellipsis", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 312}} ));
 	            return null;  // Remove "details" page for now
 	            break;
 	          case "subscribe":
@@ -49062,16 +49070,16 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	            return null;  // Remove "subscribe" action for now
 	            break;
 	          case "write":
-	            lusElem = key === "write" ? (react.createElement(Icon, { type: "icon-lus", label: true, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 319}} )) : null;
+	            lusElem = key === "write" ? (react.createElement(Icon, { type: "icon-lus", label: true, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 320}} )) : null;
 	            break;
 	        }
 
 	        // TODO: No idea why .key and .href aren't showing up in the attributes
 	        // in currentTarget when you click this. Bad javascript, bad!
 	        return (
-	          react.createElement('a', { key: key, href: value, onClick: this.handleHeaderAction, 'data-key': key, className: "header-link mr-6 flex align-center"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 326}}
+	          react.createElement('a', { key: key, href: value, onClick: this.handleHeaderAction, 'data-key': key, className: "header-link mr-6 flex align-center"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 327}}
 	            , lusElem
-	            , react.createElement('span', {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 328}}, labelElem)
+	            , react.createElement('span', {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 329}}, labelElem)
 	          )
 	        );
 	      })
@@ -49095,38 +49103,38 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    });
 
 	    return (
-	      react.createElement('div', { className: "container header-container" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 352}}
-	        , react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 353}}
-	          , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 354}})
-	          , react.createElement('div', { className: "flex-col-x header-breadcrumbs" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 355}}
+	      react.createElement('div', { className: "container header-container" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 353}}
+	        , react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 354}}
+	          , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 355}})
+	          , react.createElement('div', { className: "flex-col-x header-breadcrumbs" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 356}}
 	            , breadcrumbsElem
 	          )
 	        )
-	        , react.createElement('div', { className: "row align-center header-mainrow"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 359}}
-	          , react.createElement('div', { className: "flex-col-1 flex justify-end"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 360}}
+	        , react.createElement('div', { className: "row align-center header-mainrow"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 360}}
+	          , react.createElement('div', { className: "flex-col-1 flex justify-end"  , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 361}}
 	            , react.createElement(HeaderNotification, {
 	              notifications: this.props.store.messages.notifications,
-	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 361}}
+	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 362}}
 	            )
 	          )
-	          , react.createElement('div', { className: "flex-col-1 flex space-between align-center"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 366}}
-	            , react.createElement('a', { onClick: this.toggleMenu, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 367}}
-	              , react.createElement(Icon, { type: "icon-panini", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 368}} )
+	          , react.createElement('div', { className: "flex-col-1 flex space-between align-center"   , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 367}}
+	            , react.createElement('a', { onClick: this.toggleMenu, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 368}}
+	              , react.createElement(Icon, { type: "icon-panini", __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 369}} )
 	            )
-	            , react.createElement(Icon, { type: headerData.icon, label: true, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 370}} )
+	            , react.createElement(Icon, { type: headerData.icon, label: true, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 371}} )
 	          )
-	          , react.createElement('h1', { className: headerClass, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 372}}
-	            , react.createElement('a', { href: headerData.title.href, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 373}}, headerData.title.display)
+	          , react.createElement('h1', { className: headerClass, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 373}}
+	            , react.createElement('a', { href: headerData.title.href, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 374}}, headerData.title.display)
 	          )
 	          , actions
 	        )
-	        , react.createElement('div', { className: "row header-carpet" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 377}}
+	        , react.createElement('div', { className: "row header-carpet" , __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 378}}
 	          , headerCarpet
 	        )
 	        , react.createElement(PageStatus, {
 	          transition: this.props.store.views.transition,
 	          usership: this.props.api.authTokens.ship,
-	          storeReports: this.props.storeReports, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 380}}
+	          storeReports: this.props.storeReports, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 381}}
 	        )
 	      )
 	    )
@@ -49135,6 +49143,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  render() {
 	    let type = (this.props.data.type) ? this.props.data.type : "header-default";
 
+	    console.log(type);
 	    // TODO: This is an ugly hack until we fix queryParams
 	    if (["stream-chat", "header-stream-dm", "collection-edit"].includes(type) && !getQueryParams().station) {
 	      return null;
@@ -49180,10 +49189,10 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    }
 
 	    return (
-	      react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 437}}
+	      react.createElement(react.Fragment, {__self: this, __source: {fileName: _jsxFileName$8, lineNumber: 439}}
 	        , this.props.notifications.length > 0 &&
-	          react.createElement('a', { className: "vanilla", href: notificationHref, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 439}}
-	            , react.createElement('div', { className: `header-notifications text-mono text-700 ${this.state.notificationClass}`, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 440}}, this.props.notifications.length)
+	          react.createElement('a', { className: "vanilla", href: notificationHref, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 441}}
+	            , react.createElement('div', { className: `header-notifications text-mono text-700 ${this.state.notificationClass}`, __self: this, __source: {fileName: _jsxFileName$8, lineNumber: 442}}, this.props.notifications.length)
 	          )
 	        
 	      )
@@ -58539,10 +58548,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var util$1 = {
 =======
 	var require$$0 = {
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	var require$$0 = {
+>>>>>>> a6216f1... Style fixes
 	  inherits: inherits$1,
 	  _extend: _extend,
 	  log: log,
@@ -58567,6 +58580,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  debuglog: debuglog
 	};
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	var util$2 = /*#__PURE__*/Object.freeze({
 		format: format,
@@ -58596,6 +58610,8 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 =======
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+>>>>>>> a6216f1... Style fixes
 	var inherits_browser = createCommonjsModule(function (module) {
 	if (typeof Object.create === 'function') {
 	  // implementation from standard node.js 'util' module
@@ -58623,6 +58639,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	});
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var util$3 = getCjsExportFromNamespace(util$2);
 
 	var inherits$2 = createCommonjsModule(function (module) {
@@ -58633,6 +58650,11 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	try {
 	  var util = require$$0;
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	var inherits$2 = createCommonjsModule(function (module) {
+	try {
+	  var util = require$$0;
+>>>>>>> a6216f1... Style fixes
 	  if (typeof util.inherits !== 'function') throw '';
 	  module.exports = util.inherits;
 	} catch (e) {
@@ -59107,6 +59129,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var events = /*#__PURE__*/Object.freeze({
 		default: EventEmitter,
 		EventEmitter: EventEmitter
@@ -59116,6 +59139,8 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 =======
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+>>>>>>> a6216f1... Style fixes
 	var Tokenizer$1 = Tokenizer_1;
 
 	/*
@@ -59247,10 +59272,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	inherits$2(Parser, require$$2.EventEmitter);
 =======
 	inherits$2(Parser, EventEmitter.EventEmitter);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	inherits$2(Parser, EventEmitter.EventEmitter);
+>>>>>>> a6216f1... Style fixes
 
 	Parser.prototype._updatePosition = function(initialOffset){
 		if(this.endIndex === null){
@@ -65615,10 +65644,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	}).call(commonjsGlobal);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	//# sourceMappingURL=performance-now.js.map
 =======
 
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+
+>>>>>>> a6216f1... Style fixes
 	});
 
 	var root = typeof window === 'undefined' ? commonjsGlobal : window
@@ -68386,38 +68419,42 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	    let details = this.getDetails();
 
 	    return (
-	        react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$i, lineNumber: 178}}
-	          , react.createElement('h3', { className: "text-500", __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 179}}, "Title")
+	      react.createElement('div', { className: "row", __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 178}}
+	        , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 179}})
+	        , react.createElement('div', { className: "flex-col-x", __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 180}}
+	          , react.createElement('h3', { className: "text-500", __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 181}}, "Title")
 	          , react.createElement('input', {
 	            type: "text",
 	            name: "title",
 	            className: `h3 mt-0 mb-0 text-500 collection-title ${this.state.title.length > 0 && 'collection-value-filled'}`,
 	            value: this.state.title,
 	            onChange: this.valueChange,
-	            disabled: this.props.store.views.transition !== PAGE_STATUS_READY, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 180}} )
-	          , react.createElement('h3', { className: "text-500 mt-6" , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 187}}, "Post")
+	            disabled: this.props.store.views.transition !== PAGE_STATUS_READY, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 182}} )
+	          , react.createElement('h3', { className: "text-500 mt-6" , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 189}}, "Post")
 	          , react.createElement('textarea', {
 	            className: `collection-post-edit mb-6 ${this.state.topicContent.length > 0 && 'collection-value-filled'}`,
 	            name: "topicContent",
 	            disabled: this.props.store.views.transition !== PAGE_STATUS_READY,
 	            value: this.state.topicContent,
-	            onChange: this.valueChange, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 188}}
+	            onChange: this.valueChange, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 190}}
 	            )
-	          , react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$i, lineNumber: 195}}
+	          , react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$i, lineNumber: 197}}
 	            , react.createElement(Button, {
 	              content: "Publish",
 	              disabled: this.props.store.views.transition !== PAGE_STATUS_READY,
 	              classes: "btn btn-primary mr-1"  ,
 	              action: this.createTopic,
 	              responseKey: "circle.config.dif.full",
-	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 196}} )
+	              pushCallback: this.props.pushCallback, __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 198}} )
 	            , react.createElement('a', {
 	              href: `/~landscape/collections/~${details.hostship}/${details.clayPath}`,
 	              disabled: this.props.store.views.transition !== PAGE_STATUS_READY,
-	              className: "vanilla btn btn-default"  , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 203}}, "Cancel"
+	              className: "vanilla btn btn-default"  , __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 205}}, "Cancel"
 	              )
 	          )
 	        )
+	        , react.createElement('div', { className: "flex-col-2", __self: this, __source: {fileName: _jsxFileName$i, lineNumber: 212}})
+	      )
 	    )
 	  }
 	}
@@ -68495,7 +68532,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	      react.createElement('div', {__self: this, __source: {fileName: _jsxFileName$j, lineNumber: 61}}
 	        , react.createElement('div', { className: "flex align-top" , __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 62}}
 	          , react.createElement('div', { className: "mr-2 mt-3" , __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 63}}
-	            , react.createElement(Sigil, { ship: `~${this.props.api.authTokens.ship}`, size: "18", __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 64}} )
+	            , react.createElement(Sigil, { ship: `~${this.props.api.authTokens.ship}`, size: "18", prefix: "true", __self: this, __source: {fileName: _jsxFileName$j, lineNumber: 64}})
 	          )
 	          , react.createElement('textarea', {
 	            value: this.state.comment,
@@ -68615,10 +68652,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var buffer = require$$1.Buffer;
 =======
 	var buffer = bufferEs6.Buffer;
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	var buffer = bufferEs6.Buffer;
+>>>>>>> a6216f1... Style fixes
 
 	var toSJISFunction;
 	var CODEWORDS_COUNT = [
@@ -71371,6 +71412,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var empty$1 = {};
 
 	var empty$2 = /*#__PURE__*/Object.freeze({
@@ -71379,6 +71421,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 =======
 	var require$$0$1 = {};
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	var require$$0$1 = {};
+>>>>>>> a6216f1... Style fixes
 
 	function BufferList() {
 	  this.head = null;
@@ -73278,6 +73323,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var stream = /*#__PURE__*/Object.freeze({
 		default: Stream,
 		Readable: Readable,
@@ -73290,6 +73336,8 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 =======
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+>>>>>>> a6216f1... Style fixes
 	var msg = {
 	  2:      'need dictionary',     /* Z_NEED_DICT       2  */
 	  1:      'stream end',          /* Z_STREAM_END      1  */
@@ -79521,6 +79569,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var zlib$1 = /*#__PURE__*/Object.freeze({
 		codes: codes,
 		createDeflate: createDeflate,
@@ -79559,6 +79608,8 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 =======
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+>>>>>>> a6216f1... Style fixes
 	var chunkstream = createCommonjsModule(function (module) {
 
 
@@ -79568,10 +79619,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	var ChunkStream = module.exports = function() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	  Stream$1.call(this);
 =======
 	  Stream.call(this);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	  Stream.call(this);
+>>>>>>> a6216f1... Style fixes
 
 	  this._buffers = [];
 	  this._buffered = 0;
@@ -79583,10 +79638,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  this.writable = true;
 	};
 <<<<<<< HEAD
+<<<<<<< HEAD
 	util$3.inherits(ChunkStream, Stream$1);
 =======
 	require$$0.inherits(ChunkStream, Stream);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	require$$0.inherits(ChunkStream, Stream);
+>>>>>>> a6216f1... Style fixes
 
 
 	ChunkStream.prototype.read = function(length, callback) {
@@ -80091,10 +80150,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  this._filter.start();
 	};
 <<<<<<< HEAD
+<<<<<<< HEAD
 	util$3.inherits(FilterAsync, chunkstream);
 =======
 	require$$0.inherits(FilterAsync, chunkstream);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	require$$0.inherits(FilterAsync, chunkstream);
+>>>>>>> a6216f1... Style fixes
 	});
 
 	var constants = {
@@ -80761,10 +80824,13 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var zlib$2 = getCjsExportFromNamespace(zlib$1);
 
 =======
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+>>>>>>> a6216f1... Style fixes
 	var parserAsync = createCommonjsModule(function (module) {
 
 
@@ -80794,10 +80860,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  this._parser.start();
 	};
 <<<<<<< HEAD
+<<<<<<< HEAD
 	util$3.inherits(ParserAsync, chunkstream);
 =======
 	require$$0.inherits(ParserAsync, chunkstream);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	require$$0.inherits(ParserAsync, chunkstream);
+>>>>>>> a6216f1... Style fixes
 
 
 	ParserAsync.prototype._handleError = function(err) {
@@ -80827,10 +80897,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  if (!this._inflate) {
 	    if (this._bitmapInfo.interlace) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	      this._inflate = zlib$2.createInflate();
 =======
 	      this._inflate = zlib.createInflate();
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	      this._inflate = zlib.createInflate();
+>>>>>>> a6216f1... Style fixes
 
 	      this._inflate.on('error', this.emit.bind(this, 'error'));
 	      this._filter.on('complete', this._complete.bind(this));
@@ -80840,6 +80914,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	      var rowSize = ((this._bitmapInfo.width * this._bitmapInfo.bpp * this._bitmapInfo.depth + 7) >> 3) + 1;
 	      var imageSize = rowSize * this._bitmapInfo.height;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	      var chunkSize = Math.max(imageSize, zlib$2.Z_MIN_CHUNK);
 	      
 	      this._inflate = zlib$2.createInflate({ chunkSize: chunkSize });
@@ -80848,6 +80923,11 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	      
 	      this._inflate = zlib.createInflate({ chunkSize: chunkSize });
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	      var chunkSize = Math.max(imageSize, zlib.Z_MIN_CHUNK);
+	      
+	      this._inflate = zlib.createInflate({ chunkSize: chunkSize });
+>>>>>>> a6216f1... Style fixes
 	      var leftToInflate = imageSize;
 
 	      var emitError = this.emit.bind(this, 'error');
@@ -81267,10 +81347,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  options.deflateStrategy = options.deflateStrategy != null ? options.deflateStrategy : 3;
 	  options.inputHasAlpha = options.inputHasAlpha != null ? options.inputHasAlpha : true;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	  options.deflateFactory = options.deflateFactory || zlib$2.createDeflate;
 =======
 	  options.deflateFactory = options.deflateFactory || zlib.createDeflate;
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	  options.deflateFactory = options.deflateFactory || zlib.createDeflate;
+>>>>>>> a6216f1... Style fixes
 	  options.bitDepth = options.bitDepth || 8;
 	  // This is outputColorType
 	  options.colorType = (typeof options.colorType === 'number') ? options.colorType : constants.COLORTYPE_COLOR_ALPHA;
@@ -81373,10 +81457,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	var PackerAsync = module.exports = function(opt) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	  Stream$1.call(this);
 =======
 	  Stream.call(this);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	  Stream.call(this);
+>>>>>>> a6216f1... Style fixes
 
 	  var options = opt || {};
 
@@ -81386,10 +81474,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  this.readable = true;
 	};
 <<<<<<< HEAD
+<<<<<<< HEAD
 	util$3.inherits(PackerAsync, Stream$1);
 =======
 	require$$0.inherits(PackerAsync, Stream);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	require$$0.inherits(PackerAsync, Stream);
+>>>>>>> a6216f1... Style fixes
 
 
 	PackerAsync.prototype.pack = function(data, width, height, gamma) {
@@ -81879,6 +81971,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var assert$2 = /*#__PURE__*/Object.freeze({
 		default: assert$1,
 		AssertionError: AssertionError,
@@ -81900,12 +81993,15 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	var require$$0 = getCjsExportFromNamespace(assert$2);
 
+=======
+>>>>>>> a6216f1... Style fixes
 	var syncInflate = createCommonjsModule(function (module, exports) {
 
-	var assert = require$$0.ok;
+	var assert = assert$1.ok;
 
 
 
+<<<<<<< HEAD
 	var kMaxLength = require$$1.kMaxLength;
 =======
 	var syncInflate = createCommonjsModule(function (module, exports) {
@@ -81916,12 +82012,16 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	var kMaxLength = bufferEs6.kMaxLength;
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	var kMaxLength = bufferEs6.kMaxLength;
+>>>>>>> a6216f1... Style fixes
 
 	function Inflate(opts) {
 	  if (!(this instanceof Inflate)) {
 	    return new Inflate(opts);
 	  }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	  if (opts && opts.chunkSize < zlib$2.Z_MIN_CHUNK) {
 	    opts.chunkSize = zlib$2.Z_MIN_CHUNK;
@@ -81935,6 +82035,13 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	  zlib.Inflate.call(this, opts);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	  if (opts && opts.chunkSize < zlib.Z_MIN_CHUNK) {
+	    opts.chunkSize = zlib.Z_MIN_CHUNK;
+	  }
+
+	  zlib.Inflate.call(this, opts);
+>>>>>>> a6216f1... Style fixes
 
 	  // Node 8 --> 9 compatibility check
 	  this._offset = this._offset === undefined ? this._outOffset : this._offset;
@@ -81966,10 +82073,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	Inflate.prototype._processChunk = function(chunk, flushFlag, asyncCb) {
 	  if (typeof asyncCb === 'function') {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	    return zlib$2.Inflate._processChunk.call(this, chunk, flushFlag, asyncCb);
 =======
 	    return zlib.Inflate._processChunk.call(this, chunk, flushFlag, asyncCb);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	    return zlib.Inflate._processChunk.call(this, chunk, flushFlag, asyncCb);
+>>>>>>> a6216f1... Style fixes
 	  }
 
 	  var self = this;
@@ -82057,10 +82168,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	util$3.inherits(Inflate, zlib$2.Inflate);
 =======
 	require$$0.inherits(Inflate, zlib.Inflate);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	require$$0.inherits(Inflate, zlib.Inflate);
+>>>>>>> a6216f1... Style fixes
 
 	function zlibBufferSync(engine, buffer) {
 	  if (typeof buffer === 'string') {
@@ -82073,10 +82188,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  var flushFlag = engine._finishFlushFlag;
 	  if (flushFlag == null) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	    flushFlag = zlib$2.Z_FINISH;
 =======
 	    flushFlag = zlib.Z_FINISH;
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	    flushFlag = zlib.Z_FINISH;
+>>>>>>> a6216f1... Style fixes
 	  }
 
 	  return engine._processChunk(buffer, flushFlag);
@@ -82175,10 +82294,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (!zlib$2.deflateSync) {
 =======
 	if (!zlib.deflateSync) {
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	if (!zlib.deflateSync) {
+>>>>>>> a6216f1... Style fixes
 	  hasSyncZlib = false;
 	}
 
@@ -82248,10 +82371,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  var inflatedData;
 	  if (metaData.interlace) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	    inflatedData = zlib$2.inflateSync(inflateData);
 =======
 	    inflatedData = zlib.inflateSync(inflateData);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	    inflatedData = zlib.inflateSync(inflateData);
+>>>>>>> a6216f1... Style fixes
 	  } else {
 	    var rowSize = ((metaData.width * metaData.bpp * metaData.depth + 7) >> 3) + 1;
 	    var imageSize = rowSize * metaData.height;
@@ -82280,10 +82407,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	var hasSyncZlib$1 = true;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (!zlib$2.deflateSync) {
 =======
 	if (!zlib.deflateSync) {
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	if (!zlib.deflateSync) {
+>>>>>>> a6216f1... Style fixes
 	  hasSyncZlib$1 = false;
 	}
 
@@ -82319,6 +82450,7 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  var filteredData = packer$1.filterData(metaData.data, metaData.width, metaData.height);
 
 	  // compress it
+<<<<<<< HEAD
 	  var compressedData = zlib$2.deflateSync(filteredData, packer$1.getDeflateOptions());
 =======
 	  chunks.push(packer$$1.packIHDR(metaData.width, metaData.height));
@@ -82332,6 +82464,9 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	  // compress it
 	  var compressedData = zlib.deflateSync(filteredData, packer$$1.getDeflateOptions());
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	  var compressedData = zlib.deflateSync(filteredData, packer$1.getDeflateOptions());
+>>>>>>> a6216f1... Style fixes
 	  filteredData = null;
 
 	  if (!compressedData || !compressedData.length) {
@@ -82378,10 +82513,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	var PNG = exports.PNG = function(options) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	  Stream$1.call(this);
 =======
 	  Stream.call(this);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	  Stream.call(this);
+>>>>>>> a6216f1... Style fixes
 
 	  options = options || {}; // eslint-disable-line no-param-reassign
 
@@ -82418,10 +82557,14 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 
 	};
 <<<<<<< HEAD
+<<<<<<< HEAD
 	util$3.inherits(PNG, Stream$1);
 =======
 	require$$0.inherits(PNG, Stream);
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+	require$$0.inherits(PNG, Stream);
+>>>>>>> a6216f1... Style fixes
 
 	PNG.sync = pngSync;
 
@@ -82656,10 +82799,13 @@ lyrtesmudnytbyrsenwegfyrmurtelreptegpecnelnevfes\
 	var utils_4 = utils$2.qrToImageData;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	var require$$0$1 = getCjsExportFromNamespace(empty$2);
 
 =======
 >>>>>>> 4d7161da1e60ea138e37d5f0e5cdd27b4dbef696
+=======
+>>>>>>> a6216f1... Style fixes
 	var png$1 = createCommonjsModule(function (module, exports) {
 	var PNG = png.PNG;
 
