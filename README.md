@@ -39,7 +39,7 @@ gulp watch
 ```
 
 Whenever you change some landscape source code, this will recompile the code and
-copy the updated version into your fakezod pier.
+copy the updated version into your fakezod pier. Visit localhost:80 to launch Landscape (or whichever port is printed out to your terminal upon booting your ship).
 
 ### NixOS dev
 
