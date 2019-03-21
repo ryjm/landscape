@@ -4,6 +4,7 @@ var cssnano = require('gulp-cssnano');
 var rollup = require('gulp-better-rollup');
 var sucrase = require('@sucrase/gulp-plugin');
 var minify = require('gulp-minify');
+var exec = require('child_process').exec;
 
 var resolve = require('rollup-plugin-node-resolve');
 var commonjs = require('rollup-plugin-commonjs');
@@ -76,6 +77,18 @@ gulp.task('js-minify', function () {
     .pipe(gulp.dest('./urbit-code/web/landscape/js/'));
 });
 
+gulp.task('js-cachebust', function(cb) {
+  return Promise.resolve(
+    exec('git log', function (err, stdout, stderr) {
+      let firstLine = stdout.split("\n")[0];
+      let commitHash = firstLine.split(' ')[1].substr(0, 10);
+      let newFilename = "index-" + commitHash + "-min.js";
+
+      exec('mv ./urbit-code/web/landscape/js/index-min.js ./urbit-code/web/landscape/js/' + newFilename);
+    })
+  );
+})
+
 gulp.task('urbit-copy', function () {
   let ret = gulp.src('urbit-code/**/*');
 
@@ -87,7 +100,7 @@ gulp.task('urbit-copy', function () {
 });
 
 gulp.task('js-bundle-dev', gulp.series('jsx-transform', 'js-imports'));
-gulp.task('js-bundle-prod', gulp.series('jsx-transform', 'js-imports', 'js-minify'))
+gulp.task('js-bundle-prod', gulp.series('jsx-transform', 'js-imports', 'js-minify', 'js-cachebust'))
 
 gulp.task('bundle-dev',
   gulp.series(
