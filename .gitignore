@@ -4,6 +4,6 @@
 
 node_modules/
 dist/
-urbit-code/web/landscape/js/*
-urbit-code/web/landscape/css/*
+urbit-code/gen/landscape/js/*
+urbit-code/gen/landscape/css/*
 *.swp

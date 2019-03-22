@@ -28,7 +28,7 @@ gulp.task('css-bundle', function() {
     .src('src/index.css')
     .pipe(cssimport())
     .pipe(cssnano())
-    .pipe(gulp.dest('./urbit-code/app/landscape/css'));
+    .pipe(gulp.dest('./urbit-code/gen/landscape/css'));
 });
 
 gulp.task('jsx-transform', function(cb) {
@@ -66,14 +66,14 @@ gulp.task('js-imports', function(cb) {
       console.log(e);
       cb();
     })
-    .pipe(gulp.dest('./urbit-code/app/landscape/js/'))
+    .pipe(gulp.dest('./urbit-code/gen/landscape/js/'))
     .on('end', cb);
 });
 
 gulp.task('js-minify', function () {
-  return gulp.src('./urbit-code/app/landscape/js/index.js')
+  return gulp.src('./urbit-code/gen/landscape/js/index.js')
     .pipe(minify())
-    .pipe(gulp.dest('./urbit-code/app/landscape/js/'));
+    .pipe(gulp.dest('./urbit-code/gen/landscape/js/'));
 });
 
 gulp.task('urbit-copy', function () {
