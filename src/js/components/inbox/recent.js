@@ -124,6 +124,7 @@ export class InboxRecentPage extends Component {
     return messageRows;
   }
   buildSections(sections) {
+    console.log('sections', sections);
     return sections.map((section, i) => {
       let sectionContent = this.buildSectionContent(section);
       let stationClass = classnames({

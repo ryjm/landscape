@@ -24,7 +24,7 @@ export class CommentCreate extends Component {
     this.setState({ status: STATUS_LOADING });
 
     this.props.api.coll({
-      ship: window.ship,
+      ship: this.props.ship.substr(1),
       desk: 'home',
       acts: [{
         comment: {
@@ -41,7 +41,7 @@ export class CommentCreate extends Component {
 
     this.props.pushCallback("circle.gram", (rep) => {
       this.setState({ comment: '', status: STATUS_READY});
-      this.props.transitionTo(window.location.pathname); // any reason we shouldnt do this?
+      this.props.transitionTo(window.location.pathname);
     });
   }
 
