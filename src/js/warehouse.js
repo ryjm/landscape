@@ -4,7 +4,6 @@ import { ConfigsReducer } from '/reducers/configs';
 import { ViewsReducer } from '/reducers/views';
 import { NamesReducer } from '/reducers/names';
 import { CirclesReducer } from '/reducers/circles';
-import { CollectionsReducer } from '/reducers/collections';
 // import { PublicReducer } from '/reducers/public';
 import { router } from '/router';
 import { PAGE_STATUS_READY, PAGE_STATUS_PROCESSING, REPORT_PAGE_STATUS, REPORT_NAVIGATE } from '/lib/constants';
@@ -86,7 +85,6 @@ class UrbitWarehouse {
     this.configsReducer = new ConfigsReducer();
     this.viewsReducer = new ViewsReducer();
     this.namesReducer = new NamesReducer();
-    this.collectionsReducer = new CollectionsReducer();
     // this.publicReducer = new PublicReducer();
     this.circlesReducer = new CirclesReducer();
 
@@ -145,7 +143,6 @@ class UrbitWarehouse {
     newReports.forEach((rep) => console.log('new report: ', rep));
     this.messagesReducer.reduce(newReports, this.store);
     this.configsReducer.reduce(newReports, this.store);
-    this.collectionsReducer.reduce(newReports, this.store);
     this.viewsReducer.reduce(newReports, this.store);
     this.namesReducer.reduce(newReports, this.store);
     this.circlesReducer.reduce(newReports, this.store);
