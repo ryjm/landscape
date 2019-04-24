@@ -32,7 +32,7 @@ export class PageStatus extends Component {
           <div className="header-pending-panel text-small row flex-offset-1">
             <div onClick={this.pendingAction} className={loadingClass}></div>
             {this.props.transition === PAGE_STATUS_DISCONNECTED &&
-              <span>Connection to <span className="text-mono">~{this.props.usership}</span> failed</span>
+              <span>Reconnecting to <span className="text-mono">~{this.props.usership}</span></span>
             }
             {this.props.transition === PAGE_STATUS_TRANSITIONING &&
               <span>Loading page...</span>
