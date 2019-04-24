@@ -107,6 +107,11 @@ class UrbitRouter {
   }
 
   registerAnchorListeners() {
+    // TODO: Commenting this out because, for whatever reason, a redirect
+    // set the metakey property on click event and would prevent this from working
+    // under certain circumstances (mostly proxied at *.arvo.network)
+    //
+    /*
     window.document.addEventListener('keydown', (e) => {
       // TODO:  Verify this works on Windows systems...
       if (e.metaKey) {
@@ -116,7 +121,9 @@ class UrbitRouter {
 
     window.document.addEventListener('keyup', (e) => {
       this.metaPressed = false;
+
     });
+    */
 
     window.document.addEventListener('click', (e) => {
       // If meta isn't currnetly held down, resolve clicks normally
@@ -129,7 +136,6 @@ class UrbitRouter {
         // If you find an "a" tag in the clicked element's parents, it's a link
         if (el && !el.attributes.disabled) {
           // We can probably do something a little nicer
-          console.log('el', el.hostname);
           if (el.hostname === "localhost" || isProxyHosted(el.hostname) || /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.exec(el.hostname)) {
             e.preventDefault();
             this.transitionTo(el.pathname + el.search);
