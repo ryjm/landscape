@@ -25,7 +25,7 @@ export function esoo(str) {
 
 // check if hostname follows ship.*.urbit.org scheme
 export function isProxyHosted(hostName) {
-  const r = /([a-z,-]+)\.(.+\.)?urbit\.org/.exec(hostName);
+  const r = /([a-z,-]+)\.(.+\.)?arvo\.network/.exec(hostName);
   if (r && urbitOb.isValidPatp(r[1])) {
     return true;
   }
@@ -252,7 +252,7 @@ export function makeLocal(string) {
 		return r[1];
 	} else {
 		return string;
-	}	
+	}
 }
 
 // maybe do fancier stuff later

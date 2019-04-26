@@ -11,6 +11,7 @@
   "devDependencies": {
     "@sucrase/gulp-plugin": "^2.0.0",
     "gulp": "^4.0.0",
+    "rollup": "^1.6.0",
     "gulp-better-rollup": "^4.0.1",
     "gulp-cssimport": "^6.0.0",
     "gulp-cssnano": "^2.1.2",
