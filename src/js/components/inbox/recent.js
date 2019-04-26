@@ -66,6 +66,44 @@ export class InboxRecentPage extends Component {
     this.activateMessageGroup(null, null);
   }
 
+  buildCollectionSection(section, cl) {
+    // this is gross, but life is gross
+    console.log('comment section', section);
+    let ret;
+    if (section.icon == "icon-collection-comment") {
+      ret = (
+        <div className="row align-center">
+          <div className="flex-col-2 flex justify-end">
+            <Icon type={section.icon} label={true}/>
+          </div>
+          <div className="flex-col-x">
+            <a href={section.stationDetails.stationUrl} className={cl}><span>new comment on </span>{section.stationDetails.stationTitle}</a>
+            {section.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
+              <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-3 text-timestamp" />
+            }
+          </div>
+          <div className="flex-col-3"></div>
+        </div>
+      );
+    } else {
+      ret = (
+        <div className="row align-center">
+          <div className="flex-col-2 flex justify-end">
+            <Icon type={section.icon} label={true}/>
+          </div>
+          <div className="flex-col-x">
+            <a href={section.stationDetails.stationUrl} className={cl}>{section.stationDetails.stationTitle}</a>
+            {section.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
+              <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-3 text-timestamp" />
+            }
+          </div>
+          <div className="flex-col-3"></div>
+        </div>
+      );
+    }
+    return ret;
+  };
+
   buildSectionContent(section) {
     let lastAut = "";
 
@@ -128,11 +166,14 @@ export class InboxRecentPage extends Component {
       let sectionContent = this.buildSectionContent(section);
       let stationClass = classnames({
         'text-mono text-700': !section.stationDetails.type.includes("collection"),
-        'text-heading text-600': section.stationDetails.type.includes("collection"),
+        'text-heading text-600': section.stationDetails.type.includes("collection")
       });
 
+      let collectionSection = this.buildCollectionSection(section, stationClass);
+
+      //
       return (
-        <div className="mt-4 mb-6" key={i}>
+        <div className={`mt-4 mb-6 ${section.icon && section.icon.includes("comment") ? 'comment-notification': ''}`} key={i}>
           {section.stationDetails.type !== "stream-dm" &&
             <div className="row">
               <div className="flex-col-2"></div>
@@ -143,18 +184,7 @@ export class InboxRecentPage extends Component {
               <div className="flex-col-3"></div>
             </div>
           }
-          <div className="row align-center">
-            <div className="flex-col-2 flex justify-end">
-              <Icon type={section.icon} label={true}/>
-            </div>
-            <div className="flex-col-x">
-              <a href={section.stationDetails.stationUrl} className={stationClass} >{section.stationDetails.stationTitle}</a>
-              {section.dateGroup === parseInt(this.state.activatedMsg.dateGroup, 10) &&
-                <Elapsed timestring={parseInt(this.state.activatedMsg.date, 10)} classes="ml-3 text-timestamp" />
-              }
-            </div>
-            <div className="flex-col-3"></div>
-          </div>
+          {collectionSection}
           {sectionContent}
         </div>
       )

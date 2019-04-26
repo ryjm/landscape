@@ -138,21 +138,17 @@ export class TopicCreatePage extends Component {
 
           let topicStation = `${rep.data.gam.aud[0]}-${gramMetadata.date}`;
           let stationDetails = getStationDetails(topicStation);
+
+          api.hall({
+             source: {
+               nom: 'inbox',
+               sub: true,
+               srs: [topicStation]
+             }
+          })
+
           this.props.transitionTo(stationDetails.stationUrl);
         }
-
-        let station = `${rep.from.path.split('/')[2]}/${rep.data.cir}`;
-
-
-        // api.hall({
-        //   source: {
-        //     nom: 'inbox',
-        //     sub: true,
-        //     srs: [station]
-        //   }
-        // })
-
-
       });
     }
   }
