@@ -216,7 +216,7 @@ function deSig(ship) {
 // use urbit.org proxy if it's not on our ship
 export function foreignUrl(shipName, own, urlFrag) {
   if (deSig(shipName) != deSig(own)) {
-    return `http://${deSig(shipName)}.urbit.org${urlFrag}`
+    return `http://${deSig(shipName)}.arvo.network${urlFrag}`
   } else {
     return urlFrag
   }
