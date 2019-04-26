@@ -107,6 +107,11 @@ class UrbitRouter {
   }
 
   registerAnchorListeners() {
+    // TODO: Commenting this out because, for whatever reason, a redirect
+    // set the metakey property on click event and would prevent this from working
+    // under certain circumstances (mostly proxied at *.arvo.network)
+    //
+    /*
     window.document.addEventListener('keydown', (e) => {
       // TODO:  Verify this works on Windows systems...
       if (e.metaKey) {
@@ -116,7 +121,9 @@ class UrbitRouter {
 
     window.document.addEventListener('keyup', (e) => {
       this.metaPressed = false;
+
     });
+    */
 
     window.document.addEventListener('click', (e) => {
       // If meta isn't currnetly held down, resolve clicks normally
