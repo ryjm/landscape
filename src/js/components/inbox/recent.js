@@ -173,7 +173,7 @@ export class InboxRecentPage extends Component {
 
       //
       return (
-        <div className={`mt-4 mb-6 ${section.icon.includes("comment") ? 'comment-notification': ''}`} key={i}>
+        <div className={`mt-4 mb-6 ${section.icon && section.icon.includes("comment") ? 'comment-notification': ''}`} key={i}>
           {section.stationDetails.type !== "stream-dm" &&
             <div className="row">
               <div className="flex-col-2"></div>
