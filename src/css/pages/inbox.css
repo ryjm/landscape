@@ -1,6 +1,13 @@
 /***
   Inbox
 ***/
+/*
+ * Lord have mercy on me a sinner
+ */
+
+.comment-notification .row.align-center.false {
+    display: none;
+}
 
 .inbox-page img {
   width: 100%;
