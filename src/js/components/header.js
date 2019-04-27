@@ -108,9 +108,7 @@ export class Header extends Component {
         defaultData = this.getStationHeaderData(this.props.data.station);
 
         if (this.props.data.subtype === 'default') {
-          actions = {
-            edit: `/~~/${this.props.data.host}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit`
-          }
+          actions = this.props.data.host == `~${this.props.api.authTokens.ship}` ?  { edit: `/~~/${this.props.data.host}/==/web/collections/${this.props.data.collId}/${this.props.data.postId}?show=edit` } : {};
         }
 
         let icon = "icon-collection-post";
