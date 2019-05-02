@@ -23,10 +23,10 @@ export function esoo(str) {
 
 }
 
-// check if hostname follows ship.*.urbit.org scheme
+// check if hostname follows ship.arvo.network scheme
 export function isProxyHosted(hostName) {
   const r = /([a-z,-]+)\.(.+\.)?arvo\.network/.exec(hostName);
-  if (r && urbitOb.isValidPatp(r[1])) {
+  if (r) {
     return true;
   }
   return false;
