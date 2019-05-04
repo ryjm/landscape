@@ -24,9 +24,9 @@ export function getStationDetails(station) {
     ret.type = "aggregator";
   } else if (isDMStation(station)) {
     ret.type = "stream-dm";
-  } else if (ret.cir.includes("c-") && circleParts.length > 2) {
+  } else if (ret.cir.startsWith("c-") && circleParts.length > 2) {
     ret.type = "collection-post";
-  } else if (ret.cir.includes("c-")) {
+  } else if (ret.cir.startsWith("c-")) {
     ret.type = "collection-index";
   } else {
     ret.type = "stream-chat";
